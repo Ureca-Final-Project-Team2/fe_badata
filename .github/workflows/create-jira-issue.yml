@@ -37,6 +37,18 @@ jobs:
           template-path: ${{ steps.select-template.outputs.template_path }}
           issue-body: ${{ github.event.issue.body }}
 
+      - name: Normalize issue type name
+        id: normalize-issuetype
+        run: |
+          TYPE="${{ steps.issue-parser.outputs.issueparser_issuetype }}"
+          case "$TYPE" in
+            "Sub-task") echo "issuetype=하위 작업" >> $GITHUB_OUTPUT ;;
+            "Task") echo "issuetype=작업" >> $GITHUB_OUTPUT ;;
+            "Story") echo "issuetype=스토리" >> $GITHUB_OUTPUT ;;
+            "Epic") echo "issuetype=에픽" >> $GITHUB_OUTPUT ;;
+            *) echo "issuetype=$TYPE" >> $GITHUB_OUTPUT ;;
+          esac
+
       - name: Convert markdown to Jira syntax
         uses: peter-evans/jira2md@v1
         id: md2jira
@@ -55,7 +67,7 @@ jobs:
         uses: atlassian/gajira-create@v3
         with:
           project: BADA
-          issuetype: ${{ steps.issue-parser.outputs.issueparser_issuetype }}
+          issuetype: ${{ steps.normalize-issuetype.outputs.issuetype }}
           summary: ${{ github.event.issue.title }}
           description: ${{ steps.md2jira.outputs.output-text }}
           fields: >-
@@ -69,7 +81,7 @@ jobs:
         uses: atlassian/gajira-create@v3
         with:
           project: BADA
-          issuetype: ${{ steps.issue-parser.outputs.issueparser_issuetype }}
+          issuetype: ${{ steps.normalize-issuetype.outputs.issuetype }}
           summary: ${{ github.event.issue.title }}
           description: ${{ steps.md2jira.outputs.output-text }}
 
