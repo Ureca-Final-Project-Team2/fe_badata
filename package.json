@@ -11,6 +11,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.81.5",
+    "@tanstack/react-query-devtools": "^5.81.5",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -18,6 +20,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.81.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
