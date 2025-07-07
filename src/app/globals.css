@@ -1,15 +1,33 @@
 @import "tailwindcss";
 
+@import url("https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap");
+
+/* 라이트/다크 모드 색상 설정 */
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* 폰트 */
+  --font-sans: "Pretendard", sans-serif;
+
+  /* 프로젝트 디자인 토큰 색상 */
+  --point-1: #ff5d8f;
+  --point-2: #ff87ab;
+  --point-3: #ffa6c1;
+
+  --main-1: #0f225e;
+  --main-2: #4b7aa5;
+  --main-3: #86d1eb;
+
+  --white: #ffffff;
+  --gray-light: #f6f6f6;
+  --gray: #cbcbcb;
+  --gray-mid: #9b9b9b;
+  --gray-dark: #656565;
+  --black: #222222;
+
+  --red: #ff4242;
+  --green: #11d85d;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +37,15 @@
   }
 }
 
+/* Tailwind v4 테마 시스템용 */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
