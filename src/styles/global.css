@@ -1,0 +1,33 @@
+:root {
+  --point-1: #ff5d8f;
+  --point-2: #ff87ab;
+  --point-3: #ffa6c1;
+
+  --main-1: #0f225e;
+  --main-2: #4b7aa5;
+  --main-3: #86d1eb;
+
+  --white: #ffffff;
+  --gray-light: #f6f6f6;
+  --gray: #cbcbcb;
+  --gray-mid: #9b9b9b;
+  --gray-dark: #656565;
+  --black: #222222;
+
+  --red: #ff4242;
+  --green: #11d85d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--white);
+  color: var(--black);
+}
