@@ -1,5 +1,5 @@
-import axios from "axios";
-import { BASE_URL, NETWORK_TIMEOUT } from "../constants/api";
+import axios from 'axios';
+import { BASE_URL, NETWORK_TIMEOUT } from '@shared/constants/api';
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
