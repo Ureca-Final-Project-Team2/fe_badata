@@ -79,6 +79,24 @@ export const CompactWithFollowing: Story = {
   },
 };
 
+export const InteractiveFollow: Story = {
+  render: () => {
+    const [isFollowing, setIsFollowing] = React.useState(false);
+
+    return (
+      <Profile
+        size="sm"
+        name="사용자2"
+        subtitle="거래내역 10"
+        avatar="https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg"
+        showFollowButton
+        isFollowing={isFollowing}
+        onFollowClick={() => setIsFollowing((prev) => !prev)}
+      />
+    );
+  },
+};
+
 export const CompactAllFeatures: Story = {
   args: {
     size: 'sm',
