@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { BuyButton } from './BuyButton';
 
 const meta: Meta<typeof BuyButton> = {
-  title: 'EXAMPLE/BuyButton',
+  title: 'Components/BuyButton',
   component: BuyButton,
   args: {
     children: '구매하기',

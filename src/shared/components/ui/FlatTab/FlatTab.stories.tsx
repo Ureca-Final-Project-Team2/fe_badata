@@ -59,7 +59,7 @@ const salesItems = [
 ];
 
 const meta: Meta<typeof FlatTab> = {
-  title: 'EXAMPLE/FlatTab',
+  title: 'Components/FlatTab',
   component: FlatTab,
   args: {
     items: sampleItems,

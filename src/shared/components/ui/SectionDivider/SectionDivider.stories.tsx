@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { SectionDivider } from './SectionDivider';
 
 const meta: Meta<typeof SectionDivider> = {
-  title: 'EXAMPLE/SectionDivider',
+  title: 'Components/SectionDivider',
   component: SectionDivider,
 };
 

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Profile } from './Profile';
 
 const meta: Meta<typeof Profile> = {
-  title: 'EXAMPLE/Profile',
+  title: 'Components/Profile',
   component: Profile,
   args: {
     name: '사용자1',
