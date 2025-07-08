@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { LikeButton } from '@/shared/components/ui/LikeButton';
+import { LikeButton } from '@ui/LikeButton';
 
 const meta: Meta<typeof LikeButton> = {
   title: 'Components/LikeButton',

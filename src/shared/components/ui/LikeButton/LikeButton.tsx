@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { Heart } from 'lucide-react';
-import { useLikeToggle } from './useLikeToggle';
+import { useLikeToggle } from '@components/ui/LikeButton/useLikeToggle';
 import { Button } from '@/components/ui/button';
 
 interface LikeButtonProps {
