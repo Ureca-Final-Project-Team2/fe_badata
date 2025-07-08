@@ -13,6 +13,11 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  ...compat.extends(
+    "next/core-web-vitals",
+    "next/typescript",
+    "@tanstack/eslint-plugin-query/recommended"
+  ),
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   ...storybook.configs["flat/recommended"]
 ];
