@@ -1,6 +1,5 @@
-@import "tailwindcss";
-
-@import url("https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
 
 /* 라이트/다크 모드 색상 설정 */
 :root {
@@ -8,7 +7,7 @@
   --foreground: #171717;
 
   /* 폰트 */
-  --font-sans: "Pretendard", sans-serif;
+  --font-sans: 'Pretendard', sans-serif;
 
   /* 프로젝트 디자인 토큰 색상 */
   --point-1: #ff5d8f;
