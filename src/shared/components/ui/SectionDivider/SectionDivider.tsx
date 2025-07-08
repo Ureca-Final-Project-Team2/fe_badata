@@ -12,10 +12,6 @@ const sectionDividerVariants = cva('border-t border-solid', {
     },
     color: {
       default: 'border-[var(--gray-light)]',
-      blue: 'border-[var(--main-3)]',
-      main: 'border-[var(--main-1)]',
-      point: 'border-[var(--point-1)]',
-      gray: 'border-[var(--gray)]',
     },
     thickness: {
       thin: 'border-t',
@@ -25,7 +21,7 @@ const sectionDividerVariants = cva('border-t border-solid', {
   },
   defaultVariants: {
     size: 'default',
-    color: 'blue',
+    color: 'default',
     thickness: 'medium',
   },
 });
