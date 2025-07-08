@@ -1,2 +1,1 @@
-//src/components/ui/LoginButton/index.ts
-export * from './LoginButton';
+//src/components/ui/LoginButton/index.tsxport * from './LoginButton';

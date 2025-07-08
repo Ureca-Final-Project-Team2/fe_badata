@@ -1,4 +1,3 @@
-//src/components/ui/Header/Header.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 
 const MockLoginButton = () => (

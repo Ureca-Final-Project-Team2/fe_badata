@@ -1,4 +1,3 @@
-//src/components/ui/LoginButton/LoginButton.tsx
 'use client';
 
 import { cn } from '@/shared/lib/cn';

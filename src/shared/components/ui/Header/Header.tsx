@@ -1,4 +1,3 @@
-//src/components/ui/Header/Header.tsx
 'use client';
 
 import { LoginButton } from '@/shared/components/ui/LoginButton/LoginButton';
