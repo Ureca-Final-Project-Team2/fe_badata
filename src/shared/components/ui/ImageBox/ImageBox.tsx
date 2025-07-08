@@ -24,13 +24,10 @@ export function ImageBox({ size = 'sm', url, className }: ImageBoxProps) {
     <div
       className={cn(
         'rounded-[24px] flex items-center justify-center border',
+        'bg-[var(--gray-light)] border-[var(--gray)]',
         SIZE_MAP[size],
         className,
       )}
-      style={{
-        backgroundColor: 'var(--gray-light)',
-        borderColor: 'var(--gray)',
-      }}
     >
       <img src={url || fallbackImage} alt="image" className="object-contain w-full h-full" />
     </div>

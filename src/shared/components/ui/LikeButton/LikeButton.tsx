@@ -17,11 +17,10 @@ export function LikeButton({ defaultLiked = false }: LikeButtonProps) {
       onClick={toggle}
       size="icon"
       variant="ghost"
-      className="w-[26px] h-[26px] rounded-full flex items-center justify-center p-0 hover:bg-[var(--gray-light)] hover:text-inherit"
-      style={{
-        backgroundColor: 'var(--gray-light)',
-        color: 'inherit',
-      }}
+      className={`
+        w-[26px] h-[26px] rounded-full flex items-center justify-center p-0 
+        bg-[var(--gray-light)] text-inherit hover:bg-[var(--gray-light)] hover:text-inherit
+      `}
     >
       <Heart
         className="w-4 h-4"
