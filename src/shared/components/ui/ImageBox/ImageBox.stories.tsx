@@ -1,4 +1,4 @@
-import { ImageBox } from '@/shared/components/ui/ImageBox';
+import { ImageBox } from '@ui/ImageBox';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ImageBox> = {
