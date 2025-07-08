@@ -15,7 +15,7 @@ const profileVariants = cva('inline-flex items-center transition-colors', {
   },
 });
 
-const avatarVariants = cva('rounded-full object-cover flex-shrink-0 bg-gray-200', {
+const avatarVariants = cva('rounded-full object-cover flex-shrink-0 bg-[var(--gray)]', {
   variants: {
     size: {
       sm: 'w-[56px] h-[56px]',
@@ -81,7 +81,7 @@ export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
           <img src={avatar} alt={`${name} avatar`} className={avatarVariants({ size })} />
         ) : (
           <div className={cn(avatarVariants({ size }), 'flex items-center justify-center')}>
-            <span className="text-gray-600 font-semibold text-xl">
+            <span className="text-[var(--gray-dark)] font-semibold text-xl">
               {name.charAt(0).toUpperCase()}
             </span>
           </div>
@@ -91,7 +91,9 @@ export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-[20px] text-black truncate">{name}</div>
           {size === 'sm' && subtitle && (
-            <div className="font-light text-[12px] text-gray-600 truncate">{subtitle}</div>
+            <div className="font-light text-[12px] text-[var(--gray-dark)] truncate">
+              {subtitle}
+            </div>
           )}
         </div>
 
@@ -112,10 +114,10 @@ export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
           {showCloseButton && (
             <button
               onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0 w-6 h-6 flex items-center justify-center"
+              className="p-1 hover:bg-[var(--gray-light)] rounded-full transition-colors flex-shrink-0 w-6 h-6 flex items-center justify-center"
               type="button"
             >
-              <span className="text-gray-500 text-lg leading-none">×</span>
+              <span className="text-[var(--gray-mid)] text-lg leading-none">×</span>
             </button>
           )}
         </div>
