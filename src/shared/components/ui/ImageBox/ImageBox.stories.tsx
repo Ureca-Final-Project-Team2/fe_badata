@@ -2,7 +2,7 @@ import { ImageBox } from '@ui/ImageBox';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ImageBox> = {
-  title: 'UI/ImageBox',
+  title: 'Components/ImageBox',
   component: ImageBox,
   tags: ['autodocs'],
 };
