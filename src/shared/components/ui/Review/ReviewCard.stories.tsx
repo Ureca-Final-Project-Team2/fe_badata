@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { ReviewCard } from '@/shared/components/ui/Review/ReviewCard';
+import { ReviewCard } from './ReviewCard';
 
 const meta: Meta<typeof ReviewCard> = {
   title: 'EXAMPLE/ReviewCard',
