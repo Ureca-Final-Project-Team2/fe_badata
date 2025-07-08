@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { ReviewCard, ReviewCardProps } from './ReviewCard';
+import { ReviewCard, ReviewCardProps } from '@ui/Review/ReviewCard';
 
 const meta: Meta<typeof ReviewCard> = {
   title: 'Components/ReviewCard',

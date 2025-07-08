@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Profile } from './Profile';
+import { Profile } from '@ui/Profile/Profile';
 
 const meta: Meta<typeof Profile> = {
   title: 'Components/Profile',

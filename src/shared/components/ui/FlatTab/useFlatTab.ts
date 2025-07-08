@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TabItem } from './types';
+import { TabItem } from '@ui/FlatTab/types';
 
 export const useFlatTab = (
   items: TabItem[],

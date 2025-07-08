@@ -1,1 +1,1 @@
-export * from './SectionDivider';
+export * from '@ui/SectionDivider';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
-import { cn } from '@/shared/lib/cn';
+import { cn } from '@lib/cn';
 
 const profileVariants = cva('inline-flex items-center transition-colors', {
   variants: {

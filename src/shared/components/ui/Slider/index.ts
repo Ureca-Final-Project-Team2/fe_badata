@@ -1,1 +1,1 @@
-export * from './Slider';
+export * from '@ui/Slider';

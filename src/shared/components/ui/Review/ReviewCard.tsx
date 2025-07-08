@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
-import { cn } from '@/shared/lib/cn';
+import { cn } from '@lib/cn';
 
 const reviewCardVariants = cva(
   'bg-white rounded-[20px] border border-gray-200 shadow-sm hover:shadow-md transition-shadow',

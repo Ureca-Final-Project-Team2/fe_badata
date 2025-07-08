@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { FlatTab } from './FlatTab';
+import { FlatTab } from '@ui/FlatTab/FlatTab';
 
 const sampleItems = [
   {

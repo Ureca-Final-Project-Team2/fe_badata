@@ -1,1 +1,1 @@
-export * from './ReviewCard';
+export * from '@ui/Review/ReviewCard';

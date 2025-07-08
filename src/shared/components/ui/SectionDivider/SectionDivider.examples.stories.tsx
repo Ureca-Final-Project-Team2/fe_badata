@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { SectionDivider } from './SectionDivider';
+import { SectionDivider } from '@ui/SectionDivider/SectionDivider';
 
 const meta: Meta<typeof SectionDivider> = {
   title: 'Examples/SectionDividerPage',
