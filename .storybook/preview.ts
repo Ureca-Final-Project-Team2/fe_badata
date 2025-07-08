@@ -1,5 +1,4 @@
-import type { Preview } from '@storybook/nextjs';
-
+import type { Preview } from '@storybook/react-vite';
 import '../src/app/globals.css';
 
 const preview: Preview = {
@@ -11,7 +10,8 @@ const preview: Preview = {
       },
     },
     a11y: {
-      test: 'todo', // 접근성 경고는 UI에만 표시
+      element: '#root',
+      manual: false,
     },
   },
 };
