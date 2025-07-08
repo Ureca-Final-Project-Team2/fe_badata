@@ -8,6 +8,18 @@
   /* 폰트 */
   --font-sans: 'Pretendard', sans-serif;
 
+  /* 폰트 사이즈 */
+  --font-head-bold: 31.5px;
+  --font-head-semibold: 25px;
+  --font-title-semibold: 20px;
+  --font-title-medium: 20px;
+  --font-title-regular: 16px;
+  --font-label-light: 12.8px;
+  --font-body-light: 12.8px;
+  --font-body-xs-semibold: 12.8px;
+  --font-body-light-lh: 12.8px;
+  --font-body-semibold: 16px;
+
   /* 프로젝트 디자인 토큰 색상 */
   --point-1: #ff5d8f;
   --point-2: #ff87ab;
@@ -26,6 +38,8 @@
 
   --red: #ff4242;
   --green: #11d85d;
+
+  /* shadcn 용 디자인 토큰 색상 */
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
