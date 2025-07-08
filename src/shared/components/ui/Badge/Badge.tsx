@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@lib/cn';
 
@@ -34,8 +33,6 @@ export interface BadgeProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'>,
     VariantProps<typeof badgeVariants> {}
 
-function Badge({ className, color, size, ...rest }: BadgeProps) {
+export function Badge({ className, color, size, ...rest }: BadgeProps) {
   return <div className={cn(badgeVariants({ color, size }), className)} {...rest} />;
 }
-
-export { Badge, badgeVariants };
