@@ -1,9 +1,13 @@
 import { mergeConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
-import type { StorybookConfig } from '@storybook/react-vite';
+import type { StorybookConfig } from '@storybook/nextjs-vite';
 
 const config: StorybookConfig = {
+  framework: {
+    name: '@storybook/nextjs-vite',
+    options: {},
+  },
   stories: ['../src/**/*.stories.@(ts|tsx)'],
   addons: [
     '@storybook/addon-a11y',
@@ -11,10 +15,6 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@storybook/addon-onboarding',
   ],
-  framework: {
-    name: '@storybook/react-vite',
-    options: {},
-  },
   async viteFinal(config) {
     return mergeConfig(config, {
       plugins: [tsconfigPaths()],
@@ -32,11 +32,6 @@ const config: StorybookConfig = {
           '@types': path.resolve(__dirname, '../src/shared/types'),
           '@utils': path.resolve(__dirname, '../src/shared/utils'),
           '@styles': path.resolve(__dirname, '../src/shared/styles'),
-        },
-      },
-      css: {
-        postcss: {
-          plugins: [require('@tailwindcss/postcss')()],
         },
       },
     });
