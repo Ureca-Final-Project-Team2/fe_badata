@@ -15,41 +15,20 @@ type Story = StoryObj<typeof BuyButton>;
 export const Primary: Story = {
   args: {
     variant: 'primary',
-    size: 'md',
+    size: 'lg',
   },
 };
 
 export const Secondary: Story = {
   args: {
     variant: 'secondary',
-    size: 'md',
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    variant: 'outline',
-    size: 'md',
+    size: 'lg',
   },
 };
 
 export const Ghost: Story = {
   args: {
     variant: 'ghost',
-    size: 'md',
-  },
-};
-
-export const Small: Story = {
-  args: {
-    variant: 'primary',
-    size: 'sm',
-  },
-};
-
-export const Large: Story = {
-  args: {
-    variant: 'primary',
     size: 'lg',
   },
 };
@@ -65,5 +44,19 @@ export const Disabled: Story = {
   args: {
     variant: 'primary',
     disabled: true,
+  },
+};
+
+export const Medium: Story = {
+  args: {
+    variant: 'primary',
+    size: 'md',
+  },
+};
+
+export const Small: Story = {
+  args: {
+    variant: 'primary',
+    size: 'sm',
   },
 };

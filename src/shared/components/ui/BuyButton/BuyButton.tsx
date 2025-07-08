@@ -11,7 +11,7 @@ const buyButtonVariants = cva(
         secondary: 'bg-[var(--point-1)] text-white hover:bg-[var(--main-1)]',
         outline:
           'bg-white text-[var(--main-1)] border border-[var(--main-1)] hover:bg-[var(--point-1)] hover:text-white',
-        ghost: 'bg-transparent text-[var(--main-1)] hover:bg-[var(--gray-light)]',
+        ghost: 'bg-transparent text-white hover:bg-[var(--gray)]',
       },
       size: {
         sm: 'w-[200px] h-[50px]',
@@ -54,4 +54,4 @@ export const BuyButton = React.forwardRef<HTMLButtonElement, BuyButtonProps>(
   },
 );
 
-// BuyButton.displayName = 'BuyButton';
+BuyButton.displayName = 'BuyButton';
