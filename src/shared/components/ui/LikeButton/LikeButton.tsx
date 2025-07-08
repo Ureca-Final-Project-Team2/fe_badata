@@ -21,7 +21,7 @@ export function LikeButton({ defaultLiked = false, onChange }: LikeButtonProps) 
       variant="ghost"
       className={`
         w-[26px] h-[26px] rounded-full flex items-center justify-center p-0 
-        bg-[var(--gray-light)] text-inherit hover:bg-[var(--gray-light)] hover:text-inherit
+        bg-[var(--gray)] text-inherit hover:bg-[var(--gray)] hover:text-inherit
       `}
     >
       <Heart
