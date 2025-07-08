@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { ReviewCard } from './ReviewCard';
+import { ReviewCard, ReviewCardProps } from './ReviewCard';
 
 const meta: Meta<typeof ReviewCard> = {
   title: 'Components/ReviewCard',
@@ -88,30 +88,16 @@ export const AllSizes: Story = {
   render: () => (
     <div className="space-y-4 bg-gray-50 p-6">
       <div>
-        <h3 className="text-lg font-semibold mb-2">Small (320*110)</h3>
-        <ReviewCard size="sm" title="저렴한 공유기 대리점" rating="4.2 토" price="20,000원" />
+        <h3 className="text-lg font-semibold mb-2">Small</h3>
+        <ReviewCard {...(Small.args as ReviewCardProps)} />
       </div>
-
       <div>
-        <h3 className="text-lg font-semibold mb-2">Default (380*130)</h3>
-        <ReviewCard
-          size="default"
-          title="대리점 이름"
-          rating="3.12 토"
-          price="30,000원"
-          showReviewButton={true}
-        />
+        <h3 className="text-lg font-semibold mb-2">Default</h3>
+        <ReviewCard {...(Default.args as ReviewCardProps)} />
       </div>
-
       <div>
-        <h3 className="text-lg font-semibold mb-2">Large (440*150)</h3>
-        <ReviewCard
-          size="lg"
-          title="비싼 공유기 대리점 이름"
-          rating="4.8 토"
-          price="60,000원"
-          showReviewButton={true}
-        />
+        <h3 className="text-lg font-semibold mb-2">Large</h3>
+        <ReviewCard {...(Large.args as ReviewCardProps)} />
       </div>
     </div>
   ),
@@ -121,10 +107,10 @@ export const AllSizes: Story = {
 export const GridLayout: Story = {
   render: () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      <ReviewCard title="대리점 A" rating="4.5 토" price="25,000원" showReviewButton={true} />
-      <ReviewCard title="대리점 B" rating="3.8 토" price="35,000원" />
-      <ReviewCard title="대리점 C" rating="4.9 토" price="55,000원" showReviewButton={true} />
-      <ReviewCard title="대리점 D" rating="2.1 토" price="18,000원" />
+      <ReviewCard {...(HighRating.args as ReviewCardProps)} />
+      <ReviewCard {...(LowRating.args as ReviewCardProps)} />
+      <ReviewCard {...(ExpensiveItem.args as ReviewCardProps)} />
+      <ReviewCard {...(LongTitle.args as ReviewCardProps)} />
     </div>
   ),
 };
