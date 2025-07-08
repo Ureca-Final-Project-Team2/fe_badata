@@ -1,30 +1,15 @@
 import * as React from 'react';
-import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/lib/cn';
 
-const sliderVariants = cva('relative', {
-  variants: {
-    size: {
-      default: 'w-[176px] h-[66px]',
-      sm: 'w-[140px] h-[50px]',
-      lg: 'w-[220px] h-[80px]',
-    },
-  },
-  defaultVariants: {
-    size: 'default',
-  },
-});
-
 export interface SliderProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange'>,
-    VariantProps<typeof sliderVariants> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
   min?: number;
   max?: number;
   step?: number;
   value?: number;
   defaultValue?: number;
   label?: string;
-  showValue?: boolean;
+  showTooltip?: boolean;
   onValueChange?: (value: number) => void;
 }
 
@@ -32,56 +17,34 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
   (
     {
       className,
-      size,
       min = 0,
-      max = 100,
-      step = 1,
+      max = 50000,
+      step = 1000,
       value,
-      defaultValue = min,
+      defaultValue = 20000,
       disabled = false,
-      label,
-      showValue = false,
+      label = '가격',
+      showTooltip = true,
       onValueChange,
       ...props
     },
     ref,
   ) => {
     const [internalValue, setInternalValue] = React.useState(value ?? defaultValue);
+    const [isDragging, setIsDragging] = React.useState(false);
 
     const currentValue = value ?? internalValue;
     const percentage = ((currentValue - min) / (max - min)) * 100;
 
-    const getTrackHeight = () => {
-      switch (size) {
-        case 'sm':
-          return 'h-2';
-        case 'lg':
-          return 'h-4';
-        default:
-          return 'h-3';
-      }
+    const formatExactPrice = (price: number) => {
+      if (price === 0) return '0원';
+      return `${price.toLocaleString()}원`;
     };
 
-    const getThumbSize = () => {
-      switch (size) {
-        case 'sm':
-          return 'w-4 h-4';
-        case 'lg':
-          return 'w-6 h-6';
-        default:
-          return 'w-5 h-5';
-      }
-    };
-
-    const getLabelSize = () => {
-      switch (size) {
-        case 'sm':
-          return 'text-xs';
-        case 'lg':
-          return 'text-base';
-        default:
-          return 'text-sm';
-      }
+    const formatMinMaxLabels = () => {
+      const minLabel = min === 0 ? '0원' : `${Math.floor(min / 10000)}만원`;
+      const maxLabel = max === 50000 ? '5만원대' : `${Math.floor(max / 10000)}만원대`;
+      return { minLabel, maxLabel };
     };
 
     const handleChange = React.useCallback(
@@ -97,44 +60,59 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
       [value, onValueChange],
     );
 
+    const handleMouseDown = () => setIsDragging(true);
+    const handleMouseUp = () => setIsDragging(false);
+
     React.useEffect(() => {
       if (value !== undefined) {
         setInternalValue(value);
       }
     }, [value]);
 
+    React.useEffect(() => {
+      const handleGlobalMouseUp = () => setIsDragging(false);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
+      return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
+    }, []);
+
+    const { minLabel, maxLabel } = formatMinMaxLabels();
+
     return (
-      <div className={cn(sliderVariants({ size }), 'flex flex-col justify-center', className)}>
+      <div className={cn('relative flex flex-col', className)}>
         {label && (
-          <div className="flex justify-between items-center mb-2">
-            <label className={cn('font-medium text-white', getLabelSize())}>{label}</label>
-            {showValue && (
-              <span className={cn('text-white', getLabelSize())}>
-                {currentValue.toLocaleString()}
-              </span>
-            )}
+          <div className="flex justify-between items-center mb-6">
+            <span className="text-gray-900 font-medium text-base">{label}</span>
+            <div className="flex items-center gap-8 text-sm text-[var(--gray-mid)]">
+              <span>{minLabel}</span>
+              <span>{maxLabel}</span>
+            </div>
           </div>
         )}
 
-        <div className="relative flex items-center">
-          {/* Track Background */}
-          <div
-            className={cn(
-              'w-full bg-white rounded-full relative overflow-hidden',
-              getTrackHeight(),
-            )}
-          >
-            {/* Active Range */}
+        <div className="w-[380px] h-[8px] flex items-center relative">
+          {/* Tooltip above thumb */}
+          {showTooltip && (
             <div
-              className={cn(
-                'bg-[var(--main-3)] rounded-full transition-all duration-200',
-                getTrackHeight(),
-              )}
+              className="absolute -top-12 bg-[var(--gray-light)] border border-[var(--gray)] rounded-lg px-3 py-2 shadow-sm whitespace-nowrap z-10"
+              style={{
+                left: `calc(${percentage}% - 24px)`,
+                transform: 'translateX(-50%)',
+              }}
+            >
+              <div className="text-sm text-[var(--gray-mid)] text-center font-medium">
+                {formatExactPrice(currentValue)}
+              </div>
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[var(--gray)]"></div>
+            </div>
+          )}
+
+          <div className="w-full h-[8px] bg-[var(--gray-light)] rounded-full relative overflow-hidden">
+            <div
+              className="bg-[var(--main-3)] rounded-full transition-all duration-200 absolute top-0 left-0 h-[8px]"
               style={{ width: `${percentage}%` }}
             />
           </div>
 
-          {/* Input */}
           <input
             ref={ref}
             type="range"
@@ -143,21 +121,24 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
             step={step}
             value={currentValue}
             onChange={handleChange}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
             disabled={disabled}
-            className="absolute w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+            className="absolute w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-20"
             {...props}
           />
 
-          {/* Thumb */}
           <div
             className={cn(
-              'absolute bg-white rounded-full shadow-md transition-all duration-200 pointer-events-none border border-gray-200',
-              getThumbSize(),
-              !disabled && 'hover:shadow-lg',
-              disabled && 'bg-gray-400',
+              'absolute bg-white rounded-full shadow-lg transition-all duration-200 pointer-events-none border-2 border-white w-5 h-5',
+              !disabled && (isDragging ? 'shadow-xl scale-110' : 'shadow-md'),
+              disabled && 'bg-gray-400 border-gray-400',
             )}
             style={{
-              left: `calc(${percentage}% - ${size === 'sm' ? '8px' : size === 'lg' ? '12px' : '10px'})`,
+              left: `calc(${percentage}% - 10px)`,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 10,
             }}
           />
         </div>
