@@ -2,20 +2,17 @@ import * as React from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/lib/cn';
 
-const profileVariants = cva(
-  'inline-flex items-center bg-white rounded-lg transition-colors border border-gray-200',
-  {
-    variants: {
-      variant: {
-        default: 'w-[380px] h-[70px] px-4 gap-4',
-        compact: 'w-[380px] h-[56px] px-4 gap-3',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
+const profileVariants = cva('inline-flex items-center transition-colors', {
+  variants: {
+    variant: {
+      default: 'w-[380px] h-[70px] px-4 gap-4',
+      compact: 'w-[380px] h-[56px] px-4 gap-3',
     },
   },
-);
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
 const avatarVariants = cva('rounded-full object-cover flex-shrink-0 bg-gray-200', {
   variants: {
@@ -30,7 +27,7 @@ const avatarVariants = cva('rounded-full object-cover flex-shrink-0 bg-gray-200'
 });
 
 const followButtonVariants = cva(
-  'rounded text-white transition-colors w-[40px] h-[20px] flex items-center justify-center text-[16px] font-normal',
+  'w-[80px] h-[30px] rounded-[10px] text-white text-[16px] font-normal flex items-center justify-center transition-colors',
   {
     variants: {
       followState: {
@@ -51,6 +48,7 @@ export interface ProfileProps
   avatar?: string;
   showCloseButton?: boolean;
   onClose?: () => void;
+
   subtitle?: string;
   showFollowButton?: boolean;
   isFollowing?: boolean;
