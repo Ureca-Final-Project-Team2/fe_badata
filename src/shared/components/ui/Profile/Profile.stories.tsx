@@ -13,17 +13,16 @@ const meta: Meta<typeof Profile> = {
 export default meta;
 type Story = StoryObj<typeof Profile>;
 
-// 첫 번째 프로필 (380*70)
 export const Default: Story = {
   args: {
-    variant: 'default',
+    size: 'md',
     name: '사용자1',
   },
 };
 
 export const DefaultWithAvatar: Story = {
   args: {
-    variant: 'default',
+    size: 'md',
     name: '사용자1',
     avatar: 'https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg',
   },
@@ -31,7 +30,7 @@ export const DefaultWithAvatar: Story = {
 
 export const DefaultWithClose: Story = {
   args: {
-    variant: 'default',
+    size: 'md',
     name: '사용자1',
     avatar: 'https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg',
     showCloseButton: true,
@@ -39,10 +38,9 @@ export const DefaultWithClose: Story = {
   },
 };
 
-// 두 번째 프로필 (380*56)
 export const Compact: Story = {
   args: {
-    variant: 'compact',
+    size: 'sm',
     name: '사용자2',
     subtitle: '거래내역 10',
   },
@@ -50,7 +48,7 @@ export const Compact: Story = {
 
 export const CompactWithAvatar: Story = {
   args: {
-    variant: 'compact',
+    size: 'sm',
     name: '사용자2',
     subtitle: '거래내역 10',
     avatar: 'https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg',
@@ -59,7 +57,7 @@ export const CompactWithAvatar: Story = {
 
 export const CompactWithFollow: Story = {
   args: {
-    variant: 'compact',
+    size: 'sm',
     name: '사용자2',
     subtitle: '거래내역 10',
     avatar: 'https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg',
@@ -71,7 +69,7 @@ export const CompactWithFollow: Story = {
 
 export const CompactWithFollowing: Story = {
   args: {
-    variant: 'compact',
+    size: 'sm',
     name: '사용자2',
     subtitle: '거래내역 10',
     avatar: 'https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg',
@@ -83,7 +81,7 @@ export const CompactWithFollowing: Story = {
 
 export const CompactAllFeatures: Story = {
   args: {
-    variant: 'compact',
+    size: 'sm',
     name: '사용자2',
     subtitle: '거래내역 10',
     avatar: 'https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg',
@@ -95,20 +93,19 @@ export const CompactAllFeatures: Story = {
   },
 };
 
-// 비교용 - 모든 variants
 export const AllVariants: Story = {
   render: () => (
     <div className="space-y-4 bg-gray-50 p-6">
       <div>
-        <h3 className="text-lg font-semibold mb-2">Default Variant (380*70)</h3>
+        <h3 className="text-lg font-semibold mb-2">Medium Size (기존 default, 380*70)</h3>
         <div className="space-y-2">
           <Profile
-            variant="default"
+            size="md"
             name="사용자1"
             avatar="https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg"
           />
           <Profile
-            variant="default"
+            size="md"
             name="사용자1"
             avatar="https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg"
             showCloseButton={true}
@@ -117,23 +114,23 @@ export const AllVariants: Story = {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-2">Compact Variant (380*56)</h3>
+        <h3 className="text-lg font-semibold mb-2">Small Size (기존 compact, 320*56)</h3>
         <div className="space-y-2">
           <Profile
-            variant="compact"
+            size="sm"
             name="사용자2"
             subtitle="거래내역 10"
             avatar="https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg"
           />
           <Profile
-            variant="compact"
+            size="sm"
             name="사용자2"
             subtitle="거래내역 10"
             avatar="https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg"
             isFollowing={false}
           />
           <Profile
-            variant="compact"
+            size="sm"
             name="사용자2"
             subtitle="거래내역 10"
             avatar="https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg"

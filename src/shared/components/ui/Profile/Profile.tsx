@@ -4,25 +4,27 @@ import { cn } from '@/shared/lib/cn';
 
 const profileVariants = cva('inline-flex items-center transition-colors', {
   variants: {
-    variant: {
-      default: 'w-[380px] h-[70px] px-4 gap-4',
-      compact: 'w-[380px] h-[56px] px-4 gap-3',
+    size: {
+      sm: 'w-[320px] h-[56px] px-4 gap-3',
+      md: 'w-[380px] h-[70px] px-4 gap-4',
+      lg: 'w-[440px] h-[80px] px-5 gap-5',
     },
   },
   defaultVariants: {
-    variant: 'default',
+    size: 'md',
   },
 });
 
 const avatarVariants = cva('rounded-full object-cover flex-shrink-0 bg-gray-200', {
   variants: {
-    variant: {
-      default: 'w-[70px] h-[70px]',
-      compact: 'w-[56px] h-[56px]',
+    size: {
+      sm: 'w-[56px] h-[56px]',
+      md: 'w-[70px] h-[70px]',
+      lg: 'w-[80px] h-[80px]',
     },
   },
   defaultVariants: {
-    variant: 'default',
+    size: 'md',
   },
 });
 
@@ -59,7 +61,7 @@ export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
   (
     {
       className,
-      variant,
+      size = 'md',
       name,
       avatar,
       showCloseButton = false,
@@ -73,12 +75,12 @@ export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
     ref,
   ) => {
     return (
-      <div className={cn(profileVariants({ variant }), className)} ref={ref} {...props}>
+      <div className={cn(profileVariants({ size }), className)} ref={ref} {...props}>
         {/* Avatar */}
         {avatar ? (
-          <img src={avatar} alt={`${name} avatar`} className={avatarVariants({ variant })} />
+          <img src={avatar} alt={`${name} avatar`} className={avatarVariants({ size })} />
         ) : (
-          <div className={cn(avatarVariants({ variant }), 'flex items-center justify-center')}>
+          <div className={cn(avatarVariants({ size }), 'flex items-center justify-center')}>
             <span className="text-gray-600 font-semibold text-xl">
               {name.charAt(0).toUpperCase()}
             </span>
@@ -88,14 +90,14 @@ export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-[20px] text-black truncate">{name}</div>
-          {variant === 'compact' && subtitle && (
+          {size === 'sm' && subtitle && (
             <div className="font-light text-[12px] text-gray-600 truncate">{subtitle}</div>
           )}
         </div>
 
         {/* Actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          {showFollowButton && variant === 'compact' && (
+          {showFollowButton && size === 'sm' && (
             <button
               onClick={onFollowClick}
               className={followButtonVariants({
