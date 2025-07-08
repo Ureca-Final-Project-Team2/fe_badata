@@ -3,12 +3,12 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-type ImageBoxSize = 's' | 'm' | 'l';
+type ImageBoxSize = 'sm' | 'md' | 'lg';
 
 const SIZE_MAP: Record<ImageBoxSize, string> = {
-  s: 'w-[100px] h-[100px]',
-  m: 'w-[140px] h-[140px]',
-  l: 'w-[161px] h-[161px]',
+  sm: 'w-[100px] h-[100px]',
+  md: 'w-[140px] h-[140px]',
+  lg: 'w-[161px] h-[161px]',
 };
 
 interface ImageBoxProps {
@@ -17,7 +17,7 @@ interface ImageBoxProps {
   className?: string;
 }
 
-export function ImageBox({ size = 's', url, className }: ImageBoxProps) {
+export function ImageBox({ size = 'sm', url, className }: ImageBoxProps) {
   const fallbackImage = '/assets/sample.png';
 
   return (

@@ -1,4 +1,3 @@
-// src/stories/ImageBox.stories.tsx
 import { ImageBox } from '@/shared/components/ui/ImageBox';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,25 +16,25 @@ export const Default: Story = {
 
 export const Small: Story = {
   args: {
-    size: 's',
+    size: 'sm',
   },
 };
 
 export const Medium: Story = {
   args: {
-    size: 'm',
+    size: 'md',
   },
 };
 
 export const Large: Story = {
   args: {
-    size: 'l',
+    size: 'lg',
   },
 };
 
 export const WithImageUrl: Story = {
   args: {
-    size: 'm',
+    size: 'md',
     url: 'https://source.unsplash.com/300x300/?city',
   },
 };
