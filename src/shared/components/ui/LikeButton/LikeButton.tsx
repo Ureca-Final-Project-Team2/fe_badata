@@ -1,15 +1,17 @@
 'use client';
+
 import React from 'react';
 import { Heart } from 'lucide-react';
-import { useLikeToggle } from '@components/ui/LikeButton/useLikeToggle';
+import { useLike } from '@features/like/hooks/useLike';
 import { Button } from '@/components/ui/button';
 
 interface LikeButtonProps {
   defaultLiked?: boolean;
+  onChange?: (liked: boolean) => void;
 }
 
-export function LikeButton({ defaultLiked = false }: LikeButtonProps) {
-  const { liked, toggle } = useLikeToggle(defaultLiked);
+export function LikeButton({ defaultLiked = false, onChange }: LikeButtonProps) {
+  const { liked, toggle } = useLike({ defaultLiked, onChange });
 
   return (
     <Button
