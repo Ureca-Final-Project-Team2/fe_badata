@@ -1,1 +1,1 @@
-export * from '@ui/InputField/InputField';
+export * from './InputField';

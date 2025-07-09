@@ -1,1 +1,1 @@
-export { TextAreaField } from '@ui/TextAreaField/TextAreaField';
+export { TextAreaField } from './TextAreaField';

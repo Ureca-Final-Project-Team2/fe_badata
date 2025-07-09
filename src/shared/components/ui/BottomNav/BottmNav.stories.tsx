@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { BottomNav } from '@ui/BottomNav/BottomNav';
+import { BottomNav } from '@ui/BottomNav';
 
 const meta: Meta<typeof BottomNav> = {
   title: 'Components/BottomNav',

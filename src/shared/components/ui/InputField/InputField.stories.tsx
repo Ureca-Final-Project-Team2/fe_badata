@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { InputField } from '@/shared/components/ui/InputField/InputField';
+import { InputField } from '@ui/InputField';
 import { SearchIcon, TicketIcon } from 'lucide-react';
 import { useState } from 'react';
 

@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { InputFieldProps } from '@/shared/components/ui/InputField/InputField.types';
-import { inputVariants } from '@/shared/components/ui/InputField/InputField.variants';
+import { InputFieldProps } from '@ui/InputField/InputField.types';
+import { inputVariants } from '@ui/InputField/InputField.variants';
 import { cn } from '@lib/cn';
 
 export const InputField: React.FC<InputFieldProps> = ({

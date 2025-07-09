@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/shared/lib/cn';
-import { useAuthStore } from '@/features/auth/stores/authStore';
+import { useAuthStore } from '@features/auth/stores/authStore';
 
 export const LoginButton = () => {
   const { isLoggedIn, login, logout } = useAuthStore();
