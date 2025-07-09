@@ -70,7 +70,14 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
     useEffect(() => {
       const handleUp = () => setIsDragging(false);
       document.addEventListener('mouseup', handleUp);
-      return () => document.removeEventListener('mouseup', handleUp);
+      document.addEventListener('touchend', handleUp);
+      document.addEventListener('touchcancel', handleUp);
+
+      return () => {
+        document.removeEventListener('mouseup', handleUp);
+        document.removeEventListener('touchend', handleUp);
+        document.removeEventListener('touchcancel', handleUp);
+      };
     }, []);
 
     return (
@@ -115,8 +122,10 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
             onChange={handleChange}
             onMouseDown={() => setIsDragging(true)}
             onMouseUp={() => setIsDragging(false)}
+            onTouchStart={() => setIsDragging(true)}
+            onTouchEnd={() => setIsDragging(false)}
             disabled={disabled}
-            className="absolute w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-20"
+            className="absolute w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-20 touch-none"
             {...props}
           />
 
