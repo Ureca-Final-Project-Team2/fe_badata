@@ -18,7 +18,7 @@ export function BaseLayout({ children, header, className }: BaseLayoutProps) {
         )}
 
         {/* 스크롤 영역 (main content) */}
-        <main className={cn('pt-[70px] pb-[84px] h-full overflow-y-auto px-[24px]', className)}>
+        <main className={cn('pt-[70px] pb-[70px] h-full overflow-y-auto px-[24px]', className)}>
           {children}
         </main>
 
