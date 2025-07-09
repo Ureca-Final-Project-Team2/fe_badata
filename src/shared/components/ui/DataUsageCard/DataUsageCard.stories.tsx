@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { DataUsageCard } from '@ui/DataUsageCard/DataUsageCard';
+import { DataUsageCard } from '@ui/DataUsageCard';
 
 const meta: Meta<typeof DataUsageCard> = {
   title: 'Components/DataUsageCard',
