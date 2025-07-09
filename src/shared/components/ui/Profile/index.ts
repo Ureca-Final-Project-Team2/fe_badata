@@ -1,1 +1,1 @@
-export * from '@ui/Profile';
+export * from './Profile';
