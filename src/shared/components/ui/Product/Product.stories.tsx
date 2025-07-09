@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Product, ProductProps } from './Product';
+import { Product, ProductProps } from '@ui/Product';
 
 const meta: Meta<typeof Product> = {
   title: 'Components/Product',
