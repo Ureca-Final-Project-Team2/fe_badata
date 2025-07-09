@@ -1,1 +1,1 @@
-export * from '@ui/FloatingActionButton';
+export * from './FloatingActionButton';

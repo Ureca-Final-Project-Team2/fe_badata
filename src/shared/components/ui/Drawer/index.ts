@@ -1,1 +1,1 @@
-export * from '@ui/Drawer';
+export * from './Drawer';
