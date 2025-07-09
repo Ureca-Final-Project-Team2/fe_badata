@@ -18,7 +18,7 @@ export const BottomNav = () => {
   const [sosActive, setSosActive] = useState(false);
 
   return (
-    <nav className="absolute bottom-0 inset-x-0 h-[70px] bg-white border-t border-gray-200 flex justify-around items-center z-20">
+    <nav className="bottom-0 inset-x-0 h-[70px] bg-white border-t border-gray-200 flex justify-around items-center z-20">
       {navItems.slice(0, 2).map(({ label, icon: Icon }, idx) => (
         <NavItem
           key={label}
