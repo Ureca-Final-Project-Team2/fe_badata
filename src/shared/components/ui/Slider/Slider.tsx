@@ -93,10 +93,9 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
           {/* Tooltip above thumb */}
           {showTooltip && (
             <div
-              className="absolute -top-12 bg-[var(--gray-light)] border border-[var(--gray)] rounded-lg px-3 py-2 shadow-sm whitespace-nowrap z-10"
+              className="absolute -top-12 bg-[var(--gray-light)] border border-[var(--gray)] rounded-lg px-3 py-2 shadow-sm whitespace-nowrap z-10 -translate-x-1/2"
               style={{
                 left: `calc(${percentage}% - 24px)`,
-                transform: 'translateX(-50%)',
               }}
             >
               <div className="text-sm text-[var(--gray-mid)] text-center font-medium">
@@ -130,14 +129,12 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
 
           <div
             className={cn(
-              'absolute bg-white rounded-full shadow-lg transition-all duration-200 pointer-events-none border-2 border-white w-5 h-5',
+              'absolute bg-white rounded-full transition-all duration-200 pointer-events-none border-2 border-white w-5 h-5 top-1/2 -translate-y-1/2',
               !disabled && (isDragging ? 'shadow-xl scale-110' : 'shadow-md'),
               disabled && 'bg-gray-400 border-gray-400',
             )}
             style={{
               left: `calc(${percentage}% - 10px)`,
-              top: '50%',
-              transform: 'translateY(-50%)',
               zIndex: 10,
             }}
           />
