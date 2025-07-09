@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Profile } from '@ui/Profile/Profile';
 
@@ -80,8 +80,7 @@ export const CompactWithFollowing: Story = {
 
 export const InteractiveFollow: Story = {
   render: () => {
-    const [isFollowing, setIsFollowing] = React.useState(false);
-
+    const [isFollowing, setIsFollowing] = useState(false);
     return (
       <Profile
         size="sm"
