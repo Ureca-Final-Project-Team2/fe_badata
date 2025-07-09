@@ -1,4 +1,4 @@
-import { FaGift, FaList, FaPen, FaPlus } from 'react-icons/fa';
+import { Gift, List, Pen, Plus } from 'lucide-react';
 import { FloatingActionButton } from '@ui/FloatingActionButton/FloatingActionButton';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -19,18 +19,18 @@ export const ExpandMode: Story = {
     mode: 'expand',
     triggerAction: {
       label: '글쓰기',
-      icon: <FaPlus />,
+      icon: <Plus />,
       onClick: () => {},
     },
     actions: [
       {
         label: '데이터',
-        icon: <FaGift />,
+        icon: <Gift />,
         onClick: () => alert('데이터 탭으로 이동'),
       },
       {
         label: '쿠폰',
-        icon: <FaPen />,
+        icon: <List />,
         onClick: () => alert('쿠폰 탭으로 이동'),
       },
     ],
@@ -42,7 +42,7 @@ export const SingleMode: Story = {
     mode: 'single',
     triggerAction: {
       label: '목록보기',
-      icon: <FaList />,
+      icon: <Pen />,
       onClick: () => alert('목록으로 이동'),
     },
   },

@@ -14,14 +14,14 @@ export function Drawer({ children, onClose, variant = 'dark' }: DrawerProps) {
     <div
       className={cn(
         'fixed inset-0 z-50 flex items-end justify-center',
-        isLight ? 'bg-black/20' : 'bg-black/70 backdrop-blur-sm',
+        isLight ? 'bg-[var(--black)]/20' : 'bg-[var(--black)]/50 backdrop-blur-sm',
       )}
       onClick={onClose}
     >
       <div
         className={cn(
           'w-full max-w-md rounded-t-[20px] p-4',
-          isLight ? 'bg-white text-black' : 'bg-[var(--gray-dark)] text-white',
+          isLight ? 'bg-white text-[var(--black)]]' : 'bg-[var(--gray-dark)] text-white',
         )}
         onClick={(e) => e.stopPropagation()}
       >

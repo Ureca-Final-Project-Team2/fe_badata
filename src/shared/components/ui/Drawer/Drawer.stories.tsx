@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaEdit, FaTrash, FaFlag } from 'react-icons/fa';
+import { Flag, Pencil, Trash2 } from 'lucide-react';
 import { Drawer } from '@ui/Drawer/Drawer';
 import { DrawerButton } from '@ui/Drawer/DrawerButton';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -21,7 +21,7 @@ export const DarkMode_OneOption: Story = {
         {open && (
           <Drawer onClose={() => setOpen(false)} variant="dark">
             <div className="overflow-hidden">
-              <DrawerButton icon={<FaFlag />} variant="point" onClick={() => alert('신고')}>
+              <DrawerButton icon={<Flag />} variant="point" onClick={() => alert('신고')}>
                 신고하기
               </DrawerButton>
             </div>
@@ -44,11 +44,11 @@ export const DarkMode_TwoOptions: Story = {
         {open && (
           <Drawer onClose={() => setOpen(false)} variant="dark">
             <div className="overflow-hidden">
-              <DrawerButton icon={<FaEdit />} onClick={() => alert('수정')} theme="dark">
+              <DrawerButton icon={<Pencil />} onClick={() => alert('수정')} theme="dark">
                 게시글 수정
               </DrawerButton>
               <DrawerButton
-                icon={<FaTrash />}
+                icon={<Trash2 />}
                 variant="point"
                 onClick={() => alert('삭제')}
                 theme="dark"
@@ -76,7 +76,7 @@ export const LightMode_OneOption: Story = {
           <Drawer onClose={() => setOpen(false)} variant="light">
             <div className="overflow-hidden">
               <DrawerButton
-                icon={<FaFlag />}
+                icon={<Flag />}
                 variant="point"
                 onClick={() => alert('신고')}
                 theme="light"
@@ -103,11 +103,11 @@ export const LightMode_TwoOptions: Story = {
         {open && (
           <Drawer onClose={() => setOpen(false)} variant="light">
             <div className="overflow-hidden">
-              <DrawerButton icon={<FaEdit />} onClick={() => alert('수정')} theme="light">
+              <DrawerButton icon={<Pencil />} onClick={() => alert('수정')} theme="light">
                 게시글 수정
               </DrawerButton>
               <DrawerButton
-                icon={<FaTrash />}
+                icon={<Trash2 />}
                 variant="point"
                 onClick={() => alert('삭제')}
                 theme="light"

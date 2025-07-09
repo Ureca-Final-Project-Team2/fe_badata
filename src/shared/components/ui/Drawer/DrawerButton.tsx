@@ -22,16 +22,18 @@ export function DrawerButton({
     <button
       onClick={onClick}
       className={cn(
-        'w-full h-[56px] px-4 flex items-center justify-start gap-3 text-[16px] font-medium',
-        isLight ? 'bg-[var(--gray-light)] text-black' : 'bg-[var(--gray-mid)] text-white',
+        'relative w-full h-[56px] px-4 flex items-center justify-center gap-3 text-[16px] font-medium',
+        isLight ? 'bg-[var(--gray-light)] text-[var(--black)]' : 'bg-[var(--gray-mid)] text-white',
         variant === 'default' && 'rounded-none first:rounded-t-[12px] last:rounded-b-[12px]',
         variant === 'point' &&
           'text-[var(--point-1)] rounded-none first:rounded-t-[12px] last:rounded-b-[12px]',
         variant === 'close' && 'mt-3 rounded-[12px]',
       )}
     >
-      {icon && <span className="text-[20px]">{icon}</span>}
-      <span>{children}</span>
+      {icon && (
+        <span className="absolute left-4 text-[20px] flex items-center justify-center">{icon}</span>
+      )}
+      <span className="text-center">{children}</span>
     </button>
   );
 }
