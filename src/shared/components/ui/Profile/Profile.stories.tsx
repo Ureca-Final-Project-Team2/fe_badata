@@ -18,14 +18,12 @@ type Story = StoryObj<typeof Profile>;
 export const Default: Story = {
   args: {
     size: 'md',
-    name: '사용자1',
   },
 };
 
 export const DefaultWithAvatar: Story = {
   args: {
     size: 'md',
-    name: '사용자1',
     avatar: AVATAR_URL,
   },
 };
@@ -33,7 +31,6 @@ export const DefaultWithAvatar: Story = {
 export const DefaultWithClose: Story = {
   args: {
     size: 'md',
-    name: '사용자1',
     avatar: AVATAR_URL,
     showCloseButton: true,
     onClose: () => console.log('Close clicked'),
@@ -119,8 +116,8 @@ export const AllVariants: Story = {
       <div>
         <h3 className="text-lg font-semibold mb-2">Medium Size (기존 default, 380*70)</h3>
         <div className="space-y-2">
-          <Profile size="md" name="사용자1" avatar={AVATAR_URL} />
-          <Profile size="md" name="사용자1" avatar={AVATAR_URL} showCloseButton />
+          <Profile size="md" avatar={AVATAR_URL} name="사용자1" />
+          <Profile size="md" avatar={AVATAR_URL} name="사용자1" showCloseButton />
         </div>
       </div>
 
