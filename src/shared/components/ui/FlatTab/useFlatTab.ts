@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TabItem } from '@ui/FlatTab/types';
 
 export const useFlatTab = (
@@ -7,13 +7,13 @@ export const useFlatTab = (
   defaultValue?: string,
   onValueChange?: (value: string) => void,
 ) => {
-  const [internalValue, setInternalValue] = React.useState(
+  const [internalValue, setInternalValue] = useState(
     controlledValue ?? defaultValue ?? items[0]?.id ?? '',
   );
 
   const currentValue = controlledValue ?? internalValue;
 
-  const handleValueChange = React.useCallback(
+  const handleValueChange = useCallback(
     (newValue: string) => {
       const item = items.find((item) => item.id === newValue);
       if (item?.disabled) return;
@@ -27,7 +27,7 @@ export const useFlatTab = (
     [controlledValue, onValueChange, items],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (controlledValue !== undefined) {
       setInternalValue(controlledValue);
     }
