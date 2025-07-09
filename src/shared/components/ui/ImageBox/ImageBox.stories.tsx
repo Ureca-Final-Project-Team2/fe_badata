@@ -1,5 +1,5 @@
-import { ImageBox } from '@ui/ImageBox';
 import type { Meta, StoryObj } from '@storybook/react';
+import { ImageBox } from '@ui/ImageBox';
 
 const meta: Meta<typeof ImageBox> = {
   title: 'UI/ImageBox',

@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React, { forwardRef } from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@lib/cn';
+import type { HTMLAttributes } from 'react';
 
 const profileVariants = cva('inline-flex items-center transition-colors', {
   variants: {
@@ -43,21 +44,65 @@ const followButtonVariants = cva(
   },
 );
 
-export interface ProfileProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof profileVariants> {
+type Size = VariantProps<typeof profileVariants>['size'];
+
+type ProfileProps = HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof profileVariants> & {
+    name: string;
+    avatar?: string;
+    showCloseButton?: boolean;
+    onClose?: () => void;
+    subtitle?: string;
+    showFollowButton?: boolean;
+    isFollowing?: boolean;
+    onFollowClick?: () => void;
+  };
+
+type AvatarProps = {
   name: string;
   avatar?: string;
-  showCloseButton?: boolean;
-  onClose?: () => void;
+  size?: Size;
+};
 
-  subtitle?: string;
-  showFollowButton?: boolean;
-  isFollowing?: boolean;
-  onFollowClick?: () => void;
+function Avatar({ name, avatar, size }: AvatarProps) {
+  return avatar ? (
+    <img src={avatar} alt={`${name} avatar`} className={avatarVariants({ size })} />
+  ) : (
+    <div className={cn(avatarVariants({ size }), 'flex items-center justify-center')}>
+      <span className="text-[var(--gray-dark)] font-semibold text-xl">
+        {name.charAt(0).toUpperCase()}
+      </span>
+    </div>
+  );
 }
 
-export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
+function FollowButton({ isFollowing, onClick }: { isFollowing: boolean; onClick?: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={followButtonVariants({
+        followState: isFollowing ? 'following' : 'follow',
+      })}
+      type="button"
+    >
+      {isFollowing ? '팔로잉' : '팔로우'}
+    </button>
+  );
+}
+
+function CloseButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="p-1 hover:bg-[var(--gray-light)] rounded-full transition-colors flex-shrink-0 w-6 h-6 flex items-center justify-center"
+      type="button"
+    >
+      <span className="text-[var(--gray-mid)] text-lg leading-none">×</span>
+    </button>
+  );
+}
+
+export const Profile = forwardRef<HTMLDivElement, ProfileProps>(
   (
     {
       className,
@@ -76,18 +121,8 @@ export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
   ) => {
     return (
       <div className={cn(profileVariants({ size }), className)} ref={ref} {...props}>
-        {/* Avatar */}
-        {avatar ? (
-          <img src={avatar} alt={`${name} avatar`} className={avatarVariants({ size })} />
-        ) : (
-          <div className={cn(avatarVariants({ size }), 'flex items-center justify-center')}>
-            <span className="text-[var(--gray-dark)] font-semibold text-xl">
-              {name.charAt(0).toUpperCase()}
-            </span>
-          </div>
-        )}
+        <Avatar name={name} avatar={avatar} size={size} />
 
-        {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-[20px] text-black truncate">{name}</div>
           {size === 'sm' && subtitle && (
@@ -97,29 +132,11 @@ export const Profile = React.forwardRef<HTMLDivElement, ProfileProps>(
           )}
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
           {showFollowButton && size === 'sm' && (
-            <button
-              onClick={onFollowClick}
-              className={followButtonVariants({
-                followState: isFollowing ? 'following' : 'follow',
-              })}
-              type="button"
-            >
-              {isFollowing ? '팔로잉' : '팔로우'}
-            </button>
+            <FollowButton isFollowing={isFollowing} onClick={onFollowClick} />
           )}
-
-          {showCloseButton && (
-            <button
-              onClick={onClose}
-              className="p-1 hover:bg-[var(--gray-light)] rounded-full transition-colors flex-shrink-0 w-6 h-6 flex items-center justify-center"
-              type="button"
-            >
-              <span className="text-[var(--gray-mid)] text-lg leading-none">×</span>
-            </button>
-          )}
+          {showCloseButton && <CloseButton onClick={onClose} />}
         </div>
       </div>
     );

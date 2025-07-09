@@ -1,8 +1,16 @@
-import * as React from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  forwardRef,
+  useRef,
+  type ChangeEvent,
+} from 'react';
 import { cn } from '@lib/cn';
+import type { InputHTMLAttributes } from 'react';
 
 export interface SliderProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
   min?: number;
   max?: number;
   step?: number;
@@ -13,7 +21,17 @@ export interface SliderProps
   onValueChange?: (value: number) => void;
 }
 
-export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
+function formatExactPrice(price: number) {
+  return price === 0 ? '0원' : `${price.toLocaleString()}원`;
+}
+
+function formatMinMaxLabels(min: number, max: number) {
+  const minLabel = min === 0 ? '0원' : `${Math.floor(min / 10000)}만원`;
+  const maxLabel = max === 50000 ? '5만원대' : `${Math.floor(max / 10000)}만원대`;
+  return { minLabel, maxLabel };
+}
+
+export const Slider = forwardRef<HTMLInputElement, SliderProps>(
   (
     {
       className,
@@ -30,52 +48,37 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
     },
     ref,
   ) => {
-    const [internalValue, setInternalValue] = React.useState(value ?? defaultValue);
-    const [isDragging, setIsDragging] = React.useState(false);
-
+    const [internalValue, setInternalValue] = useState(value ?? defaultValue);
+    const [isDragging, setIsDragging] = useState(false);
     const currentValue = value ?? internalValue;
     const percentage = ((currentValue - min) / (max - min)) * 100;
+    const { minLabel, maxLabel } = formatMinMaxLabels(min, max);
 
-    const formatExactPrice = (price: number) => {
-      if (price === 0) return '0원';
-      return `${price.toLocaleString()}원`;
-    };
-
-    const formatMinMaxLabels = () => {
-      const minLabel = min === 0 ? '0원' : `${Math.floor(min / 10000)}만원`;
-      const maxLabel = max === 50000 ? '5만원대' : `${Math.floor(max / 10000)}만원대`;
-      return { minLabel, maxLabel };
-    };
-
-    const handleChange = React.useCallback(
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = parseFloat(event.target.value);
-
-        if (value === undefined) {
-          setInternalValue(newValue);
-        }
-
+    const handleChange = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        const newValue = parseFloat(e.target.value);
+        if (value === undefined) setInternalValue(newValue);
         onValueChange?.(newValue);
       },
       [value, onValueChange],
     );
 
-    const handleMouseDown = () => setIsDragging(true);
-    const handleMouseUp = () => setIsDragging(false);
-
-    React.useEffect(() => {
-      if (value !== undefined) {
-        setInternalValue(value);
-      }
+    useEffect(() => {
+      if (value !== undefined) setInternalValue(value);
     }, [value]);
 
-    React.useEffect(() => {
-      const handleGlobalMouseUp = () => setIsDragging(false);
-      document.addEventListener('mouseup', handleGlobalMouseUp);
-      return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
-    }, []);
+    useEffect(() => {
+      const handleUp = () => setIsDragging(false);
+      document.addEventListener('mouseup', handleUp);
+      document.addEventListener('touchend', handleUp);
+      document.addEventListener('touchcancel', handleUp);
 
-    const { minLabel, maxLabel } = formatMinMaxLabels();
+      return () => {
+        document.removeEventListener('mouseup', handleUp);
+        document.removeEventListener('touchend', handleUp);
+        document.removeEventListener('touchcancel', handleUp);
+      };
+    }, []);
 
     return (
       <div className={cn('relative flex flex-col', className)}>
@@ -90,19 +93,15 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
         )}
 
         <div className="w-[380px] h-[8px] flex items-center relative">
-          {/* Tooltip above thumb */}
           {showTooltip && (
             <div
-              className="absolute -top-12 bg-[var(--gray-light)] border border-[var(--gray)] rounded-lg px-3 py-2 shadow-sm whitespace-nowrap z-10"
-              style={{
-                left: `calc(${percentage}% - 24px)`,
-                transform: 'translateX(-50%)',
-              }}
+              className="absolute -top-12 bg-[var(--gray-light)] border border-[var(--gray)] rounded-lg px-3 py-2 shadow-sm whitespace-nowrap z-10 -translate-x-1/2"
+              style={{ left: `calc(${percentage}% - 24px)` }}
             >
               <div className="text-sm text-[var(--gray-mid)] text-center font-medium">
                 {formatExactPrice(currentValue)}
               </div>
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[var(--gray)]"></div>
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[var(--gray)]" />
             </div>
           )}
 
@@ -121,23 +120,23 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
             step={step}
             value={currentValue}
             onChange={handleChange}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
+            onMouseDown={() => setIsDragging(true)}
+            onMouseUp={() => setIsDragging(false)}
+            onTouchStart={() => setIsDragging(true)}
+            onTouchEnd={() => setIsDragging(false)}
             disabled={disabled}
-            className="absolute w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-20"
+            className="absolute w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-20 touch-none"
             {...props}
           />
 
           <div
             className={cn(
-              'absolute bg-white rounded-full shadow-lg transition-all duration-200 pointer-events-none border-2 border-white w-5 h-5',
+              'absolute bg-white rounded-full transition-all duration-200 pointer-events-none border-2 border-white w-5 h-5 top-1/2 -translate-y-1/2',
               !disabled && (isDragging ? 'shadow-xl scale-110' : 'shadow-md'),
               disabled && 'bg-gray-400 border-gray-400',
             )}
             style={{
               left: `calc(${percentage}% - 10px)`,
-              top: '50%',
-              transform: 'translateY(-50%)',
               zIndex: 10,
             }}
           />

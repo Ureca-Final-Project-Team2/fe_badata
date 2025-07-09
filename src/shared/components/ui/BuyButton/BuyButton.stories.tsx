@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { BuyButton } from '@ui/BuyButton/BuyButton';
+import { BuyButton } from '@ui/BuyButton';
 
 const meta: Meta<typeof BuyButton> = {
   title: 'Components/BuyButton',
