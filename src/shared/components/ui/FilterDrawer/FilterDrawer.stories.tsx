@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { FilterDrawer } from '@ui/FilterDrawer/FilterDrawer';
-import { FilterDrawerButton } from '@ui/FilterDrawer/FilterDrawerButton';
+import { FilterDrawer, FilterDrawerButton } from '@ui/FilterDrawer';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof FilterDrawer> = {

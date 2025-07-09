@@ -1,5 +1,5 @@
 import { Gift, List, Pen, Plus } from 'lucide-react';
-import { FloatingActionButton } from '@ui/FloatingActionButton/FloatingActionButton';
+import { FloatingActionButton } from '@ui/FloatingActionButton';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof FloatingActionButton> = {

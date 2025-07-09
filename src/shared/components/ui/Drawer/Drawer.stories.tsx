@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Flag, Pencil, Trash2 } from 'lucide-react';
-import { Drawer } from '@ui/Drawer/Drawer';
-import { DrawerButton } from '@ui/Drawer/DrawerButton';
+import { Drawer, DrawerButton } from '@ui/Drawer';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Drawer> = {
