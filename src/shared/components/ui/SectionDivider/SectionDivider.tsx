@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React, { forwardRef } from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@lib/cn';
+import type { HTMLAttributes, ReactNode } from 'react';
 
 const sectionDividerVariants = cva('border-t border-solid', {
   variants: {
@@ -26,30 +27,36 @@ const sectionDividerVariants = cva('border-t border-solid', {
   },
 });
 
-export interface SectionDividerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'>,
-    VariantProps<typeof sectionDividerVariants> {
-  children?: React.ReactNode;
+export type SectionDividerProps = Omit<HTMLAttributes<HTMLDivElement>, 'color'> &
+  VariantProps<typeof sectionDividerVariants> & {
+    children?: ReactNode;
+  };
+
+function DividerWithText({
+  size,
+  color,
+  thickness,
+  children,
+}: Pick<SectionDividerProps, 'size' | 'color' | 'thickness' | 'children'>) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className={cn(sectionDividerVariants({ size, color, thickness }), 'flex-1')} />
+      <div className="text-gray-600 font-medium text-sm whitespace-nowrap">{children}</div>
+      <div className={cn(sectionDividerVariants({ size, color, thickness }), 'flex-1')} />
+    </div>
+  );
 }
 
-export const SectionDivider = React.forwardRef<HTMLDivElement, SectionDividerProps>(
+export const SectionDivider = forwardRef<HTMLDivElement, SectionDividerProps>(
   ({ className, size, color, thickness, children, ...props }, ref) => {
-    if (children) {
-      return (
-        <div className={cn('flex items-center gap-4', className)} ref={ref} {...props}>
-          <div className={cn(sectionDividerVariants({ size, color, thickness }), 'flex-1')} />
-          <div className="text-gray-600 font-medium text-sm whitespace-nowrap">{children}</div>
-          <div className={cn(sectionDividerVariants({ size, color, thickness }), 'flex-1')} />
-        </div>
-      );
-    }
-
     return (
-      <div
-        className={cn(sectionDividerVariants({ size, color, thickness }), className)}
-        ref={ref}
-        {...props}
-      />
+      <div className={className} ref={ref} {...props}>
+        {children ? (
+          <DividerWithText size={size} color={color} thickness={thickness} children={children} />
+        ) : (
+          <div className={cn(sectionDividerVariants({ size, color, thickness }))} />
+        )}
+      </div>
     );
   },
 );

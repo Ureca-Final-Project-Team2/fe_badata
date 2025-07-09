@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Slider } from '@ui/Slider/Slider';
 
@@ -16,6 +16,7 @@ const meta: Meta<typeof Slider> = {
 };
 
 export default meta;
+
 type Story = StoryObj<typeof Slider>;
 
 export const Default: Story = {
@@ -49,7 +50,7 @@ export const Disabled: Story = {
 
 export const Interactive: Story = {
   render: () => {
-    const [priceValue, setPriceValue] = React.useState(25500);
+    const [priceValue, setPriceValue] = useState(25500);
 
     const formatPrice = (price: number) => {
       if (price === 0) return '0원';
@@ -69,7 +70,7 @@ export const Interactive: Story = {
           value={priceValue}
           onValueChange={setPriceValue}
           label="가격"
-          showTooltip={true}
+          showTooltip
           step={250}
         />
 
@@ -90,17 +91,17 @@ export const UseCases: Story = {
     <div className="space-y-8">
       <div className="bg-white border border-gray-200 p-6 rounded-lg">
         <h3 className="text-gray-900 font-semibold mb-4">🛍️ 쇼핑몰 가격 필터</h3>
-        <Slider defaultValue={30000} label="최대 가격" showTooltip={true} />
+        <Slider defaultValue={30000} label="최대 가격" showTooltip />
       </div>
 
       <div className="bg-white border border-gray-200 p-6 rounded-lg">
         <h3 className="text-gray-900 font-semibold mb-4">💰 예산 설정</h3>
-        <Slider defaultValue={20000} label="예산 한도" showTooltip={true} />
+        <Slider defaultValue={20000} label="예산 한도" showTooltip />
       </div>
 
       <div className="bg-white border border-gray-200 p-6 rounded-lg">
         <h3 className="text-gray-900 font-semibold mb-4">🎯 목표 가격</h3>
-        <Slider defaultValue={15000} label="희망 가격" showTooltip={true} />
+        <Slider defaultValue={15000} label="희망 가격" showTooltip />
       </div>
     </div>
   ),
