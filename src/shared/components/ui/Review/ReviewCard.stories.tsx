@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { ReviewCard, ReviewCardProps } from '@ui/Review/ReviewCard';
+import { ReviewCard } from '@ui/Review/ReviewCard';
+import type { ReviewCardProps } from '@ui/Review/ReviewCard';
 
 const meta: Meta<typeof ReviewCard> = {
   title: 'Components/ReviewCard',
@@ -13,6 +14,7 @@ const meta: Meta<typeof ReviewCard> = {
 };
 
 export default meta;
+
 type Story = StoryObj<typeof ReviewCard>;
 
 export const Default: Story = {
@@ -83,7 +85,6 @@ export const ExpensiveItem: Story = {
   },
 };
 
-// 카드 비교뷰
 export const AllSizes: Story = {
   render: () => (
     <div className="space-y-4 bg-gray-50 p-6">
@@ -103,7 +104,6 @@ export const AllSizes: Story = {
   ),
 };
 
-// 레이아웃
 export const GridLayout: Story = {
   render: () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
