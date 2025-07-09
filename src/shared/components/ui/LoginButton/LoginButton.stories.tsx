@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { LoginButton } from '@ui/LoginButton';
-import { useEffect } from 'react';
 import { useAuthStore } from '@features/auth/stores/authStore';
+import { useEffect } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof LoginButton> = {
   title: 'Components/LoginButton',
