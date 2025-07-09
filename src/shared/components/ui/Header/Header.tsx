@@ -1,6 +1,6 @@
 'use client';
 
-import { LoginButton } from '@/shared/components/ui/LoginButton/LoginButton';
+import { LoginButton } from '@ui/LoginButton/LoginButton';
 import Image from 'next/image';
 
 export const Header = () => {

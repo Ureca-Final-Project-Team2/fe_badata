@@ -1,7 +1,5 @@
 'use client';
 
-import { cn } from '@/shared/lib/cn';
-
 const navItems = [
   { label: '홈', iconSrc: '/Home.svg' },
   { label: '거래', iconSrc: '/File.svg' },
