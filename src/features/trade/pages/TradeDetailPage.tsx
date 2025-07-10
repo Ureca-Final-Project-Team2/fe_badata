@@ -8,7 +8,7 @@ interface Props {
   tradeId: string;
 }
 
-export const TradeDetailContent = ({ tradeId }: Props) => {
+export const TradeDetailPage = ({ tradeId }: Props) => {
   return (
     <>
       <TradeDetailProductSection />
