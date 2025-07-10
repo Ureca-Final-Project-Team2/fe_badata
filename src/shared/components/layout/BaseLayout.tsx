@@ -28,27 +28,17 @@ export function BaseLayout({
       <div className="relative w-full max-w-[428px] min-h-screen overflow-hidden">
         {/* 고정 헤더 */}
         {header && (
-          <div className="fixed w-full max-w-[428px] mx-auto top-0 left-1/2 transform -translate-x-1/2 z-30">
-            {header}
-          </div>
+          <div className="fixed max-w-[428px] mx-auto top-0 left-0 right-0 z-10">{header}</div>
         )}
 
         {/* 메인 스크롤 영역 */}
         <main
-          className={cn(
-            'h-full overflow-y-auto',
-            header ? 'pt-[70px]' : 'pt-0',
-            showBottomNav ? 'pb-[70px]' : 'pb-0',
-            'px-[24px]',
-            className,
-          )}
-        >
-          {children}
-        </main>
+          className={cn('pt-[70px] pb-[70px] h-full overflow-y-auto px-[24px]', className)}
+        ></main>
 
         {/* 고정 바텀 네비게이션 */}
         {showBottomNav && (
-          <div className="fixed w-full max-w-[428px] mx-auto bottom-0 left-1/2 transform -translate-x-1/2 z-30">
+          <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-10">
             <BottomNav sosActive={isDrawerOpen} onSosClick={openDrawer} />
           </div>
         )}
