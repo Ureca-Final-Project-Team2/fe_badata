@@ -159,7 +159,6 @@ body {
   html,
   body {
     height: 100%;
-    overflow: hidden;
     @apply bg-background text-foreground;
   }
 }
