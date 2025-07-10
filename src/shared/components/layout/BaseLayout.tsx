@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { cn } from '@lib/cn';
 import { BottomNav } from '@ui/BottomNav';
 import { SosDrawer } from '@/features/sos/components/SosDrawer';
+import { useSosDrawer } from '@/features/sos/hooks/useSosDrower';
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ interface BaseLayoutProps {
 }
 
 export function BaseLayout({ children, header, className }: BaseLayoutProps) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { isDrawerOpen, openDrawer, closeDrawer } = useSosDrawer();
 
   return (
     <div className="w-full flex justify-center bg-white">
@@ -29,8 +30,8 @@ export function BaseLayout({ children, header, className }: BaseLayoutProps) {
 
         {/* 고정 바텀 네비게이션 */}
         <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-10">
-          <BottomNav sosActive={isDrawerOpen} onSosClick={() => setIsDrawerOpen(true)} />
-          <SosDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+          <BottomNav sosActive={isDrawerOpen} onSosClick={openDrawer} />
+          <SosDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
         </div>
       </div>
     </div>
