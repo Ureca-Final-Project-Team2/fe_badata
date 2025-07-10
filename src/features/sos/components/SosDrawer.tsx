@@ -1,6 +1,5 @@
 import { FilterDrawer } from '@/shared/components/ui/FilterDrawer';
 import { DataUsageCard } from '@ui/DataUsageCard';
-import { X } from 'lucide-react';
 
 interface SosDrawerProps {
   isOpen: boolean;
@@ -9,7 +8,7 @@ interface SosDrawerProps {
 
 export function SosDrawer({ isOpen, onClose }: SosDrawerProps) {
   return (
-    <FilterDrawer open={isOpen} onClose={onClose} variant="light">
+    <FilterDrawer open={isOpen} onClose={onClose}>
       <div className="w-full flex flex-col items-center px-4 pt-6 pb-28">
         <button className="w-full max-w-md rounded-xl bg-pink-100 text-pink-500 text-lg py-3 flex items-center justify-center gap-2">
           <span className="text-xl">🚨</span>

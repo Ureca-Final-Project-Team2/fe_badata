@@ -31,27 +31,3 @@ export function FilterDrawer({ open, children, onClose, className }: DrawerProps
     </div>
   );
 }
-
-interface FilterDrawerButtonProps {
-  children: React.ReactNode;
-  selected?: boolean;
-  onClick?: () => void;
-}
-
-export function FilterDrawerButton({
-  children,
-  selected = false,
-  onClick,
-}: FilterDrawerButtonProps) {
-  return (
-    <button
-      className={cn(
-        'w-full text-center py-4 border-b border-gray-200 text-sm font-medium',
-        selected ? 'text-main-1 font-bold' : 'text-black',
-      )}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-}
