@@ -32,9 +32,9 @@ export function BaseLayout({
         )}
 
         {/* 메인 스크롤 영역 */}
-        <main
-          className={cn('pt-[70px] pb-[70px] h-full overflow-y-auto px-[24px]', className)}
-        ></main>
+        <main className={cn('pt-[70px] pb-[70px] h-full overflow-y-auto px-[24px]', className)}>
+          {children}
+        </main>
 
         {/* 고정 바텀 네비게이션 */}
         {showBottomNav && (
