@@ -1,32 +1,87 @@
 import { useState } from 'react';
 import { Flag, Pencil, Trash2 } from 'lucide-react';
-import { Drawer, DrawerButton } from '@ui/Drawer';
+import { Drawer, DrawerButton, FilterDrawerButton } from '@ui/Drawer';
+import { DataUsageCard } from '@ui/DataUsageCard';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Drawer> = {
   title: 'Shared/Drawer',
   component: Drawer,
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof Drawer>;
 
-export const DarkMode_OneOption: Story = {
+// 신고하기, 게시물 삭제하기 등 다크 drawer
+export const DefaultDark: Story = {
   render: () => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     return (
       <>
-        <button onClick={() => setOpen(true)}>신고 Drawer 열기 (다크모드)</button>
+        <button onClick={() => setOpen(true)} className="px-4 py-2 bg-blue-800 text-white rounded">
+          다크 Drawer 열기
+        </button>
+        <Drawer isOpen={open} onClose={() => setOpen(false)} variant="default">
+          <div className="flex flex-col">
+            <DrawerButton icon={<Flag />} variant="point" onClick={() => alert('신고')}>
+              신고하기
+            </DrawerButton>
+            <DrawerButton icon={<Pencil />} onClick={() => alert('수정')}>
+              게시글 수정
+            </DrawerButton>
+            <DrawerButton icon={<Trash2 />} variant="point" onClick={() => alert('삭제')}>
+              삭제
+            </DrawerButton>
+          </div>
+          <DrawerButton variant="close" onClick={() => setOpen(false)}>
+            닫기
+          </DrawerButton>
+        </Drawer>
+      </>
+    );
+  },
+};
+
+// 필터링 등 라이트 drawer
+export const FilterDrawerStory: Story = {
+  render: () => {
+    const [open, setOpen] = useState(false);
+    const [selected, setSelected] = useState<'recent' | 'high' | 'low'>('recent');
+
+    return (
+      <>
+        <button onClick={() => setOpen(true)} className="px-4 py-2 bg-blue-600 text-white rounded">
+          필터 Drawer 열기
+        </button>
+
         {open && (
-          <Drawer onClose={() => setOpen(false)} variant="dark">
-            <div className="overflow-hidden">
-              <DrawerButton icon={<Flag />} variant="point" onClick={() => alert('신고')}>
-                신고하기
+          <Drawer isOpen={open} onClose={() => setOpen(false)} variant="filter">
+            <div className="flex flex-col divide-y divide-[var(--gray-light)]">
+              <FilterDrawerButton
+                selected={selected === 'recent'}
+                onClick={() => setSelected('recent')}
+              >
+                최신순
+              </FilterDrawerButton>
+              <FilterDrawerButton
+                selected={selected === 'high'}
+                onClick={() => setSelected('high')}
+              >
+                평점 높은순
+              </FilterDrawerButton>
+              <FilterDrawerButton selected={selected === 'low'} onClick={() => setSelected('low')}>
+                평점 낮은순
+              </FilterDrawerButton>
+            </div>
+
+            <div className="pt-4">
+              <DrawerButton variant="close" onClick={() => setOpen(false)} theme="light">
+                닫기
               </DrawerButton>
             </div>
-            <DrawerButton variant="close" onClick={() => setOpen(false)} theme="dark">
-              닫기
-            </DrawerButton>
           </Drawer>
         )}
       </>
@@ -34,91 +89,39 @@ export const DarkMode_OneOption: Story = {
   },
 };
 
-export const DarkMode_TwoOptions: Story = {
+// SOS Drawer
+export const SosDrawerStory: Story = {
   render: () => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     return (
       <>
-        <button onClick={() => setOpen(true)}>수정/삭제 Drawer 열기 (다크모드)</button>
-        {open && (
-          <Drawer onClose={() => setOpen(false)} variant="dark">
-            <div className="overflow-hidden">
-              <DrawerButton icon={<Pencil />} onClick={() => alert('수정')} theme="dark">
-                게시글 수정
-              </DrawerButton>
-              <DrawerButton
-                icon={<Trash2 />}
-                variant="point"
-                onClick={() => alert('삭제')}
-                theme="dark"
-              >
-                삭제
-              </DrawerButton>
-            </div>
-            <DrawerButton variant="close" onClick={() => setOpen(false)} theme="dark">
-              닫기
-            </DrawerButton>
-          </Drawer>
-        )}
-      </>
-    );
-  },
-};
+        <button onClick={() => setOpen(true)} className="px-4 py-2 bg-pink-500 text-white rounded">
+          SOS Drawer 열기
+        </button>
+        <Drawer isOpen={open} onClose={() => setOpen(false)} variant="sos">
+          <div className="w-full flex flex-col items-center px-4 pt-6 pb-28">
+            <button className="w-full max-w-md rounded-xl bg-pink-100 text-pink-500 text-lg py-3 flex items-center justify-center gap-2 cursor-pointer">
+              <span className="text-xl">🚨</span>
+              SOS 요청하기
+            </button>
 
-export const LightMode_OneOption: Story = {
-  render: () => {
-    const [open, setOpen] = useState(true);
-    return (
-      <>
-        <button onClick={() => setOpen(true)}>신고 Drawer 열기 (라이트모드)</button>
-        {open && (
-          <Drawer onClose={() => setOpen(false)} variant="light">
-            <div className="overflow-hidden">
-              <DrawerButton
-                icon={<Flag />}
-                variant="point"
-                onClick={() => alert('신고')}
-                theme="light"
-              >
-                신고하기
-              </DrawerButton>
-            </div>
-            <DrawerButton variant="close" onClick={() => setOpen(false)} theme="light">
-              닫기
-            </DrawerButton>
-          </Drawer>
-        )}
-      </>
-    );
-  },
-};
+            <div className="w-full max-w-md mt-6">
+              <h2 className="text-base font-semibold text-black mb-2">나의 데이터 서랍</h2>
 
-export const LightMode_TwoOptions: Story = {
-  render: () => {
-    const [open, setOpen] = useState(true);
-    return (
-      <>
-        <button onClick={() => setOpen(true)}>수정/삭제 Drawer 열기 (라이트모드)</button>
-        {open && (
-          <Drawer onClose={() => setOpen(false)} variant="light">
-            <div className="overflow-hidden">
-              <DrawerButton icon={<Pencil />} onClick={() => alert('수정')} theme="light">
-                게시글 수정
-              </DrawerButton>
-              <DrawerButton
-                icon={<Trash2 />}
-                variant="point"
-                onClick={() => alert('삭제')}
-                theme="light"
-              >
-                삭제
-              </DrawerButton>
+              <DataUsageCard
+                phoneMasked="010-1**4-5**8"
+                planName="5G 청춘 요금제"
+                billMonth="5월 청구요금"
+                billStatus="납부 완료"
+                billAmount="150,340원"
+                remainingLabel="남은 데이터"
+                totalAmount="5GB"
+                totalValue={5}
+                remainingValue={2.5}
+              />
             </div>
-            <DrawerButton variant="close" onClick={() => setOpen(false)} theme="light">
-              닫기
-            </DrawerButton>
-          </Drawer>
-        )}
+          </div>
+        </Drawer>
       </>
     );
   },

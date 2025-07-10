@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { cn } from '@lib/cn';
 import { BottomNav } from '@ui/BottomNav';
 import { SosDrawer } from '@/features/sos/components/SosDrawer';
@@ -32,21 +32,24 @@ export function BaseLayout({
         )}
 
         {/* 메인 스크롤 영역 */}
-        <main
-          className={cn('pt-[70px] pb-[70px] h-full overflow-y-auto px-[24px]', className)}
-        ></main>
+        <main className={cn('pt-[70px] pb-[70px] h-full overflow-y-auto px-[24px]', className)}>
+          {children}
+        </main>
 
         {/* 고정 바텀 네비게이션 */}
         {showBottomNav && (
-          <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-10">
-            <BottomNav sosActive={isDrawerOpen} onSosClick={openDrawer} />
+          <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[100]">
+            <BottomNav
+              sosActive={isDrawerOpen}
+              onSosClick={isDrawerOpen ? closeDrawer : openDrawer}
+            />
           </div>
         )}
-
         {/* 전역 SOS Drawer */}
-        {showSos && <SosDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />}
-        {isDrawerOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-20" onClick={closeDrawer} />
+        {showSos && (
+          <div className="fixed bottom-0 left-0 right-0 z-40">
+            <SosDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
+          </div>
         )}
       </div>
     </div>
