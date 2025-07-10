@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ProductInfo } from './ProductInfo';
+import { ProductInfo } from '@ui/ProductInfo';
 
 const meta: Meta<typeof ProductInfo> = {
   title: 'Components/ProductInfo',
