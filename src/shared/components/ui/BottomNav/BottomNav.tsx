@@ -13,7 +13,33 @@ const navItems = [
 const MAIN_COLOR = 'var(--main-1)';
 const GRAY_COLOR = 'var(--gray-dark)';
 
-export const BottomNav = () => {
+interface BottomNavProps {
+  onSosClick?: () => void;
+}
+
+const NavItem = ({
+  label,
+  Icon,
+  active,
+  onClick,
+}: {
+  label: string;
+  Icon: any;
+  active: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    className="flex flex-col items-center justify-center gap-1 text-sm w-[60px]"
+    onClick={onClick}
+  >
+    <Icon size={20} color={active ? MAIN_COLOR : GRAY_COLOR} />
+    <span className="text-[12px] font-bold" style={{ color: active ? MAIN_COLOR : GRAY_COLOR }}>
+      {label}
+    </span>
+  </button>
+);
+
+export const BottomNav = ({ onSosClick }: BottomNavProps) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const [sosActive, setSosActive] = useState(false);
 
@@ -32,11 +58,17 @@ export const BottomNav = () => {
         />
       ))}
 
-      {/* 중앙 SOS 버튼 */}
       <div className="relative -mt-8 z-30">
         <button
           className={`w-[67px] h-[67px] rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex flex-col items-center justify-center transition-colors duration-150 ${sosActive ? 'bg-black' : 'bg-white'}`}
-          onClick={() => setSosActive((prev) => !prev)}
+          onClick={() => {
+            const next = !sosActive;
+            setSosActive(next);
+
+            if (next) {
+              onSosClick?.();
+            }
+          }}
         >
           {sosActive ? (
             <div className="flex flex-col items-center justify-center">
@@ -64,25 +96,3 @@ export const BottomNav = () => {
     </nav>
   );
 };
-
-const NavItem = ({
-  label,
-  Icon,
-  active,
-  onClick,
-}: {
-  label: string;
-  Icon: any;
-  active: boolean;
-  onClick: () => void;
-}) => (
-  <button
-    className="flex flex-col items-center justify-center gap-1 text-sm w-[60px]"
-    onClick={onClick}
-  >
-    <Icon size={20} color={active ? MAIN_COLOR : GRAY_COLOR} />
-    <span className={`text-[12px] font-bold`} style={{ color: active ? MAIN_COLOR : GRAY_COLOR }}>
-      {label}
-    </span>
-  </button>
-);

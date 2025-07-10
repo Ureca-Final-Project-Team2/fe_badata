@@ -1,11 +1,13 @@
 import React from 'react';
 
 interface DrawerProps {
+  open: boolean;
   children: React.ReactNode;
   onClose: () => void;
 }
 
-export function FilterDrawer({ children, onClose }: DrawerProps) {
+export function FilterDrawer({ open, children, onClose }: DrawerProps) {
+  if (!open) return null;
   return (
     <div
       className="fixed inset-0 z-50 bg-[var(--black)]/20 backdrop-blur-sm flex items-end justify-center"

@@ -9,8 +9,8 @@ interface SosDrawerProps {
 
 export function SosDrawer({ isOpen, onClose }: SosDrawerProps) {
   return (
-    <FilterDrawer onClose={onClose} variant="light">
-      <div className="w-full flex flex-col items-center px-4 pt-6 pb-[60px]">
+    <FilterDrawer open={isOpen} onClose={onClose} variant="light">
+      <div className="w-full flex flex-col items-center px-4 pt-6 pb-28">
         <button className="w-full max-w-md rounded-xl bg-pink-100 text-pink-500 text-lg py-3 flex items-center justify-center gap-2">
           <span className="text-xl">🚨</span>
           SOS 요청하기
@@ -32,15 +32,14 @@ export function SosDrawer({ isOpen, onClose }: SosDrawerProps) {
           />
         </div>
       </div>
-
       <button
         onClick={onClose}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-6
+    w-[67px] h-[67px] rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.25)]
+    flex flex-col items-center justify-center transition-colors duration-150 bg-black"
       >
-        <div className="w-[50px] h-[50px] rounded-full bg-black text-white flex items-center justify-center">
-          <X size={24} />
-        </div>
-        <span className="text-sm text-black mt-1">닫기</span>
+        <span className="text-white text-[32px] leading-none">×</span>
+        <span className="text-white text-[14px]">닫기</span>
       </button>
     </FilterDrawer>
   );
