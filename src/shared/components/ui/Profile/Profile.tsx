@@ -6,9 +6,9 @@ import type { HTMLAttributes } from 'react';
 const profileVariants = cva('inline-flex items-center transition-colors', {
   variants: {
     size: {
-      sm: 'w-[320px] h-[56px] px-4 gap-3',
-      md: 'w-[380px] h-[70px] px-4 gap-4',
-      lg: 'w-[440px] h-[80px] px-5 gap-5',
+      sm: 'w-[380px] h-[56px] gap-3',
+      md: 'w-[380px] h-[70px] gap-4',
+      lg: 'w-[440px] h-[80px] gap-5',
     },
   },
   defaultVariants: {
@@ -56,6 +56,7 @@ type ProfileProps = HTMLAttributes<HTMLDivElement> &
     showFollowButton?: boolean;
     isFollowing?: boolean;
     onFollowClick?: () => void;
+    avatarSize?: Size;
   };
 
 type AvatarProps = {
@@ -115,13 +116,14 @@ export const Profile = forwardRef<HTMLDivElement, ProfileProps>(
       showFollowButton = false,
       isFollowing = false,
       onFollowClick,
+      avatarSize,
       ...props
     },
     ref,
   ) => {
     return (
       <div className={cn(profileVariants({ size }), className)} ref={ref} {...props}>
-        <Avatar name={name} avatar={avatar} size={size} />
+        <Avatar name={name} avatar={avatar} size={avatarSize || size} />
 
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-[20px] text-black truncate">{name}</div>
@@ -133,9 +135,7 @@ export const Profile = forwardRef<HTMLDivElement, ProfileProps>(
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
-          {showFollowButton && size === 'sm' && (
-            <FollowButton isFollowing={isFollowing} onClick={onFollowClick} />
-          )}
+          {showFollowButton && <FollowButton isFollowing={isFollowing} onClick={onFollowClick} />}
           {showCloseButton && <CloseButton onClick={onClose} />}
         </div>
       </div>
