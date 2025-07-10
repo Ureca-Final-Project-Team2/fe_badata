@@ -1,16 +1,14 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useSosStore } from '@features/sos/stores/sosStores';
 
 export function useSosDrawer() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openDrawer = useCallback(() => setIsOpen(true), []);
-  const closeDrawer = useCallback(() => setIsOpen(false), []);
+  const { isDrawerOpen, openDrawer, closeDrawer, toggleDrawer } = useSosStore();
 
   return {
-    isDrawerOpen: isOpen,
+    isDrawerOpen,
     openDrawer,
     closeDrawer,
+    toggleDrawer,
   };
 }
