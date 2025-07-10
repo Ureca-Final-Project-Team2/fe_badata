@@ -126,9 +126,9 @@ export const Profile = forwardRef<HTMLDivElement, ProfileProps>(
         <Avatar name={name} avatar={avatar} size={avatarSize || size} />
 
         <div className="flex-1 min-w-0">
-          <div className="font-semibold text-[20px] text-black truncate">{name}</div>
+          <div className="font-semibold text-[18px] text-black truncate">{name}</div>
           {size === 'sm' && subtitle && (
-            <div className="font-light text-[12px] text-[var(--gray-dark)] truncate">
+            <div className="mt-2 font-light text-[12.8px] text-[var(--gray-dark)] truncate">
               {subtitle}
             </div>
           )}
