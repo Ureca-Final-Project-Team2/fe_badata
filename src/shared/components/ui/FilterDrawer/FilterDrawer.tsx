@@ -10,7 +10,7 @@ export function FilterDrawer({ open, children, onClose }: DrawerProps) {
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 bg-[var(--black)]/20 backdrop-blur-sm flex items-end justify-center"
+      className="fixed inset-0 z-100 bg-[var(--black)]/20 backdrop-blur-sm flex items-end justify-center"
       onClick={onClose}
     >
       <div
