@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 import React from 'react';
 
 type ImageBoxSize = 'sm' | 'md' | 'lg';
