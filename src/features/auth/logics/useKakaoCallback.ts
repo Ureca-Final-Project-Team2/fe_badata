@@ -26,7 +26,6 @@ export const useKakaoCallback = () => {
         localStorage.setItem('accessToken', accesstoken);
         login(accesstoken, content);
 
-        console.log('✅ 사용자 정보:', content);
         router.replace(content.newUser ? '/onboarding' : '/');
       } catch (err) {
         console.error('카카오 로그인 실패', err);
