@@ -5,7 +5,7 @@ export const useKakaoLogin = () => {
     const AUTH_URL = process.env.NEXT_PUBLIC_KAKAO_AUTH_URL;
 
     if (!REST_API_KEY || !REDIRECT_URI || !AUTH_URL) {
-      console.error('카카오 로그인 환경변수가 누락되었습니다.');
+      console.error('카카오 로그인 환경변수 누락');
       return;
     }
 
