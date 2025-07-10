@@ -1,6 +1,6 @@
 'use client';
 
-import { BuyButton } from '@/shared/components/ui/BuyButton';
+import { BuyButton } from '@ui/BuyButton';
 import { TradeDetailProductSection } from '@features/trade/components/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@features/trade/components/TradeDetailSellerSection';
 
