@@ -32,9 +32,12 @@ export const TradeDetailSellerSection = () => {
       <div className="mt-6">
         <h3 className="text-[20px] font-semibold text-black mb-6">판매자의 다른 상품</h3>
 
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+        <div className="flex overflow-x-auto gap-4 scrollbar-hide">
           {sampleItems.map((item) => (
-            <div key={item.id} className="w-[120px] flex-shrink-0 flex flex-col gap-2 mb-6">
+            <div
+              key={item.id}
+              className="w-[120px] flex-shrink-0 flex flex-col gap-2 mb-10 items-center"
+            >
               <div className="relative w-[100px] h-[100px]">
                 <ImageBox size="sm" url={item.image} />
 
