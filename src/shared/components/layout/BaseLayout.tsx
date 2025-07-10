@@ -28,7 +28,7 @@ export function BaseLayout({
       <div className="relative w-full max-w-[428px] min-h-screen overflow-hidden">
         {/* 고정 헤더 */}
         {header && (
-          <div className="fixed max-w-[428px] mx-auto top-0 left-0 right-0 z-10">{header}</div>
+          <div className="fixed max-w-[428px] mx-auto top-0 left-0 right-0 z-20">{header}</div>
         )}
 
         {/* 메인 스크롤 영역 */}
