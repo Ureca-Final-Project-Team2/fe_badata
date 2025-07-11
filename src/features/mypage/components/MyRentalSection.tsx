@@ -11,7 +11,7 @@ export const MyRentalSection = () => (
       나의 공유기 대여
     </h2>
     <section className="bg-white rounded-xl p-4 shadow-sm">
-      <ul className="space-y-4">
+      <ul className="space-y-5">
         <li
           style={{
             fontSize: 'var(--font-body-semibold)',

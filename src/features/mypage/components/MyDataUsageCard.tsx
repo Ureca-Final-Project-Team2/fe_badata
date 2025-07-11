@@ -22,7 +22,7 @@ export const MyDataUsageCard = () => (
             fontFamily: 'var(--font-sans)',
           }}
         >
-          고래밥 모으기
+          코인 모으기
         </span>
         <span
           style={{
@@ -31,7 +31,7 @@ export const MyDataUsageCard = () => (
             fontFamily: 'var(--font-sans)',
           }}
         >
-          현재 🌸 77 코인
+          현재 🦪 77 코인
         </span>
       </div>
     </div>

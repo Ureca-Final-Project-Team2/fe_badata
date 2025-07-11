@@ -1,11 +1,12 @@
 export const MyReportStatus = () => (
   <>
-    <div className="flex justify-between items-center mb-2">
+    <div className="flex justify-between items-end mb-2">
       <h2
         style={{
           fontSize: 'var(--font-title-semibold)',
           fontWeight: 600,
           fontFamily: 'var(--font-sans)',
+          lineHeight: '28px',
         }}
       >
         신고 내역 조회
@@ -13,7 +14,7 @@ export const MyReportStatus = () => (
       <span
         className="text-gray-mid"
         style={{
-          fontSize: '12px',
+          fontSize: '16px',
           fontWeight: 400,
           fontFamily: 'var(--font-sans)',
         }}
