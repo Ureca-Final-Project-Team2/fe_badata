@@ -11,6 +11,6 @@ export const ICONS = {
     RENTAL_LIKE: '/icons/rental-like-shop.png',
     RENTAL_NOTIFICATION: '/icons/rental-notification.png',
     SOS: '/icons/sos-siren.png',
-    NOTIFICATION: '/icons/notification,png',
+    NOTIFICATION: '/icons/notification.png',
   },
 };
