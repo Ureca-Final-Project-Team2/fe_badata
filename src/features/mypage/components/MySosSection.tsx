@@ -15,7 +15,7 @@ export const MySosSection = () => (
     <section className="bg-white rounded-xl p-4 shadow-sm">
       <div className="flex items-center gap-3">
         <img
-          src={ICONS.MYPAGE.SOS}
+          src={ICONS.MYPAGE.MYSOS}
           alt="SOS 요청 내역"
           className="w-[20px] h-[20px] object-contain"
         />
