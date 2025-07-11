@@ -4,6 +4,7 @@ export const ICONS = {
     SOS: '/icons/logo-sos.svg',
   },
   MYPAGE: {
+    COIN: '/icons/coin.png',
     TRADE_CEll: '/icons/trade-cell-list.png',
     TRADE_BUY: '/icons/trade-buy-list.png',
     TRADE_LIKE: '/icons/trade-like-list.png',
