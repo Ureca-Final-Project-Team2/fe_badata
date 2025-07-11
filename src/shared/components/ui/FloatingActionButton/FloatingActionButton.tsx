@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { cn } from '@lib/cn';
 
 export interface FABAction {
   label: string;
@@ -30,15 +31,22 @@ export function FloatingActionButton({
   };
   return (
     <div className="flex flex-col items-end">
-      {mode === 'expand' && open && actions.length > 0 && (
-        <div className="mb-2 overflow-hidden flex flex-col rounded-[20px] border bg-[var(--main-1)] shadow-md divide-y divide-white">
+      {mode === 'expand' && (
+        <div
+          className={cn(
+            'mb-2 flex flex-col rounded-[20px] border bg-[var(--main-1)] shadow-md divide-y divide-white transition-all duration-150',
+            open ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none',
+          )}
+        >
           {actions.map((action, idx) => (
             <button
               key={idx}
               onClick={action.onClick}
-              className="w-[120px] h-[50px] flex items-center justify-between px-4 py-2 text-white text-[20px]"
+              className="w-[120px] h-[46px] flex items-center justify-between px-4 py-2 text-white text-[18px] font-semibold"
             >
-              {action.icon}
+              <span className="w-[18px] h-[18px] flex items-center justify-center text-[16px]">
+                {action.icon}
+              </span>
               {action.label}
             </button>
           ))}
@@ -50,15 +58,17 @@ export function FloatingActionButton({
         onClick={handleTriggerClick}
         className={
           mode === 'expand' && open
-            ? 'w-12 h-12 rounded-full bg-[var(--main-1)] text-white text-[20px] flex items-center justify-center shadow-md'
-            : 'min-w-[120px] h-[50px] rounded-full bg-[var(--main-1)] text-white text-[20px] flex items-center justify-center gap-2 px-4 shadow-md'
+            ? 'w-12 h-12 rounded-full bg-[var(--main-1)] text-white text-[18px] flex items-center justify-center shadow-md'
+            : 'min-w-[100px] h-[46px] rounded-full bg-[var(--main-1)] text-white text-[18px] font-semibold flex items-center justify-center gap-1 px-4 shadow-md'
         }
       >
         {mode === 'expand' && open ? (
           'x'
         ) : (
           <>
-            {triggerAction.icon}
+            <span className="w-[18px] h-[18px] flex items-center justify-center text-[16px]">
+              {triggerAction.icon}
+            </span>
             {triggerAction.label}
           </>
         )}
