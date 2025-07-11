@@ -9,6 +9,7 @@ import { useSosDrawer } from '@/features/sos/hooks/useSosDrawer';
 interface BaseLayoutProps {
   children: React.ReactNode;
   header?: React.ReactNode;
+  fab?: React.ReactNode;
   className?: string;
   showBottomNav?: boolean;
   showSos?: boolean;
@@ -17,6 +18,7 @@ interface BaseLayoutProps {
 export function BaseLayout({
   children,
   header,
+  fab,
   className,
   showBottomNav = true,
   showSos = true,
@@ -36,6 +38,13 @@ export function BaseLayout({
           {children}
         </main>
 
+        {/* 플로팅 버튼 영역 */}
+        <div className="pointer-events-none fixed bottom-[90px] inset-x-0 z-50">
+          <div className="mx-auto max-w-[428px] w-full flex justify-end pr-8 pointer-events-auto">
+            {fab}
+          </div>
+        </div>
+
         {/* 고정 바텀 네비게이션 */}
         {showBottomNav && (
           <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[100]">
@@ -45,6 +54,7 @@ export function BaseLayout({
             />
           </div>
         )}
+
         {/* 전역 SOS Drawer */}
         {showSos && (
           <div className="fixed bottom-0 left-0 right-0 z-40">
