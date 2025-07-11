@@ -39,7 +39,7 @@ export function BaseLayout({
         </main>
 
         {/* 플로팅 버튼 영역 */}
-        <div className="pointer-events-none fixed bottom-[90px] inset-x-0 z-50">
+        <div className="pointer-events-none fixed bottom-[90px] inset-x-0 z-30">
           <div className="mx-auto max-w-[428px] w-full flex justify-end pr-8 pointer-events-auto">
             {fab}
           </div>
