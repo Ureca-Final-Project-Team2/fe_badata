@@ -1,4 +1,4 @@
-import { axiosInstance } from '@shared/lib/axiosInstance';
+import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 import { User } from '@features/auth/types/user';
 
 interface KakaoAuthResponse {
