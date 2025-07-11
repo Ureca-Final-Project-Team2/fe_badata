@@ -3,7 +3,7 @@ import { FloatingActionButton } from '@ui/FloatingActionButton';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof FloatingActionButton> = {
-  title: 'Shared/FloatingActionButton',
+  title: 'Components/FloatingActionButton',
   component: FloatingActionButton,
   tags: ['autodocs'],
   parameters: {
