@@ -5,7 +5,7 @@ import { DataUsageCard } from '@ui/DataUsageCard';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Drawer> = {
-  title: 'Shared/Drawer',
+  title: 'Components/Drawer',
   component: Drawer,
   parameters: {
     layout: 'fullscreen',
