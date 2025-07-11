@@ -13,7 +13,7 @@ import { Header } from '@/shared/components/ui/Header';
 export default function MyPage() {
   return (
     <BaseLayout header={<Header />}>
-      <div className="px-4 py-6 space-y-6">
+      <div className="space-y-6">
         <MyPageHeader />
         <MyDataUsageCard />
         <MyTradeSection />
