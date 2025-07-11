@@ -29,7 +29,7 @@
       "@hooks/*": ["src/shared/hooks/*"],
       "@lib/*": ["src/shared/lib/*"],
       "@constants/*": ["src/shared/constants/*"],
-      "@types/*": ["src/shared/types/*"],
+      "@models/*": ["src/shared/types/*"],
       "@utils/*": ["src/shared/utils/*"],
       "@styles/*": ["src/shared/styles/*"]
     }
