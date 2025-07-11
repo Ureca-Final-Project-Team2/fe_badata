@@ -15,7 +15,7 @@ export function ProductInfo({ brand, name, price, size = 'md' }: ProductInfoProp
   const sizeStyles = {
     sm: {
       brand: { fontSize: '12.8px', fontWeight: 300 }, // label-light
-      name: { fontSize: '20px', fontWeight: 600 }, // title-semibold
+      name: { fontSize: '16px', fontWeight: 600 }, // title-semibold
       price: { fontSize: '12.8px', fontWeight: 600, color: '#FF5D8F' }, // body-xs-semibold + point color
     },
     md: {
@@ -37,7 +37,7 @@ export function ProductInfo({ brand, name, price, size = 'md' }: ProductInfoProp
       <span style={currentStyle.brand} className="text-gray-mid mb-1">
         {brand}
       </span>
-      <span style={currentStyle.name} className="mb-2">
+      <span style={currentStyle.name} className="mb-2 truncate whitespace-nowrap overflow-hidden">
         {name}
       </span>
       <span style={currentStyle.price}>{priceText}</span>

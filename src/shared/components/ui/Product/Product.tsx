@@ -15,7 +15,7 @@ export interface ProductProps {
 
 export function Product({ imageSrc, brand, name, price, likeCount }: ProductProps) {
   return (
-    <div className="relative flex w-full gap-4 p-2">
+    <div className="relative flex w-full gap-4 pt-2 pb-4">
       {/* 왼쪽 이미지 */}
       <ImageBox url={imageSrc} size="sm" />
 
