@@ -26,7 +26,7 @@ export const MyDataUsageCard = () => {
     datasets: [
       {
         data: [used, total - used],
-        backgroundColor: [mainColor, '#E5E7EB'],
+        backgroundColor: [mainColor, 'white'],
         borderWidth: 0,
       },
     ],
