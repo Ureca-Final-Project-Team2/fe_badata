@@ -3,8 +3,8 @@
 import React from 'react';
 import { cn } from '@lib/cn';
 import { BottomNav } from '@ui/BottomNav';
-import { SosDrawer } from '@/features/sos/components/SosDrawer';
-import { useSosDrawer } from '@/features/sos/hooks/useSosDrawer';
+import { SosDrawer } from '@features/sos/components/SosDrawer';
+import { useSosDrawer } from '@features/sos/hooks/useSosDrawer';
 
 interface BaseLayoutProps {
   children: React.ReactNode;
