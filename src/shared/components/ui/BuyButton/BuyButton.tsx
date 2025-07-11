@@ -18,6 +18,7 @@ const buyButtonVariants = cva(
         sm: 'w-[200px] h-[50px]',
         md: 'w-[300px] h-[60px]',
         lg: 'w-[380px] h-[70px]',
+        lg_thin: 'w-[380px] h-[55px]',
       },
     },
     defaultVariants: {
