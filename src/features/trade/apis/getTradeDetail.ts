@@ -2,7 +2,7 @@ import { BASE_URL } from '@shared/constants/api';
 import { headers } from 'next/headers';
 
 export interface TradeWriter {
-  email: string;
+  userId: number;
   username: string;
 }
 
@@ -54,7 +54,7 @@ export const getTradeDetail = async (postId: string) => {
   const writer = content.user ?? content.seller;
 
   return {
-    postUserEmail: writer.userId,
+    postUserId: writer.userId,
     sellerName: writer.username,
     post: content.post,
   };

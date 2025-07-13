@@ -11,13 +11,13 @@ import { BuyButton } from '@ui/BuyButton';
 
 interface Props {
   tradeId: string;
-  postUserEmail: string;
+  postUserId: number;
   post: TradePost;
   postType: PostType;
   sellerName: string;
 }
 
-export const TradeDetailPage = ({ tradeId, postUserEmail, post, postType, sellerName }: Props) => {
+export const TradeDetailPage = ({ tradeId, postUserId, post, postType, sellerName }: Props) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   const handleShare = () => {
@@ -71,7 +71,7 @@ export const TradeDetailPage = ({ tradeId, postUserEmail, post, postType, seller
       <TradeDetailDrawer
         isOpen={isMoreOpen}
         onClose={() => setIsMoreOpen(false)}
-        postUserEmail={postUserEmail}
+        postUserId={postUserId}
       />
     </BaseLayout>
   );

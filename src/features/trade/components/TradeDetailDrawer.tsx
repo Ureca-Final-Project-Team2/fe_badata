@@ -7,11 +7,11 @@ import { Flag, Pencil, Trash2 } from 'lucide-react';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  postUserEmail: string;
+  postUserId: number;
 }
 
-export const TradeDetailDrawer = ({ isOpen, onClose, postUserEmail }: Props) => {
-  const isOwner = useIsPostOwner(postUserEmail); // 게시글 작성자 여부 판단: 이메일 기준
+export const TradeDetailDrawer = ({ isOpen, onClose, postUserId }: Props) => {
+  const isOwner = useIsPostOwner(postUserId); // 게시글 작성자 여부 판단: userId 기준
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose} variant="default">
