@@ -5,7 +5,17 @@ import { LikeButton } from '@ui/LikeButton';
 import { ProductInfo } from '@ui/ProductInfo';
 import { Profile } from '@ui/Profile';
 
-export const TradeDetailSellerSection = () => {
+interface TradeDetailSellerSectionProps {
+  sellerName: string;
+  likesCount: number;
+  isFollowing: boolean; // 팔로우 여부
+}
+
+export const TradeDetailSellerSection = ({
+  sellerName,
+  likesCount,
+  isFollowing,
+}: TradeDetailSellerSectionProps) => {
   const sampleItems = Array.from({ length: 10 }, (_, i) => ({
     id: i,
     brand: 'CU',
@@ -21,11 +31,11 @@ export const TradeDetailSellerSection = () => {
       <Profile
         size="sm"
         avatarSize="sm"
-        name="황금도토리"
-        subtitle="거래후기 10"
+        name={sellerName}
+        subtitle={`좋아요 ${likesCount}`}
         showFollowButton
-        isFollowing
-        onFollowClick={() => console.log('팔로우')}
+        isFollowing={isFollowing}
+        onFollowClick={() => alert('팔로우 기능 연결 예정')}
       />
 
       {/* 판매자의 다른 상품 리스트 */}
