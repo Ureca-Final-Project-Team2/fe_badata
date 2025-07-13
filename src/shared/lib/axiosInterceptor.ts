@@ -12,25 +12,45 @@ interface ErrorResponse {
   content?: null;
 }
 
-export const handleAPIError = (error: AxiosError<ErrorResponse>) => {
-  if (!error.response) {
-    throw new HTTPError(500, undefined, null, '네트워크 오류가 발생했습니다');
-  }
+export const setupAxiosInterceptors = () => {
+  // 요청 인터셉터
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      const accessToken = localStorage.getItem('accessToken');
 
-  const { data, status } = error.response;
-  throw new HTTPError(status, data.code, data.content, data.message);
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    },
+  );
+
+  // 응답 인터셉터
+  axiosInstance.interceptors.response.use(
+    <T>(response: AxiosResponse<ApiResponse<T>>): T => {
+      const { code, message, content } = response.data;
+
+      if (code !== SUCCESS_CODE) {
+        const fallbackMessage =
+          ErrorMessageMap[code as keyof typeof ErrorMessageMap] ??
+          message ??
+          '알 수 없는 오류가 발생했습니다.';
+        throw new HTTPError(response.status, code, null, fallbackMessage);
+      }
+
+      return content as T;
+    },
+
+    (error: AxiosError<ErrorResponse>) => {
+      if (!error.response) {
+        throw new HTTPError(500, undefined, null, '네트워크 오류가 발생했습니다');
+      }
+      const { data, status } = error.response;
+      throw new HTTPError(status, data.code, data.content, data.message);
+    },
+  );
 };
-
-axiosInstance.interceptors.response.use(<T>(response: AxiosResponse<ApiResponse<T>>): T => {
-  const { code, message, content } = response.data;
-
-  if (code !== SUCCESS_CODE) {
-    const fallbackMessage =
-      ErrorMessageMap[code as keyof typeof ErrorMessageMap] ??
-      message ??
-      '알 수 없는 오류가 발생했습니다.';
-    throw new HTTPError(response.status, code, null, fallbackMessage);
-  }
-
-  return content as T;
-}, handleAPIError);
