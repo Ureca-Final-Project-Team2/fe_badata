@@ -1,9 +1,9 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { axiosInstance } from '@shared/lib/axiosInstance';
-import { HTTPError } from '@shared/lib/HTTPError';
 import { ApiResponse } from '@shared/types/api';
-import { SUCCESS_CODE } from '@shared/constants/api';
-import { ErrorMessageMap } from '@shared/constants/errorCodes';
+import { axiosInstance } from '@lib/axiosInstance';
+import { HTTPError } from '@lib/HTTPError';
+import { SUCCESS_CODE } from '@constants/api';
+import { ErrorCode, ErrorMessageMap } from '@constants/errorCodes';
 
 interface ErrorResponse {
   status: number;
@@ -36,9 +36,7 @@ export const setupAxiosInterceptors = () => {
 
       if (code !== SUCCESS_CODE) {
         const fallbackMessage =
-          ErrorMessageMap[code as keyof typeof ErrorMessageMap] ??
-          message ??
-          '알 수 없는 오류가 발생했습니다.';
+          ErrorMessageMap[code as ErrorCode] ?? message ?? '알 수 없는 오류가 발생했습니다.';
         throw new HTTPError(response.status, code, null, fallbackMessage);
       }
 
