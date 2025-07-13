@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { fetchStores } from '@features/stores/apis/fetchStores';
-import { Store } from '@features/stores/types/store';
+import { fetchStores } from '@/features/stores/map/apis/fetchStores';
+import { Store } from '@/features/stores/map/types/store';
 
 export const useFetchStores = () => {
   const [stores, setStores] = useState<Store[]>([]);

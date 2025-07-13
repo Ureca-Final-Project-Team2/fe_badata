@@ -1,7 +1,6 @@
 import { axiosInstance } from '@shared/lib/axios/axiosInstance';
 import { buildQueryParams } from '@utils/buildQueryParams';
-import { FetchStoresParams } from '@features/stores/types/fetchStoresParams';
-import { Store } from '@features/stores/types/store';
+import { FetchStoresParams, Store } from '@features/stores/map/types';
 
 export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> => {
   if (!params || typeof params !== 'object') {
