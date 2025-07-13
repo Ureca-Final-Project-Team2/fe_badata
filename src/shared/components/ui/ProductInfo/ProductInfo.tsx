@@ -3,7 +3,7 @@
 import React from 'react';
 
 export interface ProductInfoProps {
-  brand: string;
+  brand?: string;
   name: string;
   price: number;
   size?: 'sm' | 'md' | 'lg';
