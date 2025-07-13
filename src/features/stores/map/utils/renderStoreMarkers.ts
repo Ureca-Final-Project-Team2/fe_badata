@@ -1,5 +1,5 @@
-import { Store } from '@/features/stores/map/types/store';
-import { fetchStoreDevices } from '@/features/stores/map/apis/fetchStoreDevices';
+import { Store } from '@features/stores/map/types';
+import { fetchStoreDevices } from '@features/stores/map/apis/fetchStoreDevices';
 import { formatDateToLocalDateTime } from '@utils/formatDate';
 
 export const renderStoreMarkers = (map: any, stores: Store[]) => {
@@ -20,7 +20,6 @@ export const renderStoreMarkers = (map: any, stores: Store[]) => {
     window.kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
     window.kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
 
-    // 마커 클릭 이벤트: 기기 조회
     window.kakao.maps.event.addListener(marker, 'click', async () => {
       try {
         const now = new Date();
@@ -39,9 +38,9 @@ export const renderStoreMarkers = (map: any, stores: Store[]) => {
           maxSupportConnection: [],
         });
 
-        console.log(`${store.name}의 기기 목록:`, devices);
+        console.log(`📦 ${store.name}의 기기 목록:`, devices);
       } catch (e) {
-        console.error('기기 조회 실패:', e);
+        console.error(`❌ ${store.name} 기기 조회 실패:`, e);
       }
     });
   });
