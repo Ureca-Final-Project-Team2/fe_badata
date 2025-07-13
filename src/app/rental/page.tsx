@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fetchShops } from '@features/shops/apis/fetchShops';
 import type { Shop } from '@models/shop';
 
@@ -12,8 +12,10 @@ declare global {
 
 const RentalPage = () => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<any>(null);
+  const [shops, setShops] = useState<Shop[]>([]);
 
-  // 지도 렌더링
+  // 1. Kakao 지도 로딩 및 생성
   useEffect(() => {
     const script = document.createElement('script');
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false`;
@@ -25,35 +27,59 @@ const RentalPage = () => {
         if (!container) return;
 
         const options = {
-          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-          level: 3,
+          center: new window.kakao.maps.LatLng(37.5665, 126.978), // 서울 중심
+          level: 4,
         };
 
-        const map = new window.kakao.maps.Map(container, options);
-
-        const marker = new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(33.450701, 126.570667),
-        });
-        marker.setMap(map);
+        const createdMap = new window.kakao.maps.Map(container, options);
+        setMap(createdMap);
       });
     };
 
     document.head.appendChild(script);
   }, []);
 
-  // 가맹점 API 호출
+  // 2. 가맹점 데이터 fetch
   useEffect(() => {
     const getShops = async () => {
       try {
-        const shops: Shop[] = await fetchShops();
-        console.log('가맹점 목록:', shops);
+        const params = {
+          swLat: 33.0,
+          swLng: 124.0,
+          neLat: 39.0,
+          neLng: 132.0,
+        };
+        const fetched = await fetchShops(params);
+        setShops(fetched);
+        console.log('✅ fetch 성공:', fetched);
       } catch (error) {
-        console.error('가맹점 불러오기 실패:', error);
+        console.error('❌ 가맹점 불러오기 실패:', error);
       }
     };
 
     getShops();
   }, []);
+
+  // 3. 마커 표시 (지도, shops 모두 준비되었을 때)
+  useEffect(() => {
+    if (!map || shops.length === 0 || !window.kakao) return;
+
+    shops.forEach((shop) => {
+      const markerPosition = new window.kakao.maps.LatLng(shop.latitude, shop.longititude);
+      const marker = new window.kakao.maps.Marker({
+        map,
+        position: markerPosition,
+      });
+
+      // 예: 마커에 이름 툴팁 추가
+      const infowindow = new window.kakao.maps.InfoWindow({
+        content: `<div style="padding:5px;font-size:14px;">${shop.name}</div>`,
+      });
+
+      window.kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
+      window.kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
+    });
+  }, [map, shops]);
 
   return (
     <div
