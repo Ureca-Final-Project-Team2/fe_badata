@@ -1,4 +1,4 @@
-export interface FetchShopsParams {
+export interface FetchStoresParams {
   isOpeningNow?: boolean;
   swLat: number;
   swLng: number;

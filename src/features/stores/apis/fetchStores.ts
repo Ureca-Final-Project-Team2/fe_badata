@@ -1,9 +1,9 @@
 import { axiosInstance } from '@shared/lib/axios/axiosInstance';
-import type { Shop } from '@models/shop';
-import { FetchShopsParams } from '@features/shops/types/fetchShopsParams';
-import { buildQueryParams } from '@/shared/utils/buildQueryParams';
+import { buildQueryParams } from '@utils/buildQueryParams';
+import { FetchStoresParams } from '@features/stores/types/fetchStoresParams';
+import { Store } from '@features/stores/types/store';
 
-export const fetchShops = async (params: FetchShopsParams): Promise<Shop[]> => {
+export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> => {
   if (!params || typeof params !== 'object') {
     throw new Error('params가 유효하지 않습니다.');
   }

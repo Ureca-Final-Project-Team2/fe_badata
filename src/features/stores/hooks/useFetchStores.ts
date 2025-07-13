@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
-import { fetchShops } from '../apis/fetchShops';
-import type { Shop } from '@models/shop';
+import { fetchStores } from '@features/stores/apis/fetchStores';
+import { Store } from '@features/stores/types/store';
 
-export const useFetchShops = () => {
-  const [shops, setShops] = useState<Shop[]>([]);
+export const useFetchStores = () => {
+  const [stores, setStores] = useState<Store[]>([]);
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        const shops = await fetchShops({
+        const stores = await fetchStores({
           swLat: 33.0,
           swLng: 124.0,
           neLat: 39.0,
           neLng: 132.0,
         });
-        setShops(shops);
+        setStores(stores);
       } catch (e) {
         console.error('❌ 가맹점 불러오기 실패:', e);
       }
@@ -23,5 +23,5 @@ export const useFetchShops = () => {
     fetch();
   }, []);
 
-  return shops;
+  return stores;
 };
