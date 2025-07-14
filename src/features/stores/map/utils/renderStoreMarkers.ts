@@ -1,5 +1,5 @@
 import { Store } from '@features/stores/map/types';
-import { fetchStoreDevices } from '@features/stores/map/apis/fetchStoreDevices';
+import { fetchStoreDevices } from '@features/stores/map/apis/map';
 import { formatDateToLocalDateTime } from '@utils/formatDate';
 
 export const renderStoreMarkers = async (map: any, stores: Store[]) => {
