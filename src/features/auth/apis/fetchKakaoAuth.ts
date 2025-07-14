@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
-import { User } from '@features/auth/types/user';
+import { User } from '@/features/auth/models/user';
 
 interface KakaoAuthResponse {
   accesstoken: string;

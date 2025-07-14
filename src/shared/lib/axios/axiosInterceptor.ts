@@ -1,5 +1,5 @@
 import type { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
-import type { ApiResponse, ErrorResponse } from '@lib/axios/types';
+import type { ApiResponse, ErrorResponse } from '@/shared/lib/axios/models';
 import { SUCCESS_CODE } from '@constants/api';
 import { ErrorMessageMap } from '@constants/errorCodes';
 import { HTTPError } from '@lib/HTTPError';

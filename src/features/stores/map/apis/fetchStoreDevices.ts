@@ -1,6 +1,6 @@
 import { axiosInstance } from '@shared/lib/axios/axiosInstance';
 import { buildQueryParams } from '@utils/buildQueryParams';
-import { ApiResponse } from '@shared/lib/axios/types';
+import { ApiResponse } from '@/shared/lib/axios/models';
 import { FetchStoreDevicesParams, StoreDevice } from '@features/stores/map/types';
 
 import type { AxiosResponse } from 'axios';

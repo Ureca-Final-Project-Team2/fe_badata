@@ -29,11 +29,11 @@
       "@hooks/*": ["src/shared/hooks/*"],
       "@lib/*": ["src/shared/lib/*"],
       "@constants/*": ["src/shared/constants/*"],
-      "@models/*": ["src/shared/types/*"],
+      "@models/*": ["src/shared/models/*"],
       "@utils/*": ["src/shared/utils/*"],
       "@styles/*": ["src/shared/styles/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/models/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -2,7 +2,7 @@ import { axiosInstance } from '@shared/lib/axios/axiosInstance';
 import { buildQueryParams } from '@utils/buildQueryParams';
 import { FetchStoresParams, Store } from '@features/stores/map/types';
 import { AxiosResponse } from 'axios';
-import { ApiResponse } from '@/shared/lib/axios/types';
+import { ApiResponse } from '@/shared/lib/axios/models';
 
 export const fetchStores = async (
   params: FetchStoresParams,
