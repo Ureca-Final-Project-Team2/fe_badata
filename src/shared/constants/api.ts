@@ -7,7 +7,7 @@ export const END_POINTS = {
     LOGIN: '/api/v1/auth/token/issue',
   },
   STORES: {
-    ALLSTORE: (storeId: string, query: string) => `/api/v1/stores/${storeId}/devices?${query}`,
+    ALLSTORE: (storeId: number, query: string) => `/api/v1/stores/${storeId}/devices?${query}`,
     ALLDEVICE: (query: string) => `/api/v1/stores/map?${query}`,
   },
 };

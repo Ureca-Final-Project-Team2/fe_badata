@@ -19,7 +19,7 @@ export const fetchStoreDevices = async (
 ): Promise<AxiosResponse<ApiResponse<StoreDevice[]>>> => {
   const query = buildQueryParams(params);
   return await axiosInstance.get<ApiResponse<StoreDevice[]>>(
-    END_POINTS.STORES.ALLSTORE(String(storeId), query),
+    END_POINTS.STORES.ALLSTORE(storeId, query),
   );
 };
 
