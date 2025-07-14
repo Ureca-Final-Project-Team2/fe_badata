@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@features/auth/stores/authStore';
-import { fetchKakaoAuth } from '../apis/auth';
+import { fetchKakaoAuth } from '@features/auth/apis/auth';
 
 export const useKakaoCallback = () => {
   const router = useRouter();
