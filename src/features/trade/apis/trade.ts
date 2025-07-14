@@ -1,4 +1,4 @@
-import { axiosInstance } from '@lib/axiosInstance';
+import { axiosInstance } from '@lib/axios/axiosInstance';
 import { END_POINTS } from '@constants/api';
 import type { Post } from '@features/trade/models/post';
 
