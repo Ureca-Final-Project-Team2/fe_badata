@@ -9,3 +9,11 @@ export const axiosInstance = axios.create({
 });
 
 applyInterceptors(axiosInstance);
+
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});

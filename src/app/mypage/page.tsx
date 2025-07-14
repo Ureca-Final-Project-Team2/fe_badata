@@ -9,6 +9,7 @@ import { MySosSection } from '@features/mypage/components/MySosSection';
 import { MyTradeSection } from '@features/mypage/components/MyTradeSection';
 import { BaseLayout } from '@components/layout/BaseLayout';
 import { Header } from '@ui/Header';
+import { MyCoinSummary } from '@/features/mypage/components/MyCoinSummary';
 
 export default function MyPage() {
   return (
@@ -16,6 +17,7 @@ export default function MyPage() {
       <div className="space-y-6">
         <MyPageHeader />
         <MyDataUsageCard />
+        <MyCoinSummary />
         <MyTradeSection />
         <MyRentalSection />
         <MySosSection />
