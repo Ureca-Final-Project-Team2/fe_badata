@@ -40,7 +40,6 @@ export const TradeDetailPage = ({ tradeId, postUserId, post, postType, sellerNam
           onMoreClick={handleMore}
         />
       }
-      className="h-[calc(100vh-70px)]"
       showBottomNav={!isMoreOpen}
     >
       <TradeDetailProductSection
