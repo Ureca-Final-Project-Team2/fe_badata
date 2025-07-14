@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { TradeDetailProductSection } from '@features/trade/components/detail/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@features/trade/components/detail/TradeDetailSellerSection';
 import { TradeDetailDrawer } from '@features/trade/components/detail/TradeDetailDrawer';
-import { PostType, TradePost } from '@features/trade/apis/getTradeDetail';
+import { PostType, TradeDetailPost } from '@features/trade/models/post';
 import { BaseLayout } from '@shared/components/layout/BaseLayout';
 import { PageHeader } from '@ui/Header';
 import { BuyButton } from '@ui/BuyButton';
@@ -12,7 +12,7 @@ import { BuyButton } from '@ui/BuyButton';
 interface Props {
   tradeId: string;
   postUserId: number;
-  post: TradePost;
+  post: TradeDetailPost;
   postType: PostType;
   sellerName: string;
 }
@@ -46,7 +46,7 @@ export const TradeDetailPage = ({ tradeId, postUserId, post, postType, sellerNam
       <TradeDetailProductSection
         postType={postType}
         thumbnailUrl={post.postImage === 'no image' ? '/assets/trade_detail.jpg' : post.postImage}
-        brand={postType === 'gifticon' ? post.partner : post.mobileCarrier}
+        brand={postType === 'GIFTICON' ? post.partner : post.mobileCarrier}
         name={post.title}
         price={post.price}
         expireDate={post.deadLine}

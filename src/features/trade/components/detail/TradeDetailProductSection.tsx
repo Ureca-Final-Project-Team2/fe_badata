@@ -4,7 +4,7 @@ import { SectionDivider } from '@ui/SectionDivider';
 import Image from 'next/image';
 
 interface TradeDetailProductSectionProps {
-  postType: 'gifticon' | 'data';
+  postType: 'GIFTICON' | 'DATA';
   thumbnailUrl?: string;
   brand?: string;
   name?: string;
@@ -43,7 +43,7 @@ export const TradeDetailProductSection = ({
         </div>
 
         {/* 데이터 타입일 경우 용량 */}
-        {postType === 'data' && capacity !== undefined && (
+        {postType === 'DATA' && capacity !== undefined && (
           <div className="flex justify-between items-center">
             <span className="text-md font-medium text-black">데이터 용량</span>
             <span className="text-sm text-gray-500">{capacity}GB</span>
@@ -51,7 +51,7 @@ export const TradeDetailProductSection = ({
         )}
 
         {/* 기프티콘 타입일 경우 발행일 */}
-        {postType === 'gifticon' && issueDate && (
+        {postType === 'GIFTICON' && issueDate && (
           <div className="flex justify-between items-center">
             <span className="text-md font-medium text-black">발행일</span>
             <span className="text-sm text-gray-500">{issueDate}</span>
