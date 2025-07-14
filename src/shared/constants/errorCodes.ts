@@ -1,4 +1,5 @@
 export enum ErrorCode {
+  // 거래
   SEARCH_NO_RESULT = 3000,
   TRENDING_SEARCH_FAILED = 3001,
   REPORT_INVALID_TARGET = 3002,
@@ -16,6 +17,7 @@ export enum ErrorCode {
 }
 
 export const ErrorMessageMap: Record<ErrorCode, string> = {
+  // 거래
   [ErrorCode.SEARCH_NO_RESULT]: '검색 결과가 존재하지 않습니다.',
   [ErrorCode.TRENDING_SEARCH_FAILED]: '실시간 검색 처리에 실패했습니다.',
   [ErrorCode.REPORT_INVALID_TARGET]: '잘못된 신고 대상입니다.',
