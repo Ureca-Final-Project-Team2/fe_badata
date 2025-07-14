@@ -2,11 +2,12 @@ import { getTradeDetail } from '@features/trade/apis/getTradeDetail';
 import { TradeDetailPage } from '@features/trade/pages/TradeDetailPage';
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default async function DataDetailPage({ params }: Props) {
-  const { id } = params;
+export default async function DataDetailPage(props: Props) {
+  const { params } = await props;
+  const { id } = await params;
   // 데이터 게시물 상세 API 호출
   const { postUserId, post, sellerName } = await getTradeDetail(id);
 
