@@ -7,7 +7,12 @@ import { handleAPIError } from '@lib/axios/errorHandler';
 
 export const applyInterceptors = (instance: AxiosInstance): void => {
   instance.interceptors.response.use(
-    <T>(response: AxiosResponse<ApiResponse<T>>): T => {
+    <T>(response: AxiosResponse<ApiResponse<T>>): T | AxiosResponse<ApiResponse<T>> => {
+      // 카카오 로그인 API는 응답 전체를 반환
+      if (response.config.url?.includes('/auth/token/issue')) {
+        return response;
+      }
+
       const { code, message, content } = response.data;
 
       if (code !== SUCCESS_CODE) {
