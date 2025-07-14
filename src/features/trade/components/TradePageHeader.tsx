@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { FlatTab } from '@ui/FlatTab';
 import { InputField } from '@ui/InputField';
 
 export function TradePageHeader() {
   const [search, setSearch] = useState('');
+  const router = useRouter();
+  const pathname = usePathname();
 
   const tabItems = [
     { id: 'all', label: '전체', content: null },
@@ -12,9 +15,29 @@ export function TradePageHeader() {
     { id: 'coupon', label: '쿠폰', content: null },
   ];
 
+  const defaultValue = pathname.includes('/data')
+    ? 'data'
+    : pathname.includes('/coupon')
+      ? 'coupon'
+      : 'all';
+
+  const handleTabChange = (tabId: string) => {
+    switch (tabId) {
+      case 'all':
+        router.push('/trade');
+        break;
+      case 'data':
+        router.push('/trade/data');
+        break;
+      case 'coupon':
+        router.push('/trade/coupon');
+        break;
+    }
+  };
+
   return (
     <div className="py-4 bg-white">
-      <FlatTab items={tabItems} defaultValue="all" />
+      <FlatTab items={tabItems} defaultValue={defaultValue} onValueChange={handleTabChange} />
       <div className="mt-4 px-6">
         <InputField
           variant="address"
