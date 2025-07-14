@@ -51,7 +51,7 @@ export const TradeDetailSellerSection = ({
             {posts.map((item) => (
               <div
                 key={item.id}
-                className="w-[120px] flex-shrink-0 flex flex-col gap-2 mb-10 items-center"
+                className="w-[98px] flex-shrink-0 flex flex-col gap-2 mb-10 items-center"
               >
                 <div className="relative w-[100px] h-[100px]">
                   <ImageBox
@@ -64,13 +64,14 @@ export const TradeDetailSellerSection = ({
                     <LikeButton defaultLiked={item.isLiked} />
                   </div>
                 </div>
-
-                <ProductInfo
-                  brand={item.partner || ''}
-                  name={item.title}
-                  price={item.price}
-                  size="sm"
-                />
+                <div className="w-[98px] mt-1">
+                  <ProductInfo
+                    brand={item.partner || ''}
+                    name={item.title}
+                    price={item.price}
+                    size="sm"
+                  />
+                </div>
               </div>
             ))}
           </div>
