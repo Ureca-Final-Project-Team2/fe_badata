@@ -1,5 +1,6 @@
-import { axiosInstance } from '@shared/lib/axiosInstance';
-import { User } from '@features/auth/types/user';
+import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
+import { END_POINTS } from '@constants/api';
+import { User } from '@/features/auth/models/user';
 
 interface KakaoAuthResponse {
   accesstoken: string;
@@ -7,7 +8,7 @@ interface KakaoAuthResponse {
 }
 
 export const fetchKakaoAuth = async (code: string): Promise<KakaoAuthResponse> => {
-  const response = await axiosInstance.get('/api/v1/auth/token/issue', {
+  const response = await axiosInstance.get(END_POINTS.USER.LOGIN, {
     params: { code, provider: 'kakao' },
   });
 
