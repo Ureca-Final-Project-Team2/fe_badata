@@ -4,7 +4,7 @@ import { cn } from '@lib/cn';
 import type { ButtonHTMLAttributes } from 'react';
 
 const buyButtonVariants = cva(
-  'inline-flex items-center justify-center font-semibold text-[20px] transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  'flex items-center justify-center font-semibold text-[20px] transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -18,6 +18,7 @@ const buyButtonVariants = cva(
         sm: 'w-[200px] h-[50px]',
         md: 'w-[300px] h-[60px]',
         lg: 'w-[380px] h-[70px]',
+        lg_thin: 'w-[380px] h-[55px]',
       },
     },
     defaultVariants: {

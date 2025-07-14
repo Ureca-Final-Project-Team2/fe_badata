@@ -152,11 +152,24 @@ body {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* 사용자 정의 스크롤바 숨김 유틸 */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html,
   body {
+    height: 100%;
+    scrollbar-width: none;
     @apply bg-background text-foreground;
   }
 }

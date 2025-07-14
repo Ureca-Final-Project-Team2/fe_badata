@@ -1,7 +1,8 @@
 'use client';
 
-import { Home, FileText, Repeat, User } from 'lucide-react';
 import React, { useState } from 'react';
+import { Home, FileText, Repeat, User } from 'lucide-react';
+import { ICONS } from '@/constants/iconPath';
 
 const navItems = [
   { label: '홈', icon: Home },
@@ -13,57 +14,10 @@ const navItems = [
 const MAIN_COLOR = 'var(--main-1)';
 const GRAY_COLOR = 'var(--gray-dark)';
 
-export const BottomNav = () => {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [sosActive, setSosActive] = useState(false);
-
-  return (
-    <nav className="absolute bottom-0 inset-x-0 h-[70px] bg-white border-t border-gray-200 flex justify-around items-center z-20">
-      {navItems.slice(0, 2).map(({ label, icon: Icon }, idx) => (
-        <NavItem
-          key={label}
-          label={label}
-          Icon={Icon}
-          active={activeIdx === idx && !sosActive}
-          onClick={() => {
-            setActiveIdx(idx);
-            setSosActive(false);
-          }}
-        />
-      ))}
-
-      {/* 중앙 SOS 버튼 */}
-      <div className="relative -mt-8 z-30">
-        <button
-          className={`w-[67px] h-[67px] rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex flex-col items-center justify-center transition-colors duration-150 ${sosActive ? 'bg-black' : 'bg-white'}`}
-          onClick={() => setSosActive((prev) => !prev)}
-        >
-          {sosActive ? (
-            <div className="flex flex-col items-center justify-center">
-              <span className="text-white text-[32px] leading-none">×</span>
-              <span className="text-white text-[14px]">닫기</span>
-            </div>
-          ) : (
-            <img src="/SOS.svg" alt="SOS 아이콘" className="w-[40px] h-[40px]" />
-          )}
-        </button>
-      </div>
-
-      {navItems.slice(2).map(({ label, icon: Icon }, idx) => (
-        <NavItem
-          key={label}
-          label={label}
-          Icon={Icon}
-          active={activeIdx === idx + 2 && !sosActive}
-          onClick={() => {
-            setActiveIdx(idx + 2);
-            setSosActive(false);
-          }}
-        />
-      ))}
-    </nav>
-  );
-};
+interface BottomNavProps {
+  onSosClick?: () => void;
+  sosActive?: boolean;
+}
 
 const NavItem = ({
   label,
@@ -81,8 +35,58 @@ const NavItem = ({
     onClick={onClick}
   >
     <Icon size={20} color={active ? MAIN_COLOR : GRAY_COLOR} />
-    <span className={`text-[12px] font-bold`} style={{ color: active ? MAIN_COLOR : GRAY_COLOR }}>
+    <span className="text-[12px] font-bold" style={{ color: active ? MAIN_COLOR : GRAY_COLOR }}>
       {label}
     </span>
   </button>
 );
+
+export const BottomNav = ({ onSosClick, sosActive = false }: BottomNavProps) => {
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  return (
+    <nav className="bottom-0 inset-x-0 h-[70px] bg-white border-t border-gray-200 flex justify-around items-center z-20">
+      {navItems.slice(0, 2).map(({ label, icon: Icon }, idx) => (
+        <NavItem
+          key={label}
+          label={label}
+          Icon={Icon}
+          active={activeIdx === idx && !sosActive}
+          onClick={() => setActiveIdx(idx)}
+        />
+      ))}
+
+      <div className="relative -mt-8 z-30 transition-transform duration-300">
+        <button
+          className={`w-[67px] h-[67px] rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex flex-col items-center justify-center transition-all duration-200 ${sosActive ? 'bg-black scale-100' : 'bg-white scale-100'}`}
+          onClick={onSosClick}
+        >
+          <div className="flex flex-col items-center justify-center transition-opacity duration-200">
+            {sosActive ? (
+              <>
+                <span className="text-white text-[32px] leading-none">×</span>
+                <span className="text-white text-[14px]">닫기</span>
+              </>
+            ) : (
+              <img
+                src={ICONS.LOGO.SOS}
+                alt="SOS 아이콘"
+                className="w-[40px] h-[40px] transition-transform duration-300"
+              />
+            )}
+          </div>
+        </button>
+      </div>
+
+      {navItems.slice(2).map(({ label, icon: Icon }, idx) => (
+        <NavItem
+          key={label}
+          label={label}
+          Icon={Icon}
+          active={activeIdx === idx + 2 && !sosActive}
+          onClick={() => setActiveIdx(idx + 2)}
+        />
+      ))}
+    </nav>
+  );
+};

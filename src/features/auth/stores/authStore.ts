@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User } from '@features/auth/types/user';
+import { User } from '@/features/auth/models/user';
 
 interface AuthState {
   isLoggedIn: boolean;
