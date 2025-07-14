@@ -1,7 +1,7 @@
 'use client';
 
-import TradePage from '@features/trade/pages/TradePage';
+import TradeMainPage from '@features/trade/pages/TradeMainPage';
 
 export default function Page() {
-  return <TradePage />;
+  return <TradeMainPage />;
 }

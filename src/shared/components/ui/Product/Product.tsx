@@ -7,7 +7,7 @@ import { Heart } from 'lucide-react';
 
 export interface ProductProps {
   imageSrc: string;
-  brand: string;
+  brand?: string;
   name: string;
   price: number;
   likeCount: number;

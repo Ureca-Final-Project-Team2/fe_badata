@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Home, FileText, Repeat, User } from 'lucide-react';
+import { ICONS } from '@/constants/iconPath';
 
 const navItems = [
   { label: '홈', icon: Home },
@@ -68,7 +69,7 @@ export const BottomNav = ({ onSosClick, sosActive = false }: BottomNavProps) => 
               </>
             ) : (
               <img
-                src="/SOS.svg"
+                src={ICONS.LOGO.SOS}
                 alt="SOS 아이콘"
                 className="w-[40px] h-[40px] transition-transform duration-300"
               />
