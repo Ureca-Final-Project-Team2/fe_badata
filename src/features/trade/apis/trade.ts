@@ -13,10 +13,6 @@ export const getTradePostDetail = async (postId: number): Promise<Post> => {
 };
 
 export const getTradeDeadlinePosts = async (): Promise<Post[]> => {
-  const response = await axiosInstance.get(END_POINTS.TRADES.DEADLINE);
-
-  const posts =
-    (response as any)?.postsResponse || (response as any)?.data?.content?.postsResponse || [];
-
-  return Array.isArray(posts) ? posts : [];
+  const content: { postsResponse: Post[] } = await axiosInstance.get(END_POINTS.TRADES.DEADLINE);
+  return content.postsResponse ?? [];
 };
