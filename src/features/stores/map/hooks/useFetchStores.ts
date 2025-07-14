@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchStores } from '@/features/stores/map/apis/fetchStores';
+import { fetchStores } from '@/features/stores/map/apis/map';
 import { Store } from '@/features/stores/map/types/store';
 
 export const useFetchStores = () => {
