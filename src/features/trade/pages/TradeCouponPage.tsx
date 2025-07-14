@@ -1,16 +1,17 @@
-'use client';
-
 import { useState } from 'react';
-import { BaseLayout } from '@components/layout/BaseLayout';
-import { TradePageHeader } from '@features/trade/components/TradePageHeader';
-import { TradeMainBanner } from '@features/trade/components/TradeMainBanner';
-import { TradeMainList } from '@features/trade/components/TradeMainList';
-import { Header } from '@ui/Header';
-import { FloatingActionButton } from '@ui/FloatingActionButton';
 import { Gift, List, Plus } from 'lucide-react';
 
-export default function TradePage() {
+import { BaseLayout } from '@components/layout/BaseLayout';
+import { Header } from '@ui/Header';
+import { FloatingActionButton } from '@ui/FloatingActionButton';
+import { TradePageHeader } from '@features/trade/components/TradePageHeader';
+import { TradeCouponList } from '@features/trade/components/TradeCouponList';
+import { TradeCouponFilter } from '@features/trade/components/TradeCouponFilter';
+
+export default function TradeCouponPage() {
+  const [sortOption, setSortOption] = useState<'latest' | 'popular'>('latest');
   const [isSortDrawerOpen, setIsSortDrawerOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
 
   const fabActions = [
     {
@@ -38,17 +39,23 @@ export default function TradePage() {
   return (
     <BaseLayout
       header={<Header />}
-      className="px-0"
       showBottomNav={!isSortDrawerOpen}
+      className="px-0"
       fab={
         <FloatingActionButton mode="expand" actions={fabActions} triggerAction={triggerAction} />
       }
     >
       <TradePageHeader />
-      <TradeMainBanner />
-      <TradeMainList
+      <TradeCouponFilter
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+      />
+      <TradeCouponList
+        sortOption={sortOption}
+        setSortOption={setSortOption}
         isSortDrawerOpen={isSortDrawerOpen}
         setIsSortDrawerOpen={setIsSortDrawerOpen}
+        selectedCategory={selectedCategory}
       />
     </BaseLayout>
   );
