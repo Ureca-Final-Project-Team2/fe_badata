@@ -1,6 +1,6 @@
 'use client';
 
-import { useKakaoCallback } from '@features/auth/logics/useKakaoCallback';
+import { useKakaoCallback } from '@/features/auth/hooks/useKakaoCallback';
 
 export default function KakaoCallbackPage() {
   useKakaoCallback();
