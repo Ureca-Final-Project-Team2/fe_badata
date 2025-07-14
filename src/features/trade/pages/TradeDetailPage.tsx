@@ -56,6 +56,7 @@ export const TradeDetailPage = ({ tradeId, postUserId, post, postType, sellerNam
       />
 
       <TradeDetailSellerSection
+        sellerId={postUserId}
         sellerName={sellerName}
         likesCount={post.likesCount}
         isFollowing={false} // 실제 follow API 연동 전까지 false 고정
