@@ -35,7 +35,7 @@ export function TradeDataList({
   );
 
   return (
-    <section className="bg-white px-6 py-4">
+    <section className="bg-white px-6">
       <div className="flex flex-row justify-between py-2">
         <button
           onClick={() => setIsSortDrawerOpen(true)}
@@ -50,7 +50,7 @@ export function TradeDataList({
           <ListFilter size={14} />
         </div>
       </div>
-      <div className="flex flex-col gap-4 py-4">
+      <div className="flex flex-col gap-4">
         {sorted.map((item) => (
           <Product
             key={item.id}
