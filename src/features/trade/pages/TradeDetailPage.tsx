@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { TradeDetailProductSection } from '@features/trade/components/TradeDetailProductSection';
-import { TradeDetailSellerSection } from '@features/trade/components/TradeDetailSellerSection';
-import { TradeDetailDrawer } from '@features/trade/components/TradeDetailDrawer';
+import { TradeDetailProductSection } from '@features/trade/components/detail/TradeDetailProductSection';
+import { TradeDetailSellerSection } from '@features/trade/components/detail/TradeDetailSellerSection';
+import { TradeDetailDrawer } from '@features/trade/components/detail/TradeDetailDrawer';
 import { PostType, TradePost } from '@features/trade/apis/getTradeDetail';
 import { BaseLayout } from '@shared/components/layout/BaseLayout';
 import { PageHeader } from '@ui/Header';
