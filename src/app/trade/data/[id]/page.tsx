@@ -1,4 +1,4 @@
-import { getTradePostDetail } from '@/features/trade/api/trade';
+import { getTradePostDetail } from '@features/trade/api/trade';
 import { TradeDetailPage } from '@features/trade/pages/TradeDetailPage';
 
 interface Props {
