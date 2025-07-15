@@ -4,7 +4,7 @@ import {
   getTradePostDetail,
   getTradePosts,
 } from '@features/trade/apis/trade';
-import type { Post } from '@features/trade/models/post';
+import type { Post, TradeDetailPost } from '@features/trade/models/post';
 
 export const useTradePostsQuery = () => {
   const { data: posts, isLoading } = useQuery<Post[]>({
@@ -18,14 +18,18 @@ export const useTradePostsQuery = () => {
 };
 
 export const useTradeDetailQuery = (postId: number) => {
-  const { data: post, isLoading } = useQuery<Post>({
+  const { data, isLoading } = useQuery<{
+    postUserId: number;
+    sellerName: string;
+    post: TradeDetailPost;
+  }>({
     queryKey: ['trade-post', postId],
     queryFn: () => getTradePostDetail(postId),
     gcTime: 5 * 60 * 1000,
     staleTime: 5 * 60 * 1000,
   });
 
-  return { post, isLoading };
+  return { ...data, isLoading };
 };
 
 export const useTradeDeadlineQuery = () => {
