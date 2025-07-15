@@ -1,35 +1,34 @@
 'use client';
 
-import { useUserCoin } from '@features/mypage/hooks/useUserCoin';
-import { useUserDataUsage } from '@features/mypage/hooks/useUserDataUsage';
 import { ICONS } from '@/constants/iconPath';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement, Tooltip } from 'chart.js';
+import { useUserDataUsage } from '@/features/mypage/model/useUserDataUsageQuery';
+import { ArcElement, Chart, Tooltip } from 'chart.js';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Doughnut } from 'react-chartjs-2';
+import { useUserCoin } from '../../model/useUserCoinQuery';
 
 Chart.register(ArcElement, Tooltip);
 
 export const MyDataUsageCard = () => {
   const { data: coinData } = useUserCoin();
   const { data: usageData } = useUserDataUsage();
-  const [mainColor, setMainColor] = useState<string | null>(null);
+  const [mainColor, setMainColor] = useState<string>('#0f225e');
 
   useEffect(() => {
     const cssMain = getComputedStyle(document.documentElement).getPropertyValue('--main-1').trim();
-    setMainColor(cssMain || '#0f225e');
+    if (cssMain) setMainColor(cssMain);
   }, []);
 
-  if (!mainColor) return null;
-  if (!usageData || !coinData) return <p>데이터를 불러오지 못했습니다.</p>;
-
-  const used = usageData.used;
+  // fallback 처리
+  const used = usageData?.dataAmount ?? 0;
+  const coinAmount = coinData?.coin ?? 0;
 
   const chartData = {
     labels: ['사용량'],
     datasets: [
       {
-        data: [used, 100], // 100은 여백용, 시각적 비율만 표현
+        data: [used, 100 - used],
         backgroundColor: [mainColor, '#f3f4f6'],
         borderWidth: 0,
       },
@@ -54,11 +53,10 @@ export const MyDataUsageCard = () => {
           <span>코인 모으기</span>
           <Link
             href="/mypage/coin"
-            className="flex items-center gap-1.5 hover:underline hover:font-semibold"
+            className="flex items-center gap-1.5 underline hover:font-semibold"
           >
-            현재
             <img src={ICONS.MYPAGE.COIN} alt="coin" className="w-4 h-4 object-contain" />
-            {coinData.coin} 코인
+            현재 <span className="font-semibold">{coinAmount}</span> 코인
           </Link>
         </div>
       </div>

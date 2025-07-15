@@ -1,12 +1,12 @@
 'use client';
 
-import { MyDataUsageCard } from '@features/mypage/components/MyDataUsageCard';
-import { MyPageHeader } from '@features/mypage/components/MyPageHeader';
-import { MyRentalSection } from '@features/mypage/components/MyRentalSection';
-import { MyReportStatus } from '@features/mypage/components/MyReportStatus';
-import { MySettings } from '@features/mypage/components/MySettings';
-import { MySosSection } from '@features/mypage/components/MySosSection';
-import { MyTradeSection } from '@features/mypage/components/MyTradeSection';
+import { MyDataUsageCard } from '@/features/mypage/ui/detail/MyDataUsageCard';
+import { MyPageHeader } from '@/features/mypage/ui/MyPageHeader';
+import { MyRentalSection } from '@/features/mypage/ui/MyRentalSection';
+import { MyReportStatus } from '@/features/mypage/ui/MyReportStatus';
+import { MySettings } from '@/features/mypage/ui/MySettings';
+import { MySosSection } from '@/features/mypage/ui/MySosSection';
+import { MyTradeSection } from '@/features/mypage/ui/MyTradeSection';
 import { BaseLayout } from '@components/layout/BaseLayout';
 import { Header } from '@ui/Header';
 

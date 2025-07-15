@@ -19,5 +19,6 @@ export const END_POINTS = {
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     DATA_USAGE: '/api/v1/users/data',
+    SOS_HISTORY: '/api/v1/mypage/sos-history',
   },
 };
