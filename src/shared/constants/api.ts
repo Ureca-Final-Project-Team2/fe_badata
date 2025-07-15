@@ -7,6 +7,7 @@ export const END_POINTS = {
     LIST: '/api/v1/trades/posts',
     DETAIL: (postId: number) => `/api/v1/trades/${postId}/post`,
     DEADLINE: '/api/v1/trades/posts/deadline',
+    SEARCH: (keyword: string) => `/api/v1/trades/posts?query=${keyword}`,
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
