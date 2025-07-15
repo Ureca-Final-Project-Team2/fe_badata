@@ -1,5 +1,5 @@
+import { getSosHistory } from '@features/mypage/api/mypage';
 import { useQuery } from '@tanstack/react-query';
-import { getSosHistory } from '../api/mypage';
 
 export const useSosHistoryQuery = () => {
   return useQuery({

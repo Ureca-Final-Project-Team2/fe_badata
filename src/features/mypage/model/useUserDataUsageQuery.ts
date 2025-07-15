@@ -1,6 +1,6 @@
+import { getUserDataUsage } from '@features/mypage/api/mypage';
+import { UserDataUsage } from '@features/mypage/lib/types';
 import { useQuery } from '@tanstack/react-query';
-import { getUserDataUsage } from '../api/mypage';
-import { UserDataUsage } from '../lib/types';
 
 export const useUserDataUsage = () => {
   return useQuery<UserDataUsage>({

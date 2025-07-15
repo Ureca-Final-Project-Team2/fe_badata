@@ -1,7 +1,7 @@
 'use client';
 
-import { ICONS } from '@/constants/iconPath';
-import { useUserCoin } from '../model/useUserCoinQuery';
+import { ICONS } from '@constants/iconPath';
+import { useUserCoin } from '@features/mypage/model/useUserCoinQuery';
 
 export default function MyCoinPage() {
   const { data, isLoading, isError } = useUserCoin();

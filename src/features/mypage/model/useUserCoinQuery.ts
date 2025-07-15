@@ -1,6 +1,6 @@
+import { getUserCoin } from '@features/mypage/api/mypage';
+import { UserCoin } from '@features/mypage/lib/types';
 import { useQuery } from '@tanstack/react-query';
-import { getUserCoin } from '../api/mypage';
-import { UserCoin } from '../lib/types';
 
 export const useUserCoin = () => {
   return useQuery<UserCoin>({

@@ -1,7 +1,7 @@
 'use client';
 
-import { SosHistoryItem } from "../../lib/types";
-import { useSosHistoryQuery } from "../../model/useSosHistoryQuery";
+import { SosHistoryItem } from "@features/mypage/lib/types";
+import { useSosHistoryQuery } from "@features/mypage/model/useSosHistoryQuery";
 
 
 export const SosList = () => {

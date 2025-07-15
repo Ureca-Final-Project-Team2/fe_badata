@@ -1,12 +1,12 @@
 'use client';
 
-import { ICONS } from '@/constants/iconPath';
-import { useUserDataUsage } from '@/features/mypage/model/useUserDataUsageQuery';
+import { ICONS } from '@constants/iconPath';
+import { useUserCoin } from '@features/mypage/model/useUserCoinQuery';
+import { useUserDataUsage } from '@features/mypage/model/useUserDataUsageQuery';
 import { ArcElement, Chart, Tooltip } from 'chart.js';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import { useUserCoin } from '../../model/useUserCoinQuery';
 
 Chart.register(ArcElement, Tooltip);
 

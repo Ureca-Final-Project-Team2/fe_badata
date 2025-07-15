@@ -1,4 +1,4 @@
-import { ICONS } from '@/constants/iconPath';
+import { ICONS } from '@constants/iconPath';
 
 export const MyTradeSection = () => (
   <>
