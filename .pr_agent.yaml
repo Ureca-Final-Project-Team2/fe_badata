@@ -1,0 +1,40 @@
+review:
+  rules:
+    # 함수 네이밍 규칙
+    - "Event handler functions must start with 'handle'. For example, handleLoginButtonClick."
+    - 'Regular functions must start with a verb, such as calculate, update, fetch, etc.'
+    - 'HTTP request functions should start with get, post, delete, etc. For example, getUserInformation.'
+
+    # Hook 네이밍
+    - "Custom React Hooks should start with 'use'. For example, useAuth, useLoginMutation."
+
+    # 변수 네이밍
+    - "Boolean variables must start with 'is' or 'has'. For example, isModalOpen."
+    - 'Variable names should be descriptive, even if long. For example, userList instead of list.'
+
+    # 파일 네이밍
+    - 'Component and page filenames must use PascalCase, e.g., LoginPage, LoginButton.'
+    - 'Hooks, utils, and APIs must use camelCase, e.g., useAuth, formatDate.'
+    - 'Image filenames must use kebab-case, e.g., high-five-logo.svg.'
+
+    # import 순서
+    - 'Imports should follow this order: 1. React libraries, 2. internal modules, 3. styles.'
+
+    # 코드 내부 선언 순서
+    - 'Within a component, follow this order: 1. hooks, 2. general variables, 3. useEffect, 4. functions.'
+
+    # 코드 스타일
+    - 'Limit code nesting to a maximum of 2 levels.'
+    - 'Add a line break before return statements for better readability.'
+    - 'Avoid nested if-statements by combining conditions when possible.'
+    - 'Avoid unnecessary else blocks after return.'
+
+    # 타입/인터페이스 사용
+    - 'If a function has 2 or more props or parameters, define an interface and use it.'
+
+    # 삼항 연산자
+    - 'Avoid using nested ternary operators. Use only one ternary expression per statement.'
+
+pr_description:
+  include_diff: true
+  include_file_list: true
