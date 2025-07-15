@@ -1,0 +1,25 @@
+import { useQuery } from '@tanstack/react-query';
+import { axiosInstance } from '@shared/lib/axios/axiosInstance';
+import { Post } from '@features/trade/models/post';
+
+interface PostsResponse {
+  postsResponse: Post[];
+}
+
+interface UserTradePostsResponse {
+  soldingPostsResponse: PostsResponse;
+  soldedPostsResponse: PostsResponse;
+}
+
+export const useUserTradePostsQuery = (userId: number) => {
+  return useQuery<UserTradePostsResponse>({
+    queryKey: ['user-trade-posts', userId],
+    queryFn: async () => {
+      const content: UserTradePostsResponse = await axiosInstance.get(
+        `/api/v1/trades/posts/${userId}`,
+      );
+      return content;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+};
