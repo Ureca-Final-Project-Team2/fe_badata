@@ -11,8 +11,8 @@ import { Doughnut } from 'react-chartjs-2';
 Chart.register(ArcElement, Tooltip);
 
 export const MyDataUsageCard = () => {
-  const { data: coinData } = useUserCoin();
-  const { data: usageData } = useUserDataUsage();
+  const { data: coinData } = useUserCoin(); // coinData: number
+  const { data: usageData } = useUserDataUsage(); // usageData: { used: number }
   const [mainColor, setMainColor] = useState<string>('#0f225e');
 
   useEffect(() => {
@@ -20,8 +20,9 @@ export const MyDataUsageCard = () => {
     if (cssMain) setMainColor(cssMain);
   }, []);
 
-const used = usageData?.used ?? 0;
-const coinAmount = coinData?.coin ?? 0;
+  console.log(usageData?.dataAmount);
+  const used = usageData?.dataAmount ?? 0;
+  const coinAmount = coinData?.coin ?? 0; 
 
   const chartData = {
     labels: ['사용량'],
@@ -52,7 +53,7 @@ const coinAmount = coinData?.coin ?? 0;
           <span>코인 모으기</span>
           <Link
             href="/mypage/coin"
-            className="flex items-center gap-1.5 underline hover:font-semibold"
+            className="flex items-center gap-1.5 hover:underline hover:font-semibold"
           >
             <img src={ICONS.MYPAGE.COIN} alt="coin" className="w-4 h-4 object-contain" />
             현재 <span className="font-semibold">{coinAmount}</span> 코인
