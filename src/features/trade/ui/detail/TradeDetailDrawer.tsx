@@ -1,6 +1,6 @@
 'use client';
 
-import { useIsPostOwner } from '@features/auth/hooks/useIsPostOwner';
+import { useIsPostOwner } from '@features/auth/model/useIsPostOwner';
 import { Drawer, DrawerButton } from '@ui/Drawer';
 import { Flag, Pencil, Trash2 } from 'lucide-react';
 
