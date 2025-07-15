@@ -20,7 +20,6 @@ export const MyDataUsageCard = () => {
     if (cssMain) setMainColor(cssMain);
   }, []);
 
-  // fallback 처리
 const used = usageData?.used ?? 0;
 const coinAmount = coinData?.coin ?? 0;
 
