@@ -4,8 +4,8 @@ import { Gift, List, Plus } from 'lucide-react';
 import { BaseLayout } from '@components/layout/BaseLayout';
 import { Header } from '@ui/Header';
 import { FloatingActionButton } from '@ui/FloatingActionButton';
-import { TradePageHeader } from '@features/trade/components/TradePageHeader';
-import { TradeDataList } from '@features/trade/components/TradeDataList';
+import { TradePageHeader } from '@features/trade/ui/TradePageHeader';
+import { TradeDataList } from '@features/trade/ui/TradeDataList';
 
 export default function TradeDataPage() {
   const [sortOption, setSortOption] = useState<'latest' | 'popular'>('latest');

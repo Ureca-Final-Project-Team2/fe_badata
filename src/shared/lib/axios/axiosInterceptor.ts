@@ -1,15 +1,15 @@
-import type { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import type { ApiResponse, ErrorResponse } from '@/shared/lib/axios/models';
-import { SUCCESS_CODE } from '@constants/api';
+import { END_POINTS, SUCCESS_CODE } from '@constants/api';
 import { ErrorMessageMap } from '@constants/errorCodes';
 import { HTTPError } from '@lib/HTTPError';
 import { handleAPIError } from '@lib/axios/errorHandler';
+import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
 export const applyInterceptors = (instance: AxiosInstance): void => {
   instance.interceptors.response.use(
     <T>(response: AxiosResponse<ApiResponse<T>>): T | AxiosResponse<ApiResponse<T>> => {
       // 카카오 로그인 API는 응답 전체를 반환
-      if (response.config.url?.includes('/auth/token/issue')) {
+      if (response.config.url?.includes(END_POINTS.USER.LOGIN)) {
         return response;
       }
 

@@ -1,9 +1,9 @@
 'use client';
 
+import { useFetchStores } from '@features/stores/map/hooks/useFetchStores';
+import { useKakaoMap } from '@features/stores/map/hooks/useKakaoMap';
+import { renderStoreMarkers } from '@features/stores/map/utils/renderStoreMarkers';
 import { useEffect } from 'react';
-import { useKakaoMap } from '@/features/stores/map/hooks/useKakaoMap';
-import { useFetchStores } from '@/features/stores/map/hooks/useFetchStores';
-import { renderStoreMarkers } from '@/features/stores/map/utils/renderStoreMarkers';
 
 const RentalPage = () => {
   const { mapRef, map } = useKakaoMap();
