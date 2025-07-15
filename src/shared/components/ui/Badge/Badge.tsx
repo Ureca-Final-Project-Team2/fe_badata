@@ -8,7 +8,7 @@ const badgeVariants = cva(
       color: {
         main1:
           'border-[var(--main-1)] text-[var(--main-1)] hover:bg-[var(--main-1)] hover:text-white',
-        grayMid: 'border-[var(--gray-mid)] text-black font-light',
+        grayMid: 'border border-[var(--gray-mid)] text-[var(--gray-dark)] font-light',
         main1Solid: 'border-[var(--main-1)] bg-[var(--main-1)] text-white',
         main1Hover:
           'bg-[var(--main-1)] text-white hover:bg-transparent hover:text-[var(--main-1)] border-[var(--main-1)]',
