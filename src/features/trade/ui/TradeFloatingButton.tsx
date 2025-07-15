@@ -1,0 +1,33 @@
+import { useRouter } from 'next/navigation';
+import { Gift, List, Plus } from 'lucide-react';
+import { FloatingActionButton } from '@ui/FloatingActionButton';
+import { PATH } from '@constants/path';
+
+export function TradeFloatingButton() {
+  const router = useRouter();
+
+  const fabActions = [
+    {
+      icon: <Gift />,
+      label: '데이터',
+      onClick: () => {
+        router.push(PATH.TRADE.DATA_REGISTER);
+      },
+    },
+    {
+      icon: <List />,
+      label: '쿠폰',
+      onClick: () => {
+        router.push(PATH.TRADE.COUPON_REGISTER);
+      },
+    },
+  ];
+
+  const triggerAction = {
+    icon: <Plus />,
+    label: '글쓰기',
+    onClick: () => {},
+  };
+
+  return <FloatingActionButton mode="expand" actions={fabActions} triggerAction={triggerAction} />;
+}
