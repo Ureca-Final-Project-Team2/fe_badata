@@ -3,7 +3,6 @@ export interface UserCoin {
 }
 
 export interface UserDataUsage {
-  // total: number;
   used: number;
 }
 

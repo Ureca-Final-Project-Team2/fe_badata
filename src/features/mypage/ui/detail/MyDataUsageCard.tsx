@@ -21,8 +21,8 @@ export const MyDataUsageCard = () => {
   }, []);
 
   // fallback 처리
-  const used = usageData?.dataAmount ?? 0;
-  const coinAmount = coinData?.coin ?? 0;
+const used = usageData?.used ?? 0;
+const coinAmount = coinData?.coin ?? 0;
 
   const chartData = {
     labels: ['사용량'],

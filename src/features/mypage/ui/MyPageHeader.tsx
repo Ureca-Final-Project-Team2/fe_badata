@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthStore } from '@/features/auth/stores/authStore';
+import { useAuthStore } from "@features/auth/model/authStore";
 
 export const MyPageHeader = () => {
   const user = useAuthStore((s) => s.user);

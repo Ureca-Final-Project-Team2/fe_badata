@@ -7,13 +7,14 @@ import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
 export const applyInterceptors = (instance: AxiosInstance): void => {
   instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
-  });
-
+});
   instance.interceptors.response.use(
     <T>(response: AxiosResponse<ApiResponse<T>>): T | AxiosResponse<ApiResponse<T>> => {
       // 카카오 로그인 API는 응답 전체를 반환
