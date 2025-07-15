@@ -10,6 +10,7 @@ import { useDebouncedValue } from '@shared/hooks/useDebounceValue';
 import { PageHeader } from '@ui/Header/PageHeader';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useRecentSearch } from '../model/useRecentSearch';
 
 export function TradeSearchPage() {
   const router = useRouter();
@@ -18,10 +19,18 @@ export function TradeSearchPage() {
 
   const { data: posts, isLoading, isError } = useSearchTradePostsQuery(debouncedSearch);
 
-  const recentKeywords = ['데이터', '200MB', '유플러스', '메가커피', '스타벅스'];
+  const { keywords: recentKeywords, add, remove, clear } = useRecentSearch();
+
   const hotKeywords = ['공유 데이터', '영화관 할인쿠폰', '데이터 1GB', '스타벅스 아메리카노'];
 
   const handleBack = () => router.back();
+
+  const handleSearchSubmit = (keyword: string) => {
+    const trimmed = keyword.trim();
+    if (!trimmed) return;
+    setSearch(trimmed);
+    add(trimmed);
+  };
 
   return (
     <BaseLayout
@@ -29,8 +38,13 @@ export function TradeSearchPage() {
       showBottomNav={true}
       showSos={true}
     >
-      <SearchHeader search={search} setSearch={setSearch} />
-      <SearchRecentKeywords keywords={recentKeywords} />
+      <SearchHeader search={search} setSearch={setSearch} onSubmit={handleSearchSubmit} />
+      <SearchRecentKeywords
+        keywords={recentKeywords}
+        onDeleteKeyword={remove}
+        onDeleteAll={clear}
+        onClickKeyword={handleSearchSubmit}
+      />
       <SearchHotKeywords keywords={hotKeywords} />
       <SearchResult search={debouncedSearch} posts={posts} isLoading={isLoading} isError={isError} />
     </BaseLayout>
