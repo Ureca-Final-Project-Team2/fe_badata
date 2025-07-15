@@ -3,8 +3,8 @@ import {
   getTradeDeadlinePosts,
   getTradePostDetail,
   getTradePosts,
-} from '@features/trade/apis/trade';
-import type { Post, TradeDetailPost } from '@features/trade/models/post';
+} from '@features/trade/api/trade';
+import type { Post, TradeDetailPost } from '@features/trade/lib/types';
 
 export const useTradePostsQuery = () => {
   const { data: posts, isLoading } = useQuery<Post[]>({

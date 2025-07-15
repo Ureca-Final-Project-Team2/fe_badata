@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { axiosInstance } from '@shared/lib/axios/axiosInstance';
-import { Post } from '@features/trade/models/post';
+import { axiosInstance } from '@lib/axios/axiosInstance';
+import { Post } from '@features/trade/lib/types';
 
 interface PostsResponse {
   postsResponse: Post[];

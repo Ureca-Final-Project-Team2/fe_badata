@@ -1,4 +1,3 @@
-// 전체 게시물 리스트 조회용
 export interface Post {
   id: number;
   title: string;
