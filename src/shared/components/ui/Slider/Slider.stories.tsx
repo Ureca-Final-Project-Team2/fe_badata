@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { Slider } from '@ui/Slider/Slider';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { Slider } from '@ui/Slider';
+import { useState } from 'react';
 
 const meta: Meta<typeof Slider> = {
   title: 'Components/Slider',

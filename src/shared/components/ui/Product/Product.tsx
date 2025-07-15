@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-import { ImageBox } from '@ui/ImageBox/ImageBox';
-import { ProductInfo } from '@ui/ProductInfo/ProductInfo';
+import { ImageBox } from '@ui/ImageBox';
+import { ProductInfo } from '@ui/ProductInfo';
 import { Heart } from 'lucide-react';
 
 export interface ProductProps {

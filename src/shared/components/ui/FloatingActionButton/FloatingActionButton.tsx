@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { cn } from '@lib/cn';
+import React, { useState } from 'react';
 
 export interface FABAction {
   label: string;

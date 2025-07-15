@@ -1,9 +1,8 @@
 'use client';
 
-import React from 'react';
+import { useImageCard } from '@features/imageCard/hooks/useImageCard';
 import { ImageBox } from '@ui/ImageBox';
 import { LikeButton } from '@ui/LikeButton';
-import { useImageCard } from '@features/imageCard/hooks/useImageCard';
 
 interface ImageCardProps {
   size?: 'sm' | 'md' | 'lg';
