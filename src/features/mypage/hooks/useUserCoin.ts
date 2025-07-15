@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getUserCoin } from '../apis/userCoin';
+import { getUserCoin } from '../api/userCoin';
 import { UserCoin } from '../model/userCoin';
 
 export const useUserCoin = () => {

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getUserDataUsage } from '../apis/userDataUsage';
+import { getUserDataUsage } from '../api/userDataUsage';
 import { UserDataUsage } from '../model/userDataUsage';
 
 export const useUserDataUsage = () => {
