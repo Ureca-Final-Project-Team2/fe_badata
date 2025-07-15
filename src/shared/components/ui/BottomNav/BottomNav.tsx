@@ -45,7 +45,7 @@ export const BottomNav = ({ onSosClick, sosActive = false }: BottomNavProps) => 
   const [activeIdx, setActiveIdx] = useState(0);
 
   return (
-    <nav className="bottom-0 inset-x-0 h-[70px] bg-white border-t border-gray-200 flex justify-around items-center z-20">
+    <nav className="bottom-0 inset-x-0 h-[70px] bg-white border-t border-gray-200 flex justify-around items-center">
       {navItems.slice(0, 2).map(({ label, icon: Icon }, idx) => (
         <NavItem
           key={label}
@@ -56,7 +56,7 @@ export const BottomNav = ({ onSosClick, sosActive = false }: BottomNavProps) => 
         />
       ))}
 
-      <div className="relative -mt-8 z-30 transition-transform duration-300">
+      <div className="relative -mt-8 transition-transform duration-300">
         <button
           className={`w-[67px] h-[67px] rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex flex-col items-center justify-center transition-all duration-200 ${sosActive ? 'bg-black scale-100' : 'bg-white scale-100'}`}
           onClick={onSosClick}
