@@ -1,5 +1,5 @@
-import { Store } from '@features/stores/map/types';
-import { fetchStoreDevices } from '@features/stores/map/apis/map';
+import { fetchStoreDevices } from '@/features/stores/map/api/map';
+import { Store } from '@features/stores/map/lib';
 
 export const renderStoreMarkers = async (map: any, stores: Store[]) => {
   if (!map || !window.kakao || stores.length === 0) return;

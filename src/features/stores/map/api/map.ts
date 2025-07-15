@@ -1,13 +1,13 @@
-import { axiosInstance } from '@shared/lib/axios/axiosInstance';
-import { buildQueryParams } from '@utils/buildQueryParams';
-import { ApiResponse } from '@shared/lib/axios/models';
+import { END_POINTS } from '@constants/api';
 import {
-  FetchStoresParams,
   FetchStoreDevicesParams,
+  FetchStoresParams,
   Store,
   StoreDevice,
-} from '@features/stores/map/types';
-import { END_POINTS } from '@constants/api';
+} from '@features/stores/map/lib';
+import { axiosInstance } from '@shared/lib/axios/axiosInstance';
+import { ApiResponse } from '@shared/lib/axios/models';
+import { buildQueryParams } from '@utils/buildQueryParams';
 import type { AxiosResponse } from 'axios';
 
 /**
