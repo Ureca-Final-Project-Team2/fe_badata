@@ -35,17 +35,23 @@ export function TradePageHeader() {
     }
   };
 
+  const handleSearchClick = () => {
+    router.push('/trade/search');
+  };
+
   return (
     <div className="py-4 bg-white">
       <FlatTab items={tabItems} defaultValue={defaultValue} onValueChange={handleTabChange} />
       <div className="mt-4 px-6">
-        <InputField
-          variant="address"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          icon={<Search className="text-[var(--gray)]" />}
-          placeholder="상품을 검색하세요"
-        />
+        <div onClick={handleSearchClick}>
+          <InputField
+            variant="address"
+            value={search}
+            readOnly
+            icon={<Search className="text-[var(--gray)]" />}
+            placeholder="상품을 검색하세요"
+          />
+        </div>
       </div>
     </div>
   );
