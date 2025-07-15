@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
-import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@lib/cn';
+import { cva, VariantProps } from 'class-variance-authority';
 import type { HTMLAttributes, ReactNode } from 'react';
+import { forwardRef } from 'react';
 
 const sectionDividerVariants = cva('border-t border-solid', {
   variants: {

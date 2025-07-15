@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Profile } from '@ui/Profile';
+import { useState } from 'react';
 
 const AVATAR_URL = 'https://i.pinimg.com/originals/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg';
 

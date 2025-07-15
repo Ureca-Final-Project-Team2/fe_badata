@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { SearchIcon, TicketIcon } from 'lucide-react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { InputField } from '@ui/InputField';
+import { SearchIcon, TicketIcon } from 'lucide-react';
 import { useState } from 'react';
 
 const meta: Meta<typeof InputField> = {
