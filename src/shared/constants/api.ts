@@ -10,6 +10,7 @@ export const END_POINTS = {
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
+    REISSUE: '/api/v1/auth/reissue/token',
   },
   STORES: {
     ALLSTORE: (storeId: number, query: string) => `/api/v1/stores/${storeId}/devices?${query}`,
