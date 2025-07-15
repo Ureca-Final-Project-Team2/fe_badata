@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { Search } from 'lucide-react';
+import { PATH } from '@shared/constants/path';
 import { FlatTab } from '@ui/FlatTab';
 import { InputField } from '@ui/InputField';
+import { Search } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export function TradePageHeader() {
   const [search, setSearch] = useState('');
@@ -24,28 +25,34 @@ export function TradePageHeader() {
   const handleTabChange = (tabId: string) => {
     switch (tabId) {
       case 'all':
-        router.push('/trade');
+        router.push(PATH.TRADE.MAIN);
         break;
       case 'data':
-        router.push('/trade/data');
+        router.push(PATH.TRADE.DATA);
         break;
       case 'coupon':
-        router.push('/trade/coupon');
+        router.push(PATH.TRADE.COUPON);
         break;
     }
+  };
+
+  const handleSearchClick = () => {
+    router.push(PATH.TRADE.SEARCH);
   };
 
   return (
     <div className="py-4 bg-white">
       <FlatTab items={tabItems} defaultValue={defaultValue} onValueChange={handleTabChange} />
       <div className="mt-4 px-6">
-        <InputField
-          variant="address"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          icon={<Search className="text-[var(--gray)]" />}
-          placeholder="상품을 검색하세요"
-        />
+        <div onClick={handleSearchClick}>
+          <InputField
+            variant="address"
+            value={search}
+            readOnly
+            icon={<Search className="text-[var(--gray)]" />}
+            placeholder="상품을 검색하세요"
+          />
+        </div>
       </div>
     </div>
   );

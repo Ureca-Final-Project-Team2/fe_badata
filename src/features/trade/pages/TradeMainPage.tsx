@@ -4,8 +4,8 @@ import { Gift, List, Plus } from 'lucide-react';
 import { BaseLayout } from '@components/layout/BaseLayout';
 import { Header } from '@ui/Header';
 import { FloatingActionButton } from '@ui/FloatingActionButton';
-import { TradePageHeader } from '@features/trade/components/TradePageHeader';
-import { TradeDeadlineBanner } from '@features/trade/components/banner/TradeDeadlineBanner';
+import { TradePageHeader } from '@features/trade/ui/TradePageHeader';
+import { TradeDeadlineBanner } from '@features/trade/ui/banner/TradeDeadlineBanner';
 
 export default function TradeMainPage() {
   const fabActions = [
