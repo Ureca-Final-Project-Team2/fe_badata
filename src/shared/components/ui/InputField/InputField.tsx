@@ -5,6 +5,7 @@ import { InputFieldProps, inputVariants } from './index';
 import { cn } from '@lib/cn';
 
 export const InputField: React.FC<InputFieldProps> = ({
+  label,
   variant = 'user',
   icon,
   className,
@@ -24,6 +25,11 @@ export const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <div className="w-[380px]">
+      {label && (
+        <label className="text-[14px] text-[var(--gray-dark)] font-medium mb-1 inline-block">
+          {label}
+        </label>
+      )}
       <div className="relative h-[45px]">
         {icon && (
           <div className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
