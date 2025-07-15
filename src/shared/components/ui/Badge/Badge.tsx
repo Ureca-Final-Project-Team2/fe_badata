@@ -17,7 +17,8 @@ const badgeVariants = cva(
         grayDarkSolid: 'bg-[var(--gray-dark)] text-white',
       },
       size: {
-        sm: 'text-[1.4rem] px-4 py-0.5 ',
+        xs: 'text-[0.8rem] px-3 py-0.5',
+        sm: 'text-[1.4rem] px-4 py-0.5',
         md: 'text-[1.6rem] px-5 py-1',
         lg: 'text-[1.8rem] px-6 py-1.5',
       },
