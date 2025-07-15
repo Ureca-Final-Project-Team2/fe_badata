@@ -34,6 +34,6 @@
       "@styles/*": ["src/shared/styles/*"]
     }
   },
-  "include": ["next-env.d.ts","**/*.ts","**/*.tsx",".next/models/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/models/**/*.ts"],
   "exclude": ["node_modules"]
 }
