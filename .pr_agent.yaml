@@ -1,0 +1,132 @@
+# ============================
+# 1️⃣ PR 리뷰 도구 설정 (/review)
+# ============================
+
+[pr_reviewer]
+# 기능 활성화/비활성화
+require_score_review=false
+require_tests_review=true
+require_estimate_effort_to_review=true
+require_can_be_split_review=false
+require_security_review=true
+require_ticket_analysis_review=true
+
+# 리뷰 코멘트 유지
+persistent_comment=true
+
+# 기타 옵션
+extra_instructions = ""
+final_update_message = true
+
+# 라벨 옵션
+enable_review_labels_security=true
+enable_review_labels_effort=true
+
+# 증분 리뷰 조건
+require_all_thresholds_for_incremental_review=false
+minimal_commits_for_incremental_review=0
+minimal_minutes_for_incremental_review=0
+
+# 리뷰 텍스트 옵션
+enable_intro_text=true
+enable_help_text=false
+
+# 코드 스타일/규칙
+rules:
+  # 함수 네이밍 규칙
+  - "Event handler functions must start with 'handle'. For example, handleLoginButtonClick."
+  - "Regular functions must start with a verb, such as calculate, update, fetch, etc."
+  - "HTTP request functions should start with get, post, delete, etc. For example, getUserInformation."
+
+  # Hook 네이밍
+  - "Custom React Hooks should start with 'use'. For example, useAuth, useLoginMutation."
+
+  # 변수 네이밍
+  - "Boolean variables must start with 'is' or 'has'. For example, isModalOpen."
+  - "Variable names should be descriptive, even if long. For example, userList instead of list."
+
+  # 파일 네이밍
+  - "Component and page filenames must use PascalCase, e.g., LoginPage, LoginButton."
+  - "Hooks, utils, and APIs must use camelCase, e.g., useAuth, formatDate."
+  - "Image filenames must use kebab-case, e.g., high-five-logo.svg."
+
+  # import 순서
+  - "Imports should follow this order: 1. React libraries, 2. internal modules, 3. styles."
+
+  # 코드 내부 선언 순서
+  - "Within a component, follow this order: 1. hooks, 2. general variables, 3. useEffect, 4. functions."
+
+  # 코드 스타일
+  - "Limit code nesting to a maximum of 2 levels."
+  - "Add a line break before return statements for better readability."
+  - "Avoid nested if-statements by combining conditions when possible."
+  - "Avoid unnecessary else blocks after return."
+
+  # 타입/인터페이스 사용
+  - "If a function has 2 or more props or parameters, define an interface and use it."
+
+  # 삼항 연산자
+  - "Avoid using nested ternary operators. Use only one ternary expression per statement."
+
+# ============================
+# 2️⃣ PR 설명 생성 도구 설정 (/describe)
+# ============================
+
+[pr_description]
+publish_labels=false
+add_original_user_description=true
+generate_ai_title=false
+use_bullet_points=true
+extra_instructions = ""
+enable_pr_type=true
+final_update_message = true
+enable_help_text=false
+enable_help_comment=true
+
+# 댓글로 설명 게시
+publish_description_as_comment=false
+publish_description_as_comment_persistent=true
+
+# 변경 사항 파일 표시
+enable_semantic_files_types=true
+collapsible_file_list='adaptive'
+collapsible_file_list_threshold=6
+inline_file_summary=false
+
+# 메타 옵션
+use_description_markers=false
+include_generated_by_header=true
+
+# 대규모 PR 대응
+enable_large_pr_handling=true
+max_ai_calls=4
+async_ai_calls=true
+
+# ============================
+# 3️⃣ 코드 제안 도구 설정 (/improve)
+# ============================
+
+[pr_code_suggestions]
+max_context_tokens=24000
+commitable_code_suggestions = true
+dual_publishing_score_threshold=6
+focus_only_on_problems=true
+extra_instructions = ""
+enable_help_text=false
+enable_chat_text=false
+persistent_comment=true
+max_history_len=4
+publish_output_no_suggestions=true
+apply_suggestions_checkbox=true
+suggestions_score_threshold=6
+
+# 점수 기반 개선
+new_score_mechanism=true
+new_score_mechanism_th_high=9
+new_score_mechanism_th_medium=7
+
+# 개선 제안 양 조절
+auto_extended_mode=true
+num_code_suggestions_per_chunk=4
+max_number_of_calls = 3
+parallel_calls = true
