@@ -16,6 +16,7 @@ export const END_POINTS = {
     ALLSTORE: (storeId: number, query: string) => `/api/v1/stores/${storeId}/devices?${query}`,
     ALLDEVICE: (query: string) => `/api/v1/stores/map?${query}`,
     STORELIST: `/api/v1/stores`,
+    STOREDETAIL: (storeId: number) => `/api/v1/stores/${storeId}`
   },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
