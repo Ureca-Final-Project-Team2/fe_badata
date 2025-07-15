@@ -1,4 +1,5 @@
 import { Flame } from 'lucide-react';
+import { Badge } from '@ui/Badge/Badge';
 
 interface SearchHotKeywordsProps {
   keywords: string[];
@@ -13,9 +14,9 @@ export const SearchHotKeywords = ({ keywords }: SearchHotKeywordsProps) => {
       </div>
       <div className="flex flex-wrap gap-2">
         {keywords.map((keyword, index) => (
-          <span key={index} className="bg-gray-100 text-sm px-3 py-1 rounded-full text-gray-600">
+          <Badge key={index} size="xs" color="grayLight">
             {keyword}
-          </span>
+          </Badge>
         ))}
       </div>
     </section>

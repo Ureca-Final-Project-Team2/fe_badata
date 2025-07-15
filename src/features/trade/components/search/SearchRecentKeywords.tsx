@@ -1,19 +1,33 @@
+import { X } from 'lucide-react';
+import { Badge } from '@ui/Badge/Badge';
+
 interface SearchRecentKeywordsProps {
   keywords: string[];
+  onDeleteKeyword?: (keyword: string) => void;
+  onDeleteAll?: () => void;
 }
 
-export const SearchRecentKeywords = ({ keywords }: SearchRecentKeywordsProps) => {
+export const SearchRecentKeywords = ({
+  keywords,
+  onDeleteKeyword,
+  onDeleteAll,
+}: SearchRecentKeywordsProps) => {
   return (
     <section className="mb-6">
       <div className="flex justify-between items-center mb-2 text-sm text-muted-foreground">
         <span>최근 검색어</span>
-        <button className="text-xs text-gray-400">전체 삭제</button>
+        <button className="text-xs text-gray-400" onClick={onDeleteAll}>
+          전체 삭제
+        </button>
       </div>
       <div className="flex flex-wrap gap-2">
         {keywords.map((keyword, index) => (
-          <span key={index} className="bg-gray-100 text-sm px-3 py-1 rounded-full text-gray-600">
+          <Badge key={index} size="xs" color="grayMid" className="flex items-center gap-1">
             {keyword}
-          </span>
+            <button onClick={() => onDeleteKeyword?.(keyword)} className="ml-1 hover:text-gray-800">
+              <X className="w-3 h-3" />
+            </button>
+          </Badge>
         ))}
       </div>
     </section>
