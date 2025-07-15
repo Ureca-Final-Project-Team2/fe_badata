@@ -4,9 +4,9 @@ import { Gift, List, Plus } from 'lucide-react';
 import { BaseLayout } from '@components/layout/BaseLayout';
 import { Header } from '@ui/Header';
 import { FloatingActionButton } from '@ui/FloatingActionButton';
-import { TradePageHeader } from '@features/trade/components/TradePageHeader';
-import { TradeCouponList } from '@features/trade/components/TradeCouponList';
-import { TradeCouponFilter } from '@features/trade/components/TradeCouponFilter';
+import { TradePageHeader } from '@features/trade/ui/TradePageHeader';
+import { TradeCouponList } from '@features/trade/ui/TradeCouponList';
+import { TradeCouponFilter } from '@features/trade/ui/TradeCouponFilter';
 
 export default function TradeCouponPage() {
   const [sortOption, setSortOption] = useState<'latest' | 'popular'>('latest');

@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import { ImageCard } from '@ui/ImageCard';
 import { ProductInfo } from '@ui/ProductInfo';
-import { useTradeDeadlineQuery } from '@features/trade/queries/useTradeQuery';
+import { useTradeDeadlineQuery } from '@/features/trade/model/useTradeQueries';
 
 export function TradeDeadlineBanner() {
   const { deadlinePosts, isLoading } = useTradeDeadlineQuery();

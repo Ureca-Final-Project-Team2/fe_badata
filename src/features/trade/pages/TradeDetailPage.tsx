@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { TradeDetailProductSection } from '@features/trade/components/detail/TradeDetailProductSection';
-import { TradeDetailSellerSection } from '@features/trade/components/detail/TradeDetailSellerSection';
-import { TradeDetailDrawer } from '@features/trade/components/detail/TradeDetailDrawer';
-import { PostType, TradeDetailPost } from '@features/trade/models/post';
+import { TradeDetailProductSection } from '@features/trade/ui/detail/TradeDetailProductSection';
+import { TradeDetailSellerSection } from '@features/trade/ui/detail/TradeDetailSellerSection';
+import { TradeDetailDrawer } from '@features/trade/ui/detail/TradeDetailDrawer';
+import { PostType, TradeDetailPost } from '@features/trade/lib/types';
 import { BaseLayout } from '@shared/components/layout/BaseLayout';
 import { PageHeader } from '@ui/Header';
 import { BuyButton } from '@ui/BuyButton';

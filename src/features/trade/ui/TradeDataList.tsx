@@ -1,46 +1,41 @@
 import { ArrowDownUp, ListFilter } from 'lucide-react';
 import { Product } from '@ui/Product';
 import { Drawer, DrawerButton, FilterDrawerButton } from '@ui/Drawer';
-import { useTradePostsQuery } from '@features/trade/queries/useTradeQuery';
+import { useTradePostsQuery } from '@features/trade/model/useTradeQueries';
 
-interface TradeCouponListProps {
-  sortOption: 'latest' | 'popular';
-  setSortOption: (value: 'latest' | 'popular') => void;
+type SortOption = 'latest' | 'popular';
+
+interface TradeDataListProps {
+  sortOption: SortOption;
+  setSortOption: (value: SortOption) => void;
   isSortDrawerOpen: boolean;
   setIsSortDrawerOpen: (value: boolean) => void;
-  selectedCategory: string;
 }
 
-export function TradeCouponList({
+export function TradeDataList({
   sortOption,
   setSortOption,
   isSortDrawerOpen,
   setIsSortDrawerOpen,
-  selectedCategory,
-}: TradeCouponListProps) {
+}: TradeDataListProps) {
   const { posts, isLoading } = useTradePostsQuery();
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <div className="py-4 text-center text-[var(--black)]">로딩 중...</div>;
   }
-
   if (!posts || posts.length === 0) {
-    return <div>쿠폰 게시물이 없습니다.</div>;
+    return <div className="py-4 text-center text-[var(--black)]">게시물이 없습니다.</div>;
   }
-  const couponPosts = posts.filter((p) => p.postCategory === 'GIFTICON');
 
-  const filtered = couponPosts.filter(
-    (p) => selectedCategory === '전체' || p.gifticonCategory === selectedCategory,
-  );
-
-  const sorted = [...filtered].sort((a, b) =>
+  const dataPosts = posts.filter((p) => p.postCategory === 'DATA');
+  const sorted = [...dataPosts].sort((a, b) =>
     sortOption === 'latest'
       ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       : b.likesCount - a.likesCount,
   );
 
   return (
-    <section className="bg-white px-6 py-4">
+    <section className="bg-white px-6">
       <div className="flex flex-row justify-between py-2">
         <button
           onClick={() => setIsSortDrawerOpen(true)}
@@ -55,11 +50,10 @@ export function TradeCouponList({
           <ListFilter size={14} />
         </div>
       </div>
-      <div className="flex flex-col gap-4 py-4">
+      <div className="flex flex-col gap-4">
         {sorted.map((item) => (
           <Product
             key={item.id}
-            brand={item.partner}
             name={item.title}
             price={item.price}
             imageSrc={item.postImage}
@@ -67,6 +61,7 @@ export function TradeCouponList({
           />
         ))}
       </div>
+
       <Drawer isOpen={isSortDrawerOpen} onClose={() => setIsSortDrawerOpen(false)} variant="filter">
         <FilterDrawerButton
           selected={sortOption === 'latest'}

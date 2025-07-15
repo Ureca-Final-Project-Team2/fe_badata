@@ -4,10 +4,10 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BaseLayout } from '@shared/components/layout/BaseLayout';
 import { PageHeader } from '@ui/Header/PageHeader';
-import { SearchHeader } from '@features/trade/components/search/SearchHeader';
-import { SearchRecentKeywords } from '@features/trade/components/search/SearchRecentKeywords';
-import { SearchHotKeywords } from '@features/trade/components/search/SearchHotKeywords';
-import { SearchResult } from '@features/trade/components/search/SearchResult';
+import { SearchHeader } from '@features/trade/ui/search/SearchHeader';
+import { SearchRecentKeywords } from '@features/trade/ui/search/SearchRecentKeywords';
+import { SearchHotKeywords } from '@features/trade/ui/search/SearchHotKeywords';
+import { SearchResult } from '@features/trade/ui/search/SearchResult';
 
 export function TradeSearchPage() {
   const router = useRouter();
