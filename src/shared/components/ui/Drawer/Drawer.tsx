@@ -18,7 +18,7 @@ export function Drawer({ isOpen, onClose, children, variant = 'default' }: Drawe
 
   const baseStyle = 'w-full max-w-md rounded-t-[20px]';
   const colorStyle = isDefault
-    ? 'bg-[var(--gray-dark)] text-white'
+    ? 'bg-[var(--black)]/60 text-white'
     : 'bg-white text-[var(--black)]]';
   const paddingStyle = isFilter ? 'pt-2 px-4 pb-6' : 'p-4';
   const dividerStyle = isFilter ? 'divide-y divide-[var(--gray-light)]' : '';
