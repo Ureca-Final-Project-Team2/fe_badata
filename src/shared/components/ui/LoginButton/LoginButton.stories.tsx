@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/features/auth/model/authStore';
+import { useAuthStore } from '@features/auth/model/authStore';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { LoginButton } from '@ui/LoginButton';
 import { useEffect } from 'react';

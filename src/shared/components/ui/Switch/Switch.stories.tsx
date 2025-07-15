@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Switch } from '@ui/Switch';
-import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 
 const meta: Meta<typeof Switch> = {
   title: 'Components/Switch',

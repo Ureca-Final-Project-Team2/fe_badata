@@ -1,6 +1,6 @@
 'use client';
 
-import { ICONS } from '@/shared/constants/iconPath';
+import { ICONS } from '@constants/iconPath';
 import { LoginButton } from '@ui/LoginButton';
 import Image from 'next/image';
 

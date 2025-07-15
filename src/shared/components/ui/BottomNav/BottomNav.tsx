@@ -1,6 +1,6 @@
 'use client';
 
-import { ICONS } from '@/shared/constants/iconPath';
+import { ICONS } from '@constants/iconPath';
 import { FileText, Home, Repeat, User } from 'lucide-react';
 import { useState } from 'react';
 
