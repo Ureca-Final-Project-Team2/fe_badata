@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { Search } from 'lucide-react';
+import { PATH } from '@shared/constants/path';
 import { FlatTab } from '@ui/FlatTab';
 import { InputField } from '@ui/InputField';
+import { Search } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export function TradePageHeader() {
   const [search, setSearch] = useState('');
@@ -24,19 +25,19 @@ export function TradePageHeader() {
   const handleTabChange = (tabId: string) => {
     switch (tabId) {
       case 'all':
-        router.push('/trade');
+        router.push(PATH.TRADE.MAIN);
         break;
       case 'data':
-        router.push('/trade/data');
+        router.push(PATH.TRADE.DATA);
         break;
       case 'coupon':
-        router.push('/trade/coupon');
+        router.push(PATH.TRADE.COUPON);
         break;
     }
   };
 
   const handleSearchClick = () => {
-    router.push('/trade/search');
+    router.push(PATH.TRADE.SEARCH);
   };
 
   return (
