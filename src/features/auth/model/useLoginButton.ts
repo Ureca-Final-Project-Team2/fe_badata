@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuthStore } from '@/features/auth/stores/authStore';
-import { useKakaoLogin } from '@/features/auth/hooks/useKakaoLogin';
+import { useAuthStore } from '@features/auth/model/authStore';
+import { useKakaoLogin } from '@features/auth/model/useKakaoLogin';
 
 export const useLoginButton = () => {
   const { isLoggedIn, logout } = useAuthStore();

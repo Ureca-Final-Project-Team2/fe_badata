@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthStore } from '@features/auth/stores/authStore';
+import { useAuthStore } from '@features/auth/model/authStore';
 
 /**
  * 현재 로그인된 사용자가 게시글 작성자인지 판단하는 훅 (userId 기준)

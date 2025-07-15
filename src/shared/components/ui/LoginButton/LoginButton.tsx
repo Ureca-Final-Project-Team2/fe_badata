@@ -1,7 +1,7 @@
 'use client';
 
-import { useLoginButton } from '@/features/auth/hooks/useLoginButton';
-import { cn } from '@/shared/lib/cn';
+import { useLoginButton } from '@features/auth/model/useLoginButton';
+import { cn } from '@lib/cn';
 
 export const LoginButton = () => {
   const { isLoggedIn, handleClick } = useLoginButton();

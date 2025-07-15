@@ -1,9 +1,9 @@
 'use client';
 
+import { fetchKakaoAuth } from '@features/auth/api/auth';
+import { useAuthStore } from '@features/auth/model/authStore';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { fetchKakaoAuth } from '@/features/auth/apis/auth';
-import { useAuthStore } from '@/features/auth/stores/authStore';
 
 export default function KakaoCallbackPage() {
   const searchParams = useSearchParams();

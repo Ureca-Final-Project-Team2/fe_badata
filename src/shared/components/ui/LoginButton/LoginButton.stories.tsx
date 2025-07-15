@@ -1,7 +1,7 @@
+import { useAuthStore } from '@/features/auth/model/authStore';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { LoginButton } from '@ui/LoginButton';
-import { useAuthStore } from '@features/auth/stores/authStore';
 import { useEffect } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof LoginButton> = {
   title: 'Components/LoginButton',
