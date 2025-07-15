@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const TradeDetailDrawer = ({ isOpen, onClose, postUserId }: Props) => {
-  const isOwner = useIsPostOwner(postUserId); // 게시글 작성자 여부 판단: userId 기준
+  const isOwner = useIsPostOwner(postUserId);
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose} variant="default">

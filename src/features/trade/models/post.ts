@@ -12,7 +12,6 @@ export interface Post {
   isLiked: boolean;
 }
 
-// 게시물 상세 조회용
 export interface TradeDetailPost {
   id: number;
   title: string;

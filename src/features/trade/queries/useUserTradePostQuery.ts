@@ -18,7 +18,6 @@ export const useUserTradePostsQuery = (userId: number) => {
       const content: UserTradePostsResponse = await axiosInstance.get(
         `/api/v1/trades/posts/${userId}`,
       );
-      console.log('🔍 API 응답:', content);
       return content;
     },
     staleTime: 1000 * 60 * 5,

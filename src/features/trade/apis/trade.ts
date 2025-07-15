@@ -1,6 +1,6 @@
 import { axiosInstance } from '@lib/axios/axiosInstance';
 import { END_POINTS } from '@constants/api';
-import { Post, TradeDetailPost, TradeWriter, PostType } from '@features/trade/models/post';
+import { Post, TradeDetailPost } from '@features/trade/models/post';
 
 export const getTradePosts = async (): Promise<Post[]> => {
   const content: { postsResponse: Post[] } = await axiosInstance.get(END_POINTS.TRADES.LIST);
