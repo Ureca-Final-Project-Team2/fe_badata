@@ -15,7 +15,7 @@ export const SearchRecentKeywords = ({
   return (
     <section className="mb-6">
       <div className="flex justify-between items-center mb-2 text-[1.25rem] text-muted-foreground">
-        <span className="text-black font-bold">최근 검색어</span>
+        <span className="text-black font-semibold">최근 검색어</span>
         <button className="text-xs text-gray-400" onClick={onDeleteAll}>
           전체 삭제
         </button>

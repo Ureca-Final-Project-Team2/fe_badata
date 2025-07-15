@@ -10,7 +10,7 @@ export const SearchHotKeywords = ({ keywords }: SearchHotKeywordsProps) => {
     <section className="mb-6">
       <div className="flex items-center gap-1 mb-2 text-[1.25rem] font-medium">
         <Flame className="w-4 h-4 text-orange-500" />
-        <span className="text-black font-bold">실시간 hot 검색어</span>
+        <span className="text-black font-semibold">실시간 hot 검색어</span>
       </div>
       <div className="flex flex-wrap gap-2">
         {keywords.map((keyword, index) => (
