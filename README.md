@@ -12,7 +12,7 @@
 **실시간 데이터 공유의 한계를 체감한 1인 가구를 위한**  
 **남는 데이터를 순환시키는 개인 간 데이터 거래 플랫폼 ‘BADATA’**
 
-_유레카 프론트엔드 개발자 2기 최종 융합 프로젝트 2조_  
+_유레카 프론트엔드 개발자 과정 2기 <br/> 최종 융합 프로젝트 2조_  
 
 **팀장** 이시현 ｜ **팀원** 박은서 · 박지회 · 이은채
 
@@ -26,7 +26,7 @@ _유레카 프론트엔드 개발자 2기 최종 융합 프로젝트 2조_
 | 항목           | 내용                                         |
 | -------------- | -------------------------------------------- |
 | **프로젝트명** | BADATA                                       |
-| **팀명**       | 2SEAU                                        |
+| **팀명**       | 2SeaU                                        |
 | **주제**       | LG U+ 공유 데이터 거래 통합 플랫폼          |
 | **타겟층**     | 1인 가구, 소규모 소비자                     |
 | **개발 기간**  | 2025.06.30 ~ 2025.08.07                      |
@@ -63,7 +63,7 @@ _유레카 프론트엔드 개발자 2기 최종 융합 프로젝트 2조_
   - 데이터 거래 게시물  
   - 기프티콘 거래 게시물 (통신사 혜택 기반)  
 - 게시글 작성 시 이미지(OCR 처리)를 첨부하면  
-  **요금제 또는 기프티콘 정보가 자동 입력**됩니다.
+  **기프티콘 정보가 자동 입력**됩니다.
 
 &nbsp;  
 &nbsp;  
@@ -108,6 +108,127 @@ _유레카 프론트엔드 개발자 2기 최종 융합 프로젝트 2조_
 &nbsp;  
 &nbsp;  
 
+## 📂 폴더 구조
+### FSD 아키텍처 도입
+- **선택 배경**
+  - **프로젝트 규모**: 거래, 대여, 예약, 지도 등 여러 도메인을 포함하는 서비스
+  - **팀 협업**: 여러 개발자가 동시에 작업하는 환경에서 충돌 최소화
+  - **유지보수성**: 기능별로 코드가 응집되어 있어 수정 및 확장이 용이
+- **주요 이점**
+  - **도메인 중심 개발**: 각 기능을 독립적으로 개발하고 관리
+  - **명확한 의존성**: 레이어 간 의존성 규칙으로 코드 복잡도 관리
+  - **확장성**: 새로운 기능 추가 시 기존 코드 영향 최소화
+    
+### 전체 구조 (주요 폴더 위주 - 리팩토링 필요🤔)
+```
+fe_badata/
+├── ...
+├── public/                       # 정적 파일
+├── src/
+│   ├── app/                      # Next.js App Router
+│   │   ├── auth/                 # 인증 페이지
+│   │   ├── home/                 # 홈 페이지
+│   │   ├── landing/              # 랜딩 페이지
+│   │   ├── mypage/               # 마이페이지
+│   │   ├── rental/               # 대여 페이지
+│   │   ├── trade/                # 거래 페이지
+│   │   ├── _providers.tsx        # 전역 Provider
+│   │   ├── globals.css           # 전역 스타일
+│   │   ├── layout.tsx            # 루트 레이아웃
+│   │   └── page.tsx              # 루트 페이지
+│   ├── components/               # shadcn/ui 컴포넌트 폴더
+│   │   └── ui/                   
+│   ├── features/                 # 도메인별 비즈니스 로직
+│   │   ├── auth/                 # 인증 도메인
+│   │   │   ├── api/              # API 통신 함수
+│   │   │   │   └── auth.ts
+│   │   │   ├── lib/              # 유틸리티 함수
+│   │   │   │   └── user.ts
+│   │   │   └── model/            # 상태 관리 및 훅
+│   │   │       ├── authStore.ts
+│   │   │       ├── useKakaoLogin.ts
+│   │   │       └── useIsPostOwner.ts
+│   │   ├── trade/                # 거래 도메인
+│   │   │   ├── api/
+│   │   │   │   └── trade.ts      # 거래 API 함수
+│   │   │   ├── lib/
+│   │   │   │   ├── types.ts      # 타입 정의
+│   │   │   │   └── partner.ts    # 제휴사, 카테고리 매핑 유틸
+│   │   │   ├── model/
+│   │   │   │   ├── useTradeQueries.ts
+│   │   │   │   └── useTradeMutations.ts
+│   │   │   ├── pages/            # 페이지 컴포넌트
+│   │   │   │   ├── TradeMainPage.tsx
+│   │   │   │   ├── TradeDataPage.tsx
+│   │   │   │   ├── TradeDetailPage.tsx
+│   │   │   │   ├── TradeSearchPage.tsx
+│   │   │   │   └── register/
+│   │   │   └── ui/               # UI 컴포넌트
+│   │   │       ├── TradeFloatingButton.tsx
+│   │   │       ├── TradePageHeader.tsx
+│   │   │       ├── banner/       # 배너 컴포넌트
+│   │   │       ├── detail/       # 상세 페이지 컴포넌트
+│   │   │       └── search/       # 검색 관련 컴포넌트
+│   │   ├── mypage/               # 마이페이지 도메인
+│   │   │   ├── api/
+│   │   │   ├── lib/
+│   │   │   ├── model/
+│   │   │   ├── pages/
+│   │   │   └── ui/
+│   │   └── stores/               # 매장 관련 상위 도메인
+│   │       └── map/              # 지도 도메인
+│   └── shared/                   # 공통 모듈
+│       ├── components/           # 공통 컴포넌트
+│       │   └── layout/
+│       │       └── BaseLayout.tsx
+│       │   └── ui/               # UI 컴포넌트
+│       │       ├── InputField/   
+│       │       │   ├── InputField.tsx
+│       │       │   ├── InputField.variants.ts
+│       │       │   ├── InputField.types.ts
+│       │       │   ├── InputField.stories.tsx
+│       │       │   └── index.ts
+│       │       ├── Button/       # 버튼
+│       │       ├── Modal/        # 모달
+│       │       ├── Toast/        # 토스트
+│       │       ├── Drawer/       # 드로어
+│       │       ├── Header/       # 헤더
+│       │       ├── BottomNav/    # 하단 네비게이션
+│       │       ├── SectionDivider/ # 섹션 구분선
+│       │       └── ...
+│       ├── constants/            # 상수 정의
+│       │   ├── api.ts            # API 엔드포인트
+│       │   ├── errorCodes.ts     # 에러 코드
+│       │   ├── iconPath.ts       # 아이콘 경로
+│       │   └── path.ts           # 라우트 경로
+│       ├── hooks/                # 공통 React 훅
+│       │   └── useDebounceValue.ts
+│       ├── lib/                  # 유틸리티 함수
+│       │   ├── cn.ts             # 클래스네임 유틸
+│       │   ├── HTTPError.ts      # HTTP 에러 클래스
+│       │   ├── queryClient.ts    # React Query 설정
+│       │   └── axios/            # Axios 설정
+│       │       ├── axiosInstance.ts
+│       │       ├── axiosInterceptor.ts
+│       │       ├── errorHandler.ts
+│       │       └── models.ts
+│       ├── styles/               # 전역 스타일
+│       │   └── index.css
+│       └── utils/                # 헬퍼 함수
+│           ├── buildQueryParams.ts
+│           ├── formatDate.ts
+│           └── formatPrice.ts
+├── .eslintrc.json                # ESLint 설정
+├── .prettierrc                   # Prettier 설정
+├── next.config.ts                # Next.js 설정
+├── tailwind.config.ts            # Tailwind 설정
+├── tsconfig.json                 # TypeScript 설정
+└── ...
+```
+
+&nbsp;  
+&nbsp;  
+&nbsp; 
 
 ## 🛠️ 프론트엔드 기술 스택
 
