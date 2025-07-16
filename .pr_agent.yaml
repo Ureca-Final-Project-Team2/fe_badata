@@ -29,7 +29,7 @@ review:
     - 'Avoid nested if-statements by combining conditions when possible.'
     - 'Avoid unnecessary else blocks after return.'
 
-    # 타입/ 인터페이스 사용
+    # 타입/인터페이스 사용
     - 'If a function has 2 or more props or parameters, define an interface and use it.'
 
     # 삼항 연산자
