@@ -15,7 +15,7 @@
 
 - 추가한 라이브러리나 특이 사항
 
-## ✅ Check List
+### ✅ Check List
 
 - [ ] merge할 브랜치의 위치를 확인했나요?
 - [ ] Label을 지정했나요?

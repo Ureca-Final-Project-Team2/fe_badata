@@ -1,4 +1,4 @@
-import MyCoinPage from "@features/mypage/pages/MyCoinPage";
+import MyCoinPage from "@/features/mypage/pages/MyCoinPage";
 
 export default function Page() {
   return <MyCoinPage />;

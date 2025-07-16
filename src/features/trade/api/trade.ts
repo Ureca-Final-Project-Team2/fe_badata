@@ -1,6 +1,10 @@
 import { END_POINTS } from '@constants/api';
-import { Post, TradeDetailPost } from '@features/trade/lib/types';
-import { axiosInstance } from '@lib/axios/axiosInstance';
+import type {
+  Post,
+  PostTradeDataRequest,
+  PostTradeGifticonRequest,
+  TradeDetailPost,
+} from '@features/trade/lib/types';
 
 export const getTradePosts = async (): Promise<Post[]> => {
   const content: { postsResponse: Post[] } = await axiosInstance.get(END_POINTS.TRADES.LIST);
@@ -35,3 +39,11 @@ export const getSearchTradePosts = async (keyword: string): Promise<Post[]> => {
   const content: { postsResponse: Post[] } = await axiosInstance.get(END_POINTS.TRADES.SEARCH(keyword));
   return content.postsResponse ?? [];
 }
+
+export const postTradeData = async (payload: PostTradeDataRequest): Promise<void> => {
+  await axiosInstance.post(END_POINTS.TRADES.REGISTER_DATA, payload);
+};
+
+export const postTradeGifticon = async (payload: PostTradeGifticonRequest): Promise<void> => {
+  await axiosInstance.post(END_POINTS.TRADES.REGISTER_GIFTICON, payload);
+};

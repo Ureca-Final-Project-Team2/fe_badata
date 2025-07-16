@@ -1,5 +1,5 @@
-import { Store } from '@features/stores/map/types';
-import { fetchStoreDevices } from '@features/stores/map/apis/map';
+import { fetchStoreDetail, fetchStoreDevices } from '@features/stores/map/api/map';
+import { Store } from '@features/stores/map/lib';
 
 export const renderStoreMarkers = async (map: any, stores: Store[]) => {
   if (!map || !window.kakao || stores.length === 0) return;
@@ -36,8 +36,19 @@ export const renderStoreMarkers = async (map: any, stores: Store[]) => {
 
     window.kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
     window.kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close(map, marker));
-    window.kakao.maps.event.addListener(marker, 'click', () => {
+    window.kakao.maps.event.addListener(marker, 'click', async () => {
       console.log(`📦 ${store.name}의 기기 목록:`, devices);
-    });
+
+      const center = map.getCenter();
+      const lat = center.getLat();
+      const lng = center.getLng();
+    
+   try {
+    const storeDetail = await fetchStoreDetail(store.id, lat, lng);
+    console.log(`${store.name}의 상세 정보:`, storeDetail);
+  } catch (error) {
+    console.error('가맹점 상세정보 요청 실패:', error);
+  }
+});
   }
 };

@@ -6,5 +6,6 @@ export const useUserCoin = () => {
   return useQuery<UserCoin>({
     queryKey: ['userCoin'],
     queryFn: getUserCoin,
+    enabled: typeof window !== 'undefined',
   });
-};
+}
