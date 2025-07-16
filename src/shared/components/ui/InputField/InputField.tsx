@@ -3,6 +3,7 @@
 import React from 'react';
 import { InputFieldProps, inputVariants } from './index';
 import { cn } from '@lib/cn';
+import { formatPrice } from '@utils/formatPrice';
 
 export const InputField: React.FC<InputFieldProps> = ({
   label,
@@ -12,8 +13,10 @@ export const InputField: React.FC<InputFieldProps> = ({
   errorMessage,
   isRequired = false,
   value,
+  onChange,
   ...props
 }) => {
+  const isPrice = variant === 'price';
   const hasError = isRequired && !value?.toString().trim();
 
   const baseStyle = inputVariants[variant];
@@ -22,6 +25,19 @@ export const InputField: React.FC<InputFieldProps> = ({
     : variant === 'user'
       ? 'border-[var(--gray-light)]'
       : '';
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!onChange) return;
+
+    const rawValue = e.target.value;
+
+    if (isPrice) {
+      const formatted = formatPrice(rawValue);
+      onChange({ ...e, target: { ...e.target, value: formatted } });
+    } else {
+      onChange(e);
+    }
+  };
 
   return (
     <div className="w-[380px]">
@@ -45,6 +61,8 @@ export const InputField: React.FC<InputFieldProps> = ({
             className,
           )}
           value={value}
+          onChange={handleChange}
+          inputMode={isPrice ? 'numeric' : undefined}
           {...props}
         />
       </div>

@@ -2,7 +2,7 @@ import { InputHTMLAttributes, ReactNode } from 'react';
 
 export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  variant?: 'ocr' | 'user' | 'address';
+  variant?: 'ocr' | 'user' | 'address' | 'price';
   icon?: ReactNode;
   className?: string;
   errorMessage?: string; // 에러 문구
