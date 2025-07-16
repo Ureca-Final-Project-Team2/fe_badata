@@ -1,8 +1,8 @@
 'use client';
 
-import { renderStoreMarkers } from '@/features/stores/map/lib/renderStoreMarkers';
-import { useFetchStores } from '@/features/stores/map/model/useFetchStores';
-import { useKakaoMap } from '@/features/stores/map/model/useKakaoMap';
+import { renderStoreMarkers } from '@features/stores/map/lib/renderStoreMarkers';
+import { useFetchStores } from '@features/stores/map/model/useFetchStores';
+import { useKakaoMap } from '@features/stores/map/model/useKakaoMap';
 import { useEffect } from 'react';
 
 const RentalPage = () => {

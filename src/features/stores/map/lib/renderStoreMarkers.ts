@@ -1,4 +1,4 @@
-import { fetchStoreDetail, fetchStoreDevices } from '@/features/stores/map/api/map';
+import { fetchStoreDetail, fetchStoreDevices } from '@features/stores/map/api/map';
 import { Store } from '@features/stores/map/lib';
 
 export const renderStoreMarkers = async (map: any, stores: Store[]) => {
