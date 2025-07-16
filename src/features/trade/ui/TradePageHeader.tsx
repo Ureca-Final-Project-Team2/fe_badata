@@ -3,10 +3,8 @@ import { FlatTab } from '@ui/FlatTab';
 import { InputField } from '@ui/InputField';
 import { Search } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 export function TradePageHeader() {
-  const [search, setSearch] = useState('');
   const router = useRouter();
   const pathname = usePathname();
 
@@ -47,7 +45,6 @@ export function TradePageHeader() {
         <div onClick={handleSearchClick}>
           <InputField
             variant="address"
-            value={search}
             readOnly
             icon={<Search className="text-[var(--gray)]" />}
             placeholder="상품을 검색하세요"

@@ -11,6 +11,32 @@ export interface Post {
   isLiked: boolean;
 }
 
+export interface BasePost {
+  id: number;
+  title: string;
+  comment: string;
+  price: number;
+  createdAt: string;
+  postImage: string;
+  likesCount: number;
+  isLiked: boolean;
+  isSold: boolean;
+  deadLine: string;
+}
+
+export interface DataPost extends BasePost {
+  postCategory: 'DATA';
+  mobileCarrier?: string;
+  capacity?: number;
+}
+
+export interface CouponPost extends BasePost {
+  postCategory: 'GIFTICON';
+  partner?: string;
+  issueDate?: string;
+  gifticonCategory?: string | null;
+}
+
 export interface TradeDetailPost {
   id: number;
   title: string;
@@ -29,6 +55,7 @@ export interface TradeDetailPost {
   // 기프티콘 거래용
   issueDate?: string;
   partner?: string;
+
   likesCount: number;
   isLiked: boolean;
 }
@@ -73,3 +100,9 @@ export interface PostTradeGifticonRequest {
   comment: string;
   file: string | null;
 }
+
+export type TradeDetailResponse = {
+  user?: { userId: number; username: string };
+  seller?: { userId: number; username: string };
+  post: TradeDetailPost;
+};

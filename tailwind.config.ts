@@ -29,6 +29,7 @@ const config: Config = {
         // Status 색상
         red: '#FF4242',
         green: '#11D85D',
+        blue: '#155dfc',
       },
       fontSize: {
         'head-bold': ['31.5px', 'auto'],

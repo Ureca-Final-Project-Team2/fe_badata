@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import { PostType, TradeDetailPost } from '@features/trade/lib/types';
+import { TradeDetailDrawer } from '@features/trade/ui/detail/TradeDetailDrawer';
 import { TradeDetailProductSection } from '@features/trade/ui/detail/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@features/trade/ui/detail/TradeDetailSellerSection';
-import { TradeDetailDrawer } from '@features/trade/ui/detail/TradeDetailDrawer';
-import { PostType, TradeDetailPost } from '@features/trade/lib/types';
 import { BaseLayout } from '@shared/components/layout/BaseLayout';
-import { PageHeader } from '@ui/Header';
 import { BuyButton } from '@ui/BuyButton';
+import { PageHeader } from '@ui/Header';
+import { useState } from 'react';
 
 interface Props {
   tradeId: string;
@@ -17,7 +17,7 @@ interface Props {
   sellerName: string;
 }
 
-export const TradeDetailPage = ({ tradeId, postUserId, post, postType, sellerName }: Props) => {
+export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Props) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   const handleShare = () => {

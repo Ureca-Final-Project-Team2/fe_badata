@@ -1,7 +1,7 @@
 'use client';
 
 import { ICONS } from '@constants/iconPath';
-import { FileText, Home, Repeat, User } from 'lucide-react';
+import { FileText, Home, LucideIcon, Repeat, User } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
@@ -26,7 +26,7 @@ const NavItem = ({
   onClick,
 }: {
   label: string;
-  Icon: any;
+  Icon: LucideIcon;
   active: boolean;
   onClick: () => void;
 }) => (
