@@ -1,10 +1,10 @@
 import { END_POINTS } from '@constants/api';
-import { axiosInstance } from '@lib/axios/axiosInstance';
 import {
   SosHistoryItem,
   UserCoin,
-  UserDataUsage,
-} from '../lib/types';
+  UserDataUsage
+} from '@features/mypage/lib/types';
+import { axiosInstance } from '@lib/axios/axiosInstance';
 
 // 나의 코인 정보 조회
 export const getUserCoin = async (): Promise<UserCoin> => {
