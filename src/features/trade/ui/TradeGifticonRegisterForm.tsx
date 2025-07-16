@@ -1,27 +1,28 @@
-'use client';
+"use client";
 
-import { getCategoryByPartner } from '@features/trade/lib/partner';
-import { GifticonCategory } from '@features/trade/lib/types';
-import { usePostTradeGifticonMutation } from '@features/trade/model/useTradeMutations';
-import { BuyButton } from '@ui/BuyButton';
-import { InputField } from '@ui/InputField';
-import { TextAreaField } from '@ui/TextAreaField';
-import { toRawPrice } from '@utils/formatPrice';
-import { ImageUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { ImageUp } from "lucide-react";
+
+import { getCategoryByPartner } from "@features/trade/lib/partner";
+import { GifticonCategory } from "@features/trade/lib/types";
+import { usePostTradeGifticonMutation } from "@features/trade/model/useTradeMutations";
+import { BuyButton } from "@ui/BuyButton";
+import { InputField } from "@ui/InputField";
+import { TextAreaField } from "@ui/TextAreaField";
+import { toRawPrice } from "@utils/formatPrice";
 
 export function TradeCouponRegisterForm() {
   const [ocrResult, setOcrResult] = useState({
-    title: '메가커피 아메리카노',
-    partner: '메가MGC커피',
-    couponNumber: 'MGC123456789',
-    deadLine: '2025-07-19',
-    issueDate: '2025-06-18',
-    image: 'no-image',
+    title: "메가커피 아메리카노",
+    partner: "메가MGC커피",
+    couponNumber: "MGC123456789",
+    deadLine: "2025-07-19",
+    issueDate: "2025-06-18",
+    image: "no-image",
   });
 
-  const [price, setPrice] = useState('');
-  const [comment, setComment] = useState('');
+  const [price, setPrice] = useState("");
+  const [comment, setComment] = useState("");
   const [category, setCategory] = useState<GifticonCategory | undefined>();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -39,7 +40,7 @@ export function TradeCouponRegisterForm() {
 
     setIsSubmitting(true);
 
-    const file = 'no-image';
+    const file = "no-image";
 
     mutate(
       {
@@ -54,7 +55,7 @@ export function TradeCouponRegisterForm() {
         comment,
       },
       {
-        onSuccess: () => setIsSubmitting(false)
+        onSuccess: () => setIsSubmitting(false),
       },
     );
   };
@@ -70,11 +71,11 @@ export function TradeCouponRegisterForm() {
         setImagePreview(reader.result as string);
         // 수정 필요
         setOcrResult({
-          title: 'OCR 상품명',
-          partner: 'OCR 제휴사',
-          couponNumber: 'OCR123456',
-          deadLine: '2025-12-31',
-          issueDate: '2025-01-01',
+          title: "OCR 상품명",
+          partner: "OCR 제휴사",
+          couponNumber: "OCR123456",
+          deadLine: "2025-12-31",
+          issueDate: "2025-01-01",
           image: reader.result as string,
         });
       };
@@ -92,7 +93,11 @@ export function TradeCouponRegisterForm() {
     >
       <label className="relative w-[380px] h-[330px] border-2 border-[var(--gray-light)] shadow-sm rounded-2xl overflow-hidden cursor-pointer">
         {imagePreview ? (
-          <img src={imagePreview} alt="이미지 미리보기" className="w-full h-full object-contain" />
+          <img
+            src={imagePreview}
+            alt="이미지 미리보기"
+            className="w-full h-full object-contain"
+          />
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center gap-2">
             <ImageUp size={30} color="var(--point-1)" />
@@ -107,7 +112,9 @@ export function TradeCouponRegisterForm() {
         />
       </label>
       {imageFile && (
-        <p className="text-[16px] text-[var(--gray-mid)] mb-4">이미지 선택됨: {imageFile.name}</p>
+        <p className="text-[16px] text-[var(--gray-mid)] mb-4">
+          이미지 선택됨: {imageFile.name}
+        </p>
       )}
       <InputField
         label="상품명"
@@ -127,7 +134,7 @@ export function TradeCouponRegisterForm() {
         label="카테고리"
         readOnly
         variant="ocr"
-        value={category ?? ''}
+        value={category ?? ""}
         placeholder="카테고리"
       />
       <InputField

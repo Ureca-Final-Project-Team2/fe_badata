@@ -1,12 +1,13 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
+
 import {
   addRecentKeyword,
   clearRecentKeywords,
   getRecentKeywords,
   removeRecentKeyword,
 } from '@lib/localSearch';
-import { useCallback, useEffect, useState } from 'react';
 
 export const useRecentSearch = () => {
   const [keywords, setKeywords] = useState<string[]>([]);

@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
-import type { PostTradeDataRequest, PostTradeGifticonRequest } from '@features/trade/lib/types';
 import { postTradeData, postTradeGifticon } from '@features/trade/api/trade';
+import type { PostTradeDataRequest, PostTradeGifticonRequest } from '@features/trade/lib/types';
+import { useMutation } from '@tanstack/react-query';
 
 export const usePostTradeDataMutation = () => {
   return useMutation({

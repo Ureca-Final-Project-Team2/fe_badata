@@ -1,6 +1,7 @@
+import { Gift, List, Pen, Plus } from 'lucide-react';
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { FloatingActionButton } from '@ui/FloatingActionButton';
-import { Gift, List, Pen, Plus } from 'lucide-react';
 
 const meta: Meta<typeof FloatingActionButton> = {
   title: 'Components/FloatingActionButton',

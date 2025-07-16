@@ -1,9 +1,10 @@
 import { useState } from 'react';
+
 import { BaseLayout } from '@components/layout/BaseLayout';
-import { Header } from '@ui/Header';
-import { TradePageHeader } from '@features/trade/ui/TradePageHeader';
 import { TradeDataList } from '@features/trade/ui/TradeDataList';
 import { TradeFloatingButton } from '@features/trade/ui/TradeFloatingButton';
+import { TradePageHeader } from '@features/trade/ui/TradePageHeader';
+import { Header } from '@ui/Header';
 
 export default function TradeDataPage() {
   const [sortOption, setSortOption] = useState<'latest' | 'popular'>('latest');

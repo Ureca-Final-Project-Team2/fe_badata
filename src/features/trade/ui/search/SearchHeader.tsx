@@ -1,7 +1,8 @@
 'use client';
 
-import { InputField } from '@ui/InputField';
 import { Search } from 'lucide-react';
+
+import { InputField } from '@ui/InputField';
 
 interface SearchHeaderProps {
   search: string;

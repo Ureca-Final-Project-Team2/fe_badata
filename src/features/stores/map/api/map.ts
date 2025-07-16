@@ -1,3 +1,5 @@
+import type { AxiosResponse } from 'axios';
+
 import { END_POINTS } from '@constants/api';
 import {
   FetchStoreDevicesParams,
@@ -9,7 +11,6 @@ import {
 import { axiosInstance } from '@shared/lib/axios/axiosInstance';
 import { ApiResponse } from '@shared/lib/axios/models';
 import { buildQueryParams } from '@utils/buildQueryParams';
-import type { AxiosResponse } from 'axios';
 
 /**
  * 특정 가맹점(storeId)의 장비 목록 조회

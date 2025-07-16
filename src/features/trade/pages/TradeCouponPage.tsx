@@ -1,10 +1,11 @@
 import { useState } from 'react';
+
 import { BaseLayout } from '@components/layout/BaseLayout';
-import { Header } from '@ui/Header';
-import { TradePageHeader } from '@features/trade/ui/TradePageHeader';
-import { TradeCouponList } from '@features/trade/ui/TradeCouponList';
 import { TradeCouponFilter } from '@features/trade/ui/TradeCouponFilter';
+import { TradeCouponList } from '@features/trade/ui/TradeCouponList';
 import { TradeFloatingButton } from '@features/trade/ui/TradeFloatingButton';
+import { TradePageHeader } from '@features/trade/ui/TradePageHeader';
+import { Header } from '@ui/Header';
 
 export default function TradeCouponPage() {
   const [sortOption, setSortOption] = useState<'latest' | 'popular'>('latest');

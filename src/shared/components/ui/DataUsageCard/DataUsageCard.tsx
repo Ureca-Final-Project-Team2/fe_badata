@@ -1,6 +1,7 @@
-import { cn } from '@lib/cn';
-import { cva } from 'class-variance-authority';
 import React, { forwardRef } from 'react';
+import { cva } from 'class-variance-authority';
+
+import { cn } from '@lib/cn';
 
 const cardWrapperVariants = cva(
   'w-[380px] h-[225px] rounded-[20px] bg-white p-4 flex flex-col justify-between shadow-sm',

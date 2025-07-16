@@ -1,7 +1,8 @@
+import { AlertCircle, Search } from 'lucide-react';
+
 import { CouponPost, DataPost } from '@features/trade/lib/types';
 import { SearchResultCard } from '@features/trade/ui/search/SearchResultCard';
 import { SearchSkeletonCard } from '@features/trade/ui/search/SearchSkeletonCard';
-import { AlertCircle, Search } from 'lucide-react';
 
 interface SearchResultProps {
   search: string;

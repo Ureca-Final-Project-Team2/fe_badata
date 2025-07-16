@@ -1,5 +1,6 @@
-import { Badge } from '@ui/Badge';
 import { X } from 'lucide-react';
+
+import { Badge } from '@ui/Badge';
 
 interface SearchRecentKeywordsProps {
   keywords: string[];

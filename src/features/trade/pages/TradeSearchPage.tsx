@@ -1,5 +1,8 @@
 'use client';
 
+import { useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { CouponPost, DataPost } from '@features/trade/lib/types';
 import { useRecentSearch } from '@features/trade/model/useRecentSearch';
 import { useSearchTradePostsQuery } from '@features/trade/model/useTradeQueries';
@@ -10,8 +13,6 @@ import { SearchResult } from '@features/trade/ui/search/SearchResult';
 import { BaseLayout } from '@shared/components/layout/BaseLayout';
 import { useDebouncedValue } from '@shared/hooks/useDebounceValue';
 import { PageHeader } from '@ui/Header/PageHeader';
-import { useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
 
 export function TradeSearchPage() {
   const router = useRouter();

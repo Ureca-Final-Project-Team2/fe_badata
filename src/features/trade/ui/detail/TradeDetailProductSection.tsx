@@ -1,7 +1,8 @@
 'use client';
 
-import { SectionDivider } from '@ui/SectionDivider';
 import Image from 'next/image';
+
+import { SectionDivider } from '@ui/SectionDivider';
 
 interface TradeDetailProductSectionProps {
   postType: 'GIFTICON' | 'DATA';

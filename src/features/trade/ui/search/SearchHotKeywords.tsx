@@ -1,4 +1,5 @@
 import { Flame } from 'lucide-react';
+
 import { Badge } from '@ui/Badge';
 
 interface SearchHotKeywordsProps {

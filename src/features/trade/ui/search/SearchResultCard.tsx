@@ -1,5 +1,6 @@
-import { CouponPost, DataPost } from '@features/trade/lib/types';
 import { useRouter } from 'next/navigation';
+
+import { CouponPost, DataPost } from '@features/trade/lib/types';
 
 interface SearchResultCardProps {
   post: DataPost | CouponPost;

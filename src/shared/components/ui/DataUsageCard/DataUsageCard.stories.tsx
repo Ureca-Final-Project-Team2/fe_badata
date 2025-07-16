@@ -1,6 +1,7 @@
+import { useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { DataUsageCard } from '@ui/DataUsageCard';
-import { useState } from 'react';
 
 const meta: Meta<typeof DataUsageCard> = {
   title: 'Components/DataUsageCard',

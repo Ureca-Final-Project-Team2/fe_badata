@@ -1,8 +1,9 @@
 'use client';
 
+import Image from 'next/image';
+
 import { ICONS } from '@constants/iconPath';
 import { LoginButton } from '@ui/LoginButton';
-import Image from 'next/image';
 
 export const Header = () => {
   return (

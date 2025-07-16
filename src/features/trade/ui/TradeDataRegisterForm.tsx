@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { ImageUp } from 'lucide-react';
+
 import { usePostTradeDataMutation } from '@features/trade/model/useTradeMutations';
-import { InputField } from '@ui/InputField';
 import { BuyButton } from '@ui/BuyButton';
+import { InputField } from '@ui/InputField';
 import { TextAreaField } from '@ui/TextAreaField';
 import { toRawPrice } from '@utils/formatPrice';
 

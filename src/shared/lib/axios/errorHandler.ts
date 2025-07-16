@@ -1,4 +1,5 @@
 import type { AxiosError } from 'axios';
+
 import type { ErrorResponse } from '@/shared/lib/axios/models';
 import { HTTPError } from '@lib/HTTPError';
 

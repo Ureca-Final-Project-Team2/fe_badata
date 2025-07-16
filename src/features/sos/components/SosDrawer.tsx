@@ -1,5 +1,5 @@
-import { Drawer } from '@ui/Drawer';
 import { DataUsageCard } from '@ui/DataUsageCard';
+import { Drawer } from '@ui/Drawer';
 
 interface SosDrawerProps {
   isOpen: boolean;

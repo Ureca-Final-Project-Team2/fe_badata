@@ -1,7 +1,8 @@
 import { useRouter } from 'next/navigation';
 import { Gift, List, Plus } from 'lucide-react';
-import { FloatingActionButton } from '@ui/FloatingActionButton';
+
 import { PATH } from '@constants/path';
+import { FloatingActionButton } from '@ui/FloatingActionButton';
 
 export function TradeFloatingButton() {
   const router = useRouter();

@@ -1,8 +1,9 @@
 'use client';
 
-import { ICONS } from '@constants/iconPath';
-import { FileText, Home, LucideIcon, Repeat, User } from 'lucide-react';
 import { useState } from 'react';
+import { FileText, Home, LucideIcon, Repeat, User } from 'lucide-react';
+
+import { ICONS } from '@constants/iconPath';
 
 const navItems = [
   { label: '홈', icon: Home },

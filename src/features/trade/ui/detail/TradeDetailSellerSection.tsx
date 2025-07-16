@@ -1,10 +1,10 @@
 'use client';
 
+import { useUserTradePostsQuery } from '@features/trade/model/useUserTradePostQuery';
 import { ImageBox } from '@ui/ImageBox';
 import { LikeButton } from '@ui/LikeButton';
 import { ProductInfo } from '@ui/ProductInfo';
 import { Profile } from '@ui/Profile';
-import { useUserTradePostsQuery } from '@features/trade/model/useUserTradePostQuery';
 
 interface TradeDetailSellerSectionProps {
   sellerId: number; // 판매자 userId

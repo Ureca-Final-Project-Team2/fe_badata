@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { PostType, TradeDetailPost } from '@features/trade/lib/types';
 import { TradeDetailDrawer } from '@features/trade/ui/detail/TradeDetailDrawer';
 import { TradeDetailProductSection } from '@features/trade/ui/detail/TradeDetailProductSection';
@@ -7,7 +9,6 @@ import { TradeDetailSellerSection } from '@features/trade/ui/detail/TradeDetailS
 import { BaseLayout } from '@shared/components/layout/BaseLayout';
 import { BuyButton } from '@ui/BuyButton';
 import { PageHeader } from '@ui/Header';
-import { useState } from 'react';
 
 interface Props {
   tradeId: string;

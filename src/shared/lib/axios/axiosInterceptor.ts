@@ -1,9 +1,10 @@
+import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+
 import type { ApiResponse, ErrorResponse } from '@/shared/lib/axios/models';
 import { END_POINTS, SUCCESS_CODE } from '@constants/api';
 import { ErrorMessageMap } from '@constants/errorCodes';
-import { HTTPError } from '@lib/HTTPError';
 import { handleAPIError } from '@lib/axios/errorHandler';
-import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import { HTTPError } from '@lib/HTTPError';
 
 export const applyInterceptors = (instance: AxiosInstance): void => {
   instance.interceptors.request.use((config) => {

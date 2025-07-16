@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
-import { InputFieldProps, inputVariants } from './index';
+
 import { cn } from '@lib/cn';
 import { formatPrice } from '@utils/formatPrice';
+
+import { InputFieldProps, inputVariants } from './index';
 
 export const InputField: React.FC<InputFieldProps> = ({
   label,

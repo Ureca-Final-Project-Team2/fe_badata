@@ -1,8 +1,9 @@
 'use client';
 
+import { Heart } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { useLike } from '@features/like/hooks/useLike';
-import { Heart } from 'lucide-react';
 
 interface LikeButtonProps {
   defaultLiked?: boolean;

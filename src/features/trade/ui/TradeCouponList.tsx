@@ -1,7 +1,8 @@
 import { ArrowDownUp, ListFilter } from 'lucide-react';
-import { Product } from '@ui/Product';
-import { Drawer, DrawerButton, FilterDrawerButton } from '@ui/Drawer';
+
 import { useTradePostsQuery } from '@features/trade/model/useTradeQueries';
+import { Drawer, DrawerButton, FilterDrawerButton } from '@ui/Drawer';
+import { Product } from '@ui/Product';
 
 interface TradeCouponListProps {
   sortOption: 'latest' | 'popular';

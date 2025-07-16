@@ -1,5 +1,5 @@
 'use client';
-import { KakaoLoginButton } from '@/shared/components/ui/KakaoLoginButton/KakaoLoginButton';
+import { KakaoLoginButton } from '@ui/KakaoLoginButton';
 
 export default function LandingPage() {
   return (
