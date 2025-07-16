@@ -1,4 +1,4 @@
-import { Badge } from '@ui/Badge/Badge';
+import { Badge } from '@ui/Badge';
 import { X } from 'lucide-react';
 
 interface SearchRecentKeywordsProps {
