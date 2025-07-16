@@ -20,7 +20,6 @@ export const MyDataUsageCard = () => {
     if (cssMain) setMainColor(cssMain);
   }, []);
 
-  console.log(usageData?.dataAmount);
   const used = usageData?.dataAmount ?? 0;
   const coinAmount = coinData?.coin ?? 0; 
 
