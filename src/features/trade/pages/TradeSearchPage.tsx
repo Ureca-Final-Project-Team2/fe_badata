@@ -1,5 +1,7 @@
 'use client';
 
+import { CouponPost, DataPost } from '@features/trade/lib/types';
+import { useRecentSearch } from '@features/trade/model/useRecentSearch';
 import { useSearchTradePostsQuery } from '@features/trade/model/useTradeQueries';
 import { SearchHeader } from '@features/trade/ui/search/SearchHeader';
 import { SearchHotKeywords } from '@features/trade/ui/search/SearchHotKeywords';
@@ -9,8 +11,7 @@ import { BaseLayout } from '@shared/components/layout/BaseLayout';
 import { useDebouncedValue } from '@shared/hooks/useDebounceValue';
 import { PageHeader } from '@ui/Header/PageHeader';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useRecentSearch } from '../model/useRecentSearch';
+import { useCallback, useState } from 'react';
 
 export function TradeSearchPage() {
   const router = useRouter();
@@ -23,14 +24,14 @@ export function TradeSearchPage() {
 
   const hotKeywords = ['공유 데이터', '영화관 할인쿠폰', '데이터 1GB', '스타벅스 아메리카노'];
 
-  const handleBack = () => router.back();
+  const handleBack = useCallback(() => router.back(), [router]);
 
-  const handleSearchSubmit = (keyword: string) => {
-    const trimmed = keyword.trim();
-    if (!trimmed) return;
-    setSearch(trimmed);
-    add(trimmed);
-  };
+  const handleSearchSubmit = useCallback((keyword: string) => {
+  const trimmed = keyword.trim();
+  if (!trimmed) return;
+  setSearch(trimmed);
+  add(trimmed);
+}, [add]);
 
   return (
     <BaseLayout
@@ -46,7 +47,7 @@ export function TradeSearchPage() {
         onClickKeyword={handleSearchSubmit}
       />
       <SearchHotKeywords keywords={hotKeywords} />
-      <SearchResult search={debouncedSearch} posts={posts} isLoading={isLoading} isError={isError} />
+      <SearchResult search={debouncedSearch} posts={posts as DataPost[] | CouponPost[]} isLoading={isLoading} isError={isError} />
     </BaseLayout>
   );
 }
