@@ -101,7 +101,8 @@ _유레카 프론트엔드 개발자 2기 최종 융합 프로젝트 2조_
 
 ## 🧩 서비스 플로우차트
 
-<img width="3965" height="2265" alt="플로우차트" src="https://github.com/user-attachments/assets/ee2a67ec-d036-48ca-8e51-715e92d11c90" />
+<img width="3965" height="2265" alt="플로우차트" src="https://github.com/user-attachments/assets/ec4ca70e-f566-4c36-8e02-9ea45727576f" />
+" />
 
 &nbsp;  
 &nbsp;  
@@ -131,7 +132,7 @@ _유레카 프론트엔드 개발자 2기 최종 융합 프로젝트 2조_
 | ---------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------ |
 | <img src="https://avatars.githubusercontent.com/u/102678331?v=4" width="100" />   | **이시현**<br/>[@sihyuuun](https://github.com/sihyuuun)       | - 프로젝트 설계 및 구조<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 거래 메인 페이지 **UI 및 API 연동** 담당 |
 | <img src="https://avatars.githubusercontent.com/u/88071251?v=4" width="100" />    | **박은서**<br/>[@arty0928](https://github.com/arty0928)       | - 프로젝트 배포 및 환경 설정<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 공유기 대여 페이지 **UI 및 API 연동** 담당 |
-| <img src="https://avatars.githubusercontent.com/u/197379577?v=4" width="100" />   | **박지회**<br/>[@jihoi0615](https://github.com/jihoi0615)     | - 서비스 플로우차트 설계<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 마이페이지 **UI 및 API 연동** 담당 |
+| <img src="https://avatars.githubusercontent.com/u/197379577?v=4" width="100" />   | **박지회**<br/>[@jihoi0615](https://github.com/jihoi0615)     | - 서비스 플로우차트 설계 및 컴포넌트 관리<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 마이페이지 **UI 및 API 연동** 담당 |
 | <img src="https://avatars.githubusercontent.com/u/171488704?v=4" width="100" />   | **이은채**<br/>[@eunchrri](https://github.com/eunchrri)       | - 스토리북 세팅 및 컴포넌트 관리<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 거래 상세 페이지 **UI 및 API 연동** 담당 |
 
 
