@@ -133,7 +133,6 @@ export function TradeDataRegisterForm() {
         type="submit"
         loading={isSubmitting}
         disabled={!isFormValid}
-        onClick={handleSubmit}
       >
         등록하기
       </BuyButton>
