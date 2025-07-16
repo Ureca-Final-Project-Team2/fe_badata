@@ -29,6 +29,9 @@ export const getTradeDeadlinePosts = async (): Promise<Post[]> => {
 };
 
 export const getSearchTradePosts = async (keyword: string): Promise<Post[]> => {
+  if (!keyword || keyword.trim() === '') {
+    return [];
+  }
   const content: { postsResponse: Post[] } = await axiosInstance.get(END_POINTS.TRADES.SEARCH(keyword));
   return content.postsResponse ?? [];
 }
