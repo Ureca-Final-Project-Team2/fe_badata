@@ -1,7 +1,7 @@
 import { fetchStoreDetail, fetchStoreDevices } from '@features/stores/map/api/map';
 import { Store } from '@features/stores/map/lib';
 
-export const renderStoreMarkers = async (map: any, stores: Store[]) => {
+export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) => {
   if (!map || !window.kakao || stores.length === 0) return;
 
   for (const store of stores) {
@@ -34,8 +34,13 @@ export const renderStoreMarkers = async (map: any, stores: Store[]) => {
       content: `<div style="padding:5px;font-size:14px;">${store.name}</div>`,
     });
 
-    window.kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
-    window.kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close(map, marker));
+window.kakao.maps.event.addListener(marker, 'mouseover', () => {
+  infowindow.open(map, marker);
+});
+window.kakao.maps.event.addListener(marker, 'mouseout', () => {
+  infowindow.close();
+});
+
     window.kakao.maps.event.addListener(marker, 'click', async () => {
       console.log(`📦 ${store.name}의 기기 목록:`, devices);
 

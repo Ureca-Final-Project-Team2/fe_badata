@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
-    kakao: kakao.maps.Map;
+    kakao: typeof kakao;
   }
 }
 
 export const useKakaoMap = () => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<any>(null);
+  const [map, setMap] = useState<kakao.maps.Map | null>(null);
 
   useEffect(() => {
     const script = document.createElement('script');
