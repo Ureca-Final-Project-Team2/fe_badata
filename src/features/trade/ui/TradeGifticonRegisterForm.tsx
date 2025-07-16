@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ImageUp } from 'lucide-react';
-import { usePostTradeGifticonMutation } from '@features/trade/model/useTradeMutations';
 import { getCategoryByPartner } from '@features/trade/lib/partner';
 import { GifticonCategory } from '@features/trade/lib/types';
+import { usePostTradeGifticonMutation } from '@features/trade/model/useTradeMutations';
+import { BuyButton } from '@ui/BuyButton';
 import { InputField } from '@ui/InputField';
 import { TextAreaField } from '@ui/TextAreaField';
-import { BuyButton } from '@ui/BuyButton';
 import { toRawPrice } from '@utils/formatPrice';
+import { ImageUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function TradeCouponRegisterForm() {
   const [ocrResult, setOcrResult] = useState({
@@ -54,7 +54,7 @@ export function TradeCouponRegisterForm() {
         comment,
       },
       {
-        onSettled: () => setIsSubmitting(false),
+        onSuccess: () => setIsSubmitting(false)
       },
     );
   };
@@ -68,6 +68,15 @@ export function TradeCouponRegisterForm() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
+        // 수정 필요
+        setOcrResult({
+          title: 'OCR 상품명',
+          partner: 'OCR 제휴사',
+          couponNumber: 'OCR123456',
+          deadLine: '2025-12-31',
+          issueDate: '2025-01-01',
+          image: reader.result as string,
+        });
       };
       reader.readAsDataURL(file);
     }

@@ -4,7 +4,9 @@ import type {
   PostTradeDataRequest,
   PostTradeGifticonRequest,
   TradeDetailPost,
+  TradeDetailResponse,
 } from '@features/trade/lib/types';
+import { axiosInstance } from '@lib/axios/axiosInstance';
 
 export const getTradePosts = async (): Promise<Post[]> => {
   const content: { postsResponse: Post[] } = await axiosInstance.get(END_POINTS.TRADES.LIST);
@@ -18,12 +20,15 @@ export const getTradePostDetail = async (
   sellerName: string;
   post: TradeDetailPost;
 }> => {
-  const content = (await axiosInstance.get(END_POINTS.TRADES.DETAIL(Number(postId)))) as any;
+  const content = await axiosInstance.get<TradeDetailResponse>(END_POINTS.TRADES.DETAIL(Number(postId))).then(res => res.data);
   const writer = content.user ?? content.seller;
+  if (!writer) {
+    throw new Error('No writer info in trade detail response');
+  }
   return {
     postUserId: writer.userId,
     sellerName: writer.username,
-    post: content.post as TradeDetailPost,
+    post: content.post,
   };
 };
 

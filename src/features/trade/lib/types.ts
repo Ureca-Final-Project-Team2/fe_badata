@@ -100,3 +100,9 @@ export interface PostTradeGifticonRequest {
   comment: string;
   file: string | null;
 }
+
+export type TradeDetailResponse = {
+  user?: { userId: number; username: string };
+  seller?: { userId: number; username: string };
+  post: TradeDetailPost;
+};
