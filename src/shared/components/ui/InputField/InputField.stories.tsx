@@ -28,7 +28,6 @@ export const OCR: Story = {
 export const PriceInput: Story = {
   render: () => {
     const [value, setValue] = useState('');
-    const isInvalid = !!value && isNaN(Number(value));
 
     return (
       <InputField

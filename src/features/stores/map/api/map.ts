@@ -18,11 +18,11 @@ import { buildQueryParams } from '@utils/buildQueryParams';
 export const fetchStoreDevices = async (
   storeId: number,
   params: FetchStoreDevicesParams,
-): Promise<AxiosResponse<ApiResponse<StoreDevice[]>>> => {
-  const query = buildQueryParams(params);
-  return await axiosInstance.get<ApiResponse<StoreDevice[]>>(
-    END_POINTS.STORES.ALLSTORE(storeId, query),
-  );
+): Promise<StoreDevice[]> => {
+  const { data } = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
+    params,
+  });
+  return data;
 };
 
 /**
@@ -30,9 +30,11 @@ export const fetchStoreDevices = async (
  */
 export const fetchStores = async (
   params: FetchStoresParams,
-): Promise<AxiosResponse<ApiResponse<Store[]>>> => {
-  const query = buildQueryParams(params);
-  return await axiosInstance.get<ApiResponse<Store[]>>(END_POINTS.STORES.ALLDEVICE(query));
+): Promise<Store[]> => {
+  const { data } = await axiosInstance.get(END_POINTS.STORES.ALLDEVICE(), {
+    params,
+  });
+  return data;
 };
 
 /**
@@ -43,15 +45,11 @@ export const fetchStoreDetail = async (
   centerLat: number,
   centerLng: number
 ): Promise<StoreDetail> => {
-  const response : StoreDetail = await axiosInstance.get(
-    END_POINTS.STORES.STOREDETAIL(storeId),
-    {
-      params: {
-        centerLat,
-        centerLng,
-      },
-    }
-  );
-
-  return response;
+  const { data } = await axiosInstance.get(END_POINTS.STORES.STOREDETAIL(storeId), {
+    params: {
+      centerLat,
+      centerLng,
+    },
+  });
+  return data;
 };

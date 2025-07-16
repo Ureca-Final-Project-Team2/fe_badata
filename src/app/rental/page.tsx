@@ -10,9 +10,10 @@ const RentalPage = () => {
   const { mapRef, map } = useKakaoMap();
   const stores = useFetchStores();
 
-  useEffect(() => {
-    renderStoreMarkers(map, stores);
-  }, [map, stores]);
+useEffect(() => {
+  if (!map) return;
+  renderStoreMarkers(map, stores);
+}, [map, stores]);
 
   return (
     <div

@@ -54,8 +54,9 @@ export const SectionDivider = forwardRef<HTMLDivElement, SectionDividerProps>(
       <div className={className} ref={ref} {...props}>
         {children ? (
           <DividerWithText size={size} color={color} thickness={thickness}>
-            {children}
-          </DividerWithText>
+  {children}
+</DividerWithText>
+
         ) : (
           <div className={cn(sectionDividerVariants({ size, color, thickness }))} />
         )}
