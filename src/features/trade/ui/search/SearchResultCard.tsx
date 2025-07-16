@@ -1,8 +1,8 @@
-import { Post } from '@features/trade/lib/types';
+import { CouponPost, DataPost } from '@features/trade/lib/types';
 import { useRouter } from 'next/navigation';
 
 interface SearchResultCardProps {
-  post: Post;
+  post: DataPost | CouponPost;
 }
 
 export const SearchResultCard = ({ post }: SearchResultCardProps) => {
