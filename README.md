@@ -102,7 +102,7 @@ _유레카 프론트엔드 개발자 2기 최종 융합 프로젝트 2조_
 ## 🧩 서비스 플로우차트
 
 <img width="3965" height="2265" alt="플로우차트" src="https://github.com/user-attachments/assets/ec4ca70e-f566-4c36-8e02-9ea45727576f" />
-" />
+
 
 &nbsp;  
 &nbsp;  
