@@ -1,13 +1,14 @@
-import { axiosInstance } from '@shared/lib/axios/axiosInstance';
-import { buildQueryParams } from '@utils/buildQueryParams';
-import { ApiResponse } from '@shared/lib/axios/models';
-import {
-  FetchStoresParams,
-  FetchStoreDevicesParams,
-  Store,
-  StoreDevice,
-} from '@features/stores/map/types';
 import { END_POINTS } from '@constants/api';
+import {
+  FetchStoreDevicesParams,
+  FetchStoresParams,
+  Store,
+  StoreDetail,
+  StoreDevice,
+} from '@features/stores/map/lib';
+import { axiosInstance } from '@shared/lib/axios/axiosInstance';
+import { ApiResponse } from '@shared/lib/axios/models';
+import { buildQueryParams } from '@utils/buildQueryParams';
 import type { AxiosResponse } from 'axios';
 
 /**
@@ -31,4 +32,25 @@ export const fetchStores = async (
 ): Promise<AxiosResponse<ApiResponse<Store[]>>> => {
   const query = buildQueryParams(params);
   return await axiosInstance.get<ApiResponse<Store[]>>(END_POINTS.STORES.ALLDEVICE(query));
+};
+
+/**
+ * 클릭한 가맹점 상세 조회
+ */
+export const fetchStoreDetail = async (
+  storeId: number,
+  centerLat: number,
+  centerLng: number
+): Promise<StoreDetail> => {
+  const response : StoreDetail = await axiosInstance.get(
+    END_POINTS.STORES.STOREDETAIL(storeId),
+    {
+      params: {
+        centerLat,
+        centerLng,
+      },
+    }
+  );
+
+  return response;
 };

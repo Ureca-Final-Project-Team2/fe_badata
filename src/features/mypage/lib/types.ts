@@ -3,7 +3,7 @@ export interface UserCoin {
 }
 
 export interface UserDataUsage {
-  used: number;
+  dataAmount: number;
 }
 
 export interface SosHistoryItem {
