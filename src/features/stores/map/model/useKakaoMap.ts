@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
-    kakao: any;
+    kakao: kakao.maps.Map;
   }
 }
 
