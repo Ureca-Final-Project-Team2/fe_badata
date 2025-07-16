@@ -1,11 +1,11 @@
-import { Post } from '@features/trade/lib/types';
+import { CouponPost, DataPost } from '@features/trade/lib/types';
+import { SearchResultCard } from '@features/trade/ui/search/SearchResultCard';
+import { SearchSkeletonCard } from '@features/trade/ui/search/SearchSkeletonCard';
 import { AlertCircle, Search } from 'lucide-react';
-import { SearchResultCard } from './SearchResultCard';
-import { SearchSkeletonCard } from './SearchSkeletonCard';
 
 interface SearchResultProps {
   search: string;
-  posts?: Post[];
+  posts?: DataPost[] | CouponPost[];
   isLoading: boolean;
   isError: boolean;
 }
@@ -66,7 +66,7 @@ export const SearchResult = ({ search, posts, isLoading, isError }: SearchResult
       </div>
       <div className="grid gap-3">
         {posts.map((post) => (
-          <SearchResultCard key={post.id} post={post} />
+          <SearchResultCard key={post.id} post={post as DataPost | CouponPost} />
         ))}
       </div>
     </section>
