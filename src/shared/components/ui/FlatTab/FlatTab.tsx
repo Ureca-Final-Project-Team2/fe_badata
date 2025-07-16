@@ -1,8 +1,8 @@
-import React, { forwardRef } from 'react';
-import { cva } from 'class-variance-authority';
-import { useFlatTab } from '@ui/FlatTab/useFlatTab';
 import { cn } from '@lib/cn';
-import type { FlatTabProps, FlatTabItem } from '@ui/FlatTab/types';
+import type { FlatTabItem, FlatTabProps } from '@ui/FlatTab/types';
+import { useFlatTab } from '@ui/FlatTab/useFlatTab';
+import { cva } from 'class-variance-authority';
+import { forwardRef } from 'react';
 
 export const flatTabVariants = cva('bg-white', {
   variants: {

@@ -1,26 +1,16 @@
 'use client';
 
+import { useLoginButton } from '@features/auth/model/useLoginButton';
 import { cn } from '@lib/cn';
-import { useAuthStore } from '@features/auth/stores/authStore';
 
 export const LoginButton = () => {
-  const { isLoggedIn, login, logout } = useAuthStore();
-
-  const handleClick = () => {
-    if (isLoggedIn) {
-      logout();
-    } else {
-      // 실제 구현 전까지는 임시 토큰 부여
-      login('sample-access-token');
-    }
-  };
+  const { isLoggedIn, handleClick } = useLoginButton();
 
   return (
     <button
       className={cn(
         'h-[35px] w-[70px] px-4 py-2 bg-white rounded-[6px] shadow-[0px_2px_2px_rgba(0,0,0,0.25)]',
-        'text-[11px] font-extrabold text-black',
-        'whitespace-nowrap',
+        'text-[11px] font-extrabold text-black whitespace-nowrap',
       )}
       onClick={handleClick}
     >

@@ -10,9 +10,15 @@ export const END_POINTS = {
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
+    REISSUE: '/api/v1/auth/reissue/token',
   },
   STORES: {
     ALLSTORE: (storeId: number, query: string) => `/api/v1/stores/${storeId}/devices?${query}`,
     ALLDEVICE: (query: string) => `/api/v1/stores/map?${query}`,
+  },
+  MYPAGE: {
+    COIN: '/api/v1/users/coin',
+    DATA_USAGE: '/api/v1/users/data',
+    SOS_HISTORY: '/api/v1/mypage/sos-history',
   },
 };

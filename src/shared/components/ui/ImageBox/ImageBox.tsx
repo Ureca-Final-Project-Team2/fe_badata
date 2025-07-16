@@ -1,7 +1,7 @@
 'use client';
 
-import { cn } from '@/shared/lib/cn';
-import React from 'react';
+import { cn } from '@lib/cn';
+import Image from 'next/image';
 
 type ImageBoxSize = 'sm' | 'md' | 'lg';
 
@@ -29,7 +29,7 @@ export function ImageBox({ size = 'sm', url, className }: ImageBoxProps) {
         className,
       )}
     >
-      <img src={url || fallbackImage} alt="image" className="object-contain w-full h-full" />
+      <Image src={url || fallbackImage} alt="image" className="object-contain w-full h-full" />
     </div>
   );
 }

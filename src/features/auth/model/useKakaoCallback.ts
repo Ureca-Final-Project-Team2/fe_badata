@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import { fetchKakaoAuth } from '@features/auth/api/auth';
+import { useAuthStore } from '@features/auth/model/authStore';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@features/auth/stores/authStore';
-import { fetchKakaoAuth } from '@features/auth/apis/auth';
+import { useEffect } from 'react';
 
 export const useKakaoCallback = () => {
   const router = useRouter();

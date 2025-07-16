@@ -9,6 +9,8 @@ export const useKakaoLogin = () => {
       return;
     }
 
+    localStorage.setItem('redirectTo', window.location.pathname);
+
     const kakaoAuthUrl = `${AUTH_URL}?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
     window.location.href = kakaoAuthUrl;
   };

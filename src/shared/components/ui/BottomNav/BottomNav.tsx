@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Home, FileText, Repeat, User } from 'lucide-react';
-import { ICONS } from '@/constants/iconPath';
+import { ICONS } from '@constants/iconPath';
+import { FileText, Home, Repeat, User } from 'lucide-react';
+import { useState } from 'react';
 
 const navItems = [
   { label: '홈', icon: Home },

@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
-import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@lib/cn';
+import { cva, VariantProps } from 'class-variance-authority';
 import type { HTMLAttributes } from 'react';
+import { forwardRef } from 'react';
 
 const reviewCardVariants = cva(
   'bg-white rounded-[20px] border border-gray-200 shadow-sm hover:shadow-md transition-shadow',
