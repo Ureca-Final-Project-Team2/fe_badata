@@ -1,18 +1,22 @@
 'use client';
 
-import { cn } from '@lib/cn';
 import React from 'react';
 import { InputFieldProps, inputVariants } from './index';
+import { cn } from '@lib/cn';
+import { formatPrice } from '@utils/formatPrice';
 
 export const InputField: React.FC<InputFieldProps> = ({
+  label,
   variant = 'user',
   icon,
   className,
   errorMessage,
   isRequired = false,
   value,
+  onChange,
   ...props
 }) => {
+  const isPrice = variant === 'price';
   const hasError = isRequired && !value?.toString().trim();
 
   const baseStyle = inputVariants[variant];
@@ -22,8 +26,26 @@ export const InputField: React.FC<InputFieldProps> = ({
       ? 'border-[var(--gray-light)]'
       : '';
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!onChange) return;
+
+    const rawValue = e.target.value;
+
+    if (isPrice) {
+      const formatted = formatPrice(rawValue);
+      onChange({ ...e, target: { ...e.target, value: formatted } });
+    } else {
+      onChange(e);
+    }
+  };
+
   return (
     <div className="w-[380px]">
+      {label && (
+        <label className="text-[14px] text-[var(--gray-dark)] font-medium mb-1 inline-block">
+          {label}
+        </label>
+      )}
       <div className="relative h-[45px]">
         {icon && (
           <div className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
@@ -39,6 +61,8 @@ export const InputField: React.FC<InputFieldProps> = ({
             className,
           )}
           value={value}
+          onChange={handleChange}
+          inputMode={isPrice ? 'numeric' : undefined}
           {...props}
         />
       </div>

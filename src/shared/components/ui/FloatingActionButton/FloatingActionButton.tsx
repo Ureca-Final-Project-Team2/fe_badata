@@ -42,7 +42,7 @@ export function FloatingActionButton({
             <button
               key={idx}
               onClick={action.onClick}
-              className="w-[120px] h-[46px] flex items-center justify-between px-4 py-2 text-white text-[18px] font-semibold"
+              className="w-[120px] h-[46px] flex items-center justify-between px-4 py-2 text-white text-[18px] font-semibold cursor-pointer"
             >
               <span className="w-[18px] h-[18px] flex items-center justify-center text-[16px]">
                 {action.icon}

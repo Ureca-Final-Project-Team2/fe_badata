@@ -7,6 +7,8 @@ export const END_POINTS = {
     LIST: '/api/v1/trades/posts',
     DETAIL: (postId: number) => `/api/v1/trades/${postId}/post`,
     DEADLINE: '/api/v1/trades/posts/deadline',
+    REGISTER_DATA: '/api/v1/trades/posts/data',
+    REGISTER_GIFTICON: '/api/v1/trades/posts/gifticon',
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
@@ -23,4 +25,4 @@ export const END_POINTS = {
     DATA_USAGE: '/api/v1/users/data',
     SOS_HISTORY: '/api/v1/mypage/sos-history',
   },
-};
+} as const;
