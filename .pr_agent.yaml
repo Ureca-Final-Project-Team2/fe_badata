@@ -20,7 +20,7 @@ review:
     # import 순서
     - 'Imports should follow this order: 1. React libraries, 2. internal modules, 3. styles.'
 
-    # 코드내부 선언 순서
+    # 코드/내부 선언 순서
     - 'Within a component, follow this order: 1. hooks, 2. general variables, 3. useEffect, 4. functions.'
 
     # 코드 스타일
