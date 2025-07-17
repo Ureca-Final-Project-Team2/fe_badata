@@ -1,7 +1,8 @@
 export const dynamic = 'force-dynamic';
 
-import KakaoCallbackClient from '@app/auth/kakao/callback/kakaoCallbackClient';
 import { Suspense } from 'react';
+
+import KakaoCallbackClient from '@/app/auth/kakao/callback/kakaoCallbackClient';
 
 export default function KakaoCallbackPage() {
   return (

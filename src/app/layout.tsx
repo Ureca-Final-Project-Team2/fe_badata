@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import './globals.css';
-import Providers from '@app/_providers';
+
+import Providers from '@/app/_providers';
 
 export const metadata: Metadata = {
   title: 'Create Next App',

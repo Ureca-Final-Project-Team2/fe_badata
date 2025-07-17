@@ -1,4 +1,33 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
+  // TypeScript import 경로 관련
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.preferences.useAliasesForRenames": true,
+
+  // 인텔리센스/자동완성 향상
+  "typescript.suggest.autoImports": true,
+  "typescript.suggest.paths": true,
+  "typescript.suggest.completeFunctionCalls": true,
+  "typescript.preferences.includeCompletionsForModuleExports": true,
+  "typescript.preferences.includeCompletionsForImportStatements": true,
+  "typescript.suggest.includeAutomaticOptionalChainCompletions": true,
+
+  // 저장 시 ESLint + import 정리 자동 실행
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": "explicit",
+    "source.organizeImports": "explicit",
+    "source.removeUnusedImports": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // 경로 alias 인텔리센스
+  "path-intellisense.mappings": {
+    "@": "${workspaceFolder}/src",
+    "@/app": "${workspaceFolder}/src/app",
+    "@/pages": "${workspaceFolder}/src/pages",
+    "@/widgets": "${workspaceFolder}/src/widgets",
+    "@/entities": "${workspaceFolder}/src/entities",
+    "@/shared": "${workspaceFolder}/src/shared",
+    "@/components": "${workspaceFolder}/src/components"
+  }
 }

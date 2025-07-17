@@ -1,20 +1,22 @@
-import type { ApiResponse, ErrorResponse } from '@/shared/lib/axios/models';
-import { END_POINTS, SUCCESS_CODE } from '@constants/api';
-import { ErrorMessageMap } from '@constants/errorCodes';
-import { HTTPError } from '@lib/HTTPError';
 import { handleAPIError } from '@lib/axios/errorHandler';
+import { HTTPError } from '@lib/HTTPError';
+
+import { END_POINTS, SUCCESS_CODE } from '@/shared/api/endpoints';
+import { ErrorMessageMap } from '@/shared/config/errorCodes';
+
+import type { ApiResponse, ErrorResponse } from '@/shared/lib/axios/responseTypes';
 import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
 export const applyInterceptors = (instance: AxiosInstance): void => {
   instance.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
-  }
-  return config;
-});
+    return config;
+  });
   instance.interceptors.response.use(
     <T>(response: AxiosResponse<ApiResponse<T>>): T | AxiosResponse<ApiResponse<T>> => {
       // 카카오 로그인 API는 응답 전체를 반환

@@ -1,7 +1,8 @@
 'use client';
 
-import { useAuthStore } from '@features/auth/model/authStore';
 import { useEffect, useRef } from 'react';
+
+import { useAuthStore } from '@features/auth/model/authStore';
 
 export default function HomePage() {
   const user = useAuthStore((state) => state.user);

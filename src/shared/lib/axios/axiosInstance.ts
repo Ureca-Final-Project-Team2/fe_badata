@@ -1,5 +1,7 @@
-import { BASE_URL, NETWORK_TIMEOUT } from '@shared/constants/api';
 import axios from 'axios';
+
+import { BASE_URL, NETWORK_TIMEOUT } from '@/shared/api/endpoints';
+
 import { applyInterceptors } from './axiosInterceptor';
 
 export const axiosInstance = axios.create({
