@@ -1,4 +1,4 @@
-## BADATA🌊, 1인 가구를 위한 데이터 공유 및 거래 통합 플랫폼
+## 🌊BADATA: 프론트 소개
 
 &nbsp;  
 &nbsp;    
@@ -267,7 +267,7 @@ fe_badata/
 | ---------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------ |
 | <img src="https://avatars.githubusercontent.com/u/102678331?v=4" width="100" />   | **이시현**<br/>[@sihyuuun](https://github.com/sihyuuun)       | - 프로젝트 설계 및 구조<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 거래 메인 페이지 **UI 및 API 연동** 담당 |
 | <img src="https://avatars.githubusercontent.com/u/88071251?v=4" width="100" />    | **박은서**<br/>[@arty0928](https://github.com/arty0928)       | - 프로젝트 배포 및 환경 설정<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 공유기 대여 페이지 **UI 및 API 연동** 담당 |
-| <img src="https://avatars.githubusercontent.com/u/197379577?v=4" width="100" />   | **박지회**<br/>[@jihoi0615](https://github.com/jihoi0615)     | - 서비스 플로우차트 설계 및 컴포넌트 관리<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 마이페이지 **UI 및 API 연동** 담당 |
+| <img src="https://avatars.githubusercontent.com/u/197379577?v=4" width="100" />   | **박지회**<br/>[@jihoi0615](https://github.com/jihoi0615)     | - 서비스 플로우차트 설계 및 컴포넌트 관리<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 홈, 마이페이지 **UI 및 API 연동** 담당 |
 | <img src="https://avatars.githubusercontent.com/u/171488704?v=4" width="100" />   | **이은채**<br/>[@eunchrri](https://github.com/eunchrri)       | - 스토리북 세팅 및 컴포넌트 관리<br/>- 기획, 피그마 디자인 및 공통 컴포넌트 제작<br/>- 거래 상세 페이지 **UI 및 API 연동** 담당 |
 
 
