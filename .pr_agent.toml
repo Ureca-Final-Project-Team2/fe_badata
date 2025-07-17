@@ -1,0 +1,87 @@
+[config]
+model = "gpt-4o-mini"
+model_turbo = "gpt-4o-mini"
+language = "ko"
+verbosity_level = 0
+publish_output_progress = false
+
+[pr_reviewer]
+# 자동 리뷰 활성화
+auto_review = true
+num_code_suggestions = 2
+inline_code_comments = true
+require_focused_review = false
+require_score_review = false
+require_tests = false
+require_security_review = false
+require_can_be_split_review = false
+enable_help_text = true
+persistent_comment = true
+
+# 검토 지침
+extra_instructions = """
+답변은 반드시 한국어로 작성해주세요.
+
+Next.js + TypeScript 프로젝트입니다. 다음을 간단히 검토해주세요:
+- TypeScript 타입 오류
+- React 컴포넌트 기본 구조  
+- 명백한 버그나 로직 오류
+- 간단한 성능 개선 사항
+
+모든 리뷰 코멘트는 한국어로 작성해주세요.
+"""
+
+# 필수 파일만 검토
+relevant_file_extensions = [".ts", ".tsx", ".js", ".jsx"]
+
+[pr_description]
+# PR 설명 자동 생성
+publish_description = true
+add_original_user_description = true
+keep_original_user_title = true
+publish_labels = false
+use_bullet_points = true
+include_generated_by_tag = false
+
+# 간단한 PR 설명
+extra_instructions = """
+반드시 한국어로 작성해주세요.
+
+간단하게 다음 내용을 포함:
+- 주요 변경사항
+- 테스트 방법 (해당시)
+
+모든 내용은 한국어로 작성해주세요.
+"""
+
+[pr_code_suggestions]
+# 코드 개선 제안
+auto_improve = false
+summarize = true
+num_code_suggestions = 2
+commitable_code_suggestions = false
+enable_help_text = false
+
+[pr_questions]
+# 질문 생성 비활성화
+enable_pr_questions = false
+
+[pr_similar_issue]
+# 유사 이슈 검색 비활성화
+skip_comments = true
+
+[pr_update_changelog]
+# 체인지로그 비활성화
+publish_changelog = false
+
+[github]
+# GitHub 기본 설정
+publish_inline_comments = true
+publish_review_comments = true
+publish_description_as_comment = false
+add_pr_commands_text = false
+
+[litellm]
+# API 최적화
+drop_params = true
+request_timeout = 120
