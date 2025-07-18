@@ -1,6 +1,6 @@
-export const dynamic = 'force-dynamic';
+import { SosHistoryList } from '@/pages/mypage/sos-history/ui/SosHistoryList';
 
-import { SosHistoryList } from "@features/mypage/pages/MySosPage";
+export const dynamic = 'force-dynamic';
 
 export default function Page() {
   return <SosHistoryList />;

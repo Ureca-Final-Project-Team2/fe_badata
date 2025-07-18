@@ -7,7 +7,7 @@ import { formatPrice } from '@/shared/lib/formatPrice';
 
 import { inputVariants } from './index';
 
-import type { InputFieldProps} from './index';
+import type { InputFieldProps } from './index';
 
 export const InputField: React.FC<InputFieldProps> = ({
   label,
@@ -25,7 +25,7 @@ export const InputField: React.FC<InputFieldProps> = ({
 
   const baseStyle = inputVariants[variant];
   const borderColor = hasError
-    ? 'border-[var(--point-1)]'
+    ? 'border-[var(--main-5)]'
     : variant === 'user'
       ? 'border-[var(--gray-light)]'
       : '';

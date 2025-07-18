@@ -1,10 +1,12 @@
 import { forwardRef } from 'react';
 
-import { cn } from '@lib/cn';
-import { useFlatTab } from '@ui/FlatTab/useFlatTab';
 import { cva } from 'class-variance-authority';
 
-import type { FlatTabItem, FlatTabProps } from '@ui/FlatTab/types';
+import { cn } from '@/shared/lib/cn';
+
+import { useFlatTab } from './useFlatTab';
+
+import type { FlatTabItem, FlatTabProps } from './types';
 
 export const flatTabVariants = cva('bg-white', {
   variants: {
@@ -40,8 +42,8 @@ function FlatTabButton({
       className={cn(
         'flex-1 h-full font-semibold text-[15px] transition-colors duration-200 border-b-2 border-transparent focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 relative',
         isActive
-          ? 'text-[var(--main-1)] border-[var(--main-1)]'
-          : 'text-[var(--gray-mid)] hover:text-[var(--main-1)]',
+          ? 'text-[var(--main-5)] border-[var(--main-5)]'
+          : 'text-[var(--gray-mid)] hover:text-[var(--main-5)]',
       )}
       type="button"
     >

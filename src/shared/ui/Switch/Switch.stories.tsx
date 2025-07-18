@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Switch } from '@ui/Switch';
+import { Switch } from '@radix-ui/react-switch';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
@@ -25,8 +25,6 @@ export const WithLabels: Story = {
   render: () => {
     const [checked, setChecked] = useState(false);
 
-    return (
-      <Switch checked={checked} onCheckedChange={setChecked} labels={['판매중', '판매완료']} />
-    );
+    return <Switch checked={checked} onCheckedChange={setChecked} />;
   },
 };

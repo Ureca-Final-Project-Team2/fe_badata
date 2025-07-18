@@ -1,26 +1,25 @@
 'use client';
 
-import { BaseLayout } from '@components/layout/BaseLayout';
-import { MyDataUsageCard } from '@features/mypage/ui/detail/MyDataUsageCard';
-import { MyPageHeader } from '@features/mypage/ui/MyPageHeader';
-import { MyRentalSection } from '@features/mypage/ui/MyRentalSection';
-import { MyReportStatus } from '@features/mypage/ui/MyReportStatus';
-import { MySettings } from '@features/mypage/ui/MySettings';
-import { MySosSection } from '@features/mypage/ui/MySosSection';
-import { MyTradeSection } from '@features/mypage/ui/MyTradeSection';
-import { Header } from '@ui/Header';
+import { AlarmSettingSection } from '@/pages/mypage/ui/AlarmSettingSection';
+import { DataUsageCardSection } from '@/pages/mypage/ui/DataUsageCardSection';
+import { RentalSection } from '@/pages/mypage/ui/RentalSection';
+import { ReportStatusSection } from '@/pages/mypage/ui/ReportStatusSection';
+import { SosSection } from '@/pages/mypage/ui/SosSection';
+import { TradeSection } from '@/pages/mypage/ui/TradeSection';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { Header, PageHeader } from '@/shared/ui/Header';
 
 export default function MyPage() {
   return (
     <BaseLayout header={<Header />}>
       <div className="space-y-6">
-        <MyPageHeader />
-        <MyDataUsageCard />
-        <MyTradeSection />
-        <MyRentalSection />
-        <MySosSection />
-        <MyReportStatus />
-        <MySettings />
+        <PageHeader title="" onBack={() => {}} />
+        <DataUsageCardSection />
+        <TradeSection />
+        <RentalSection />
+        <SosSection />
+        <ReportStatusSection />
+        <AlarmSettingSection />
       </div>
     </BaseLayout>
   );

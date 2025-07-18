@@ -1,4 +1,4 @@
-import { SectionDivider } from '@ui/SectionDivider';
+import { SectionDivider } from './SectionDivider';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

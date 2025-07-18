@@ -1,13 +1,7 @@
 import type { InputHTMLAttributes } from 'react';
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useState,
-  type ChangeEvent
-} from 'react';
+import { forwardRef, useCallback, useEffect, useState, type ChangeEvent } from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 
 export interface SliderProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {

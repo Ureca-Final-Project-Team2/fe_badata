@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { TradeCouponRegisterForm } from '@/pages/trade/register/gifticon/ui/TradeGifticonRegisterForm';
+import { TradeGifticonRegisterForm } from '@/pages/trade/register/gifticon/ui/TradeGifticonRegisterForm';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
@@ -14,7 +14,7 @@ export default function RegisterGifticonPage() {
       header={<PageHeader title="쿠폰 게시물 등록" onBack={() => router.back()} />}
       showBottomNav={false}
     >
-      <TradeCouponRegisterForm />
+      <TradeGifticonRegisterForm />
     </BaseLayout>
   );
 }

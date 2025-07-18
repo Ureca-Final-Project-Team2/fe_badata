@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { TabItem } from '@ui/FlatTab/types';
+import type { TabItem } from './types';
 
 export const useFlatTab = (
   items: TabItem[],

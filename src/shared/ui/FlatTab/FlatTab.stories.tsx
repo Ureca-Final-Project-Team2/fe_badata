@@ -1,4 +1,4 @@
-import { FlatTab } from '@ui/FlatTab';
+import { FlatTab } from './FlatTab';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

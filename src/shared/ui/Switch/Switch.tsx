@@ -1,4 +1,4 @@
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 
 interface SwitchProps {
@@ -24,7 +24,7 @@ export function Switch({ checked, onCheckedChange, labels }: SwitchProps) {
           <div
             className={cn(
               'absolute top-0 left-0 h-full w-1/2 rounded-full transition-transform duration-200 ease-in-out',
-              'bg-[var(--main-1)]',
+              'bg-[var(--main-5)]',
               checked ? 'translate-x-full' : 'translate-x-0',
             )}
           />
@@ -53,7 +53,7 @@ export function Switch({ checked, onCheckedChange, labels }: SwitchProps) {
 
         <SwitchPrimitive.Thumb
           className={cn(
-            'absolute top-[2px] left-[2px] h-[22px] w-[22px] rounded-full bg-[var(--main-1)] shadow transition-all',
+            'absolute top-[2px] left-[2px] h-[22px] w-[22px] rounded-full bg-[var(--main-5)] shadow transition-all',
             checked && hasLabels && 'translate-x-[88px]',
             !checked && hasLabels && 'translate-x-0',
             checked && !hasLabels && 'translate-x-[24px]',

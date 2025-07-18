@@ -1,5 +1,5 @@
-import { getTradePostDetail } from '@features/trade/api/trade';
-import { TradeDetailPage } from '@features/trade/pages/TradeDetailPage';
+import { getTradePostDetail } from '@/pages/trade/data/detail/api/apis';
+import { TradeDetailPage } from '@/pages/trade/data/detail/page/DataDetailPage';
 
 interface Props {
   params: Promise<{ id: string }>;

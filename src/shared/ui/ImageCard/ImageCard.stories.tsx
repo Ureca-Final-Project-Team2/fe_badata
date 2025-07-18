@@ -1,4 +1,4 @@
-import { ImageCard } from '@ui/ImageCard';
+import { ImageCard } from './ImageCard';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

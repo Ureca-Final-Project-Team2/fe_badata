@@ -1,4 +1,4 @@
-import { ProductInfo } from '@ui/ProductInfo';
+import { ProductInfo } from './ProductInfo';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

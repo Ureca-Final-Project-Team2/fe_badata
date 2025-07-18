@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 import { cva } from 'class-variance-authority';
 
 import type { VariantProps } from 'class-variance-authority';
@@ -46,7 +46,7 @@ function ReviewHeader({
       {showReviewButton && (
         <button
           onClick={onReviewClick}
-          className="ml-4 text-[var(--point-1)] font-semibold text-[16px] hover:text-[var(--point-2)] transition-colors flex-shrink-0"
+          className="ml-4 text-[var(--main-5)] font-semibold text-[16px] hover:text-[var(--main-5)] transition-colors flex-shrink-0"
           type="button"
         >
           📝 리뷰쓰기

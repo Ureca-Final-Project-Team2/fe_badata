@@ -2,18 +2,18 @@
 
 import { useEffect } from 'react';
 
-import { renderStoreMarkers } from '@features/stores/map/lib/renderStoreMarkers';
-import { useFetchStores } from '@features/stores/map/model/useFetchStores';
-import { useKakaoMap } from '@features/stores/map/model/useKakaoMap';
+import { renderStoreMarkers } from '@/pages/rental/map/lib/renderStoreMarkers';
+import { useFetchStoresHooks } from '@/pages/rental/map/model/useFetchStoresHooks';
+import { useKakaoMapHooks } from '@/pages/rental/map/model/useKakaoMapHooks';
 
 const RentalPage = () => {
-  const { mapRef, map } = useKakaoMap();
-  const stores = useFetchStores();
+  const { mapRef, map } = useKakaoMapHooks();
+  const stores = useFetchStoresHooks();
 
-useEffect(() => {
-  if (!map) return;
-  renderStoreMarkers(map, stores);
-}, [map, stores]);
+  useEffect(() => {
+    if (!map) return;
+    renderStoreMarkers(map, stores);
+  }, [map, stores]);
 
   return (
     <div

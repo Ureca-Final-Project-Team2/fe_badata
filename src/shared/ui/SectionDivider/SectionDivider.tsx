@@ -1,7 +1,7 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 import { cva } from 'class-variance-authority';
 
 import type { VariantProps } from 'class-variance-authority';
@@ -56,9 +56,8 @@ export const SectionDivider = forwardRef<HTMLDivElement, SectionDividerProps>(
       <div className={className} ref={ref} {...props}>
         {children ? (
           <DividerWithText size={size} color={color} thickness={thickness}>
-  {children}
-</DividerWithText>
-
+            {children}
+          </DividerWithText>
         ) : (
           <div className={cn(sectionDividerVariants({ size, color, thickness }))} />
         )}

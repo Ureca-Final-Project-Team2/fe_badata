@@ -1,4 +1,4 @@
-import { HTTPError } from '@lib/HTTPError';
+import { HTTPError } from '../HTTPError';
 
 import type { ErrorResponse } from '@/shared/lib/axios/responseTypes';
 import type { AxiosError } from 'axios';

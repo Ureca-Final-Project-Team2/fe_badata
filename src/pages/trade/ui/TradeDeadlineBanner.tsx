@@ -1,7 +1,9 @@
-import { useTradeDeadlineQuery } from '@features/trade/model/useTradeQueries';
-import { ImageCard } from '@ui/ImageCard';
-import { ProductInfo } from '@ui/ProductInfo';
 import { ChevronRight } from 'lucide-react';
+
+import { ImageCard } from '@/shared/ui/ImageCard';
+import { ProductInfo } from '@/shared/ui/ProductInfo';
+
+import { useTradeDeadlineQuery } from '../model/queries';
 
 export function TradeDeadlineBanner() {
   const { deadlinePosts, isLoading } = useTradeDeadlineQuery();
@@ -25,7 +27,7 @@ export function TradeDeadlineBanner() {
           <div key={item.id} className="w-[98px]">
             <ImageCard key={item.id} size="sm" url={item.postImage} defaultLiked={item.isLiked} />
             <div className="mt-1">
-              <ProductInfo brand={item.partner} name={item.title} price={item.price} size="sm" />
+              <ProductInfo brand={item.partner!} name={item.title} price={item.price} size="sm" />
             </div>
           </div>
         ))}

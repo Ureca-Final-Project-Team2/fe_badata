@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 
 interface DrawerButtonProps {
   icon?: React.ReactNode;
@@ -27,7 +27,7 @@ export function DrawerButton({
         isLight ? 'bg-[var(--gray-light)] text-[var(--black)]' : 'bg-[var(--gray-mid)] text-white',
         variant === 'default' && 'rounded-none first:rounded-t-[12px] last:rounded-b-[12px]',
         variant === 'point' &&
-          'text-[var(--point-1)] rounded-none first:rounded-t-[12px] last:rounded-b-[12px]',
+          'text-[var(--main-5)] rounded-none first:rounded-t-[12px] last:rounded-b-[12px]',
         variant === 'close' && 'mt-3 rounded-[12px]',
       )}
     >

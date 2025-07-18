@@ -1,7 +1,7 @@
+import CoinHistoryPage from '@/pages/mypage/coin-history/page/CoinHistoryPage';
+
 export const dynamic = 'force-dynamic';
 
-import MyCoinPage from "@features/mypage/pages/MyCoinPage";
-
 export default function Page() {
-  return <MyCoinPage />;
+  return <CoinHistoryPage />;
 }

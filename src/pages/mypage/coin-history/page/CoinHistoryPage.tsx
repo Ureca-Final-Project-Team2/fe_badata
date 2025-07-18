@@ -1,6 +1,6 @@
 'use client';
 
-import { useUserCoinQuery } from '@/pages/mypage/model/useUserCoinQuery';
+import { useUserCoinQuery } from '@/entities/coin/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 
 export default function CoinHistoryPage() {

@@ -1,5 +1,4 @@
-import { Badge } from '@ui/Badge';
-import { X } from 'lucide-react';
+import { Badge, X } from 'lucide-react';
 
 interface SearchRecentKeywordsProps {
   keywords: string[];
@@ -24,12 +23,21 @@ export const SearchRecentKeywords = ({
       </div>
       <div className="flex flex-wrap gap-2">
         {keywords.map((keyword, index) => (
-          <Badge key={index} size="xs" color="grayMid" className="flex items-center gap-1" onClick={() => onClickKeyword?.(keyword)}>
+          <Badge
+            key={index}
+            size="xs"
+            color="grayMid"
+            className="flex items-center gap-1"
+            onClick={() => onClickKeyword?.(keyword)}
+          >
             <span>{keyword}</span>
-            <button onClick={(e) => {
-              e.stopPropagation();
-              onDeleteKeyword?.(keyword);
-            }} className="ml-1 hover:text-gray-800">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteKeyword?.(keyword);
+              }}
+              className="ml-1 hover:text-gray-800"
+            >
               <X className="w-3 h-3" />
             </button>
           </Badge>

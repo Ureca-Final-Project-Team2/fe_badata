@@ -1,6 +1,8 @@
-import { fetchStoreDetail, fetchStoreDevices } from '@features/stores/map/api/map';
+import { fetchStoreDevices } from '@/entities/devices/api/apis';
 
-import type { Store } from '@features/stores/map/lib';
+import { fetchStoreDetail } from '../api/apis';
+
+import type { Store } from './types';
 
 export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) => {
   if (!map || !window.kakao || stores.length === 0) return;
@@ -35,12 +37,12 @@ export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) =
       content: `<div style="padding:5px;font-size:14px;">${store.name}</div>`,
     });
 
-window.kakao.maps.event.addListener(marker, 'mouseover', () => {
-  infowindow.open(map, marker);
-});
-window.kakao.maps.event.addListener(marker, 'mouseout', () => {
-  infowindow.close();
-});
+    window.kakao.maps.event.addListener(marker, 'mouseover', () => {
+      infowindow.open(map, marker);
+    });
+    window.kakao.maps.event.addListener(marker, 'mouseout', () => {
+      infowindow.close();
+    });
 
     window.kakao.maps.event.addListener(marker, 'click', async () => {
       console.log(`📦 ${store.name}의 기기 목록:`, devices);
@@ -48,13 +50,13 @@ window.kakao.maps.event.addListener(marker, 'mouseout', () => {
       const center = map.getCenter();
       const lat = center.getLat();
       const lng = center.getLng();
-    
-   try {
-    const storeDetail = await fetchStoreDetail(store.id, lat, lng);
-    console.log(`${store.name}의 상세 정보:`, storeDetail);
-  } catch (error) {
-    console.error('가맹점 상세정보 요청 실패:', error);
-  }
-});
+
+      try {
+        const storeDetail = await fetchStoreDetail(store.id, lat, lng);
+        console.log(`${store.name}의 상세 정보:`, storeDetail);
+      } catch (error) {
+        console.error('가맹점 상세정보 요청 실패:', error);
+      }
+    });
   }
 };

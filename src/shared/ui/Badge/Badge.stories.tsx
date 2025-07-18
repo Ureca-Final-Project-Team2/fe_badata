@@ -1,4 +1,4 @@
-import { Badge } from '@ui/Badge';
+import { Badge } from 'lucide-react';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

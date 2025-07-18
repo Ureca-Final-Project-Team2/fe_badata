@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
-import { usePostTradeDataMutation } from '@features/trade/model/useTradeMutations';
-import { BuyButton } from '@ui/BuyButton';
-import { InputField } from '@ui/InputField';
-import { TextAreaField } from '@ui/TextAreaField';
 import { ImageUp } from 'lucide-react';
 
 import { toRawPrice } from '@/shared/lib/formatPrice';
+import { BuyButton } from '@/shared/ui/BuyButton';
+import { InputField } from '@/shared/ui/InputField';
+import { TextAreaField } from '@/shared/ui/TextAreaField';
+
+import { usePostTradeDataMutation } from '../../register/data/model/mutations';
 
 export function TradeDataRegisterForm() {
   const [form, setForm] = useState({
@@ -74,7 +75,7 @@ export function TradeDataRegisterForm() {
           <img src={imagePreview} alt="이미지 미리보기" className="w-full h-full object-contain" />
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center gap-2">
-            <ImageUp size={30} color="var(--point-1)" />
+            <ImageUp size={30} color="var(--main-5)" />
             <span className="text-[var(--gray-dark)]">이미지 파일 업로드</span>
           </div>
         )}

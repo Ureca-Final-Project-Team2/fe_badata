@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import { useAuthStore } from '@features/auth/model/authStore';
+import { useAuthStore } from '@/entities/auth/model/authStore';
 
 export default function HomePage() {
   const user = useAuthStore((state) => state.user);

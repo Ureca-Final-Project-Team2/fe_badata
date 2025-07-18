@@ -19,7 +19,7 @@ export const DataUsageCardSection = () => {
   const [mainColor, setMainColor] = useState<string>('#0f225e');
 
   useEffect(() => {
-    const cssMain = getComputedStyle(document.documentElement).getPropertyValue('--main-1').trim();
+    const cssMain = getComputedStyle(document.documentElement).getPropertyValue('--main-5').trim();
     if (cssMain) setMainColor(cssMain);
   }, []);
 

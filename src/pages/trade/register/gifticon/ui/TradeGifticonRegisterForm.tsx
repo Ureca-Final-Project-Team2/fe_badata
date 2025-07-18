@@ -13,7 +13,7 @@ import { TextAreaField } from '@/shared/ui/TextAreaField';
 
 import type { GifticonCategory } from '@/pages/trade/register/gifticon/lib/types';
 
-export function TradeCouponRegisterForm() {
+export function TradeGifticonRegisterForm() {
   const [ocrResult, setOcrResult] = useState({
     title: '메가커피 아메리카노',
     partner: '메가MGC커피',
@@ -98,7 +98,7 @@ export function TradeCouponRegisterForm() {
           <img src={imagePreview} alt="이미지 미리보기" className="w-full h-full object-contain" />
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center gap-2">
-            <ImageUp size={30} color="var(--point-1)" />
+            <ImageUp size={30} color="var(--main-5)" />
             <span className="text-[var(--gray-dark)]">이미지 파일 업로드</span>
           </div>
         )}

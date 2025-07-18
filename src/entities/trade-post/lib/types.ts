@@ -30,7 +30,7 @@ export interface DataPost extends BasePost {
   capacity?: number;
 }
 
-export interface CouponPost extends BasePost {
+export interface GifticonPost extends BasePost {
   postCategory: 'GIFTICON';
   partner?: string;
   issueDate?: string;

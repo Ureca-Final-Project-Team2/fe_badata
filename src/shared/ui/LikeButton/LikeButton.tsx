@@ -26,8 +26,8 @@ export function LikeButton({ defaultLiked = false, onChange }: LikeButtonProps) 
     >
       <Heart
         className="w-4 h-4"
-        fill={liked ? 'var(--point-1)' : 'none'}
-        stroke={liked ? 'var(--point-1)' : 'white'}
+        fill={liked ? 'var(--main-5)' : 'none'}
+        stroke={liked ? 'var(--main-5)' : 'white'}
         strokeWidth={2}
       />
     </Button>

@@ -1,5 +1,4 @@
-import { Badge } from '@ui/Badge';
-import { Flame } from 'lucide-react';
+import { Badge, Flame } from 'lucide-react';
 
 interface SearchHotKeywordsProps {
   keywords: string[];

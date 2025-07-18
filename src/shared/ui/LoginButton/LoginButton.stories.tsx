@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 
-import { useAuthStore } from '@features/auth/model/authStore';
-import { LoginButton } from '@ui/LoginButton';
+import { useAuthStore } from '@/entities/auth/model/authStore';
+
+import { LoginButton } from './LoginButton';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

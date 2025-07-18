@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Profile } from '@ui/Profile';
+import { Profile } from './Profile';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

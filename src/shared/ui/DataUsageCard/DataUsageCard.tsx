@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 import { cva } from 'class-variance-authority';
 
 const cardWrapperVariants = cva(
@@ -55,7 +55,7 @@ export const DataUsageCard = forwardRef<HTMLDivElement, DataUsageCardProps>(
             <p className="text-[12px] text-[var(--gray-mid)] mt-[2px]">{planName}</p>
           </div>
           <button
-            className="px-3 py-1 rounded-full bg-[var(--main-1)] text-white text-[12px] font-medium"
+            className="px-3 py-1 rounded-full bg-[var(--main-5)] text-white text-[12px] font-medium"
             type="button"
           >
             {chargeLabel}
@@ -76,10 +76,10 @@ export const DataUsageCard = forwardRef<HTMLDivElement, DataUsageCardProps>(
 
         <div className="mt-3">
           <p className="text-[12px] text-black mb-[2px]">{remainingLabel}</p>
-          <p className="text-[11px] text-[var(--main-1)] mb-[4px]">{formattedUsage}</p>
+          <p className="text-[11px] text-[var(--main-5)] mb-[4px]">{formattedUsage}</p>
           <div className="w-full h-[6px] rounded-full bg-[var(--gray-light)]">
             <div
-              className="h-full rounded-full bg-[var(--main-1)] transition-all"
+              className="h-full rounded-full bg-[var(--main-5)] transition-all"
               style={{ width: `${percentage}%` }}
             />
           </div>

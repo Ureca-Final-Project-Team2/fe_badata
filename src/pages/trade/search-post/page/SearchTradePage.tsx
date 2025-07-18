@@ -14,7 +14,7 @@ import { useDebouncedValueHooks } from '@/shared/model/useDebounceValueHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
-import type { CouponPost, DataPost } from '@/entities/trade-post/lib/types';
+import type { DataPost, GifticonPost } from '@/entities/trade-post/lib/types';
 
 export function TradeSearchPage() {
   const router = useRouter();
@@ -55,7 +55,7 @@ export function TradeSearchPage() {
       <SearchHotKeywords keywords={hotKeywords} />
       <SearchResult
         search={debouncedSearch}
-        posts={posts as DataPost[] | CouponPost[]}
+        posts={posts as DataPost[] | GifticonPost[]}
         isLoading={isLoading}
         isError={isError}
       />

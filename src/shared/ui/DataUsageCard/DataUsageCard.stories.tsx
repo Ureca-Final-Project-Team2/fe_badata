@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { DataUsageCard } from '@ui/DataUsageCard';
+import { DataUsageCard } from './DataUsageCard';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

@@ -20,7 +20,7 @@ export function ImageCard({ size = 'sm', url, expireDate, defaultLiked = false }
 
       {dDayText && (
         <span
-          className="absolute top-0 left-0 w-[57px] h-[30px] bg-[var(--point-1)] text-white text-body-semibold flex items-center justify-center z-10"
+          className="absolute top-0 left-0 w-[57px] h-[30px] bg-[var(--main-5)] text-white text-body-semibold flex items-center justify-center z-10"
           aria-label="D-Day Badge"
         >
           {dDayText}

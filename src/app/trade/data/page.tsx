@@ -1,8 +1,9 @@
 'use client';
-export const dynamic = 'force-dynamic'; 
 
-import TradeDataPage from '@features/trade/pages/TradeDataPage';
+import DataPage from '@/pages/trade/data/page/DataPage';
+
+export const dynamic = 'force-dynamic';
 
 export default function Page() {
-  return <TradeDataPage />;
+  return <DataPage />;
 }

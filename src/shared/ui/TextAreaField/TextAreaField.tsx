@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 
 interface TextAreaFieldProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   isRequired?: boolean;
@@ -23,7 +23,7 @@ export const TextAreaField: React.FC<TextAreaFieldProps> = ({
       <textarea
         className={cn(
           'w-full h-[100px] rounded-[10px] px-4 py-3 bg-gray-light border text-[16px] font-normal text-black font-sans resize-none',
-          hasError ? 'border-[var(--point-1)]' : 'border-[var(--gray-light)]',
+          hasError ? 'border-[var(--main-5)]' : 'border-[var(--gray-light)]',
           className,
         )}
         value={value}

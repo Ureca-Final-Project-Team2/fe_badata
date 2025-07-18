@@ -1,5 +1,6 @@
-import { FloatingActionButton } from '@ui/FloatingActionButton';
 import { Gift, List, Pen, Plus } from 'lucide-react';
+
+import { FloatingActionButton } from './FloatingActionButton';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

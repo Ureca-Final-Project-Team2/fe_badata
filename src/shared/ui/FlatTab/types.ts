@@ -1,6 +1,4 @@
-import type * as React from 'react';
-
-import type { flatTabVariants } from '@ui/FlatTab';
+import type { flatTabVariants } from '@/shared/ui/FlatTab';
 import type { VariantProps } from 'class-variance-authority';
 
 export type FlatTabItem = {

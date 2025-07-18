@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 
 export interface FABAction {
   label: string;
@@ -35,7 +35,7 @@ export function FloatingActionButton({
       {mode === 'expand' && (
         <div
           className={cn(
-            'mb-2 flex flex-col rounded-[20px] border bg-[var(--main-1)] shadow-md divide-y divide-white transition-all duration-150',
+            'mb-2 flex flex-col rounded-[20px] border bg-[var(--main-5)] shadow-md divide-y divide-white transition-all duration-150',
             open ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none',
           )}
         >
@@ -59,8 +59,8 @@ export function FloatingActionButton({
         onClick={handleTriggerClick}
         className={
           mode === 'expand' && open
-            ? 'w-12 h-12 rounded-full bg-[var(--main-1)] text-white text-[18px] flex items-center justify-center shadow-md'
-            : 'min-w-[100px] h-[46px] rounded-full bg-[var(--main-1)] text-white text-[18px] font-semibold flex items-center justify-center gap-1 px-4 shadow-md'
+            ? 'w-12 h-12 rounded-full bg-[var(--main-5)] text-white text-[18px] flex items-center justify-center shadow-md'
+            : 'min-w-[100px] h-[46px] rounded-full bg-[var(--main-5)] text-white text-[18px] font-semibold flex items-center justify-center gap-1 px-4 shadow-md'
         }
       >
         {mode === 'expand' && open ? (

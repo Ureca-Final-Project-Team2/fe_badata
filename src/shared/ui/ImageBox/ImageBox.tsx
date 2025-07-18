@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 
 type ImageBoxSize = 'sm' | 'md' | 'lg';
 
