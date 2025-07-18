@@ -1,0 +1,2 @@
+export { FilterIcon } from './FilterIcon';
+
