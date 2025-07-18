@@ -2,6 +2,7 @@ export const ICONS = {
   LOGO: {
     BADATA: '/icons/logo-badata.svg',
     SOS: '/icons/logo-sos.svg',
+    BACKBUTTON: '/icons/backbutton.svg'
   },
   MYPAGE: {
     COIN: '/icons/coin.png',
