@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { BuyButton } from '@/shared/ui/BuyButton';
 import { PageHeader } from '@/shared/ui/Header';
+import { BuyButton } from '@/shared/ui/RegisterButton';
 import { TradeDetailDrawer } from '@/widgets/trade/post-detail/ui/TradeDetailDrawer';
 import { TradeDetailProductSection } from '@/widgets/trade/post-detail/ui/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@/widgets/trade/post-detail/ui/TradeDetailSellerSection';

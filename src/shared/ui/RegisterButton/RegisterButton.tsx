@@ -7,7 +7,7 @@ import { cn } from '@/shared/lib/cn';
 
 import type { VariantProps } from 'class-variance-authority';
 
-const buyButtonVariants = cva(
+const registerButtonVariants = cva(
   'flex items-center justify-center font-semibold text-[20px] transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
@@ -43,7 +43,7 @@ function LoadingSpinner() {
 
 export interface BuyButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buyButtonVariants> {
+    VariantProps<typeof registerButtonVariants> {
   loading?: boolean;
 }
 
@@ -51,7 +51,7 @@ export const BuyButton = forwardRef<HTMLButtonElement, BuyButtonProps>(
   ({ className, variant, size, loading = false, children, disabled, ...props }, ref) => {
     return (
       <button
-        className={cn(buyButtonVariants({ variant, size }), className)}
+        className={cn(registerButtonVariants({ variant, size }), className)}
         ref={ref}
         disabled={disabled || loading}
         {...props}
