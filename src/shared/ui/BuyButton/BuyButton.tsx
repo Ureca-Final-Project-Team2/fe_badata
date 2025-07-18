@@ -1,5 +1,5 @@
+import { LikeButtonCircle } from '@/shared/ui/LikeButtonCircle/LikeButtonCircle';
 import React from 'react';
-import { LikeButtonCircle } from '../LikeButtonCircle/LikeButtonCircle';
 
 interface BuyButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
