@@ -1,5 +1,5 @@
+import { LikeButton } from '@/shared/ui/LikeButton/LikeButton';
 import React from 'react';
-import { LikeButton } from '../LikeButton/LikeButton';
 
 interface LikeButtonCircleProps {
   active?: boolean;
@@ -13,7 +13,7 @@ export function LikeButtonCircle({ active = false, onClick, className }: LikeBut
       className={`w-14 h-14 rounded-full bg-white flex items-center justify-center ${className ?? ''}`}
       style={{ width: 56, height: 56 }}
     >
-      <LikeButton active={active} onClick={onClick} className="w-[50px] h-[50px]" />
+      <LikeButton active={active} onClick={onClick} />
     </div>
   );
 }
