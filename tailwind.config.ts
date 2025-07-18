@@ -8,15 +8,11 @@ const config: Config = {
         sans: ['var(--font-sans)', 'sans-serif'], // Pretendard 설정
       },
       colors: {
-        // Point 색상
-        'point-1': '#FF5D8F',
-        'point-2': '#FF87AB',
-        'point-3': '#FFA6C1',
-
-        // Main 색상
-        'main-1': '#0F225E',
-        'main-2': '#4B7AA5',
-        'main-3': '#86D1EB',
+        'main-1': '#edf7fb',
+        'main-2': '#c6eaf8',
+        'main-3': '#ade7ff',
+        'main-4': '#72c1f2',
+        'main-5': '#3e9fdc',
 
         // Gray scale
         white: '#FFFFFF',
@@ -29,6 +25,7 @@ const config: Config = {
         // Status 색상
         red: '#FF4242',
         green: '#11D85D',
+        blue: '#155dfc',
       },
       fontSize: {
         'head-bold': ['31.5px', 'auto'],

@@ -1,9 +1,13 @@
-'use client';
+export const dynamic = 'force-dynamic';
 
-import { useKakaoCallback } from '@features/auth/logics/useKakaoCallback';
+import { Suspense } from 'react';
+
+import KakaoCallbackClient from '@/app/auth/kakao/callback/kakaoCallbackClient';
 
 export default function KakaoCallbackPage() {
-  useKakaoCallback();
-
-  return <div className="p-10">로그인 처리 중입니다...</div>;
+  return (
+    <Suspense fallback={<div className="p-4 text-center">로그인 처리 중입니다...</div>}>
+      <KakaoCallbackClient />
+    </Suspense>
+  );
 }

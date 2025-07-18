@@ -1,6 +1,7 @@
+import { HTTPError } from '../HTTPError';
+
+import type { ErrorResponse } from '@/shared/lib/axios/responseTypes';
 import type { AxiosError } from 'axios';
-import type { ErrorResponse } from '@/shared/lib/axios/models';
-import { HTTPError } from '@lib/HTTPError';
 
 export const handleAPIError = (error: AxiosError<ErrorResponse>) => {
   if (!error.response) {
