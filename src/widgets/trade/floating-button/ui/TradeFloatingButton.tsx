@@ -20,7 +20,7 @@ export function TradeFloatingButton() {
       icon: <List />,
       label: '쿠폰',
       onClick: () => {
-        router.push(PATH.TRADE.COUPON_REGISTER);
+        router.push(PATH.TRADE.GIFTICON_REGISTER);
       },
     },
   ];

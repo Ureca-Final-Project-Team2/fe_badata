@@ -28,9 +28,9 @@ export function GifticonList({
   if (!posts || posts.length === 0) {
     return <div>쿠폰 게시물이 없습니다.</div>;
   }
-  const couponPosts = posts.filter((p) => p.postCategory === 'GIFTICON');
+  const gifticonPosts = posts.filter((p) => p.postCategory === 'GIFTICON');
 
-  const filtered = couponPosts.filter(
+  const filtered = gifticonPosts.filter(
     (p) => selectedCategory === '전체' || p.gifticonCategory === selectedCategory,
   );
 

@@ -17,7 +17,7 @@ export function TradeGifticonRegisterForm() {
   const [ocrResult, setOcrResult] = useState({
     title: '메가커피 아메리카노',
     partner: '메가MGC커피',
-    couponNumber: 'MGC123456789',
+    gitfticonNumber: 'MGC123456789',
     deadLine: '2025-07-19',
     issueDate: '2025-06-18',
     image: 'no-image',
@@ -48,7 +48,7 @@ export function TradeGifticonRegisterForm() {
       {
         title: ocrResult.title,
         partner: ocrResult.partner,
-        couponNumber: ocrResult.couponNumber,
+        gifticonNumber: ocrResult.gitfticonNumber,
         deadLine: new Date(ocrResult.deadLine).toISOString(),
         issueDate: new Date(ocrResult.issueDate).toISOString(),
         file,
@@ -75,7 +75,7 @@ export function TradeGifticonRegisterForm() {
         setOcrResult({
           title: 'OCR 상품명',
           partner: 'OCR 제휴사',
-          couponNumber: 'OCR123456',
+          gitfticonNumber: 'OCR123456',
           deadLine: '2025-12-31',
           issueDate: '2025-01-01',
           image: reader.result as string,
@@ -137,7 +137,7 @@ export function TradeGifticonRegisterForm() {
         label="쿠폰번호"
         readOnly
         variant="ocr"
-        value={ocrResult.couponNumber}
+        value={ocrResult.gitfticonNumber}
         placeholder="쿠폰 번호"
       />
       <InputField

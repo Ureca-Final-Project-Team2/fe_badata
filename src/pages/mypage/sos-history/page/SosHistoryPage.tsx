@@ -1,6 +1,6 @@
 'use client';
 
-import { useSosHistoryQuery } from '../model/quries';
+import { useSosHistoryQuery } from '@/pages/mypage/sos-history/model/queries';
 
 import type { SosHistoryItem } from '../lib/types';
 

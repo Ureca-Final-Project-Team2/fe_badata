@@ -3,7 +3,7 @@ export type MobileCarrier = 'LGU+';
 export interface PostTradeDataRequest {
   title: string;
   mobileCarrier: MobileCarrier;
-  deadLine: string;
+  deadLine: Date;
   capacity: number;
   price: number;
   comment: string;

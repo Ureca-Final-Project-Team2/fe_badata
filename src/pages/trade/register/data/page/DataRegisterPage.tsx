@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { TradeDataRegisterForm } from '@/pages/trade/data/ui/TradeDataRegisterForm';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
