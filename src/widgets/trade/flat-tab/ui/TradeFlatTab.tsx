@@ -10,13 +10,13 @@ export function TradeFlatTab() {
   const tabItems = [
     { id: 'all', label: '전체', content: null },
     { id: 'data', label: '데이터', content: null },
-    { id: 'coupon', label: '쿠폰', content: null },
+    { id: 'gifticon', label: '기프티콘', content: null },
   ];
 
-  const defaultValue = pathname.includes('/data')
+  const defaultValue = pathname?.includes('/data')
     ? 'data'
-    : pathname.includes('/coupon')
-      ? 'coupon'
+    : pathname?.includes('/gifticon')
+      ? 'gifticon'
       : 'all';
 
   const handleTabChange = (tabId: string) => {
@@ -27,8 +27,8 @@ export function TradeFlatTab() {
       case 'data':
         router.push(PATH.TRADE.DATA);
         break;
-      case 'coupon':
-        router.push(PATH.TRADE.COUPON);
+      case 'gifticon':
+        router.push(PATH.TRADE.GIFTICON);
         break;
     }
   };

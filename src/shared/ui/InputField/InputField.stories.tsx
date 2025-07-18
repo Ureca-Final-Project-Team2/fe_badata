@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
-import { InputField } from '@ui/InputField';
 import { SearchIcon, TicketIcon } from 'lucide-react';
+
+import { InputField } from './InputField';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

@@ -1,7 +1,7 @@
-import { Product } from '@ui/Product';
+import { Product } from './Product';
 
+import type { ProductProps } from '@/shared/ui/Product';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import type { ProductProps } from '@ui/Product';
 
 const meta: Meta<typeof Product> = {
   title: 'Components/Product',

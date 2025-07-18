@@ -1,4 +1,4 @@
-import { BottomNav } from '@ui/BottomNav';
+import { BottomNav } from './BottomNav';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

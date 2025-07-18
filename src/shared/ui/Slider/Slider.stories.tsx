@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Slider } from '@ui/Slider';
+import { Slider } from './Slider';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
@@ -78,7 +78,7 @@ export const Interactive: Story = {
 
         <div className="bg-gray-50 p-4 rounded-lg text-center">
           <h4 className="text-gray-900 font-medium mb-2">선택된 가격</h4>
-          <p className="text-2xl font-bold text-[var(--main-1)]">{formatPrice(priceValue)}</p>
+          <p className="text-2xl font-bold text-[var(--main-5)]">{formatPrice(priceValue)}</p>
           <p className="text-sm text-gray-500 mt-2">
             전체 범위의 {Math.round((priceValue / 50000) * 100)}%
           </p>

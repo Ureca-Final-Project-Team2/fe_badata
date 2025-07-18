@@ -13,11 +13,11 @@ import { TextAreaField } from '@/shared/ui/TextAreaField';
 
 import type { GifticonCategory } from '@/pages/trade/register/gifticon/lib/types';
 
-export function TradeCouponRegisterForm() {
+export function TradeGifticonRegisterForm() {
   const [ocrResult, setOcrResult] = useState({
     title: '메가커피 아메리카노',
     partner: '메가MGC커피',
-    couponNumber: 'MGC123456789',
+    gitfticonNumber: 'MGC123456789',
     deadLine: '2025-07-19',
     issueDate: '2025-06-18',
     image: 'no-image',
@@ -48,7 +48,7 @@ export function TradeCouponRegisterForm() {
       {
         title: ocrResult.title,
         partner: ocrResult.partner,
-        couponNumber: ocrResult.couponNumber,
+        gifticonNumber: ocrResult.gitfticonNumber,
         deadLine: new Date(ocrResult.deadLine).toISOString(),
         issueDate: new Date(ocrResult.issueDate).toISOString(),
         file,
@@ -75,7 +75,7 @@ export function TradeCouponRegisterForm() {
         setOcrResult({
           title: 'OCR 상품명',
           partner: 'OCR 제휴사',
-          couponNumber: 'OCR123456',
+          gitfticonNumber: 'OCR123456',
           deadLine: '2025-12-31',
           issueDate: '2025-01-01',
           image: reader.result as string,
@@ -98,7 +98,7 @@ export function TradeCouponRegisterForm() {
           <img src={imagePreview} alt="이미지 미리보기" className="w-full h-full object-contain" />
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center gap-2">
-            <ImageUp size={30} color="var(--point-1)" />
+            <ImageUp size={30} color="var(--main-5)" />
             <span className="text-[var(--gray-dark)]">이미지 파일 업로드</span>
           </div>
         )}
@@ -137,7 +137,7 @@ export function TradeCouponRegisterForm() {
         label="쿠폰번호"
         readOnly
         variant="ocr"
-        value={ocrResult.couponNumber}
+        value={ocrResult.gitfticonNumber}
         placeholder="쿠폰 번호"
       />
       <InputField

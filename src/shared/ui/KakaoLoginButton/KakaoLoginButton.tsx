@@ -1,6 +1,6 @@
 'use client';
 
-import { useKakaoLogin } from "@features/auth/model/useKakaoLogin";
+import { useKakaoLogin } from '@/entities/auth/model/useKakaoLogin';
 
 export const KakaoLoginButton = () => {
   const handleLogin = useKakaoLogin();

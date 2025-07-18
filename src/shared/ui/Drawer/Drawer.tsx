@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 
 type DrawerVariant = 'default' | 'filter' | 'sos';
 

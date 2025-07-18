@@ -21,7 +21,7 @@ export function GifticonFilter({ selectedCategory, onSelectCategory }: GifticonF
               className={`flex-1 py-1.5 border font-medium
                 ${
                   selectedCategory === cat
-                    ? 'bg-[var(--main-1)] text-white border-[var(--main-1)] shadow'
+                    ? 'bg-[var(--main-5)] text-white border-[var(--main-5)] shadow'
                     : 'bg-white text-[var(--gray)] border-[var(--gray-light)] hover:bg-[var(--gray-light)]'
                 }
                 transition-colors duration-100

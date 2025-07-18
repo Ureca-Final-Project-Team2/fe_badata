@@ -1,4 +1,4 @@
-import { FlatTab } from '@ui/FlatTab';
+import { FlatTab } from './FlatTab';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
@@ -24,8 +24,8 @@ const sampleItems = [
     ),
   },
   {
-    id: 'coupon',
-    label: '쿠폰',
+    id: 'gifticon',
+    label: '기프티콘',
     content: (
       <div className="p-4 bg-green-50 rounded">
         <h3 className="text-lg font-semibold mb-2">쿠폰 내용</h3>

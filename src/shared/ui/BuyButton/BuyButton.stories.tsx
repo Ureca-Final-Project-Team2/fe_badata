@@ -1,4 +1,4 @@
-import { BuyButton } from '@ui/BuyButton';
+import { BuyButton } from './BuyButton';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

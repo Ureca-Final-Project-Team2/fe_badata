@@ -1,8 +1,8 @@
 'use client';
 
-import { useSosHistoryQuery } from '@/pages/mypage/model/useSosHistoryQuery';
+import { useSosHistoryQuery } from '@/pages/mypage/sos-history/model/queries';
 
-import type { SosHistoryItem } from '@/pages/mypage/lib/types';
+import type { SosHistoryItem } from '../lib/types';
 
 export const SosHistoryPage = () => {
   const { data, isLoading, isError } = useSosHistoryQuery();

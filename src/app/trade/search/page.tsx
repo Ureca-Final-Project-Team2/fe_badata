@@ -1,6 +1,6 @@
-export const dynamic = 'force-dynamic';
+import { TradeSearchPage } from '@/pages/trade/search-post/page/SearchTradePage';
 
-import { TradeSearchPage } from '@features/trade/pages/TradeSearchPage';
+export const dynamic = 'force-dynamic';
 
 export default function SearchPage() {
   return <TradeSearchPage />;

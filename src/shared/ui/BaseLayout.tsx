@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
+import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
 
-import { SosDrawer } from '@features/sos/components/SosDrawer';
-import { useSosDrawer } from '@features/sos/hooks/useSosDrawer';
-import { cn } from '@lib/cn';
-import { BottomNav } from '@ui/BottomNav';
+import { cn } from '../lib/cn';
+
+import { BottomNav } from './BottomNav';
 
 interface BaseLayoutProps {
   children: React.ReactNode;

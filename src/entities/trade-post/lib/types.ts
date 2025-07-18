@@ -1,14 +1,18 @@
 export interface AllPost {
   id: number;
   title: string;
+  partner?: string;
   price: number;
-  createdAt: string;
+  createdAt: Date;
   postImage: string;
   postCategory: 'DATA' | 'GIFTICON';
-  partner: string | null;
-  gifticonCategory: string | null;
+  gifticonCategory?: string;
   likesCount: number;
   isLiked: boolean;
+}
+
+export interface DeadlinePost extends AllPost {
+  deadLine: Date;
 }
 
 export interface BasePost {
@@ -30,7 +34,7 @@ export interface DataPost extends BasePost {
   capacity?: number;
 }
 
-export interface CouponPost extends BasePost {
+export interface GifticonPost extends BasePost {
   postCategory: 'GIFTICON';
   partner?: string;
   issueDate?: string;

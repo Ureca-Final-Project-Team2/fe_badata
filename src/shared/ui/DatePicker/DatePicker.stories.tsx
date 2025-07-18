@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { DatePicker } from '@ui/DatePicker';
+import { DatePicker } from './DatePicker';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

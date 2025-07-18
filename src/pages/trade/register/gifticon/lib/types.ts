@@ -1,4 +1,3 @@
-
 export type GifticonCategory =
   | 'OTT/뮤직'
   | '도서/아티클'
@@ -60,7 +59,7 @@ export interface PostTradeGifticonRequest {
   title: string;
   category: GifticonCategory;
   partner: string;
-  couponNumber: string;
+  gifticonNumber: string;
   deadLine: string;
   issueDate: string;
   price: number;

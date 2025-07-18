@@ -1,5 +1,6 @@
-import { Badge } from '@ui/Badge';
 import { Flame } from 'lucide-react';
+
+import { Badge } from '@/shared/ui/Badge';
 
 interface SearchHotKeywordsProps {
   keywords: string[];

@@ -19,7 +19,7 @@ export function FilterDrawerButton({
       className="w-full px-4 py-3 flex items-center justify-between text-[20px] font-medium text-[var(--black)]"
     >
       <span>{children}</span>
-      {selected && <Check className="w-5 h-5 text-[var(--point-1)]" />}
+      {selected && <Check className="w-5 h-5 text-[var(--main-5)]" />}
     </button>
   );
 }

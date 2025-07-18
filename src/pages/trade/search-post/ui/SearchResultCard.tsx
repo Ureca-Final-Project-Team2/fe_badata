@@ -1,16 +1,16 @@
 import { useRouter } from 'next/navigation';
 
-import type { CouponPost, DataPost } from '@/entities/trade-post/lib/types';
+import type { DataPost, GifticonPost } from '@/entities/trade-post/lib/types';
 
 interface SearchResultCardProps {
-  post: DataPost | CouponPost;
+  post: DataPost | GifticonPost;
 }
 
 export const SearchResultCard = ({ post }: SearchResultCardProps) => {
   const router = useRouter();
 
   const handleClick = () => {
-    const path = `/trade/${post.postCategory === 'DATA' ? 'data' : 'coupon'}/${post.id}`;
+    const path = `/trade/${post.postCategory === 'DATA' ? 'data' : 'gifticon'}/${post.id}`;
     router.push(path);
   };
 

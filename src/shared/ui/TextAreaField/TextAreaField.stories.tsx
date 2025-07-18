@@ -1,4 +1,4 @@
-import { TextAreaField } from '@ui/TextAreaField';
+import { TextAreaField } from './TextAreaField';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

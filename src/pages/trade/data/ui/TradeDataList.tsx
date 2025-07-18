@@ -1,7 +1,8 @@
-import { useTradePostsQuery } from '@features/trade/model/useTradeQueries';
-import { Drawer, DrawerButton, FilterDrawerButton } from '@ui/Drawer';
-import { Product } from '@ui/Product';
 import { ArrowDownUp, ListFilter } from 'lucide-react';
+
+import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
+import { Drawer, DrawerButton, FilterDrawerButton } from '@/shared/ui/Drawer';
+import { Product } from '@/shared/ui/Product';
 
 type SortOption = 'latest' | 'popular';
 

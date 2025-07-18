@@ -1,4 +1,4 @@
-import { LikeButton } from '@ui/LikeButton';
+import { LikeButton } from './LikeButton';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

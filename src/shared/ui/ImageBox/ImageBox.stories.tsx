@@ -1,4 +1,4 @@
-import { ImageBox } from '@ui/ImageBox';
+import { ImageBox } from './ImageBox';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

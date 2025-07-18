@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getUserCoin } from '@/pages/mypage/api/mypage';
+import { getUserCoin } from '@/entities/coin/api/apis';
 
-import type { UserCoin } from '@/pages/mypage/lib/types';
+import type { UserCoin } from '../lib/types';
 
 export const useUserCoinQuery = () => {
   return useQuery<UserCoin>({
@@ -10,4 +10,4 @@ export const useUserCoinQuery = () => {
     queryFn: getUserCoin,
     enabled: typeof window !== 'undefined',
   });
-}
+};

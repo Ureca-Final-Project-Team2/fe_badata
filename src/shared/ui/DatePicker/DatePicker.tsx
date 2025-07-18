@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 

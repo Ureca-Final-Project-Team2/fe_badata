@@ -6,7 +6,7 @@ import { FileText, Home, Repeat, User } from 'lucide-react';
 
 import { ICONS } from '@/shared/config/iconPath';
 
-import type { LucideIcon} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 const navItems = [
   { label: '홈', icon: Home },
@@ -15,7 +15,7 @@ const navItems = [
   { label: '마이', icon: User },
 ];
 
-const MAIN_COLOR = 'var(--main-1)';
+const MAIN_COLOR = 'var(--main-5)';
 const GRAY_COLOR = 'var(--gray-dark)';
 
 interface BottomNavProps {

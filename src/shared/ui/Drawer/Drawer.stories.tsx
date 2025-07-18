@@ -1,8 +1,12 @@
 import { useState } from 'react';
 
-import { DataUsageCard } from '@ui/DataUsageCard';
-import { Drawer, DrawerButton, FilterDrawerButton } from '@ui/Drawer';
 import { Flag, Pencil, Trash2 } from 'lucide-react';
+
+import { DataUsageCard } from '../DataUsageCard';
+
+import { Drawer } from './Drawer';
+import { DrawerButton } from './DrawerButton';
+import { FilterDrawerButton } from './FilterDrawerButton';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

@@ -8,7 +8,6 @@
   /* 폰트 */
   --font-sans: 'Pretendard', sans-serif;
 
-  /* 폰트 크기 */
   --font-head-bold: 31.5px;
   --font-head-semibold: 25px;
   --font-title-semibold: 20px;
@@ -20,14 +19,11 @@
   --font-body-light-lh: 12.8px;
   --font-body-semibold: 16px;
 
-  /* 프로젝트 디자인 토큰 색상 */
-  --point-1: #ff5d8f;
-  --point-2: #ff87ab;
-  --point-3: #ffa6c1;
-
-  --main-1: #0f225e;
-  --main-2: #4b7aa5;
-  --main-3: #86d1eb;
+  --main-1: #edf7fb;
+  --main-2: #c6eaf8;
+  --main-3: #ade7ff;
+  --main-4: #72c1f2;
+  --main-5: #3e9fdc;
 
   --white: #ffffff;
   --gray-light: #f6f6f6;

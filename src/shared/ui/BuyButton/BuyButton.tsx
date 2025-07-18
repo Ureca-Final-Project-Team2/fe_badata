@@ -1,8 +1,9 @@
 import type { ButtonHTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 
-import { cn } from '@lib/cn';
 import { cva } from 'class-variance-authority';
+
+import { cn } from '@/shared/lib/cn';
 
 import type { VariantProps } from 'class-variance-authority';
 
@@ -11,10 +12,10 @@ const buyButtonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-[var(--main-1)] text-white hover:bg-[var(--point-1)]',
-        secondary: 'bg-[var(--point-1)] text-white hover:bg-[var(--main-1)]',
+        primary: 'bg-[var(--main-5)] text-white hover:bg-[var(--main-5)]',
+        secondary: 'bg-[var(--main-5)] text-white hover:bg-[var(--main-5)]',
         outline:
-          'bg-white text-[var(--main-1)] border border-[var(--main-1)] hover:bg-[var(--point-1)] hover:text-white',
+          'bg-white text-[var(--main-5)] border border-[var(--main-5)] hover:bg-[var(--main-5)] hover:text-white',
         ghost: 'bg-transparent text-white hover:bg-[var(--gray)]',
       },
       size: {

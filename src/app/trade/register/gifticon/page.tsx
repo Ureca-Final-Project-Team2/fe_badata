@@ -3,5 +3,5 @@ import RegisterGifticonPage from '@/pages/trade/register/gifticon/page/RegisterG
 export const dynamic = 'force-dynamic';
 
 export default function Page() {
-  return RegisterGifticonPage();
+  return <RegisterGifticonPage />;
 }

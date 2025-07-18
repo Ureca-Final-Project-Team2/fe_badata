@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 
-import { cn } from '@lib/cn';
+import { cn } from '@/shared/lib/cn';
 import { cva } from 'class-variance-authority';
 
 import type { VariantProps } from 'class-variance-authority';
@@ -38,7 +38,7 @@ const followButtonVariants = cva(
     variants: {
       followState: {
         following: 'bg-[var(--gray-mid)]',
-        follow: 'bg-[var(--main-1)]',
+        follow: 'bg-[var(--main-5)]',
       },
     },
     defaultVariants: {

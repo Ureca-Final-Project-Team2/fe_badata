@@ -1,7 +1,8 @@
 'use client';
 
-import { InputField } from '@ui/InputField';
 import { Search } from 'lucide-react';
+
+import { InputField } from '@/shared/ui/InputField';
 
 interface SearchHeaderProps {
   search: string;
@@ -17,7 +18,7 @@ export const SearchHeader = ({ search, setSearch, onSubmit }: SearchHeaderProps)
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') { 
+          if (e.key === 'Enter') {
             onSubmit(search);
           }
         }}

@@ -1,6 +1,6 @@
-export const dynamic = 'force-dynamic';
+import DataRegisterPage from '@/pages/trade/register/data/page/DataRegisterPage';
 
-import DataRegisterPage from '@features/trade/pages/register/DataRegisterPage';
+export const dynamic = 'force-dynamic';
 
 export default function Page() {
   return <DataRegisterPage />;

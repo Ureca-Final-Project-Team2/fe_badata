@@ -2,8 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { fetchKakaoAuth } from '@/entities/auth/api/auth';
 import { useAuthStore } from '@/entities/auth/model/authStore';
