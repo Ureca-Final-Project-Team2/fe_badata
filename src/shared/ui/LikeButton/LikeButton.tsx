@@ -1,3 +1,4 @@
+import { ICONS } from '@/shared/config/iconPath';
 import React from 'react';
 
 interface LikeButtonProps {
@@ -14,7 +15,7 @@ export function LikeButton({ active = false, onClick }: LikeButtonProps) {
       style={{ minWidth: 0, minHeight: 0 }}
     >
       <img
-        src={active ? '/assets/like_active.png' : '/assets/like_nonactive.png'}
+        src={active ? ICONS.ETC.LIKE_ACTIVE : ICONS.ETC.LIKE_NONACTIVE}
         alt={active ? '좋아요 활성' : '좋아요 비활성'}
         className="w-full h-full"
         draggable={false}
