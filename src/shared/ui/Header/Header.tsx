@@ -11,7 +11,7 @@ interface HeaderProps {
 export const Header = ({ isLoggedIn }: HeaderProps) => {
   return (
     <header
-      className={`w-full max-w-[${HEADER_WIDTH.MAX}px] min-w-[${HEADER_WIDTH.MIN}px] h-[90px] px-0 flex items-center justify-between bg-white`}
+      className={`w-full max-w-[${HEADER_WIDTH.MAX}px] min-w-[${HEADER_WIDTH.MIN}px] h-[70px] px-0 flex items-center justify-between bg-white`}
     >
       <div className="flex items-center justify-center w-[90px] h-[90px] ml-[24px]">
         <img
