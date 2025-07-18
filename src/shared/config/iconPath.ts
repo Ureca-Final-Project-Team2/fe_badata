@@ -17,5 +17,6 @@ export const ICONS = {
   ETC: {
     LIKE_ACTIVE: '/assets/like_active.png',
     LIKE_NONACTIVE: '/assets/like_nonactive.png',
+    BACK: '/assets/back.png',
   },
 };
