@@ -8,7 +8,7 @@ const meta: Meta<typeof UploadBox> = {
   argTypes: {
     label: {
       control: 'text',
-      defaultValue: '사진/영상을 추가해 주세요',
+      defaultValue: '사진을 추가해 주세요',
     },
   },
 };
@@ -18,6 +18,6 @@ type Story = StoryObj<typeof UploadBox>;
 
 export const Default: Story = {
   args: {
-    label: '사진/영상을 추가해 주세요',
+    label: '사진을 추가해 주세요',
   },
 };

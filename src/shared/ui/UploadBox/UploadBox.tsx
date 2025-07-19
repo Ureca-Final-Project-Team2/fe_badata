@@ -3,7 +3,7 @@ interface UploadBoxProps {
   onClick?: () => void;
 }
 
-export const UploadBox = ({ label = '사진/영상을 추가해 주세요', onClick }: UploadBoxProps) => {
+export const UploadBox = ({ label = '사진을 추가해 주세요', onClick }: UploadBoxProps) => {
   return (
     <div
       className={`
