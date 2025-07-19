@@ -18,10 +18,9 @@ const meta: Meta<typeof StatusButton> = {
 };
 
 export default meta;
-
 type Story = StoryObj<typeof StatusButton>;
 
-export const Unselected: Story = {
+export const Default: Story = {
   args: {
     label: '✨ 기기 상태가 좋아요',
     selected: false,
