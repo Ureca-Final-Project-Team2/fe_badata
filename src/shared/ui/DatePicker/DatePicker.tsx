@@ -10,7 +10,6 @@ import { cn } from '@/shared/lib/cn';
 
 export interface DatePickerProps {
   date: Date | undefined;
-  onDateChange: (date: Date | undefined) => void;
   placeholder?: string;
 }
 
@@ -21,7 +20,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, placeholder }) => 
         <Button
           variant="outline"
           className={cn(
-            'w-full justify-start text-left font-normal',
+            'w-full justify-start text-left font-normal hover:text-[var(--main-5)]',
             !date && 'text-muted-foreground',
           )}
         >
