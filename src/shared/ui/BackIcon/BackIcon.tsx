@@ -1,6 +1,11 @@
 import { ICONS } from '@/shared/config/iconPath';
+import Image from 'next/image';
 
-interface BackIconProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
+interface BackIconProps extends Omit<React.ComponentProps<typeof Image>, 'src'> {
+  width?: number;
+  height?: number;
+  alt: string;
+}
 
 export const BackIcon = ({
   width = 24,
@@ -8,5 +13,5 @@ export const BackIcon = ({
   alt = '뒤로가기 아이콘',
   ...props
 }: BackIconProps) => {
-  return <img src={ICONS.LOGO.BACKICON} width={width} height={height} alt={alt} {...props} />;
+  return <Image src={ICONS.ETC.BACKICON} width={width} height={height} alt={alt} {...props} />;
 };

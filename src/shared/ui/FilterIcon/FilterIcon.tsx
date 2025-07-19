@@ -1,6 +1,11 @@
 import { ICONS } from '@/shared/config/iconPath';
+import Image from 'next/image';
 
-interface FilterIconProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
+interface FilterIconProps extends Omit<React.ComponentProps<typeof Image>, 'src'> {
+  width?: number;
+  height?: number;
+  alt: string;
+}
 
 export const FilterIcon = ({
   width = 24,
@@ -8,5 +13,5 @@ export const FilterIcon = ({
   alt = '필터 아이콘',
   ...props
 }: FilterIconProps) => {
-  return <img src={ICONS.LOGO.FILTERICON} width={width} height={height} alt={alt} {...props} />;
+  return <Image src={ICONS.ETC.FILTERICON} width={width} height={height} alt={alt} {...props} />;
 };
