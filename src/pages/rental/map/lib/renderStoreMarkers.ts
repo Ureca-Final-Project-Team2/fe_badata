@@ -1,3 +1,5 @@
+import { ICONS } from '@/shared/config/iconPath';
+
 import { fetchStoreDetail, fetchStoreDevices } from '../api/apis';
 
 import type { Store } from './types';
@@ -16,11 +18,21 @@ export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) =
   for (const store of stores) {
     const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
 
+    // 마커 이미지로 조개(LIKE_NONACTIVE) 사용
+    const markerImageSrc =
+      typeof ICONS.ETC.LIKE_NONACTIVE === 'string'
+        ? ICONS.ETC.LIKE_NONACTIVE
+        : ICONS.ETC.LIKE_NONACTIVE.src;
+    const markerImage = new window.kakao.maps.MarkerImage(
+      markerImageSrc,
+      new window.kakao.maps.Size(36, 36), // 원하는 크기로 조정
+    );
+
     // 👉 조건 없이 모든 기기 조회
     const devices = await fetchStoreDevices(store.id, {});
     const safeDevices = Array.isArray(devices) ? devices : [];
 
-    const marker = new window.kakao.maps.Marker({ map, position });
+    const marker = new window.kakao.maps.Marker({ map, position, image: markerImage });
 
     const overlay = new window.kakao.maps.CustomOverlay({
       position,
