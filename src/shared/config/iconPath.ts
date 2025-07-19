@@ -27,6 +27,8 @@ export const ICONS = {
     LIKE_NONACTIVE: likeNonactive,
     BACKICON: backIcon,
     FILTERICON: filterIcon,
+    SHELL: '/assets/shell.svg',
+    SHELL_GRAY: '/assets/seashell_gray.svg',
   },
   MYPAGE: {
     COIN: coin,
