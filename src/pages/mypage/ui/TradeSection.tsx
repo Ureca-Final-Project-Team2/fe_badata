@@ -1,4 +1,5 @@
 import { ICONS } from '@/shared/config/iconPath';
+import Image from 'next/image';
 
 export const TradeSection = () => (
   <>
@@ -6,26 +7,33 @@ export const TradeSection = () => (
     <section className="bg-white rounded-xl p-4 shadow-sm">
       <div className="grid grid-cols-3 gap-4 text-center">
         <div className="flex flex-col items-center justify-end gap-1 min-h-[60px]">
-          <img
-            src={ICONS.MYPAGE.TRADE_CEll}
+          <Image
+            src={ICONS.MYPAGE.TRADE_CELL}
             alt="판매 내역"
-            className="w-[18px] h-[18px] object-contain"
+            width={18}
+            height={18}
+            className="object-contain"
           />
           <span className="text-[--font-body-regular] font-sans font-normal">판매 내역</span>
         </div>
         <div className="flex flex-col items-center justify-end gap-1 min-h-[60px]">
-          <img
+          <Image
             src={ICONS.MYPAGE.TRADE_BUY}
             alt="구매 내역"
-            className="w-[22px] h-[22px] object-contain"
+            width={22}
+            height={22}
+            className="object-contain"
           />
+
           <span className="text-[--font-body-regular] font-sans font-normal">구매 내역</span>
         </div>
         <div className="flex flex-col items-center justify-end gap-1 min-h-[60px]">
-          <img
+          <Image
             src={ICONS.MYPAGE.TRADE_LIKE}
             alt="찜 목록"
-            className="w-[15px] h-[15px] object-contain"
+            width={15}
+            height={15}
+            className="object-contain"
           />
           <span className="text-[--font-body-regular] font-sans font-normal">찜 목록</span>
         </div>
