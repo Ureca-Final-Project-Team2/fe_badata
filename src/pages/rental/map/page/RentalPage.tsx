@@ -13,7 +13,7 @@ import type { DateRange } from 'react-day-picker';
 
 const RentalPage = () => {
   const { mapRef, map } = useKakaoMapHooks();
-  const stores = useFetchStoresHooks();
+  const stores = useFetchStoresHooks(map);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   useEffect(() => {
