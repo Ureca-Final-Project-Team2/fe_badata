@@ -12,7 +12,7 @@ export function LikeButton({ active = false, onClick }: LikeButtonProps) {
     <button
       type="button"
       onClick={onClick}
-      className="w-[26px] h-[26px] p-0 border-none bg-[var(--main-1)] rounded-full flex items-center justify-center"
+      className="w-[26px] h-[26px] p-0 border-none rounded-full flex items-center justify-center"
       style={{ minWidth: 0, minHeight: 0 }}
     >
       <Image
