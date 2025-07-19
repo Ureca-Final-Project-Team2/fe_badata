@@ -8,6 +8,8 @@ export const StatusButton = ({ label, selected = false, onClick }: StatusButtonP
   return (
     <button
       onClick={onClick}
+      aria-pressed={selected}
+      type="button"
       className={`
         px-4 py-2 rounded-md
         text-[length:var(--font-body-xs-semibold)] font-semibold
