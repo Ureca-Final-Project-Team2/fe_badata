@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface DdayBadgeProps {
   children?: React.ReactNode;
   dday?: string | number;
