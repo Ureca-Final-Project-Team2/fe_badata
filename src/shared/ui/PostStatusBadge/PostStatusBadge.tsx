@@ -13,7 +13,7 @@ interface PostStatusBadgeProps {
 const PostStatusBadge = ({ text, children, className = '' }: PostStatusBadgeProps) => {
   return (
     <span
-      className={`inline-flex items-center justify-center gap-[10px] px-[10px] py-[4px] rounded-full bg-[var(--color-gray-dark)] text-white font-sans font-medium text-[12px] leading-none ${className}`}
+      className={`inline-flex items-center justify-center gap-[10px] px-[10px] py-[4px] rounded-full bg-[var(--gray-dark)] text-white font-sans font-medium text-[12px] leading-none ${className}`}
     >
       {children ? children : text}
     </span>

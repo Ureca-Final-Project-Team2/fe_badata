@@ -13,7 +13,7 @@ interface DdayBadgeProps {
 const DdayBadge: React.FC<DdayBadgeProps> = ({ dday, children, className = '' }) => {
   return (
     <span
-      className={`inline-flex items-center justify-center w-[50px] h-[30px] rounded-[10px] bg-[var(--color-main-2)] text-white font-sans font-bold text-[16px] leading-none ${className}`}
+      className={`inline-flex items-center justify-center w-[50px] h-[30px] rounded-[10px] bg-[var(--main-2)] text-white font-sans font-bold text-[16px] leading-none ${className}`}
     >
       {children ? children : dday !== undefined ? `D-${dday}` : null}
     </span>
