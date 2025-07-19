@@ -1,7 +1,8 @@
 import PostStatusBadge from '@/shared/ui/PostStatusBadge';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { PostStatusBadgeProps } from './PostStatusBadge';
 
-const meta: Meta<typeof PostStatusBadge> = {
+const meta: Meta<PostStatusBadgeProps> = {
   title: 'UI/PostStatusBadge',
   component: PostStatusBadge,
   parameters: {
@@ -25,7 +26,7 @@ const meta: Meta<typeof PostStatusBadge> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<PostStatusBadgeProps>;
 
 export const Default: Story = {
   args: {
@@ -56,8 +57,4 @@ export const WithCustomClass: Story = {
     text: '거래 완료',
     className: 'bg-green-500',
   },
-};
-
-export const Empty: Story = {
-  args: {},
 };

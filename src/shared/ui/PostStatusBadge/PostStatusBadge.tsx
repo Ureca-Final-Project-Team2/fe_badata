@@ -1,8 +1,6 @@
-interface PostStatusBadgeProps {
-  children?: React.ReactNode;
-  text?: string;
+type PostStatusBadgeProps = {
   className?: string;
-}
+} & ({ text: string; children?: never } | { children: React.ReactNode; text?: never });
 
 /**
  * PostStatusBadge - 거래 완료 등 상태 뱃지
