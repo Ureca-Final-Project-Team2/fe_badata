@@ -7,13 +7,12 @@ interface StatusButtonProps {
 export const StatusButton = ({ label, selected = false, onClick }: StatusButtonProps) => {
   return (
     <button
-      className={`px-4 py-2 rounded-full border text-sm font-medium
-        ${
-          selected
-            ? 'bg-[#ADE7FF] text-black border-transparent'
-            : 'bg-white text-gray-700 border border-gray-300'
-        }`}
       onClick={onClick}
+      className={`
+        px-4 py-2 rounded-md
+        text-[length:var(--font-body-xs-semibold)] font-semibold
+        ${selected ? 'bg-[var(--main-3)] text-[var(--black)]' : 'bg-white text-gray-700 border border-gray-300'}
+      `}
     >
       {label}
     </button>
