@@ -61,7 +61,7 @@ export const TradeDetailSellerSection = ({
                     }
                   />
                   <div className="absolute bottom-2.5 right-2.5 z-10">
-                    <LikeButton defaultLiked={item.isLiked} />
+                    <LikeButton active={item.isLiked} />
                   </div>
                 </div>
                 <div className="w-[98px] mt-1">

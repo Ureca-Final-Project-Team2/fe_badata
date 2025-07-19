@@ -10,6 +10,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { useUserCoinQuery } from '@/entities/coin/model/queries';
 import { useUserDataUsageQuery } from '@/entities/data/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
+import Image from 'next/image';
 
 Chart.register(ArcElement, Tooltip);
 
@@ -57,7 +58,13 @@ export const DataUsageCardSection = () => {
             href="/mypage/coin"
             className="flex items-center gap-1.5 hover:underline hover:font-semibold"
           >
-            <img src={ICONS.MYPAGE.COIN} alt="coin" className="w-4 h-4 object-contain" />
+            <Image
+              src={ICONS.MYPAGE.COIN}
+              alt="coin"
+              width={16}
+              height={16}
+              className="object-contain"
+            />
             현재 <span className="font-semibold">{coinAmount}</span> 코인
           </Link>
         </div>

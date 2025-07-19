@@ -1,4 +1,5 @@
 import { ICONS } from '@/shared/config/iconPath';
+import Image from 'next/image';
 
 export const RentalSection = () => (
   <>
@@ -6,26 +7,34 @@ export const RentalSection = () => (
     <section className="bg-white rounded-xl p-4 shadow-sm">
       <ul className="space-y-5">
         <li className="flex items-center gap-3">
-          <img
+          <Image
             src={ICONS.MYPAGE.RENTAL_LIST}
             alt="공유기 대여 내역"
-            className="w-[20px] h-[20px] object-contain"
+            width={20}
+            height={20}
+            className="object-contain"
           />
           <span className="text-[--font-body-regular] font-sans font-normal">공유기 대여 내역</span>
         </li>
+
         <li className="flex items-center gap-3">
-          <img
+          <Image
             src={ICONS.MYPAGE.RENTAL_LIKE}
             alt="관심 매장"
-            className="w-[20px] h-[20px] object-contain"
+            width={20}
+            height={20}
+            className="object-contain"
           />
           <span className="text-[--font-body-regular] font-sans font-normal">관심 매장</span>
         </li>
+
         <li className="flex items-center gap-3">
-          <img
+          <Image
             src={ICONS.MYPAGE.RENTAL_NOTIFICATION}
             alt="재입고 알림"
-            className="w-[20px] h-[20px] object-contain"
+            width={20}
+            height={20}
+            className="object-contain"
           />
           <span className="text-[--font-body-regular] font-sans font-normal">재입고 알림</span>
         </li>
