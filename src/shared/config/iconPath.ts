@@ -3,6 +3,8 @@ import backIcon from '@/shared/icons/back-icon.png';
 import filterIcon from '@/shared/icons/filter-icon.png';
 import likeActive from '@/shared/icons/like-active.png';
 import likeNonactive from '@/shared/icons/like-nonactive.png';
+import shellGray from '@/shared/icons/seashell_gray.png';
+import shell from '@/shared/icons/shell.png';
 
 // MYPAGE
 import coin from '@/shared/icons/coin.png';
@@ -27,6 +29,8 @@ export const ICONS = {
     LIKE_NONACTIVE: likeNonactive,
     BACKICON: backIcon,
     FILTERICON: filterIcon,
+    SHELL: shell,
+    SHELL_GRAY: shellGray,
   },
   MYPAGE: {
     COIN: coin,

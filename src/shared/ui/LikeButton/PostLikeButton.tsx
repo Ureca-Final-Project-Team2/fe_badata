@@ -2,17 +2,17 @@ import { ICONS } from '@/shared/config/iconPath';
 import Image from 'next/image';
 import React from 'react';
 
-interface LikeButtonProps {
+interface PostLikeButtonProps {
   active?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export function LikeButton({ active = false, onClick }: LikeButtonProps) {
+export function PostLikeButton({ active = false, onClick }: PostLikeButtonProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="w-[26px] h-[26px] p-0 border-none rounded-full flex items-center justify-center"
+      className="w-[26px] h-[26px] p-0 border-none bg-[var(--main-1)] rounded-full flex items-center justify-center"
       style={{ minWidth: 0, minHeight: 0 }}
     >
       <Image
