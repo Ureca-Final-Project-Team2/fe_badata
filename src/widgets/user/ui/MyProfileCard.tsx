@@ -16,7 +16,7 @@ interface MyProfileCardProps {
  */
 const MyProfileCard = ({ name, days, avatarSrc, className = '' }: MyProfileCardProps) => {
   return (
-    <div className={`flex items-center w-[380px] h-[70px] border border-black ${className}`}>
+    <div className={`flex items-center w-[380px] h-[70px] ${className}`}>
       <UserAvatar src={avatarSrc} size="lg" className="flex-shrink-0" />
       <div className="flex flex-col justify-center ml-8 flex-1">
         <span className="text-black text-[20px] font-sans font-medium leading-none text-right">
