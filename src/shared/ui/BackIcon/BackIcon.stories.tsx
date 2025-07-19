@@ -33,19 +33,3 @@ export const Default: Story = {
   },
 };
 
-export const Large: Story = {
-  args: {
-    width: 48,
-    height: 48,
-    alt: '큰 뒤로가기 아이콘',
-  },
-};
-
-export const Small: Story = {
-  args: {
-    width: 16,
-    height: 16,
-    alt: '작은 뒤로가기 아이콘',
-  },
-};
-
