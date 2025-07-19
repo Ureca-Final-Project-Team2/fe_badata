@@ -41,13 +41,13 @@ function LoadingSpinner() {
   );
 }
 
-export interface BuyButtonProps
+export interface RegisterButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof registerButtonVariants> {
   loading?: boolean;
 }
 
-export const BuyButton = forwardRef<HTMLButtonElement, BuyButtonProps>(
+export const RegisterButton = forwardRef<HTMLButtonElement, RegisterButtonProps>(
   ({ className, variant, size, loading = false, children, disabled, ...props }, ref) => {
     return (
       <button
@@ -62,4 +62,4 @@ export const BuyButton = forwardRef<HTMLButtonElement, BuyButtonProps>(
   },
 );
 
-BuyButton.displayName = 'BuyButton';
+RegisterButton.displayName = 'RegisterButton';
