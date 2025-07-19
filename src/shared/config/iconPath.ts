@@ -1,25 +1,42 @@
+// ETC
+import backIcon from '@/shared/icons/back-icon.png';
+import filterIcon from '@/shared/icons/filter-icon.png';
+import likeActive from '@/shared/icons/like-active.png';
+import likeNonactive from '@/shared/icons/like-nonactive.png';
+
+// MYPAGE
+import coin from '@/shared/icons/coin.png';
+import notification from '@/shared/icons/notification.png';
+import rentalLike from '@/shared/icons/rental-like-shop.png';
+import rentalList from '@/shared/icons/rental-list.png';
+import rentalNotification from '@/shared/icons/rental-notification.png';
+import mySos from '@/shared/icons/sos-siren.png';
+import tradeBuy from '@/shared/icons/trade-buy-list.png';
+import tradeCell from '@/shared/icons/trade-cell-list.png';
+import tradeLike from '@/shared/icons/trade-like-list.png';
+
 export const ICONS = {
   LOGO: {
-    BADATA: '/public/logo-badata.png',
-    SOS: '/public/logo-sos.svg',
-    DETAIL: '/public/trade-detail.jpg',
-    SAMPLE: '/public/trade-sample.png',
+    BADATA: '/logo-badata.png',
+    SOS: '/logo-sos.svg',
+    DETAIL: '/trade-detail.jpg',
+    SAMPLE: '/trade-sample.png',
   },
   ETC: {
-    LIKE_ACTIVE: '/src/shared/icons/like-active.png',
-    LIKE_NONACTIVE: '/src/shared/icons/like-nonactive.png',
-    BACKICON: '/src/shared/icons/back-icon.png',
-    FILTERICON: '/src/shared/icons/filter-icon.png',
+    LIKE_ACTIVE: likeActive,
+    LIKE_NONACTIVE: likeNonactive,
+    BACKICON: backIcon,
+    FILTERICON: filterIcon,
   },
   MYPAGE: {
-    COIN: '/src/shared/icons/coin.png',
-    TRADE_CEll: '/src/shared/icons/trade-cell-list.png',
-    TRADE_BUY: '/src/shared/icons/trade-buy-list.png',
-    TRADE_LIKE: '/src/shared/icons/trade-like-list.png',
-    RENTAL_LIST: '/src/shared/icons/rental-list.png',
-    RENTAL_LIKE: '/src/shared/icons/rental-like-shop.png',
-    RENTAL_NOTIFICATION: '/src/shared/icons/rental-notification.png',
-    MYSOS: '/src/shared/icons/sos-siren.png',
-    NOTIFICATION: '/src/shared/icons/notification.png',
+    COIN: coin,
+    TRADE_CEll: tradeCell,
+    TRADE_BUY: tradeBuy,
+    TRADE_LIKE: tradeLike,
+    RENTAL_LIST: rentalList,
+    RENTAL_LIKE: rentalLike,
+    RENTAL_NOTIFICATION: rentalNotification,
+    MYSOS: mySos,
+    NOTIFICATION: notification,
   },
 };

@@ -2,6 +2,7 @@
 
 import { useUserCoinQuery } from '@/entities/coin/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
+import Image from 'next/image';
 
 export default function CoinHistoryPage() {
   const { data, isLoading, isError } = useUserCoinQuery();
@@ -12,11 +13,15 @@ export default function CoinHistoryPage() {
   return (
     <div className="p-5 space-y-6">
       <div className="flex flex-col items-center gap-3">
-        <img
+        <Image
           src={ICONS.MYPAGE.COIN}
           alt="코인 이미지"
-          className="w-[100px] h-[100px] rounded-full"
+          width={100}
+          height={100}
+          className="rounded-full object-contain"
+          unoptimized
         />
+
         <p className="text-gray-500 text-sm">나의 현재 코인</p>
         <p className="text-xl font-bold">+{data.coin}코인</p>
       </div>
