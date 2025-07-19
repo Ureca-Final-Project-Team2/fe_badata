@@ -1,5 +1,6 @@
 import { formatPrice } from '@/shared/lib/formatPrice';
 import DdayBadge from '@/shared/ui/DdayBadge';
+import { LikeButton } from '@/shared/ui/LikeButton';
 import PriceText from '@/shared/ui/PriceText';
 
 const DEFAULT_IMAGE = '/assets/sample.png';
@@ -46,6 +47,9 @@ const SellerPostCard = ({
             <DdayBadge dday={dday} size="sm" />
           </div>
         )}
+        <div className="absolute bottom-1 right-1 z-10">
+          <LikeButton />
+        </div>
         <img
           src={imageUrl || DEFAULT_IMAGE}
           alt={title}
