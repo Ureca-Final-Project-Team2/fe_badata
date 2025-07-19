@@ -6,6 +6,7 @@ import type { Store } from '@/pages/rental/map/lib/types';
 
 export const useFetchStoresHooks = () => {
   const [stores, setStores] = useState<Store[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
@@ -16,14 +17,17 @@ export const useFetchStoresHooks = () => {
           neLat: 39.0,
           neLng: 132.0,
         });
+
         setStores(stores);
       } catch (e) {
-        console.error('❌ 가맹점 불러오기 실패:', e);
+        console.error('가맹점 불러오기 실패:', e);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetch();
   }, []);
 
-  return stores;
+  return { stores, isLoading };
 };

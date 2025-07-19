@@ -11,9 +11,9 @@ const RentalPage = () => {
   const stores = useFetchStoresHooks();
 
   useEffect(() => {
-    if (!map) return;
-    renderStoreMarkers(map, stores);
-  }, [map, stores]);
+    if (!map || stores.isLoading) return;
+    renderStoreMarkers(map, stores.stores);
+  }, [map, stores.stores, stores.isLoading]);
 
   return (
     <div

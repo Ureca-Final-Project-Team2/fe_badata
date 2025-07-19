@@ -1,11 +1,17 @@
-import { fetchStoreDevices } from '@/entities/devices/api/apis';
-
-import { fetchStoreDetail } from '../api/apis';
+import { fetchStoreDetail, fetchStoreDevices } from '../api/apis';
 
 import type { Store } from './types';
 
 export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) => {
-  if (!map || !window.kakao || stores.length === 0) return;
+  if (!map || !window.kakao || !stores || stores.length === 0) {
+    console.log('마커 렌더링 조건 불충족:', {
+      map: !!map,
+      kakao: !!window.kakao,
+      stores: !!stores,
+      storesCount: stores?.length || 0,
+    });
+    return;
+  }
 
   for (const store of stores) {
     const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
