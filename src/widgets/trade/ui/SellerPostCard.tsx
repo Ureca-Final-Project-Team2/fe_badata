@@ -1,9 +1,12 @@
+import { ICONS } from '@/shared/config/iconPath';
+import { IMAGES } from '@/shared/config/imagePath';
 import { formatPrice } from '@/shared/lib/formatPrice';
 import DdayBadge from '@/shared/ui/DdayBadge';
-import { LikeButton } from '@/shared/ui/LikeButton';
+import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PriceText from '@/shared/ui/PriceText';
+import Image from 'next/image';
 
-const DEFAULT_IMAGE = '/assets/sample.png';
+const DEFAULT_IMAGE = IMAGES.TRADE.TRADE_SAMPLE;
 
 interface SellerPostCardProps {
   imageUrl: string;
@@ -13,6 +16,8 @@ interface SellerPostCardProps {
   likeCount: number;
   hasDday?: boolean;
   dday?: number | string;
+  isLiked?: boolean;
+  onLikeChange?: (liked: boolean) => void;
   className?: string;
 }
 
@@ -35,6 +40,8 @@ const SellerPostCard = ({
   likeCount,
   hasDday = false,
   dday,
+  isLiked = false,
+  onLikeChange,
   className = '',
 }: SellerPostCardProps) => {
   return (
@@ -48,28 +55,30 @@ const SellerPostCard = ({
           </div>
         )}
         <div className="absolute bottom-1 right-1 z-10">
-          <LikeButton />
+          <PostLikeButton active={isLiked} onClick={() => onLikeChange?.(!isLiked)} />
         </div>
-        <img
+        <Image
           src={imageUrl || DEFAULT_IMAGE}
           alt={title}
+          width={106}
+          height={102}
           className="w-full h-full object-cover"
           onError={(e) => {
             e.currentTarget.src = DEFAULT_IMAGE;
           }}
         />
       </div>
-      <div className="flex flex-col w-full px-2 mt-2">
-        <span className="text-[var(--black)] text-[12px] font-sans font-semibold leading-none truncate">
+      <div className="flex flex-col w-full px-2 mt-2.5">
+        <span className="text-[var(--black)] text-[12px] mt-0.5 font-sans font-semibold leading-none truncate">
           {title}
         </span>
-        <span className="text-[var(--black)] text-[10px] mt-1 font-sans font-light leading-none truncate">
+        <span className="text-[var(--black)] text-[10px] mt-1.5 font-sans font-light leading-none truncate">
           {partner}
         </span>
-        <PriceText value={formatPrice(String(price))} size="sm" className="mt-1" />
+        <PriceText value={formatPrice(String(price))} size="sm" className="mt-1.5" />
       </div>
-      <div className="flex items-center w-full px-2 gap-1">
-        <img src="/assets/seashell_gray.svg" alt="좋아요" className="w-5 h-5" />
+      <div className="flex items-center w-full px-2 gap-1 mt-0.5">
+        <Image src={ICONS.ETC.SHELL_GRAY} alt="좋아요" width={20} height={20} className="w-5 h-5" />
         <span className="text-[var(--black)] text-[12px] font-sans font-normal leading-none">
           {likeCount}
         </span>
