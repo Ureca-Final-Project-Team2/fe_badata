@@ -18,11 +18,11 @@ const MyProfileCard = ({ name, days, avatarSrc, className = '' }: MyProfileCardP
   return (
     <div className={`flex items-center w-[380px] h-[70px] border border-black ${className}`}>
       <UserAvatar src={avatarSrc} size="lg" className="flex-shrink-0" />
-      <div className="flex flex-col justify-center ml-8">
-        <span className="text-black text-[20px] font-sans font-medium leading-none text-center">
+      <div className="flex flex-col justify-center ml-8 flex-1">
+        <span className="text-black text-[20px] font-sans font-medium leading-none text-right">
           {name}
         </span>
-        <span className="text-black text-[12.8px] font-sans font-light leading-[20px] text-center mt-1">
+        <span className="text-black text-[12.8px] font-sans font-light leading-[20px] text-right mt-2">
           BADATA와 함께 한지 {days}일째
         </span>
       </div>

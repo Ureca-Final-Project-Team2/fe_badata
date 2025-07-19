@@ -29,6 +29,7 @@ const UserAvatar = ({ src, alt = '유저 아바타', size = 'md', className = ''
       src={imgSrc}
       alt={alt}
       className={`rounded-full object-cover border border-[var(--gray)] bg-white ${sizeMap[size]} ${className}`}
+      style={imgSrc === DEFAULT_AVATAR ? { padding: '12px' } : {}}
       onError={() => setImgSrc(DEFAULT_AVATAR)}
     />
   );
