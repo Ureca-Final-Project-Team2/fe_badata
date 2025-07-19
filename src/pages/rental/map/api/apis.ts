@@ -1,9 +1,8 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { StoreDevice } from '@/entities/devices/lib/types';
-import type { FetchStoresParams } from '@/entities/store/lib/types';
-import type { Store } from '@/pages/rental/map/lib/types';
+import type { FetchStoreDevicesParams, FetchStoresParams } from '@/entities/store/lib/types';
+import type { Store, StoreDevice } from '@/pages/rental/map/lib/types';
 import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 
 /**
@@ -16,7 +15,6 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
     });
     // response 자체가 배열인지 확인 (axios interceptor에서 이미 data를 추출)
     const stores = Array.isArray(response) ? response : [];
-
     return stores;
   } catch (error) {
     console.error('fetchStores API 호출 실패:', error);
@@ -29,7 +27,7 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
  */
 export const fetchStoreDevices = async (
   storeId: number,
-  params: Record<string, unknown>,
+  params: FetchStoreDevicesParams,
 ): Promise<StoreDevice[]> => {
   const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
     params,

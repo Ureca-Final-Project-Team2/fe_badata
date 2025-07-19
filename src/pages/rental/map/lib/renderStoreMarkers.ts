@@ -18,6 +18,7 @@ export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) =
 
     // 👉 조건 없이 모든 기기 조회
     const devices = await fetchStoreDevices(store.id, {});
+    const safeDevices = Array.isArray(devices) ? devices : [];
 
     const marker = new window.kakao.maps.Marker({ map, position });
 
@@ -33,7 +34,7 @@ export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) =
         transform: translateY(-100%);
         white-space: nowrap;
         pointer-events: none;">
-        ${devices.length}
+        ${safeDevices.length}
       </div>`,
     });
 
@@ -51,7 +52,7 @@ export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) =
     });
 
     window.kakao.maps.event.addListener(marker, 'click', async () => {
-      console.log(`📦 ${store.name}의 기기 목록:`, devices);
+      console.log(`📦 ${store.name}의 기기 목록:`, safeDevices);
 
       const center = map.getCenter();
       const lat = center.getLat();
