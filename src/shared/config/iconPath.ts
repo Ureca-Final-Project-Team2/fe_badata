@@ -17,10 +17,10 @@ import tradeLike from '@/shared/icons/trade-like-list.png';
 
 export const ICONS = {
   LOGO: {
-    BADATA: '/logo-badata.png',
-    SOS: '/logo-sos.svg',
-    DETAIL: '/trade-detail.jpg',
-    SAMPLE: '/trade-sample.png',
+    BADATA: '/assets/logo-badata.png',
+    SOS: '/assets/logo-sos.svg',
+    DETAIL: '/assets/trade-detail.jpg',
+    SAMPLE: '/assets/trade-sample.png',
   },
   ETC: {
     LIKE_ACTIVE: likeActive,
