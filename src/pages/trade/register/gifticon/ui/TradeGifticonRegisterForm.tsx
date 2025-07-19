@@ -7,8 +7,8 @@ import { ImageUp } from 'lucide-react';
 import { getCategoryByPartner } from '@/pages/trade/register/gifticon/lib/getCategoryByPartner';
 import { usePostTradeGifticonMutation } from '@/pages/trade/register/gifticon/model/mutations';
 import { toRawPrice } from '@/shared/lib/formatPrice';
-import { BuyButton } from '@/shared/ui/BuyButton';
 import { InputField } from '@/shared/ui/InputField';
+import { BuyButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
 
 import type { GifticonCategory } from '@/pages/trade/register/gifticon/lib/types';

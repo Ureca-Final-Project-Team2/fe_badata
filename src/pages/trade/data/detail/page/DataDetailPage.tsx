@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { BuyButton } from '@/shared/ui/BuyButton';
 import { PageHeader } from '@/shared/ui/Header';
+import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TradeDetailDrawer } from '@/widgets/trade/post-detail/ui/TradeDetailDrawer';
 import { TradeDetailProductSection } from '@/widgets/trade/post-detail/ui/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@/widgets/trade/post-detail/ui/TradeDetailSellerSection';
@@ -65,9 +65,9 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
 
       {/* 구매하기 버튼 */}
       <div className="fixed bottom-[84px] left-1/2 -translate-x-1/2 z-20">
-        <BuyButton variant="primary" size="lg_thin" onClick={() => console.log('구매하기')}>
+        <RegisterButton variant="primary" size="lg_thin" onClick={() => console.log('구매하기')}>
           구매하기
-        </BuyButton>
+        </RegisterButton>
       </div>
 
       <TradeDetailDrawer
