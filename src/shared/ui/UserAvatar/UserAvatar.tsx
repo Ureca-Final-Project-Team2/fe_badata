@@ -1,4 +1,5 @@
 import { ICONS } from '@/shared/config/iconPath';
+import Image from 'next/image';
 import { useState } from 'react';
 
 interface UserAvatarProps {
@@ -26,9 +27,11 @@ const UserAvatar = ({ src, alt = '유저 아바타', size = 'md', className = ''
   const [imgSrc, setImgSrc] = useState(src || DEFAULT_AVATAR);
 
   return (
-    <img
+    <Image
       src={imgSrc}
       alt={alt}
+      width={size === 'lg' ? 70 : 58}
+      height={size === 'lg' ? 70 : 58}
       className={`rounded-full object-cover border border-[var(--gray)] bg-white ${sizeMap[size]} ${className}`}
       style={imgSrc === DEFAULT_AVATAR ? { padding: '12px' } : {}}
       onError={() => setImgSrc(DEFAULT_AVATAR)}
