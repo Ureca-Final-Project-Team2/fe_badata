@@ -10,7 +10,7 @@ const meta: Meta<typeof PriceText> = {
   tags: ['autodocs'],
   argTypes: {
     value: {
-      control: { type: 'number' },
+      control: { type: 'text' },
       description: '가격 값',
     },
     unit: {
