@@ -16,12 +16,7 @@ export function Header_Detail({ title }: HeaderDetailProps) {
       </div>
       {/* 가운데 텍스트 */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex items-center justify-center pointer-events-none">
-        <span
-          style={{ fontSize: 'var(--font-title-semibold)', fontWeight: 600 }}
-          className="text-black"
-        >
-          {title}
-        </span>
+        <span className="text-black text-xl font-semibold">{title}</span>
       </div>
     </header>
   );
