@@ -27,23 +27,27 @@ const UserProfileCard = ({
   className = '',
 }: UserProfileCardProps) => {
   return (
-    <div className={`flex items-center w-[380px] h-[68px] ${className}`}>
+    <div className={`flex items-center w-[380px] h-[58px] ${className}`}>
       <UserAvatar src={avatarSrc} size="md" className="flex-shrink-0" />
       <div className="flex flex-col justify-center ml-4 flex-1">
-        <span className="text-black text-[20px] font-sans font-semibold leading-none">{name}</span>
-        <span className="text-black text-[12.8px] font-sans font-light leading-none mt-1">
+        <div className="flex items-center justify-between">
+          <span className="text-black text-[20px] font-sans font-semibold leading-none">
+            {name}
+          </span>
+          <button
+            type="button"
+            className={`w-[78px] h-[26px] rounded-[3px] text-white text-[16px] font-sans font-bold flex items-center justify-center
+              ${isFollowing ? 'bg-[var(--gray-dark)]' : 'bg-[var(--main-5)]'}
+            `}
+            onClick={onFollowClick}
+          >
+            {isFollowing ? '팔로잉' : '팔로우'}
+          </button>
+        </div>
+        <span className="text-black text-[12.8px] font-sans font-light leading-none mt-2">
           거래내역 {tradeCount}
         </span>
       </div>
-      <button
-        type="button"
-        className={`w-[78px] h-[26px] rounded-[3px] text-white text-[16px] font-sans font-bold flex items-center justify-center ml-4
-          ${isFollowing ? 'bg-[var(--color-gray-dark)]' : 'bg-[var(--color-main-5)]'}
-        `}
-        onClick={onFollowClick}
-      >
-        {isFollowing ? '팔로잉' : '팔로우'}
-      </button>
     </div>
   );
 };
