@@ -1,83 +1,85 @@
-import { forwardRef } from 'react';
-
-import { cva } from 'class-variance-authority';
-
 import { cn } from '@/shared/lib/cn';
+import type { FlatTabItem, FlatTabProps } from '@/shared/ui/FlatTab/types';
+import { useFlatTab } from '@/shared/ui/FlatTab/useFlatTab';
+import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
 
-import { useFlatTab } from './useFlatTab';
-
-import type { FlatTabItem, FlatTabProps } from './types';
-
-export const flatTabVariants = cva('bg-white', {
-  variants: {
-    size: {
-      default: 'w-[428px] h-[30px]',
-      sm: 'w-[320px] h-[25px]',
-      lg: 'w-[500px] h-[35px]',
-    },
-  },
-  defaultVariants: {
-    size: 'default',
-  },
-});
-
-function FlatTabButton({
-  id,
-  label,
-  isActive,
-  disabled,
-  onClick,
-}: {
-  id: string;
+interface FlatTabButtonProps {
   label: string;
   isActive: boolean;
   disabled?: boolean;
   onClick: () => void;
-}) {
-  return (
-    <button
-      key={id}
-      onClick={onClick}
-      disabled={disabled}
-      className={cn(
-        'flex-1 h-full font-semibold text-[15px] transition-colors duration-200 border-b-2 border-transparent focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 relative',
-        isActive
-          ? 'text-[var(--main-5)] border-[var(--main-5)]'
-          : 'text-[var(--gray-mid)] hover:text-[var(--main-5)]',
-      )}
-      type="button"
-    >
-      {label}
-    </button>
-  );
+  buttonRef: (el: HTMLButtonElement | null) => void;
 }
 
+const FlatTabButton = ({ label, isActive, disabled, onClick, buttonRef }: FlatTabButtonProps) => (
+  <button
+    ref={buttonRef}
+    onClick={onClick}
+    disabled={disabled}
+    className={cn(
+      'flex-1 h-[30px] flex items-center justify-center min-w-0 transition-all duration-200 relative z-10',
+      isActive
+        ? 'text-[var(--gray-dark)] font-body-semibold'
+        : 'text-[var(--gray-mid)] font-title-regular hover:text-[var(--main-4)]',
+    )}
+    type="button"
+    style={{ minWidth: 0 }}
+  >
+    {label}
+  </button>
+);
+
 export const FlatTab = forwardRef<HTMLDivElement, FlatTabProps>(
-  ({ className, size, items, defaultValue, value, onValueChange, ...props }, ref) => {
+  ({ className, items, defaultValue, value, onValueChange, ...props }, ref) => {
     const { currentValue, activeItem, handleValueChange } = useFlatTab(
       items,
       value,
       defaultValue,
       onValueChange,
     );
+    const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+    const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+
+    useLayoutEffect(() => {
+      const idx = items.findIndex((item: { id: string }) => item.id === currentValue);
+      const el = tabRefs.current[idx];
+      if (el) {
+        setIndicator({
+          left: el.offsetLeft,
+          width: el.offsetWidth,
+        });
+      }
+    }, [currentValue, items]);
 
     return (
-      <div className={cn('w-full', className)} ref={ref} {...props}>
-        <div className={flatTabVariants({ size })}>
-          <div className="flex h-full border-b border-gray-200">
-            {items.map((item: FlatTabItem) => (
-              <FlatTabButton
-                key={item.id}
-                id={item.id}
-                label={item.label}
-                isActive={currentValue === item.id}
-                disabled={item.disabled}
-                onClick={() => handleValueChange(item.id)}
-              />
-            ))}
-          </div>
+      <div
+        className={cn(
+          'w-[380px] h-[40px] flex flex-col justify-center items-center px-0',
+          className,
+        )}
+        ref={ref}
+        {...props}
+      >
+        <div className="relative flex flex-row h-[30px] gap-0 py-[5px] w-full items-center justify-center">
+          {/* moving indicator */}
+          <div
+            className="absolute top-0 left-0 h-full bg-[var(--main-3)] rounded-[10px] z-0 transition-all duration-200"
+            style={{
+              width: indicator.width,
+              left: indicator.left,
+            }}
+          />
+          {items.map((item: FlatTabItem, idx: number) => (
+            <FlatTabButton
+              key={item.id}
+              label={item.label}
+              isActive={currentValue === item.id}
+              disabled={item.disabled}
+              onClick={() => handleValueChange(item.id)}
+              buttonRef={(el) => (tabRefs.current[idx] = el)}
+            />
+          ))}
         </div>
-
         {activeItem?.content && <div className="pt-4">{activeItem.content}</div>}
       </div>
     );

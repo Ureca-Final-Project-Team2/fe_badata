@@ -1,17 +1,17 @@
-import { BuyButton } from './BuyButton';
+import { RegisterButton } from './RegisterButton';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-const meta: Meta<typeof BuyButton> = {
-  title: 'Components/BuyButton',
-  component: BuyButton,
+const meta: Meta<typeof RegisterButton> = {
+  title: 'Components/RegisterButton',
+  component: RegisterButton,
   args: {
     children: '구매하기',
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof BuyButton>;
+type Story = StoryObj<typeof RegisterButton>;
 
 export const Primary: Story = {
   args: {

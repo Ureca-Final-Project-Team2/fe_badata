@@ -1,21 +1,33 @@
+name: PR Agent
+
 on:
   pull_request:
-    types: [opened, reopened, ready_for_review, synchronize]
+    types: [opened, synchronize, reopened, ready_for_review]
   issue_comment:
+    types: [created, edited]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   pr_agent_job:
-    if: ${{ github.event.sender.type != 'Bot' }}
+    if: ${{ github.event.sender.type != 'Bot' && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
-      contents: write
-    name: Run pr agent on every pull request, respond to user comments
+      contents: read
+    name: Run PR Agent (GPT-4o-mini)
     steps:
-      - name: PR Agent action step
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: PR Agent action
         id: pragent
-        uses: qodo-ai/pr-agent@main
+        uses: Codium-ai/pr-agent@main
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_AGENT.CONFIG.LANGUAGE: 'ko'
+          PR_AGENT.PR_REVIEWER.EXTRA_INSTRUCTIONS: '모든 리뷰 코멘트는 반드시 한국어로 작성해주세요.'

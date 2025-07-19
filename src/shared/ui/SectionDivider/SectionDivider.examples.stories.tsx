@@ -3,7 +3,7 @@ import { SectionDivider } from './SectionDivider';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta: Meta<typeof SectionDivider> = {
-  title: 'Examples/SectionDividerPage',
+  title: 'Components/SectionDividerPage',
   component: SectionDivider,
 };
 
