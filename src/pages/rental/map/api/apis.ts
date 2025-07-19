@@ -29,10 +29,15 @@ export const fetchStoreDevices = async (
   storeId: number,
   params: FetchStoreDevicesParams,
 ): Promise<StoreDevice[]> => {
-  const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
-    params,
-  });
-  return Array.isArray(response) ? response : [];
+  try {
+    const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
+      params,
+    });
+    return Array.isArray(response) ? response : [];
+  } catch (error) {
+    console.error(`스토어 ${storeId} 디바이스 조회 실패:`, error);
+    return []; // 에러 발생 시 빈 배열 반환하여 마커는 정상 생성
+  }
 };
 
 /**
