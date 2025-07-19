@@ -45,11 +45,10 @@ export const fetchStoreDetail = async (
   centerLat: number,
   centerLng: number,
 ): Promise<StoreDetail> => {
-  const response = await axiosInstance.get(END_POINTS.STORES.STOREDETAIL(storeId), {
+  return await axiosInstance.get(END_POINTS.STORES.STOREDETAIL(storeId), {
     params: {
       centerLat,
       centerLng,
     },
   });
-  return response;
 };
