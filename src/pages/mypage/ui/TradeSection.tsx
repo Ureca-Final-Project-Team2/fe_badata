@@ -8,7 +8,7 @@ export const TradeSection = () => (
       <div className="grid grid-cols-3 gap-4 text-center">
         <div className="flex flex-col items-center justify-end gap-1 min-h-[60px]">
           <Image
-            src={ICONS.MYPAGE.TRADE_CEll}
+            src={ICONS.MYPAGE.TRADE_CELL}
             alt="판매 내역"
             width={18}
             height={18}

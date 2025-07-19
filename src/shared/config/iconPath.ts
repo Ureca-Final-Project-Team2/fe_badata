@@ -30,7 +30,7 @@ export const ICONS = {
   },
   MYPAGE: {
     COIN: coin,
-    TRADE_CEll: tradeCell,
+    TRADE_CELL: tradeCell,
     TRADE_BUY: tradeBuy,
     TRADE_LIKE: tradeLike,
     RENTAL_LIST: rentalList,
