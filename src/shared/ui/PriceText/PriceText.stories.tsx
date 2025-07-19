@@ -17,6 +17,11 @@ const meta: Meta<typeof PriceText> = {
       control: { type: 'text' },
       description: '단위(기본값: 원)',
     },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md'],
+      description: '텍스트 크기 (sm: 12px, md: 16px)',
+    },
     className: {
       control: { type: 'text' },
       description: '추가 커스텀 클래스',
@@ -58,10 +63,24 @@ export const SmallAmount: Story = {
   },
 };
 
+export const SmallSize: Story = {
+  args: {
+    value: 15000,
+    size: 'sm',
+  },
+};
+
+export const MediumSize: Story = {
+  args: {
+    value: 15000,
+    size: 'md',
+  },
+};
+
 export const WithCustomClass: Story = {
   args: {
     value: 30000,
-    className: 'text-red-500 text-lg',
+    className: 'text-red-500',
   },
 };
 
