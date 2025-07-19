@@ -6,31 +6,21 @@ interface UploadBoxProps {
 export const UploadBox = ({ label = '사진/영상을 추가해 주세요', onClick }: UploadBoxProps) => {
   return (
     <div
-      className="flex flex-col items-center justify-center rounded-lg cursor-pointer"
-      style={{
-        width: 220,
-        height: 110,
-        backgroundColor: '#C3E7F4',
-      }}
+      className={`
+        flex flex-col items-center justify-center cursor-pointer rounded-lg
+        w-[220px] h-[110px] bg-[var(--main-2)]
+      `}
       onClick={onClick}
     >
-      <p className="text-sm font-bold text-black mb-2">{label}</p>
-      <div
-        className="flex items-center justify-center rounded-full bg-white"
-        style={{
-          width: 50,
-          height: 50,
-        }}
+      <p
+        className={`
+          mb-2 text-[length:var(--font-body-semibold)] font-semibold text-[var(--black)]
+        `}
       >
-        <span
-          style={{
-            color: '#3E9FDC',
-            fontSize: 30,
-            lineHeight: 1,
-          }}
-        >
-          +
-        </span>
+        {label}
+      </p>
+      <div className="flex items-center justify-center rounded-full bg-white w-[50px] h-[50px]">
+        <span className="text-[30px] leading-none text-[var(--main-5)]">+</span>
       </div>
     </div>
   );
