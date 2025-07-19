@@ -34,18 +34,23 @@ export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]) =
 
     const marker = new window.kakao.maps.Marker({ map, position, image: markerImage });
 
+    // 디바이스 개수를 조개(마커) 중앙에 검정색으로 표시하는 오버레이
     const overlay = new window.kakao.maps.CustomOverlay({
       position,
       content: `<div style="
-        background: #ff5a5a;
-        color: white;
-        padding: 2px 6px;
-        border-radius: 16px;
-        font-size: 12px;
+        position: absolute;
+        left: 50%;
+        top: 20%;
+        transform: translate(-50%, -95%);
+        background: transparent;
+        color: black;
+        font-size: 16px;
         font-weight: bold;
-        transform: translateY(-100%);
-        white-space: nowrap;
-        pointer-events: none;">
+        pointer-events: none;
+        text-align: center;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;">
         ${safeDevices.length}
       </div>`,
     });
