@@ -17,6 +17,11 @@ const meta: Meta<typeof DdayBadge> = {
       control: { type: 'text' },
       description: '직접 텍스트를 넘길 수도 있음',
     },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md'],
+      description: '뱃지 크기 (sm: 30x18, md: 50x30)',
+    },
     className: {
       control: { type: 'text' },
       description: '추가 커스텀 클래스',
@@ -30,12 +35,21 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     dday: 5,
+    size: 'md',
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    dday: 5,
+    size: 'sm',
   },
 };
 
 export const WithCustomText: Story = {
   args: {
     children: 'D-3',
+    size: 'md',
   },
 };
 
