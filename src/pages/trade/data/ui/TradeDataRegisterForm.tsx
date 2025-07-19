@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { ImageUp } from 'lucide-react';
 
 import { toRawPrice } from '@/shared/lib/formatPrice';
-import { BuyButton } from '@/shared/ui/BuyButton';
 import { InputField } from '@/shared/ui/InputField';
+import { BuyButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
 
 import { usePostTradeDataMutation } from '../../register/data/model/mutations';

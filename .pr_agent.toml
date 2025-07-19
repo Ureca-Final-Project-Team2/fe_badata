@@ -28,6 +28,63 @@ Next.js + TypeScript 프로젝트입니다. 다음을 간단히 검토해주세�
 - 명백한 버그나 로직 오류
 - 간단한 성능 개선 사항
 
+---
+# 📦 공통 컴포넌트 리팩토링 기준 (폴더/파일 구조)
+
+## 1. 폴더/파일 위치 기준
+
+### 1) 공통 스타일/레이아웃 컴포넌트
+- 위치: src/shared/ui/
+- 역할: 스타일/레이아웃만 담당, 도메인 로직/상태/이벤트 핸들러 없음, props 최소화, 순수 UI
+
+### 2) 하나의 도메인에서 여러 곳에서 공통으로 쓰이는 컴포넌트
+- 위치: src/widgets/{도메인}/ui/
+- 역할: 해당 도메인에서 여러 페이지/플로우에서 재사용, 도메인 특화 로직/상태/이벤트 핸들러 포함 가능
+
+### 3) 여러 도메인에서 공통으로 쓰이는 엔티티/로직
+- 위치: src/entities/
+- 역할: 여러 도메인에서 공통으로 쓰이는 데이터/엔티티/로직, 도메인에 종속적이지 않은 경우만
+
+### 4) 특정 페이지만 쓰는 확장 컴포넌트
+- 위치: src/pages/{도메인}/{페이지}/ui/ (또는 widgets/{도메인}/ui/에 두고, 필요시 페이지별로 래핑)
+
+---
+## 2. 구체적 리팩토링 예시 (주요 컴포넌트)
+- 공통 InputField: src/shared/ui/InputField/InputField.tsx
+- 가격 입력 필드: src/widgets/trade/ui/PriceInputField.tsx
+- 주소 입력 필드: src/widgets/rental/ui/AddressInputField.tsx
+- 공통 Slider: src/shared/ui/Slider/Slider.tsx
+- 가격 슬라이더: src/widgets/trade/ui/PriceSlider.tsx
+- 공통 ImageCard: src/shared/ui/ImageCard/ImageCard.tsx
+- 거래용 이미지 카드: src/widgets/trade/ui/TradeImageCard.tsx
+- 공통 Header: src/shared/ui/Header/Header.tsx
+- 앱 헤더: src/widgets/layout/AppHeader.tsx
+- 공통 Button: src/shared/ui/Button/Button.tsx
+- 로그인 버튼: src/widgets/auth/LoginButton.tsx
+- 카카오 로그인 버튼: src/widgets/auth/KakaoLoginButton.tsx
+- 좋아요 버튼: src/widgets/common/LikeButton.tsx
+- 공통 Card: src/shared/ui/Card/Card.tsx
+- 데이터 사용량 카드: src/widgets/mypage/ui/DataUsageCard.tsx
+- 공통 BottomNav: src/shared/ui/BottomNav/BottomNav.tsx
+- 앱 하단 네비게이션: src/widgets/layout/AppBottomNav.tsx
+
+---
+## 3. 리팩토링 방향/계획
+- shared/ui/에는 스타일/레이아웃만 담당하는 순수 컴포넌트만 남김
+- 도메인 특화/로직 포함 컴포넌트는 widgets/{도메인}/ui/로 이동 및 분리
+- 도메인 특화 로직이 포함된 기존 컴포넌트는 삭제
+- 새 위치로 경로 수정
+
+---
+## 4. 정리된 리팩토링 기준
+- 공통 스타일/레이아웃: shared/ui/
+- 하나의 도메인에서 여러 곳에서 공통 사용: widgets/{도메인}/ui/
+- 여러 도메인에서 공통 사용: entities/
+- 특정 페이지만 사용: pages/{도메인}/{페이지}/ui/ (필요시)
+
+---
+**리뷰 시, 실제로 폴더와 파일이 위 기준대로 생성/수정/이동/삭제되었는지 반드시 확인하고, 위반 시 구체적으로 코멘트로 남겨주세요.**
+
 모든 리뷰 코멘트는 한국어로 작성해주세요.
 """
 
