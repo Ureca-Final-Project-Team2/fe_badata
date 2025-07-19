@@ -1,6 +1,6 @@
-type PostStatusBadgeProps = {
-  className?: string;
-} & ({ text: string; children?: never } | { children: React.ReactNode; text?: never });
+export type PostStatusBadgeProps =
+  | { text: string; children?: never; className?: string }
+  | { children: React.ReactNode; text?: never; className?: string };
 
 /**
  * PostStatusBadge - 거래 완료 등 상태 뱃지
