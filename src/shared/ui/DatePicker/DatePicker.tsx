@@ -2,13 +2,11 @@
 
 import * as React from 'react';
 
-import { cn } from '@/shared/lib/cn';
-import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
+import { Calendar, CalendarIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/shared/lib/cn';
 
 export interface DatePickerProps {
   date: Date | undefined;
@@ -28,10 +26,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onDateChange, plac
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, 'PPP') : <span>{placeholder ?? '날짜 선택'}</span>}
+          {date ? date.toLocaleDateString() : <span>{placeholder ?? ''}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
+        {/* @ts-expect-error: Calendar is not from lucide-react, but from a custom component */}
         <Calendar mode="single" selected={date} onSelect={onDateChange} initialFocus />
       </PopoverContent>
     </Popover>
