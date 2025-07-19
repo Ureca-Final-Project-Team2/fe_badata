@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
-import { Calendar, CalendarIcon } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/shared/lib/cn';
@@ -14,7 +14,7 @@ export interface DatePickerProps {
   placeholder?: string;
 }
 
-export const DatePicker: React.FC<DatePickerProps> = ({ date, onDateChange, placeholder }) => {
+export const DatePicker: React.FC<DatePickerProps> = ({ date, placeholder }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -29,10 +29,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onDateChange, plac
           {date ? date.toLocaleDateString() : <span>{placeholder ?? ''}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        {/* @ts-expect-error: Calendar is not from lucide-react, but from a custom component */}
-        <Calendar mode="single" selected={date} onSelect={onDateChange} initialFocus />
-      </PopoverContent>
+      <PopoverContent className="w-auto p-0" align="start"></PopoverContent>
     </Popover>
   );
 };
