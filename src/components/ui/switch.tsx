@@ -1,25 +1,67 @@
 'use client';
 
 import { cn } from '@/shared/lib/cn';
+import * as RadixSwitch from '@radix-ui/react-switch';
 
-function Switch({ className, ...props }: React.ComponentProps<typeof SwitchPrimitive.Root>) {
-  return (
-    <SwitchPrimitive.Root
-      data-slot="switch"
-      className={cn(
-        'peer data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
-        className,
-      )}
-      {...props}
-    >
-      <SwitchPrimitive.Thumb
-        data-slot="switch-thumb"
-        className={cn(
-          'bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0',
-        )}
-      />
-    </SwitchPrimitive.Root>
-  );
+interface CustomSwitchProps {
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  labels?: [string, string];
 }
 
-export { Switch };
+export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwitchProps) {
+  const hasLabels = Boolean(labels);
+
+  if (hasLabels) {
+    return (
+      <div className="relative w-[120px] h-[30px] rounded-full bg-[var(--gray)] flex overflow-hidden">
+        <div
+          className={cn(
+            'absolute top-0 left-0 w-1/2 h-full rounded-full transition-transform duration-200 ease-in-out',
+            checked ? 'translate-x-full bg-[var(--main-5)]' : 'translate-x-0 bg-[var(--main-5)]',
+          )}
+        />
+        <button
+          onClick={() => onCheckedChange(false)}
+          className={cn(
+            'flex-1 flex items-center justify-center z-10 text-[14px] font-semibold transition-colors',
+            !checked ? 'text-white' : 'text-[var(--black)]',
+          )}
+        >
+          {labels?.[0]}
+        </button>
+        <button
+          onClick={() => onCheckedChange(true)}
+          className={cn(
+            'flex-1 flex items-center justify-center z-10 text-[14px] font-semibold transition-colors',
+            checked ? 'text-white' : 'text-[var(--black)]',
+          )}
+        >
+          {labels?.[1]}
+        </button>
+      </div>
+    );
+  }
+
+  // 기본 토글 스위치
+  return (
+    <div className="relative w-[50px] h-[26px]">
+      <RadixSwitch.Root
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        className={cn(
+          'relative z-10 w-full h-full rounded-full appearance-none outline-none cursor-pointer transition-colors',
+          checked ? 'bg-[var(--main-5)]' : 'bg-[var(--gray)]',
+        )}
+        {...props}
+      >
+        <RadixSwitch.Thumb
+          className={cn(
+            'absolute top-[2px] left-[2px] h-[22px] w-[22px] rounded-full bg-white shadow transition-all',
+            checked ? 'translate-x-[24px]' : 'translate-x-0',
+          )}
+        />
+      </RadixSwitch.Root>
+    </div>
+  );
+}
