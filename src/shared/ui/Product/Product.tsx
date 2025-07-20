@@ -1,6 +1,5 @@
 'use client';
 
-import { ICONS } from '@/shared/config/iconPath';
 import { ProductInfo } from '@/shared/ui/ProductInfo';
 import { Heart } from 'lucide-react';
 import { ImageBox } from '../ImageBox';
@@ -17,7 +16,7 @@ export function Product({ imageSrc, brand, name, price, likeCount }: ProductProp
   return (
     <div className="relative flex w-full gap-4 pt-2 pb-4">
       {/* 왼쪽 이미지 */}
-      <ImageBox url={ICONS.LOGO.SAMPLE} size="sm" />
+      <ImageBox url={imageSrc} size="sm" />
 
       {/* 가운데 정보 */}
       <div className="flex flex-col justify-between flex-1">

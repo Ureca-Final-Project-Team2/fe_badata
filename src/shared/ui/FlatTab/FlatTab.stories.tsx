@@ -53,6 +53,7 @@ export const ExtendedTabs: Story = {
       { id: 'notice', label: '공지사항' },
       { id: 'setting', label: '설정' },
     ],
+    onValueChange: (value: string) => console.log(`Extended tab changed to: ${value}`),
   },
 };
 
