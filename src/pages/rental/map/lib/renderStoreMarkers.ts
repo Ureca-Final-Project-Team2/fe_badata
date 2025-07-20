@@ -62,7 +62,6 @@ export const showCurrentLocation = (map: kakao.maps.Map): void => {
 
   // 초기 로드 시 현재 위치로 이동
   moveToCurrentLocation();
-
   // 현재 위치 마커 클릭 시 현재 위치로 다시 이동
   window.kakao.maps.event.addListener(currentLocationMarker, 'click', () => {
     moveToCurrentLocation();
@@ -135,6 +134,7 @@ const createStoreMarker = async (store: Store, map: kakao.maps.Map): Promise<voi
     const position = new window.kakao.maps.LatLng(store.latitude, store.longitude);
 
     // 디바이스 데이터 조회
+
     const devices = await fetchStoreDevices(store.id, {});
     const safeDevices = Array.isArray(devices) ? devices : [];
 
