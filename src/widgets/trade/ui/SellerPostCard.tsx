@@ -1,12 +1,11 @@
 import { ICONS } from '@/shared/config/iconPath';
-import { IMAGES } from '@/shared/config/imagePath';
 import { formatPrice } from '@/shared/lib/formatPrice';
 import DdayBadge from '@/shared/ui/DdayBadge';
 import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PriceText from '@/shared/ui/PriceText';
 import Image from 'next/image';
 
-const DEFAULT_IMAGE = IMAGES.TRADE.TRADE_SAMPLE;
+const DEFAULT_IMAGE = ICONS.LOGO.DETAIL;
 
 interface SellerPostCardProps {
   imageUrl: string;
