@@ -28,7 +28,7 @@ export function ImageCard({ size = 'sm', url, expireDate, defaultLiked = false }
       )}
 
       <div className="absolute bottom-2.5 right-2.5 z-10">
-        <LikeButton defaultLiked={defaultLiked} />
+        <LikeButton />
       </div>
     </div>
   );

@@ -1,53 +1,17 @@
+import '@/app/globals.css';
+import { ICONS } from '@/shared/config/iconPath';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const MockLoginButton = () => (
-  <button
-    style={{
-      height: '35px',
-      width: '70px',
-      padding: '12px 16px',
-      borderRadius: '6px',
-      backgroundColor: '#fff',
-      fontSize: '11px',
-      fontWeight: 800,
-      boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25)',
-      border: 'none',
-    }}
-  >
+  <button className="h-[35px] w-[70px] px-4 py-3 rounded-[6px] bg-white text-[11px] font-extrabold shadow-md border-none mr-[24px]">
     로그인
   </button>
 );
 
 const MockHeader = () => (
-  <header
-    style={{
-      width: '100%',
-      height: '70px',
-      padding: '0 16px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-    }}
-  >
-    <div
-      style={{
-        width: '120px',
-        height: '40px',
-        display: 'flex',
-        alignItems: 'center',
-      }}
-    >
-      <img
-        src="/BADATA.svg"
-        alt="BADATA 로고"
-        style={{
-          objectFit: 'contain',
-          width: '100%',
-          height: '100%',
-        }}
-      />
+  <header className="w-[428px] h-[70px] px-4 flex justify-between items-center bg-white shadow-sm">
+    <div className="w-[90px] h-[90px] ml-[24px] flex items-center justify-center">
+      <img src={ICONS.LOGO.BADATA} alt="BADATA 로고" className="object-contain w-[90px] h-[90px]" />
     </div>
     <MockLoginButton />
   </header>
@@ -67,19 +31,8 @@ type Story = StoryObj<typeof MockHeader>;
 
 export const Default: Story = {
   render: () => (
-    <div
-      style={{
-        width: '375px',
-        height: '812px',
-        margin: '0 auto',
-        border: '1px solid #ccc',
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: '#f9f9f9',
-      }}
-    >
+    <div className="w-[428px] h-[812px] mx-auto border border-[#ccc] flex flex-col">
       <MockHeader />
-      <main style={{ flex: 1 }} />
     </div>
   ),
 };
