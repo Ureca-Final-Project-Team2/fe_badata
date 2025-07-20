@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { FileText, Home, Repeat, User, X } from 'lucide-react';
+
+import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 
 const NAV_CONFIG = [
   { label: '홈', path: '/', icon: Home },
@@ -14,12 +14,8 @@ const NAV_CONFIG = [
   { label: '마이', path: '/mypage', icon: User },
 ];
 
-interface BottomNavProps {
-  onSosClick?: () => void;
-}
-
-export const BottomNav = ({ onSosClick }: BottomNavProps) => {
-  const [isSosOpen, setIsSosOpen] = useState(false);
+export const BottomNav = () => {
+  const { isDrawerOpen, toggleDrawer } = useSosDrawer();
   const pathname = usePathname() ?? '';
   const router = useRouter();
 
@@ -31,11 +27,6 @@ export const BottomNav = ({ onSosClick }: BottomNavProps) => {
     return -1;
   };
   const activeIdx = getActiveIdx();
-
-  const handleSosToggle = () => {
-    setIsSosOpen((prev) => !prev);
-    onSosClick?.();
-  };
 
   return (
     <nav className="relative bottom-0 inset-x-0 h-[80px]">
@@ -70,14 +61,14 @@ export const BottomNav = ({ onSosClick }: BottomNavProps) => {
         })}
 
         {/* SOS 버튼 */}
-        <li className="relative mb-8 z-20 flex flex-col items-center  transition-transform duration-300">
+        <li className="relative mb-8 z-20 flex flex-col items-center transition-transform duration-300">
           <button
-            onClick={handleSosToggle}
-            className={` rounded-full flex items-center justify-center transition-color duration-100 ${
-              isSosOpen ? 'w-[80px] h-[80px] bg-black' : 'w-[80px] h-[80px]'
+            onClick={toggleDrawer}
+            className={`w-[80px] h-[80px] rounded-full flex items-center justify-center transition-color duration-100 ${
+              isDrawerOpen ? 'bg-black' : 'none'
             }`}
           >
-            {isSosOpen ? (
+            {isDrawerOpen ? (
               <div className="flex flex-col items-center text-white justify-center transition-opacity duration-200">
                 <X />
                 <span className="text-[14px] font-semibold">닫기</span>

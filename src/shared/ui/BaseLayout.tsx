@@ -1,6 +1,5 @@
 'use client';
 
-import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
 
 import { cn } from '../lib/cn';
@@ -13,7 +12,6 @@ interface BaseLayoutProps {
   fab?: React.ReactNode;
   className?: string;
   showBottomNav?: boolean;
-  showSos?: boolean;
 }
 
 export function BaseLayout({
@@ -22,10 +20,7 @@ export function BaseLayout({
   fab,
   className,
   showBottomNav = true,
-  showSos = true,
 }: BaseLayoutProps) {
-  const { isDrawerOpen, openDrawer, closeDrawer } = useSosDrawer();
-
   return (
     <div className="w-full flex justify-center bg-white">
       <div className="relative w-full max-w-[428px] min-h-screen overflow-hidden">
@@ -49,19 +44,13 @@ export function BaseLayout({
         {/* 고정 바텀 네비게이션 */}
         {showBottomNav && (
           <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[100]">
-            <BottomNav
-              sosActive={isDrawerOpen}
-              onSosClick={isDrawerOpen ? closeDrawer : openDrawer}
-            />
+            <BottomNav />
           </div>
         )}
 
         {/* 전역 SOS Drawer */}
-        {showSos && (
-          <div className="fixed bottom-0 left-0 right-0 z-40">
-            <SosDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
-          </div>
-        )}
+
+        <SosDrawer />
       </div>
     </div>
   );
