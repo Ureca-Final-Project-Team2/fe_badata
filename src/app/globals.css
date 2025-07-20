@@ -8,16 +8,31 @@
   /* 폰트 */
   --font-sans: 'Pretendard', sans-serif;
 
+  /* 이 부분은 나중에 지우기 */
   --font-head-bold: 31.5px;
   --font-head-semibold: 25px;
   --font-title-semibold: 20px;
   --font-title-medium: 20px;
   --font-title-regular: 16px;
+  --font-body-semibold: 16px;
+  --font-body-xs-semibold: 12.8px;
   --font-label-light: 12.8px;
   --font-body-light: 12.8px;
-  --font-body-xs-semibold: 12.8px;
   --font-body-light-lh: 12.8px;
-  --font-body-semibold: 16px;
+
+  /* 폰트 사이즈 */
+  --font-head-size: 31.5px;
+  --font-title-size: 25px;
+  --font-body-size: 20px;
+  --font-label-size: 16px;
+  --font-small-size: 12.8px;
+
+  /* 폰트 두께 */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
 
   --main-1: #edf7fb;
   --main-2: #c6eaf8;
@@ -167,5 +182,83 @@ body {
     height: 100%;
     scrollbar-width: none;
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* head */
+  .font-head-bold {
+    font-family: var(--font-sans);
+    font-size: var(--font-head-bold);
+    font-weight: var(--font-bold);
+  }
+  .font-head-semibold {
+    font-family: var(--font-sans);
+    font-size: var(--font-head-size);
+    font-weight: var(--font-semibold);
+  }
+  /* title */
+  .font-title-semibold {
+    font-family: var(--font-sans);
+    font-size: var(--font-title-size);
+    font-weight: var(--font-semibold);
+  }
+  .font-title-medium {
+    font-family: var(--font-sans);
+    font-size: var(--font-title-size);
+    font-weight: var(--font-medium);
+  }
+  .font-title-regular {
+    font-family: var(--font-sans);
+    font-size: var(--font-title-regular);
+    font-weight: var(--font-regular);
+  }
+  /* body */
+  .font-body-semibold {
+    font-family: var(--font-sans);
+    font-size: var(--font-body-size);
+    font-weight: var(--font-semibold);
+  }
+  .font-body-medium {
+    font-family: var(--font-sans);
+    font-size: var(--font-body-size);
+    font-weight: var(--font-medium);
+  }
+  .font-body-regular {
+    font-family: var(--font-sans);
+    font-size: var(--font-body-regular);
+    font-weight: var(--font-regular);
+  }
+  /* label */
+  .font-lable-semibold {
+    font-family: var(--font-sans);
+    font-size: var(--font-label-size);
+    font-weight: var(--font-semibold);
+  }
+  .font-label-medium {
+    font-family: var(--font-sans);
+    font-size: var(--font-label-size);
+    font-weight: var(--font-medium);
+  }
+  .font-label-regular {
+    font-family: var(--font-sans);
+    font-size: var(--font-label-regular);
+    font-weight: var(--font-regular);
+  }
+  /* small */
+  .font-small-semibold {
+    font-family: var(--font-sans);
+    font-size: var(--font-small-size);
+    font-weight: var(--font-semibold);
+  }
+  .font-small-medium {
+    font-family: var(--font-sans);
+    font-size: var(--font-small-size);
+    font-weight: var(--font-medium);
+  }
+  .font-small-regular {
+    font-family: var(--font-sans);
+    font-size: var(--font-small-size);
+    font-weight: var(--font-light);
   }
 }
