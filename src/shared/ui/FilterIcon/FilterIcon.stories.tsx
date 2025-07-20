@@ -1,4 +1,4 @@
-import { FilterIcon } from 'lucide-react';
+import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
