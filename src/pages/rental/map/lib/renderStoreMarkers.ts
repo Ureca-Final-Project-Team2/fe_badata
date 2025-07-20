@@ -132,7 +132,7 @@ const setupMarkerEventListeners = (
 // 단일 스토어 마커 생성 함수
 const createStoreMarker = async (store: Store, map: kakao.maps.Map): Promise<void> => {
   try {
-    const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
+    const position = new window.kakao.maps.LatLng(store.latitude, store.longitude);
 
     // 디바이스 데이터 조회
     const devices = await fetchStoreDevices(store.id, {});
