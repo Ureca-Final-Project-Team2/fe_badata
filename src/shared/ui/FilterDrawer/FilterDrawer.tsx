@@ -2,14 +2,14 @@ import React from 'react';
 
 import { cn } from '@/shared/lib/cn';
 
-interface DrawerProps {
+interface FilterDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
   className?: string;
 }
 
-export function Drawer({ isOpen, onClose, children, className }: DrawerProps) {
+export function FilterDrawer({ isOpen, onClose, children, className }: FilterDrawerProps) {
   if (!isOpen) return null;
 
   return (
@@ -18,7 +18,11 @@ export function Drawer({ isOpen, onClose, children, className }: DrawerProps) {
       onClick={onClose}
     >
       <div
-        className={cn('w-full max-w-md rounded-t-[20px]', className)}
+        className={cn(
+          'w-full max-w-md bg-white rounded-t-[20px] pt-2 px-4 pb-6',
+          'divide-y divide-[var(--gray-light)]',
+          className,
+        )}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

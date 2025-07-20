@@ -7,28 +7,18 @@ interface DrawerButtonProps {
   children: React.ReactNode;
   onClick: () => void;
   variant?: 'default' | 'point' | 'close';
-  theme?: 'light' | 'dark';
 }
 
-export function DrawerButton({
-  icon,
-  children,
-  onClick,
-  variant = 'default',
-  theme = 'dark',
-}: DrawerButtonProps) {
-  const isLight = theme === 'light';
-
+export function DrawerButton({ icon, children, onClick, variant = 'default' }: DrawerButtonProps) {
   return (
     <button
       onClick={onClick}
       className={cn(
         'relative w-full h-[56px] px-4 flex items-center justify-center gap-3 text-[16px] font-medium',
-        isLight ? 'bg-[var(--gray-light)] text-[var(--black)]' : 'bg-[var(--gray-mid)] text-white',
-        variant === 'default' && 'rounded-none first:rounded-t-[12px] last:rounded-b-[12px]',
-        variant === 'point' &&
-          'text-[var(--main-5)] rounded-none first:rounded-t-[12px] last:rounded-b-[12px]',
-        variant === 'close' && 'mt-3 rounded-[12px]',
+        'bg-[var(--gray-mid)] text-white',
+        'first:rounded-t-[12px] last:rounded-b-[12px]',
+        variant === 'point' && 'text-[var(--main-5)]',
+        variant === 'close' && 'mt-3 rounded-[12px] bg-[var(--gray-mid)]',
       )}
     >
       {icon && (
