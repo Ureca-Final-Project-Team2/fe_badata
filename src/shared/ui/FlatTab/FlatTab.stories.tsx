@@ -18,7 +18,7 @@ export const BasicTabs: Story = {
       { id: 'data', label: '데이터' },
       { id: 'coupon', label: '쿠폰' },
     ],
-    onValueChange: (value) => console.log(`Tab changed to: ${value}`),
+    onValueChange: (value: string) => console.log(`Tab changed to: ${value}`),
   },
 };
 // 판매 중 / 판매 완료
