@@ -6,26 +6,10 @@ const meta: Meta<typeof BackIcon> = {
   component: BackIcon,
   tags: ['autodocs'],
   argTypes: {
-    width: {
-      control: { type: 'number' },
-      defaultValue: 24,
-    },
-    height: {
-      control: { type: 'number' },
-      defaultValue: 24,
-    },
-    alt: {
-      control: { type: 'text' },
-      defaultValue: '뒤로가기 아이콘',
-    },
+    width: { control: { type: 'number' } },
+    height: { control: { type: 'number' } },
+    alt: { control: { type: 'text' } },
   },
-};
-
-export default meta;
-
-type Story = StoryObj<typeof BackIcon>;
-
-export const Default: Story = {
   args: {
     width: 24,
     height: 24,
@@ -33,3 +17,8 @@ export const Default: Story = {
   },
 };
 
+export default meta;
+
+type Story = StoryObj<typeof BackIcon>;
+
+export const Default: Story = {};

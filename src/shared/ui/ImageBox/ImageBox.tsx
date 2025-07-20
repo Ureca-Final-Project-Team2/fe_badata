@@ -1,5 +1,6 @@
 'use client';
 
+import { ICONS } from '@/shared/config/iconPath';
 import { cn } from '@/shared/lib/cn';
 
 type ImageBoxSize = 'sm' | 'md' | 'lg';
@@ -17,7 +18,7 @@ interface ImageBoxProps {
 }
 
 export function ImageBox({ size = 'sm', url, className }: ImageBoxProps) {
-  const fallbackImage = '/assets/sample.png';
+  const fallbackImage = ICONS.LOGO.SAMPLE;
 
   return (
     <div
