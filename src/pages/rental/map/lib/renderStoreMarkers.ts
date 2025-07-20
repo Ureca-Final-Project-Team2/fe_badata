@@ -63,12 +63,6 @@ export const showCurrentLocation = (map: kakao.maps.Map): void => {
   // 초기 로드 시 현재 위치로 이동
   moveToCurrentLocation();
 
-  // 지도 클릭 시 현재 위치 마커를 클릭한 위치로 이동 (선택사항)
-  window.kakao.maps.event.addListener(map, 'click', (mouseEvent: any) => {
-    const clickedPosition = mouseEvent.latLng;
-    currentLocationMarker.setPosition(clickedPosition);
-  });
-
   // 현재 위치 마커 클릭 시 현재 위치로 다시 이동
   window.kakao.maps.event.addListener(currentLocationMarker, 'click', () => {
     moveToCurrentLocation();
