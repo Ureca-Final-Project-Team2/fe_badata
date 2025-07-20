@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { ImageCard } from './IMageCard';
+import { ImageCard } from './ImageCard';
 
 const meta: Meta<typeof ImageCard> = {
   title: 'Components/ImageCard',
