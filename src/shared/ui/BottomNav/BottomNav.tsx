@@ -2,95 +2,120 @@
 
 import { useState } from 'react';
 
-import { FileText, Home, Repeat, User } from 'lucide-react';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { ICONS } from '@/shared/config/iconPath';
+import { FileText, Home, Repeat, User, X } from 'lucide-react';
 
-import type { LucideIcon } from 'lucide-react';
-
-const navItems = [
-  { label: '홈', icon: Home },
-  { label: '거래', icon: FileText },
-  { label: '대여', icon: Repeat },
-  { label: '마이', icon: User },
+const NAV_CONFIG = [
+  { label: '홈', path: '/', icon: Home },
+  { label: '거래', path: '/trade', icon: FileText },
+  { label: '대여', path: '/rental', icon: Repeat },
+  { label: '마이', path: '/mypage', icon: User },
 ];
-
-const MAIN_COLOR = 'var(--main-5)';
-const GRAY_COLOR = 'var(--gray-dark)';
 
 interface BottomNavProps {
   onSosClick?: () => void;
-  sosActive?: boolean;
 }
 
-const NavItem = ({
-  label,
-  Icon,
-  active,
-  onClick,
-}: {
-  label: string;
-  Icon: LucideIcon;
-  active: boolean;
-  onClick: () => void;
-}) => (
-  <button
-    className="flex flex-col items-center justify-center gap-1 text-sm w-[60px]"
-    onClick={onClick}
-  >
-    <Icon size={20} color={active ? MAIN_COLOR : GRAY_COLOR} />
-    <span className="text-[12px] font-bold" style={{ color: active ? MAIN_COLOR : GRAY_COLOR }}>
-      {label}
-    </span>
-  </button>
-);
+export const BottomNav = ({ onSosClick }: BottomNavProps) => {
+  const [isSosOpen, setIsSosOpen] = useState(false);
+  const pathname = usePathname() ?? '';
+  const router = useRouter();
 
-export const BottomNav = ({ onSosClick, sosActive = false }: BottomNavProps) => {
-  const [activeIdx, setActiveIdx] = useState(0);
+  const getActiveIdx = () => {
+    if (pathname === '/') return 0;
+    if (pathname.startsWith('/trade')) return 1;
+    if (pathname.startsWith('/rental')) return 2;
+    if (pathname.startsWith('/mypage')) return 3;
+    return -1;
+  };
+  const activeIdx = getActiveIdx();
+
+  const handleSosToggle = () => {
+    setIsSosOpen((prev) => !prev);
+    onSosClick?.();
+  };
 
   return (
-    <nav className="bottom-0 inset-x-0 h-[70px] bg-white border-t border-gray-200 flex justify-around items-center">
-      {navItems.slice(0, 2).map(({ label, icon: Icon }, idx) => (
-        <NavItem
-          key={label}
-          label={label}
-          Icon={Icon}
-          active={activeIdx === idx && !sosActive}
-          onClick={() => setActiveIdx(idx)}
-        />
-      ))}
+    <nav className="relative bottom-0 inset-x-0 h-[80px]">
+      {/* 파도 형태 */}
+      <div
+        className="absolute bottom-0 left-0 w-full h-[80px] bg-[var(--main-5)]"
+        style={{
+          clipPath: `path('M 0 10 C 80 0 120 20 214 10 C 290 0 320 20 400 10 C 420 8 428 12 428 10 L 428 120 L 0 120 Z')`,
+        }}
+      />
 
-      <div className="relative -mt-8 transition-transform duration-300">
-        <button
-          className={`w-[67px] h-[67px] rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex flex-col items-center justify-center transition-all duration-200 ${sosActive ? 'bg-black scale-100' : 'bg-white scale-100'}`}
-          onClick={onSosClick}
-        >
-          <div className="flex flex-col items-center justify-center transition-opacity duration-200">
-            {sosActive ? (
-              <>
-                <span className="text-white text-[32px] leading-none">×</span>
-                <span className="text-white text-[14px]">닫기</span>
-              </>
+      <ul className="relative flex w-full justify-between items-end px-2 z-10 h-full">
+        {NAV_CONFIG.slice(0, 2).map((item, idx) => {
+          const Icon = item.icon;
+          const isActive = activeIdx === idx;
+          return (
+            <li key={item.label} className="flex-1 flex flex-col items-center justify-end pb-3">
+              <button
+                onClick={() => router.push(item.path)}
+                className="flex flex-col items-center gap-1"
+              >
+                <Icon
+                  size={24}
+                  stroke="white"
+                  fill={isActive ? 'white' : 'none'}
+                  strokeWidth={isActive ? 2.5 : 2}
+                />
+                <span className="text-xs font-bold text-white">{item.label}</span>
+              </button>
+            </li>
+          );
+        })}
+
+        {/* SOS 버튼 */}
+        <li className="relative mb-8 z-20 flex flex-col items-center  transition-transform duration-300">
+          <button
+            onClick={handleSosToggle}
+            className={` rounded-full flex items-center justify-center transition-color duration-100 ${
+              isSosOpen ? 'w-[80px] h-[80px] bg-black' : 'w-[80px] h-[80px]'
+            }`}
+          >
+            {isSosOpen ? (
+              <div className="flex flex-col items-center text-white justify-center transition-opacity duration-200">
+                <X />
+                <span className="text-[14px] font-semibold">닫기</span>
+              </div>
             ) : (
-              <img
-                src={ICONS.LOGO.SOS}
-                alt="SOS 아이콘"
-                className="w-[40px] h-[40px] transition-transform duration-300"
+              <Image
+                src="/images/sos-button.svg"
+                alt="SOS"
+                width={80}
+                height={80}
+                draggable={false}
+                priority
               />
             )}
-          </div>
-        </button>
-      </div>
+          </button>
+        </li>
 
-      {navItems.slice(2).map(({ label, icon: Icon }, idx) => (
-        <NavItem
-          key={label}
-          label={label}
-          Icon={Icon}
-          active={activeIdx === idx + 2 && !sosActive}
-          onClick={() => setActiveIdx(idx + 2)}
-        />
-      ))}
+        {NAV_CONFIG.slice(2).map((item, idx) => {
+          const Icon = item.icon;
+          const isActive = activeIdx === idx + 2;
+          return (
+            <li key={item.label} className="flex-1 flex flex-col items-center justify-end pb-3">
+              <button
+                onClick={() => router.push(item.path)}
+                className="flex flex-col items-center gap-1"
+              >
+                <Icon
+                  size={24}
+                  stroke="white"
+                  fill={isActive ? 'white' : 'none'}
+                  strokeWidth={isActive ? 2.5 : 2}
+                />
+                <span className="text-xs font-bold text-white">{item.label}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 };
