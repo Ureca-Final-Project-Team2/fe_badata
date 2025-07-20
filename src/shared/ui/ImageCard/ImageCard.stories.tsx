@@ -12,6 +12,7 @@ const meta: Meta<typeof ImageCard> = {
   },
 };
 
+export default meta;
 type Story = StoryObj<typeof ImageCard>;
 
 export const Default: Story = {};
