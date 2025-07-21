@@ -16,9 +16,15 @@ interface TradeDetailProductSectionProps {
   capacity?: number;
 }
 
+const brandImageMap: Record<string, string> = {
+  KT: '/assets/KT_Logo.png',
+  UPLUS: '/assets/LGU_Logo.png',
+  SKT: '/assets/SKT_Logo.png',
+};
+
 export const TradeDetailProductSection = ({
   postType,
-  thumbnailUrl = '/assets/trade_detail.jpg',
+  thumbnailUrl = '/assets/trade-detail.jpg',
   brand = 'CU',
   name = '모바일 금액권 3천원권',
   price = 2050,
@@ -27,27 +33,46 @@ export const TradeDetailProductSection = ({
   description = 'CU에서 사용 가능한 모바일 금액권 3000원 쿠폰입니다. 전국 매장에서 사용 가능하며 현금처럼 사용하실 수 있습니다.',
   capacity,
 }: TradeDetailProductSectionProps) => {
+  const brandImageSrc = brandImageMap[brand ?? ''] || '/assets/LGU_Logo.png';
   return (
     <section>
       {/* 썸네일 이미지 */}
       <div className="w-full h-[340px] mt-4 relative rounded-xl overflow-hidden">
-        <Image src={thumbnailUrl} alt="기프티콘" fill className="object-cover" />
+        <Image
+          src={thumbnailUrl}
+          alt="thumbnail"
+          fill
+          sizes="(max-width: 768px) 100vw, 430px"
+          className="object-cover"
+          priority
+        />
       </div>
 
       {/* 텍스트 영역 */}
       <div className="mt-6">
         {/* 브랜드, 상품명, 가격 */}
-        <div className="flex flex-col gap-2 mb-6">
-          <span className="text-sm text-gray-500">{brand}</span>
+        <div className="flex flex-col gap-1 mb-6">
+          <div className="h-6">
+            <Image
+              src={brandImageSrc}
+              alt={brand}
+              width={20}
+              height={100}
+              style={{ height: 'auto' }}
+              className="object-contain"
+            />
+          </div>
           <span className="text-lg font-bold">{name}</span>
-          <span className="text-md text-blue-600 font-semibold">{price?.toLocaleString()}원</span>
+          <span className="text-md text-[var(--main-5)] font-semibold">
+            {price?.toLocaleString()}원
+          </span>
         </div>
 
         {/* 데이터 타입일 경우 용량 */}
         {postType === 'DATA' && capacity !== undefined && (
           <div className="flex justify-between items-center">
             <span className="text-md font-medium text-black">데이터 용량</span>
-            <span className="text-sm text-gray-500">{capacity}GB</span>
+            <span className="text-sm text-[var(--gray-dark)]">{capacity}GB</span>
           </div>
         )}
 
