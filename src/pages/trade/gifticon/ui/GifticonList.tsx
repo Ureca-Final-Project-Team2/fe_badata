@@ -1,7 +1,8 @@
-import { ArrowDownUp, ListFilter } from 'lucide-react';
+import { ListFilter } from 'lucide-react';
 
 import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
 import { Product } from '@/shared/ui/Product';
+import { SortButton } from '@/shared/ui/SortButton';
 
 type SortOption = 'latest' | 'popular';
 
@@ -36,10 +37,7 @@ export function GifticonList({ sortOption, onSortClick, selectedCategory }: Gift
   return (
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
-        <button onClick={onSortClick} className="flex flex-row gap-1 items-center font-semibold">
-          <ArrowDownUp size={16} />
-          {sortOption === 'latest' ? '최신순' : '인기순'}
-        </button>
+        <SortButton onClick={onSortClick} label={sortOption === 'latest' ? '최신순' : '인기순'} />
 
         <div className="flex flex-row gap-1 items-center font-semibold">
           조건
