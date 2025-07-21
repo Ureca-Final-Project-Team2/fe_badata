@@ -1,6 +1,10 @@
 'use client';
 
-import { ChevronLeft, MoreVertical, Share } from 'lucide-react';
+import Image from 'next/image';
+
+import { MoreVertical, Share } from 'lucide-react';
+
+import { ICONS } from '@/shared/config/iconPath';
 
 interface PageHeaderProps {
   title: string;
@@ -19,11 +23,11 @@ export const PageHeader = ({
 }: PageHeaderProps) => (
   <header className="relative w-full h-[70px] flex items-center bg-white shadow-sm">
     <button
-      className="absolute left-4 w-[30px] h-[30px] flex items-center justify-center"
+      className="absolute left-4 w-[50px] h-[30px] flex items-center justify-center"
       onClick={onBack}
       aria-label="뒤로가기"
     >
-      <ChevronLeft size={30} />
+      <Image src={ICONS.ETC.BACKICON} alt="back-button" width={50} height={30} />
     </button>
 
     <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[20px] font-bold text-black">
