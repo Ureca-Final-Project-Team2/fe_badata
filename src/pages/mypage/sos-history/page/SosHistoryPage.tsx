@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
