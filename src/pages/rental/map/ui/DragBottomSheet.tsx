@@ -12,9 +12,9 @@ export const DragBottomSheet = ({ open, onClose, children, storeList }: DragBott
   // windowHeight가 설정된 후에 계산하도록 수정
   const expandedY = windowHeight > 0 ? 60 : 0;
   const middleY = windowHeight > 0 ? windowHeight * 0.5 : 0;
-  const collapsedY = windowHeight > 0 ? windowHeight * 0.7 : 0; // 70% 아래로
+  const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 70% 아래로
 
-  const y = useMotionValue(windowHeight);
+  const y = useMotionValue(windowHeight > 0 ? collapsedY : 0);
   const controls = useAnimation();
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export const DragBottomSheet = ({ open, onClose, children, storeList }: DragBott
         </div>
 
         {/* StoreCard 리스트 */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
           {storeList && storeList.length > 0 ? (
             <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
               {storeList.map((store, idx) => (
@@ -84,7 +84,7 @@ export const DragBottomSheet = ({ open, onClose, children, storeList }: DragBott
               ))}
             </div>
           ) : (
-            <div className="flex flex-col gap-3">{children}</div>
+            <div className="flex flex-col gap-3 px-4 pt-3 pb-6">{children}</div>
           )}
         </div>
       </motion.div>
