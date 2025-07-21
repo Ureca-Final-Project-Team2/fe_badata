@@ -3,14 +3,14 @@
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 
-import { FileText, Home, Repeat, User, X } from 'lucide-react';
+import { Home, ShoppingCart, User, Wifi, X } from 'lucide-react';
 
 import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 
 const NAV_CONFIG = [
   { label: '홈', path: '/', icon: Home },
-  { label: '거래', path: '/trade', icon: FileText },
-  { label: '대여', path: '/rental', icon: Repeat },
+  { label: '거래', path: '/trade', icon: ShoppingCart },
+  { label: '대여', path: '/rental', icon: Wifi },
   { label: '마이', path: '/mypage', icon: User },
 ];
 
@@ -50,11 +50,14 @@ export const BottomNav = () => {
               >
                 <Icon
                   size={24}
-                  stroke="white"
-                  fill={isActive ? 'white' : 'none'}
+                  stroke={isActive ? 'var(--main-3)' : 'var(--gray-light)'}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
-                <span className="text-xs font-bold text-white">{item.label}</span>
+                <span
+                  className={`text-xs font-bold ${isActive ? 'text-[var(--main-3)]' : 'text-[var(--gray-light)]'}`}
+                >
+                  {item.label}
+                </span>
               </button>
             </li>
           );
@@ -97,11 +100,14 @@ export const BottomNav = () => {
               >
                 <Icon
                   size={24}
-                  stroke="white"
-                  fill={isActive ? 'white' : 'none'}
+                  stroke={isActive ? 'var(--main-3)' : 'var(--gray-light)'}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
-                <span className="text-xs font-bold text-white">{item.label}</span>
+                <span
+                  className={`text-xs font-bold ${isActive ? 'text-[var(--main-3)]' : 'text-[var(--gray-light)]'}`}
+                >
+                  {item.label}
+                </span>
               </button>
             </li>
           );
