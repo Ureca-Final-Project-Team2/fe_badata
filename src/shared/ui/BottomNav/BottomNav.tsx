@@ -7,6 +7,8 @@ import { Home, ShoppingCart, User, Wifi, X } from 'lucide-react';
 
 import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 
+import { WAVE_CLIP_PATH } from './constants';
+
 const NAV_CONFIG = [
   { label: '홈', path: '/', icon: Home },
   { label: '거래', path: '/trade', icon: ShoppingCart },
@@ -14,17 +16,46 @@ const NAV_CONFIG = [
   { label: '마이', path: '/mypage', icon: User },
 ];
 
+const NavItem = ({
+  item,
+  isActive,
+  onClick,
+}: {
+  item: (typeof NAV_CONFIG)[0];
+  isActive: boolean;
+  onClick: () => void;
+}) => {
+  const Icon = item.icon;
+  return (
+    <li className="flex-1 flex flex-col items-center justify-end pb-3">
+      <button onClick={onClick} className="flex flex-col items-center gap-1">
+        <Icon
+          size={24}
+          stroke={isActive ? 'var(--main-3)' : 'var(--gray-light)'}
+          strokeWidth={isActive ? 2.5 : 2}
+        />
+        <span
+          className={`text-xs font-bold ${isActive ? 'text-[var(--main-3)]' : 'text-[var(--gray-light)]'}`}
+        >
+          {item.label}
+        </span>
+      </button>
+    </li>
+  );
+};
+
 export const BottomNav = () => {
   const { isDrawerOpen, toggleDrawer } = useSosDrawer();
   const pathname = usePathname() ?? '';
   const router = useRouter();
 
   const getActiveIdx = () => {
-    if (pathname === '/') return 0;
-    if (pathname.startsWith('/trade')) return 1;
-    if (pathname.startsWith('/rental')) return 2;
-    if (pathname.startsWith('/mypage')) return 3;
-    return -1;
+    return NAV_CONFIG.findIndex((item) => {
+      if (item.path === '/') {
+        return pathname === '/';
+      }
+      return pathname.startsWith(item.path);
+    });
   };
   const activeIdx = getActiveIdx();
 
@@ -34,37 +65,22 @@ export const BottomNav = () => {
       <div
         className="absolute bottom-0 left-0 w-full h-[80px] bg-[var(--main-5)]"
         style={{
-          clipPath: `path('M 0 10 C 80 0 106.41 29.417 214 10 C 290 0 317.593 28.884 400 10 C 420 8 428 12 428 10 L 428 120 L 0 120 ZM 0 10 C 80 0 91.478 41.15 214 10 C 290 0 317.593 28.884 400 10 C 420 8 428 12 428 10 L 428 120 L 0 120 Z')`,
+          clipPath: WAVE_CLIP_PATH,
         }}
       />
 
       <ul className="relative flex w-full justify-between items-end px-2 z-10 h-full">
-        {NAV_CONFIG.slice(0, 2).map((item, idx) => {
-          const Icon = item.icon;
-          const isActive = activeIdx === idx;
-          return (
-            <li key={item.label} className="flex-1 flex flex-col items-center justify-end pb-3">
-              <button
-                onClick={() => router.push(item.path)}
-                className="flex flex-col items-center gap-1"
-              >
-                <Icon
-                  size={24}
-                  stroke={isActive ? 'var(--main-3)' : 'var(--gray-light)'}
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
-                <span
-                  className={`text-xs font-bold ${isActive ? 'text-[var(--main-3)]' : 'text-[var(--gray-light)]'}`}
-                >
-                  {item.label}
-                </span>
-              </button>
-            </li>
-          );
-        })}
+        {NAV_CONFIG.slice(0, 2).map((item, idx) => (
+          <NavItem
+            key={item.label}
+            item={item}
+            isActive={activeIdx === idx}
+            onClick={() => router.push(item.path)}
+          />
+        ))}
 
         {/* SOS 버튼 */}
-        <li className="relative mb-8 z-20 flex flex-col items-center transition-transform duration-300">
+        <li className="relative mb-6 z-20 flex flex-col items-center transition-transform duration-300">
           <button
             onClick={toggleDrawer}
             className={`w-[80px] h-[80px] rounded-full flex items-center justify-center transition-color duration-100 ${
@@ -89,29 +105,14 @@ export const BottomNav = () => {
           </button>
         </li>
 
-        {NAV_CONFIG.slice(2).map((item, idx) => {
-          const Icon = item.icon;
-          const isActive = activeIdx === idx + 2;
-          return (
-            <li key={item.label} className="flex-1 flex flex-col items-center justify-end pb-3">
-              <button
-                onClick={() => router.push(item.path)}
-                className="flex flex-col items-center gap-1"
-              >
-                <Icon
-                  size={24}
-                  stroke={isActive ? 'var(--main-3)' : 'var(--gray-light)'}
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
-                <span
-                  className={`text-xs font-bold ${isActive ? 'text-[var(--main-3)]' : 'text-[var(--gray-light)]'}`}
-                >
-                  {item.label}
-                </span>
-              </button>
-            </li>
-          );
-        })}
+        {NAV_CONFIG.slice(2).map((item, idx) => (
+          <NavItem
+            key={item.label}
+            item={item}
+            isActive={activeIdx === idx + 2}
+            onClick={() => router.push(item.path)}
+          />
+        ))}
       </ul>
     </nav>
   );
