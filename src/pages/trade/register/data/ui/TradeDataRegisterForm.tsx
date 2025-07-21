@@ -1,10 +1,8 @@
 import { useState } from 'react';
 
-import { ImageUp } from 'lucide-react';
-
 import { toRawPrice } from '@/shared/lib/formatPrice';
 import { InputField } from '@/shared/ui/InputField';
-import { BuyButton } from '@/shared/ui/RegisterButton';
+import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
 
 import { usePostTradeDataMutation } from '../model/mutations';
@@ -16,31 +14,25 @@ export function TradeDataRegisterForm() {
     capacity: '',
     price: '',
     comment: '',
-    file: '',
   });
 
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { mutate } = usePostTradeDataMutation();
 
   const handleSubmit = () => {
-    if (!form.title || !form.deadLine || !form.capacity || !form.price || !imageFile) return;
+    if (!form.title || !form.deadLine || !form.capacity || !form.price) return;
 
     setIsSubmitting(true);
-
-    const file = 'no-image';
 
     mutate(
       {
         title: form.title,
-        mobileCarrier: 'LGU+',
-        deadLine: new Date(form.deadLine).toISOString(),
+        mobileCarrier: 'UPLUS',
+        deadLine: form.deadLine,
         capacity: Number(form.capacity),
         price: toRawPrice(form.price),
         comment: form.comment,
-        file,
       },
       {
         onSettled: () => setIsSubmitting(false),
@@ -48,19 +40,7 @@ export function TradeDataRegisterForm() {
     );
   };
 
-  const isFormValid = form.title && form.deadLine && form.capacity && form.price && imageFile;
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const isFormValid = !!(form.title && form.deadLine && form.capacity && form.price);
 
   return (
     <form
@@ -70,25 +50,6 @@ export function TradeDataRegisterForm() {
         handleSubmit();
       }}
     >
-      <label className="relative w-[380px] h-[330px] border-2 border-[var(--gray-light)] shadow-sm rounded-2xl overflow-hidden cursor-pointer">
-        {imagePreview ? (
-          <img src={imagePreview} alt="이미지 미리보기" className="w-full h-full object-contain" />
-        ) : (
-          <div className="w-full h-full flex flex-col justify-center items-center gap-2">
-            <ImageUp size={30} color="var(--main-5)" />
-            <span className="text-[var(--gray-dark)]">이미지 파일 업로드</span>
-          </div>
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="absolute inset-0 opacity-0 cursor-pointer"
-        />
-      </label>
-      {imageFile && (
-        <p className="text-[16px] text-[var(--gray-mid)] mb-4">이미지 선택됨: {imageFile.name}</p>
-      )}
       <InputField
         label="데이터 상품명"
         isRequired
@@ -132,9 +93,9 @@ export function TradeDataRegisterForm() {
         placeholder="설명 (선택)"
       />
 
-      <BuyButton type="submit" loading={isSubmitting} disabled={!isFormValid}>
+      <RegisterButton type="submit" loading={isSubmitting} isFormValid={isFormValid}>
         등록하기
-      </BuyButton>
+      </RegisterButton>
     </form>
   );
 }
