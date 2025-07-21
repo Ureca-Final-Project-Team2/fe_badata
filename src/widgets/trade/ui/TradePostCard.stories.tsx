@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
+
 import TradePostCard from './TradePostCard';
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta: Meta<typeof TradePostCard> = {
   title: 'Widgets/Trade/TradePostCard',
@@ -132,18 +134,6 @@ export const ZeroLikes: Story = {
     partner: '새 브랜드',
     price: 5000,
     likeCount: 0,
-    isLiked: false,
-  },
-};
-
-export const WithCustomClass: Story = {
-  args: {
-    imageUrl: '/assets/trade-sample.png',
-    title: '커스텀 스타일',
-    partner: '커스텀 브랜드',
-    price: 8000,
-    likeCount: 12,
-    className: 'border-2 border-blue-500',
     isLiked: false,
   },
 };
