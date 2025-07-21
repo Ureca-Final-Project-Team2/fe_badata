@@ -10,16 +10,42 @@ export const getTradePostDetail = async (
   sellerName: string;
   post: TradeDetailPost;
 }> => {
-  const content = await axiosInstance
-    .get<TradeDetailResponse>(END_POINTS.TRADES.DETAIL(Number(postId)))
-    .then((res) => res.data);
-  const writer = content.user ?? content.seller;
-  if (!writer) {
-    throw new Error('No writer info in trade detail response');
+  try {
+    const response = await axiosInstance.get<TradeDetailResponse>(
+      END_POINTS.TRADES.DETAIL(Number(postId)),
+    );
+
+    console.log('API Response:', response);
+    console.log('Response data:', response.data);
+
+    // response.data가 undefined인 경우 response 자체를 사용
+    const content = response.data || response;
+
+    // content가 undefined인 경우 처리
+    if (!content) {
+      console.error('Content is undefined, full response:', response);
+      throw new Error('No content in trade detail response');
+    }
+
+    // post가 undefined인 경우 처리
+    if (!content.post) {
+      console.error('Post is undefined, content:', content);
+      throw new Error('No post info in trade detail response');
+    }
+
+    const writer = content.user ?? content.seller;
+    if (!writer) {
+      console.error('No writer found, content:', content);
+      throw new Error('No writer info in trade detail response');
+    }
+
+    return {
+      postUserId: writer.userId,
+      sellerName: writer.username,
+      post: content.post,
+    };
+  } catch (error) {
+    console.error('Error fetching trade post detail:', error);
+    throw error;
   }
-  return {
-    postUserId: writer.userId,
-    sellerName: writer.username,
-    post: content.post,
-  };
 };
