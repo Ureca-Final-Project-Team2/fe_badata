@@ -2,10 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 
+import { TradeDataRegisterForm } from '@/pages/trade/register/data/ui/DataRegisterForm';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
-
-import { TradeDataRegisterForm } from '../ui/TradeDataRegisterForm';
 
 export default function DataRegisterPage() {
   const router = useRouter();
