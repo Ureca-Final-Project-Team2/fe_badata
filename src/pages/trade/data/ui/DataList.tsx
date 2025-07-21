@@ -28,7 +28,7 @@ export function DataList({ sortOption, onSortClick }: DataListProps) {
   );
 
   return (
-    <section className="bg-white px-6">
+    <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
         <button onClick={onSortClick} className="flex flex-row gap-1 items-center font-semibold">
           <ArrowDownUp size={16} />

@@ -9,7 +9,7 @@ import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInp
 
 export default function TradePage() {
   return (
-    <BaseLayout header={<Header />} className="px-0" showBottomNav fab={<TradeFloatingButton />}>
+    <BaseLayout header={<Header />} showBottomNav fab={<TradeFloatingButton />}>
       <TradeFlatTab />
       <TradeSearchInput />
       <TradeDeadlineBanner />

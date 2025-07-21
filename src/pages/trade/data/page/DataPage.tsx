@@ -17,7 +17,6 @@ export default function DataPage() {
       <BaseLayout
         header={<Header />}
         showBottomNav={!isSortDrawerOpen}
-        className="px-0"
         fab={<TradeFloatingButton />}
       >
         <TradeFlatTab />

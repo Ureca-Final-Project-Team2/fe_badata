@@ -34,7 +34,7 @@ export function GifticonList({ sortOption, onSortClick, selectedCategory }: Gift
   );
 
   return (
-    <section className="bg-white px-6">
+    <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
         <button onClick={onSortClick} className="flex flex-row gap-1 items-center font-semibold">
           <ArrowDownUp size={16} />

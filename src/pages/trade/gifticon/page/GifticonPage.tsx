@@ -22,7 +22,6 @@ export default function GifticonPage() {
       <BaseLayout
         header={<Header />}
         showBottomNav={!isSortDrawerOpen}
-        className="px-0"
         fab={<TradeFloatingButton />}
       >
         <TradeFlatTab />
