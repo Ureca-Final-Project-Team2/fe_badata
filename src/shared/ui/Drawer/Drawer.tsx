@@ -18,7 +18,7 @@ export function Drawer({ isOpen, onClose, children, className }: DrawerProps) {
       onClick={onClose}
     >
       <div
-        className={cn('w-full max-w-[428px] rounded-t-[20px]', className)}
+        className={cn('w-full max-w-[428px] rounded-t-[20px] bg-[var(--black)]/60', className)}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
