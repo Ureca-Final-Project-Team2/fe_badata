@@ -13,7 +13,7 @@ export function TradeSearchInput() {
   };
 
   return (
-    <div className="mt-4 px-6">
+    <div className="my-4">
       <div onClick={handleSearchClick}>
         <InputField
           variant="address"
