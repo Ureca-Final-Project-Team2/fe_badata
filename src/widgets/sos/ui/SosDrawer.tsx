@@ -1,21 +1,20 @@
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { Drawer } from '@/shared/ui/Drawer';
 
-interface SosDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { useSosDrawer } from '../model/useSosDrawer';
 
-export function SosDrawer({ isOpen, onClose }: SosDrawerProps) {
+export function SosDrawer() {
+  const { isDrawerOpen, closeDrawer } = useSosDrawer();
+
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} variant="sos">
+    <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} className="bg-white">
       <div className="w-full flex flex-col items-center px-4 pt-6 pb-28">
-        <button className="w-full max-w-md rounded-xl bg-pink-100 text-pink-500 text-lg py-3 flex items-center justify-center gap-2 cursor-pointer">
+        <button className="w-full rounded-xl bg-[var(--main-1)] text-[var(--main-5)] text-lg py-3 flex items-center justify-center gap-2 cursor-pointer">
           <span className="text-xl">🚨</span>
           SOS 요청하기
         </button>
 
-        <div className="w-full max-w-md mt-6">
+        <div className="w-full mt-6">
           <h2 className="text-base font-semibold text-black mb-2">나의 데이터 서랍</h2>
 
           <DataUsageCard

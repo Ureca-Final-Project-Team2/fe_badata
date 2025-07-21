@@ -1,2 +1,1 @@
-export * from './ImageCard.stories';
-
+export * from './ImageCard';
