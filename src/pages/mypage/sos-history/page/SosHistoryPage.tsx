@@ -1,9 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/router';
+
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { PageHeader } from '@/shared/ui/Header';
-import { useRouter } from 'next/navigation';
 
 interface SosHistoryListProps {
   name: string;
@@ -14,6 +15,11 @@ interface SosHistoryListProps {
 
 export default function SosHistoryPage() {
   const router = useRouter();
+
+  const sosHistoryData = [
+    { name: '홍길동', date: '2024-06-01', amount: '2GB', status: '완료' },
+    { name: '김철수', date: '2024-06-02', amount: '1GB', status: '대기' },
+  ];
 
   return (
     <div className="min-h-screen bg-[var(--white)] flex flex-col items-center relative">
@@ -36,8 +42,21 @@ export default function SosHistoryPage() {
 
           <h2 className="text-[20px] font-semibold mt-8 mb-4">나의 SOS 요청 내역</h2>
           <ul className="flex flex-col gap-4">
-            <SosHistoryList name="박○○" date="2025.07.07" amount="100MB" status="요청 완료" />
-            <SosHistoryList name="김○○" date="2025.07.17" amount="100MB" status="요청 중" />
+            {sosHistoryData.length > 0 ? (
+              sosHistoryData.map((item, index) => (
+                <SosHistoryList 
+                  key={index}
+                  name={item.name} 
+                  date={item.date} 
+                  amount={item.amount} 
+                  status={item.status} 
+                />
+              ))
+            ) : (
+              <div className="text-center py-8 text-[var(--gray-mid)]">
+                SOS 요청 내역이 없습니다.
+              </div>
+            )}
           </ul>
         </div>
       </div>
