@@ -2,47 +2,58 @@ import { useEffect, useState } from 'react';
 
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 
-interface DragBottomSheetProps {
-  open: boolean;
-  onClose?: () => void;
-  children: React.ReactNode;
-  title?: string;
-}
+import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
 
-export const DragBottomSheet = ({ open, onClose, children }: DragBottomSheetProps) => {
+import type { DragBottomSheetProps } from '@/pages/rental/map/lib/types';
+
+export const DragBottomSheet = ({ open, onClose, children, storeList }: DragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
-  const expandedY = 60;
-  const middleY = windowHeight * 0.5;
-  const collapsedY = windowHeight * 0.7; // 70% 아래로
+
+  // windowHeight가 설정된 후에 계산하도록 수정
+  const expandedY = windowHeight > 0 ? 60 : 0;
+  const middleY = windowHeight > 0 ? windowHeight * 0.5 : 0;
+  const collapsedY = windowHeight > 0 ? windowHeight * 0.7 : 0; // 70% 아래로
 
   const y = useMotionValue(windowHeight);
   const controls = useAnimation();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') setWindowHeight(window.innerHeight);
+    if (typeof window !== 'undefined') {
+      const height = window.innerHeight;
+      setWindowHeight(height);
+      console.log('Window height set to:', height);
+    }
   }, []);
 
   useEffect(() => {
     if (windowHeight === 0) return;
-    controls.start({ y: open ? middleY : collapsedY });
+
+    const targetY = open ? middleY : collapsedY;
+    controls.start({ y: targetY });
   }, [open, controls, windowHeight, middleY, collapsedY]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
-    if (info.point.y < middleY) controls.start({ y: expandedY });
-    else if (info.point.y > middleY + 80) {
+    console.log('Drag ended at:', info.point.y, 'middleY:', middleY);
+
+    if (info.point.y < middleY) {
+      controls.start({ y: expandedY });
+    } else if (info.point.y > middleY + 80) {
       controls.start({ y: collapsedY });
       onClose?.();
-    } else controls.start({ y: middleY });
+    } else {
+      controls.start({ y: middleY });
+    }
   };
 
-  if (windowHeight === 0) return null;
+  if (windowHeight === 0) {
+    console.log('WindowHeight is 0, not rendering');
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 z-30 pointer-events-none">
       {/* overlay는 항상 전체 window 덮음 */}
-      {open && (
-        <div className="fixed inset-0 z-30 bg-black/30 pointer-events-auto" onClick={onClose} />
-      )}
+      {open && <div className="fixed inset-0 z-30 pointer-events-auto" onClick={onClose} />}
       <motion.div
         drag="y"
         dragConstraints={{ top: expandedY, bottom: collapsedY }}
@@ -53,17 +64,29 @@ export const DragBottomSheet = ({ open, onClose, children }: DragBottomSheetProp
         style={{
           y,
           height: `calc(${windowHeight}px - ${y.get()}px)`,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          position: 'fixed',
-          zIndex: 40,
-          pointerEvents: 'auto',
         }}
-        className="w-full max-w-[428px] mx-auto bg-white rounded-t-2xl border border-light-gray flex flex-col"
+        className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
       >
-        {/* ...시트 내부 UI */}
-        {children}
+        {/* Header 부분 */}
+        <div className="px-4 pt-4 pb-2">
+          <div className="w-12 h-1.5 bg-gray rounded-full mx-auto" />
+          <div className="font-small-bold text-[var(--gray-dark)]">
+            정렬 기준 (총 {storeList?.length || 0}개 매장)
+          </div>
+        </div>
+
+        {/* StoreCard 리스트 */}
+        <div className="flex-1 overflow-y-auto">
+          {storeList && storeList.length > 0 ? (
+            <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
+              {storeList.map((store, idx) => (
+                <StoreCard key={store.id || idx} {...store} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">{children}</div>
+          )}
+        </div>
       </motion.div>
     </div>
   );
