@@ -13,7 +13,7 @@ const initialAlarms = [
     id: 1,
     title: '국내 포켓와이파이 데이터 연장 15GB 30GB 60GB 120GB 240GB 30일 와이파이도시락 에...',
     price: '10,000원',
-    img: '/public/assets/empty-image.png', // 예시 이미지
+    img: '/public/assets/empty-image.png', 
   },
   {
     id: 2,
@@ -33,13 +33,10 @@ export default function RestockAlarmPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center relative">
-      {/* 헤더 고정 */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[428px] z-20">
         <PageHeader title="재입고 알림 내역" onBack={() => router.back()} />
       </div>
-      {/* 리스트 영역 */}
       <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-[56px] pb-[84px] px-4">
-        {/* 제목 */}
         <div className="flex items-center justify-between mt-6 mb-4">
           <span
             className="text-[20px] font-semibold"
@@ -55,36 +52,35 @@ export default function RestockAlarmPage() {
             전체 삭제
           </button>
         </div>
-        {/* 알림 리스트 */}
         <ul className="flex flex-col gap-4">
           {alarms.map((item) => (
-            <li key={item.id} className="flex gap-3 relative p-0 min-h-[72px]">
+            <li key={item.id} className="flex gap-3 p-0 min-h-[72px]">
               <div className="w-[72px] h-[72px] bg-[var(--gray-light)] rounded-md overflow-hidden flex-shrink-0">
                 <Image src={item.img} alt="상품 이미지" width={72} height={72} className="object-cover w-full h-full" />
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-between h-[72px]">
-                <div className="flex flex-col h-full justify-between min-h-[72px]">
-                  <div className="text-[16px] font-semibold leading-tight break-words whitespace-pre-line overflow-hidden max-h-[52px]" style={{ fontFamily: 'var(--font-body-semibold)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                <div className="flex items-start w-full">
+                  <div className="text-[16px] font-semibold leading-tight break-words whitespace-pre-line overflow-hidden max-h-[52px] flex-1" style={{ fontFamily: 'var(--font-body-semibold)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                     {item.title}
                   </div>
-                  <div className="flex items-end justify-start w-full mt-1">
-                    <span className="text-[16px] font-semibold text-[var(--main-5)]" style={{ fontFamily: 'var(--font-body-semibold)' }}>
-                      {item.price}
-                    </span>
-                  </div>
+                  <button
+                    className="text-[20px] text-[var(--gray-mid)] px-2 py-0 ml-2 flex-shrink-0 relative"
+                    style={{ top: '-8px' }}
+                    aria-label="삭제"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="flex items-end justify-start w-full mt-1">
+                  <span className="text-[16px] font-semibold text-[var(--main-5)]" style={{ fontFamily: 'var(--font-body-semibold)' }}>
+                    {item.price}
+                  </span>
                 </div>
               </div>
-              <button
-                className="absolute top-0 right-0 text-[20px] text-[var(--gray-mid)] px-2 py-1"
-                aria-label="삭제"
-                onClick={() => handleDelete(item.id)}
-              >
-                ×
-              </button>
             </li>
           ))}
         </ul>
-        {/* 안내 박스 */}
         <div className="mt-6 rounded-xl border-2 border-[var(--gray-light)] bg-white overflow-hidden">
           <div className="flex items-center gap-2 px-3 py-2" style={{ background: '#ececec' }}>
             <span className="text-[16px] font-semibold" style={{ fontFamily: 'var(--font-body-semibold)', color: 'var(--main-5)' }}>ⓘ</span>
@@ -102,7 +98,6 @@ export default function RestockAlarmPage() {
           </div>
         </div>
       </div>
-      {/* 하단바 고정 */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[428px] z-20">
         <BottomNav />
       </div>

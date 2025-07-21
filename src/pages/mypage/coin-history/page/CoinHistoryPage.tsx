@@ -1,8 +1,9 @@
 'use client';
 
+import Image from 'next/image';
+
 import { useUserCoinQuery } from '@/entities/coin/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
-import Image from 'next/image';
 
 export default function CoinHistoryPage() {
   const { data, isLoading, isError } = useUserCoinQuery();
