@@ -12,7 +12,7 @@ export function RecentSearchBadge({ label, onDelete, onClick }: RecentSearchBadg
   return (
     <Badge
       size="xs"
-      color="main1Solid"
+      color="main1"
       className="flex items-center gap-1 cursor-pointer"
       onClick={() => onClick?.(label)}
     >
@@ -27,7 +27,7 @@ export function RecentSearchBadge({ label, onDelete, onClick }: RecentSearchBadg
         }}
         aria-label={`${label} 삭제`}
       >
-        <X className="w-4 h-4 cursor-pointer hover:text-[var(--main-3)]" />
+        <X className="w-4 h-4 cursor-pointer hover:text-[var(--main-2)]" />
       </button>
     </Badge>
   );
