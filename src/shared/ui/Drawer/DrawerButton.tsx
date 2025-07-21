@@ -14,7 +14,7 @@ export function DrawerButton({ icon, children, onClick, variant = 'default' }: D
     <button
       onClick={onClick}
       className={cn(
-        'relative w-full h-[56px] px-4 flex items-center justify-center gap-3 text-[16px] font-medium',
+        'relative w-full h-[56px] flex items-center justify-center gap-3 text-[16px] font-medium',
         'bg-[var(--gray-mid)] text-white',
         'first:rounded-t-[12px] last:rounded-b-[12px]',
         variant === 'point' && 'text-[var(--main-5)]',

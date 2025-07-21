@@ -19,7 +19,7 @@ export function FilterDrawer({ isOpen, onClose, children, className }: FilterDra
     >
       <div
         className={cn(
-          'w-full max-w-md bg-white rounded-t-[20px] pt-2 px-4 pb-6',
+          'w-full max-w-[428px] bg-white rounded-t-[20px] pt-2 px-4 pb-6',
           'divide-y divide-[var(--gray-light)]',
           className,
         )}
