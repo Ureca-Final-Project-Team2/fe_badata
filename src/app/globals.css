@@ -243,7 +243,7 @@ body {
   }
   .font-label-regular {
     font-family: var(--font-sans);
-    font-size: var(--font-label-size);
+    font-size: var(--font-label-regular);
     font-weight: var(--font-regular);
   }
   /* small */
