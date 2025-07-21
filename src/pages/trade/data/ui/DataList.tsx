@@ -5,26 +5,25 @@ import { SortButton } from '@/shared/ui/SortButton';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
 
-interface GifticonListProps {
+interface DataListProps {
   items: AllPost[];
   isLoading: boolean;
   sortLabel: string;
   onSortClick: () => void;
 }
 
-export function GifticonList({ items, isLoading, sortLabel, onSortClick }: GifticonListProps) {
+export function DataList({ items, isLoading, sortLabel, onSortClick }: DataListProps) {
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <div className="py-4 text-center text-[var(--black)]">로딩 중...</div>;
   }
-
   if (items.length === 0) {
-    return <div>쿠폰 게시물이 없습니다.</div>;
+    return <div className="py-4 text-center text-[var(--black)]">게시물이 없습니다.</div>;
   }
 
   return (
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
-        <SortButton onClick={onSortClick} label={sortLabel} />
+        <SortButton label={sortLabel} onClick={onSortClick} />
 
         <div className="flex flex-row gap-1 items-center font-semibold">
           조건
@@ -32,11 +31,10 @@ export function GifticonList({ items, isLoading, sortLabel, onSortClick }: Gifti
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 py-4">
+      <div className="flex flex-col gap-4">
         {items.map((item) => (
           <Product
             key={item.id}
-            brand={item.partner}
             name={item.title}
             price={item.price}
             imageSrc={item.postImage}

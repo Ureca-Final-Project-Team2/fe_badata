@@ -1,4 +1,5 @@
 import { Badge } from './Badge';
+import { RecentSearchBadge } from './RecentSearchBadge';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
@@ -50,6 +51,11 @@ export const AllVariants: Story = {
         <Badge color="main3">정렬</Badge>
         <Badge color="grayLight">정렬</Badge>
         <Badge color="grayDarkSolid">정렬</Badge>
+        <RecentSearchBadge
+          label="200MB"
+          onDelete={() => alert('삭제!')}
+          onClick={() => alert('클릭!')}
+        />
       </div>
     </div>
   ),
