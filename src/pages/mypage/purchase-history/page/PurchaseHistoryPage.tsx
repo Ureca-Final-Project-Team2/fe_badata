@@ -30,7 +30,6 @@ const completedPosts = [
     isLiked: false,
     hasDday: false,
   },
-  // 필요시 hasDday: true인 더미 데이터 추가 가능
 ];
 
 const profile = {

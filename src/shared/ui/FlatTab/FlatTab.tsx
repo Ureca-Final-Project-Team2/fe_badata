@@ -1,7 +1,9 @@
-import { cn } from '@/shared/lib/cn';
-import type { FlatTabItem, FlatTabProps } from '@/shared/ui/FlatTab/types';
-import { useFlatTab } from '@/shared/ui/FlatTab/useFlatTab';
 import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
+
+import { cn } from '@/shared/lib/cn';
+import { useFlatTab } from '@/shared/ui/FlatTab/useFlatTab';
+
+import type { FlatTabItem, FlatTabProps } from '@/shared/ui/FlatTab/types';
 
 interface FlatTabButtonProps {
   label: string;
@@ -32,7 +34,7 @@ const FlatTabButton = ({ label, isActive, disabled, onClick, buttonRef }: FlatTa
 export const FlatTab = forwardRef<HTMLDivElement, FlatTabProps>(
   ({ className, items, defaultValue, value, onValueChange, ...props }, ref) => {
     const { currentValue, activeItem, handleValueChange } = useFlatTab(
-      items,
+      items, 
       value,
       defaultValue,
       onValueChange,

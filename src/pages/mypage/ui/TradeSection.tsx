@@ -8,7 +8,7 @@ export const TradeSection = () => (
     <h2 className="mb-2 text-[20px] font-sans font-semibold">나의 거래</h2>
     <section className="bg-white rounded-xl p-4 shadow-sm">
       <div className="grid grid-cols-3 gap-4 text-center">
-        <Link href="#" className="flex flex-col items-center justify-end gap-1 min-h-[60px] hover:bg-[--main-3] rounded-xl transition cursor-pointer">
+        <Link href="/mypage/sales-history" className="flex flex-col items-center justify-end gap-1 min-h-[60px] hover:bg-[--main-3] rounded-xl transition cursor-pointer">
           <Image
             src={ICONS.MYPAGE.TRADE_CELL}
             alt="판매 내역"
