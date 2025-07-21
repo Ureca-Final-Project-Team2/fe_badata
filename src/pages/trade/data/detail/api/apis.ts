@@ -18,16 +18,13 @@ export const getTradePostDetail = async (
     console.log('API Response:', response);
     console.log('Response data:', response.data);
 
-    // response.data가 undefined인 경우 response 자체를 사용
     const content = response.data || response;
 
-    // content가 undefined인 경우 처리
     if (!content) {
       console.error('Content is undefined, full response:', response);
       throw new Error('No content in trade detail response');
     }
 
-    // post가 undefined인 경우 처리
     if (!content.post) {
       console.error('Post is undefined, content:', content);
       throw new Error('No post info in trade detail response');
