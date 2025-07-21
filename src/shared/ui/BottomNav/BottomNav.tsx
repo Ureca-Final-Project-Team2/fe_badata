@@ -1,96 +1,119 @@
 'use client';
 
-import { useState } from 'react';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { FileText, Home, Repeat, User } from 'lucide-react';
+import { Home, ShoppingCart, User, Wifi, X } from 'lucide-react';
 
-import { ICONS } from '@/shared/config/iconPath';
+import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 
-import type { LucideIcon } from 'lucide-react';
+import { WAVE_CLIP_PATH } from './constants';
 
-const navItems = [
-  { label: '홈', icon: Home },
-  { label: '거래', icon: FileText },
-  { label: '대여', icon: Repeat },
-  { label: '마이', icon: User },
+const NAV_CONFIG = [
+  { label: '홈', path: '/', icon: Home },
+  { label: '거래', path: '/trade', icon: ShoppingCart },
+  { label: '대여', path: '/rental', icon: Wifi },
+  { label: '마이', path: '/mypage', icon: User },
 ];
 
-const MAIN_COLOR = 'var(--main-5)';
-const GRAY_COLOR = 'var(--gray-dark)';
-
-interface BottomNavProps {
-  onSosClick?: () => void;
-  sosActive?: boolean;
-}
-
 const NavItem = ({
-  label,
-  Icon,
-  active,
+  item,
+  isActive,
   onClick,
 }: {
-  label: string;
-  Icon: LucideIcon;
-  active: boolean;
+  item: (typeof NAV_CONFIG)[0];
+  isActive: boolean;
   onClick: () => void;
-}) => (
-  <button
-    className="flex flex-col items-center justify-center gap-1 text-sm w-[60px]"
-    onClick={onClick}
-  >
-    <Icon size={20} color={active ? MAIN_COLOR : GRAY_COLOR} />
-    <span className="text-[12px] font-bold" style={{ color: active ? MAIN_COLOR : GRAY_COLOR }}>
-      {label}
-    </span>
-  </button>
-);
+}) => {
+  const Icon = item.icon;
+  return (
+    <li className="flex-1 flex flex-col items-center justify-end pb-3">
+      <button onClick={onClick} className="flex flex-col items-center gap-1">
+        <Icon
+          size={24}
+          stroke={isActive ? 'var(--main-3)' : 'var(--gray-light)'}
+          strokeWidth={isActive ? 2.5 : 2}
+        />
+        <span
+          className={`text-xs font-bold ${isActive ? 'text-[var(--main-3)]' : 'text-[var(--gray-light)]'}`}
+        >
+          {item.label}
+        </span>
+      </button>
+    </li>
+  );
+};
 
-export const BottomNav = ({ onSosClick, sosActive = false }: BottomNavProps) => {
-  const [activeIdx, setActiveIdx] = useState(0);
+export const BottomNav = () => {
+  const { isDrawerOpen, toggleDrawer } = useSosDrawer();
+  const pathname = usePathname() ?? '';
+  const router = useRouter();
+
+  const getActiveIdx = () => {
+    return NAV_CONFIG.findIndex((item) => {
+      if (item.path === '/') {
+        return pathname === '/';
+      }
+      return pathname.startsWith(item.path);
+    });
+  };
+  const activeIdx = getActiveIdx();
 
   return (
-    <nav className="bottom-0 inset-x-0 h-[70px] bg-white border-t border-gray-200 flex justify-around items-center">
-      {navItems.slice(0, 2).map(({ label, icon: Icon }, idx) => (
-        <NavItem
-          key={label}
-          label={label}
-          Icon={Icon}
-          active={activeIdx === idx && !sosActive}
-          onClick={() => setActiveIdx(idx)}
-        />
-      ))}
+    <nav className="relative bottom-0 inset-x-0 h-[80px]">
+      {/* 파도 형태 */}
+      <div
+        className="absolute bottom-0 left-0 w-full h-[80px] bg-[var(--main-5)]"
+        style={{
+          clipPath: WAVE_CLIP_PATH,
+        }}
+      />
 
-      <div className="relative -mt-8 transition-transform duration-300">
-        <button
-          className={`w-[67px] h-[67px] rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.25)] flex flex-col items-center justify-center transition-all duration-200 ${sosActive ? 'bg-black scale-100' : 'bg-white scale-100'}`}
-          onClick={onSosClick}
-        >
-          <div className="flex flex-col items-center justify-center transition-opacity duration-200">
-            {sosActive ? (
-              <>
-                <span className="text-white text-[32px] leading-none">×</span>
-                <span className="text-white text-[14px]">닫기</span>
-              </>
+      <ul className="relative flex w-full justify-between items-end px-2 z-10 h-full">
+        {NAV_CONFIG.slice(0, 2).map((item, idx) => (
+          <NavItem
+            key={item.label}
+            item={item}
+            isActive={activeIdx === idx}
+            onClick={() => router.push(item.path)}
+          />
+        ))}
+
+        {/* SOS 버튼 */}
+        <li className="relative mb-6 z-20 flex flex-col items-center transition-transform duration-300">
+          <button
+            onClick={toggleDrawer}
+            className={`w-[80px] h-[80px] rounded-full flex items-center justify-center transition-color duration-100 ${
+              isDrawerOpen ? 'bg-black' : 'none'
+            }`}
+          >
+            {isDrawerOpen ? (
+              <div className="flex flex-col items-center text-white justify-center transition-opacity duration-200">
+                <X />
+                <span className="text-[14px] font-semibold">닫기</span>
+              </div>
             ) : (
-              <img
-                src={ICONS.LOGO.SOS}
-                alt="SOS 아이콘"
-                className="w-[40px] h-[40px] transition-transform duration-300"
+              <Image
+                src="/images/sos-button.svg"
+                alt="SOS"
+                width={80}
+                height={80}
+                draggable={false}
+                priority
               />
             )}
-          </div>
-        </button>
-      </div>
+          </button>
+        </li>
 
-      {navItems.slice(2).map(({ label, icon: Icon }, idx) => (
-        <NavItem
-          key={label}
-          label={label}
-          Icon={Icon}
-          active={activeIdx === idx + 2 && !sosActive}
-          onClick={() => setActiveIdx(idx + 2)}
-        />
-      ))}
+        {NAV_CONFIG.slice(2).map((item, idx) => (
+          <NavItem
+            key={item.label}
+            item={item}
+            isActive={activeIdx === idx + 2}
+            onClick={() => router.push(item.path)}
+          />
+        ))}
+      </ul>
     </nav>
   );
 };

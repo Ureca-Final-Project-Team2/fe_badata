@@ -12,8 +12,8 @@ const registerButtonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-[var(--main-5)] text-white hover:bg-[var(--main-5)]',
-        secondary: 'bg-[var(--main-5)] text-white hover:bg-[var(--main-5)]',
+        primary: 'bg-[var(--main-5)] text-white hover:bg-[var(--main-4)]',
+        secondary: 'bg-[var(--main-5)] text-white hover:bg-[var(--main-4)]',
         outline:
           'bg-white text-[var(--main-5)] border border-[var(--main-5)] hover:bg-[var(--main-5)] hover:text-white',
         ghost: 'bg-transparent text-white hover:bg-[var(--gray)]',
@@ -24,10 +24,15 @@ const registerButtonVariants = cva(
         lg: 'w-[380px] h-[70px]',
         lg_thin: 'w-[380px] h-[55px]',
       },
+      state: {
+        active: '',
+        inactive: 'bg-[var(--gray)] text-white cursor-not-allowed border-[var(--gray)]',
+      },
     },
     defaultVariants: {
       variant: 'primary',
       size: 'lg',
+      state: 'inactive',
     },
   },
 );
@@ -45,15 +50,38 @@ export interface RegisterButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof registerButtonVariants> {
   loading?: boolean;
+  isFormValid?: boolean;
 }
 
 export const RegisterButton = forwardRef<HTMLButtonElement, RegisterButtonProps>(
-  ({ className, variant, size, loading = false, children, disabled, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      loading = false,
+      isFormValid = false,
+      children,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
+    const isDisabled = disabled || loading || !isFormValid;
+    const buttonState = isFormValid ? 'active' : 'inactive';
+
     return (
       <button
-        className={cn(registerButtonVariants({ variant, size }), className)}
+        className={cn(
+          registerButtonVariants({
+            variant: isFormValid ? variant : undefined,
+            size,
+            state: buttonState,
+          }),
+          className,
+        )}
         ref={ref}
-        disabled={disabled || loading}
+        disabled={isDisabled}
         {...props}
       >
         {loading ? <LoadingSpinner /> : children}
