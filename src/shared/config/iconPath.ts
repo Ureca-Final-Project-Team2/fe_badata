@@ -1,17 +1,45 @@
+// ETC
+import backIcon from '@/shared/icons/back-icon.png';
+// MYPAGE
+import coin from '@/shared/icons/coin.png';
+import filterIcon from '@/shared/icons/filter-icon.png';
+import likeActive from '@/shared/icons/like-active.png';
+import likeNonactive from '@/shared/icons/like-nonactive.png';
+import shellGray from '@/shared/icons/seashell_gray.png';
+import shell from '@/shared/icons/shell.png';
+import notification from '@/shared/icons/notification.png';
+import rentalLike from '@/shared/icons/rental-like-shop.png';
+import rentalList from '@/shared/icons/rental-list.png';
+import rentalNotification from '@/shared/icons/rental-notification.png';
+import mySos from '@/shared/icons/sos-siren.png';
+import tradeBuy from '@/shared/icons/trade-buy-list.png';
+import tradeCell from '@/shared/icons/trade-cell-list.png';
+import tradeLike from '@/shared/icons/trade-like-list.png';
+
 export const ICONS = {
   LOGO: {
-    BADATA: '/icons/logo-badata.svg',
-    SOS: '/icons/logo-sos.svg',
+    BADATA: '/assets/logo-badata.png',
+    SOS: '/assets/logo-sos.svg',
+    DETAIL: '/assets/trade-detail.jpg',
+    SAMPLE: '/assets/trade-sample.png',
+  },
+  ETC: {
+    LIKE_ACTIVE: likeActive,
+    LIKE_NONACTIVE: likeNonactive,
+    BACKICON: backIcon,
+    FILTERICON: filterIcon,
+    SHELL: shell,
+    SHELL_GRAY: shellGray,
   },
   MYPAGE: {
-    COIN: '/icons/coin.png',
-    TRADE_CEll: '/icons/trade-cell-list.png',
-    TRADE_BUY: '/icons/trade-buy-list.png',
-    TRADE_LIKE: '/icons/trade-like-list.png',
-    RENTAL_LIST: '/icons/rental-list.png',
-    RENTAL_LIKE: '/icons/rental-like-shop.png',
-    RENTAL_NOTIFICATION: '/icons/rental-notification.png',
-    MYSOS: '/icons/sos-siren.png',
-    NOTIFICATION: '/icons/notification.png',
+    COIN: coin,
+    TRADE_CELL: tradeCell,
+    TRADE_BUY: tradeBuy,
+    TRADE_LIKE: tradeLike,
+    RENTAL_LIST: rentalList,
+    RENTAL_LIKE: rentalLike,
+    RENTAL_NOTIFICATION: rentalNotification,
+    MYSOS: mySos,
+    NOTIFICATION: notification,
   },
 };

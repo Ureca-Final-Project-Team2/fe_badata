@@ -1,35 +1,27 @@
-'use client';
-
-import { Heart } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-import { useLikeHooks } from '@/shared/model/useLikeHooks';
+import { ICONS } from '@/shared/config/iconPath';
+import Image from 'next/image';
+import React from 'react';
 
 interface LikeButtonProps {
-  defaultLiked?: boolean;
-  onChange?: (liked: boolean) => void;
+  active?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export function LikeButton({ defaultLiked = false, onChange }: LikeButtonProps) {
-  const { liked, toggle } = useLikeHooks({ defaultLiked, onChange });
-
+export function LikeButton({ active = false, onClick }: LikeButtonProps) {
   return (
-    <Button
+    <button
       type="button"
-      onClick={toggle}
-      size="icon"
-      variant="ghost"
-      className={`
-        w-[26px] h-[26px] rounded-full flex items-center justify-center p-0 
-        bg-[var(--gray)] text-inherit hover:bg-[var(--gray)] hover:text-inherit
-      `}
+      onClick={onClick}
+      className="w-[26px] h-[26px] p-0 border-none rounded-full flex items-center justify-center"
+      style={{ minWidth: 0, minHeight: 0 }}
     >
-      <Heart
-        className="w-4 h-4"
-        fill={liked ? 'var(--main-5)' : 'none'}
-        stroke={liked ? 'var(--main-5)' : 'white'}
-        strokeWidth={2}
+      <Image
+        src={active ? ICONS.ETC.LIKE_ACTIVE : ICONS.ETC.LIKE_NONACTIVE}
+        alt={active ? '좋아요 활성' : '좋아요 비활성'}
+        width={20}
+        height={20}
+        draggable={false}
       />
-    </Button>
+    </button>
   );
 }

@@ -1,8 +1,6 @@
+import { Switch } from '@/components/ui/switch';
+import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-
-import { Switch } from '@radix-ui/react-switch';
-
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta: Meta<typeof Switch> = {
   title: 'Components/Switch',
@@ -11,12 +9,12 @@ const meta: Meta<typeof Switch> = {
 };
 
 export default meta;
+
 type Story = StoryObj<typeof Switch>;
 
 export const Default: Story = {
   render: () => {
     const [checked, setChecked] = useState(false);
-
     return <Switch checked={checked} onCheckedChange={setChecked} />;
   },
 };
@@ -24,7 +22,8 @@ export const Default: Story = {
 export const WithLabels: Story = {
   render: () => {
     const [checked, setChecked] = useState(false);
-
-    return <Switch checked={checked} onCheckedChange={setChecked} />;
+    return (
+      <Switch checked={checked} onCheckedChange={setChecked} labels={['판매중', '판매완료']} />
+    );
   },
 };
