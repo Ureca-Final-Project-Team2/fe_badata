@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { TradeGifticonRegisterForm } from '@/pages/trade/register/gifticon/ui/TradeGifticonRegisterForm';
+import { TradeGifticonRegisterForm } from '@/pages/trade/register/gifticon/ui/GifticonRegisterForm';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
