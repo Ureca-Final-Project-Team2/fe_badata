@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { Switch } from '@/components/ui/switch';
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { PageHeader } from '@/shared/ui/Header';
-import { Switch } from '@/shared/ui/Switch';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 export default function AlarmSettingPage() {
   const router = useRouter();
