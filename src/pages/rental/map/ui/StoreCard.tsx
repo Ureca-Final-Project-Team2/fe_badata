@@ -3,17 +3,7 @@
 import { ImageBox } from '@/shared/ui/ImageBox';
 import { LikeButtonCircle } from '@/shared/ui/LikeButtonCircle/LikeButtonCircle';
 
-import type { Store } from '@/pages/rental/map/lib/types';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
-
-interface StoreCardProps {
-  store: Store;
-  storeDetail: StoreDetail;
-  deviceCount: number;
-  onLikeClick?: () => void;
-  isLiked?: boolean;
-  className?: string;
-}
+import type { StoreCardProps } from '@/pages/rental/map/lib/types';
 
 // 유틸 함수는 컴포넌트 바깥으로 분리
 const formatTime = (time: string) => time.substring(0, 5);
