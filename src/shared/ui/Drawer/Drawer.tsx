@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { createPortal } from 'react-dom';
+
 import { cn } from '@/shared/lib/cn';
 
 type DrawerVariant = 'default' | 'filter' | 'sos';
@@ -24,7 +26,7 @@ export function Drawer({ isOpen, onClose, children, variant = 'default' }: Drawe
   const paddingStyle = isFilter ? 'pt-2 px-4 pb-6' : 'p-4';
   const dividerStyle = isFilter ? 'divide-y divide-[var(--gray-light)]' : '';
 
-  return (
+  const drawerContent = (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--black)]/50"
       onClick={onClose}
@@ -37,4 +39,9 @@ export function Drawer({ isOpen, onClose, children, variant = 'default' }: Drawe
       </div>
     </div>
   );
+
+  if (typeof window !== 'undefined') {
+    return createPortal(drawerContent, document.body);
+  }
+  return null;
 }
