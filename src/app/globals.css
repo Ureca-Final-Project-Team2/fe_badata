@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
+@import '../shared/styles/custom-scrollbar.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -230,7 +231,7 @@ body {
     font-weight: var(--font-regular);
   }
   /* label */
-  .font-lable-semibold {
+  .font-label-semibold {
     font-family: var(--font-sans);
     font-size: var(--font-label-size);
     font-weight: var(--font-semibold);
