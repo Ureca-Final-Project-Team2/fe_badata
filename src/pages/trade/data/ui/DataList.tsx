@@ -1,6 +1,7 @@
-import { ArrowDownUp, ListFilter } from 'lucide-react';
+import { ListFilter } from 'lucide-react';
 
 import { Product } from '@/shared/ui/Product';
+import { SortButton } from '@/shared/ui/SortButton';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
 
@@ -22,10 +23,7 @@ export function DataList({ items, isLoading, sortLabel, onSortClick }: DataListP
   return (
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
-        <button onClick={onSortClick} className="flex flex-row gap-1 items-center font-semibold">
-          <ArrowDownUp size={16} />
-          {sortLabel}
-        </button>
+        <SortButton label={sortLabel} onClick={onSortClick} />
 
         <div className="flex flex-row gap-1 items-center font-semibold">
           조건
