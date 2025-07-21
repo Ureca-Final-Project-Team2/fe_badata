@@ -34,7 +34,7 @@ export const BottomNav = () => {
       <div
         className="absolute bottom-0 left-0 w-full h-[80px] bg-[var(--main-5)]"
         style={{
-          clipPath: `path('M 0 10 C 80 0 120 20 214 10 C 290 0 320 20 400 10 C 420 8 428 12 428 10 L 428 120 L 0 120 Z')`,
+          clipPath: `path('M 0 10 C 80 0 106.41 29.417 214 10 C 290 0 317.593 28.884 400 10 C 420 8 428 12 428 10 L 428 120 L 0 120 ZM 0 10 C 80 0 91.478 41.15 214 10 C 290 0 317.593 28.884 400 10 C 420 8 428 12 428 10 L 428 120 L 0 120 Z')`,
         }}
       />
 
