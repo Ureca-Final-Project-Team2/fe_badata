@@ -10,11 +10,10 @@ export default function SosHistoryPage() {
 
   return (
     <div className="min-h-screen bg-[var(--white)] flex flex-col items-center">
-      <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
+      <div className="w-full max-w-[428px] flex flex-col justify-between flex-0">
         <PageHeader title="SOS 요청 내역" onBack={() => router.back()} />
 
-        <div className="px-4 pt-0 pb-24">
-          {/* 데이터 요금 */}
+        <div className="px-4 pt-4 pb-24">
           <h2 className="text-[20px] font-semibold mb-4">나의 데이터 요금</h2>
           <DataUsageCard
             phoneMasked="010-1**4-5**8"
@@ -28,7 +27,6 @@ export default function SosHistoryPage() {
             remainingValue={5}
           />
 
-          {/* SOS 요청 내역 */}
           <h2 className="text-[20px] font-semibold mt-8 mb-4">나의 SOS 요청 내역</h2>
           <ul className="flex flex-col gap-4">
             <SosHistoryList name="박○○" date="2025.07.07" amount="100MB" status="요청 완료" />
