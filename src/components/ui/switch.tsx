@@ -1,7 +1,8 @@
 'use client';
 
-import { cn } from '@/shared/lib/cn';
 import * as RadixSwitch from '@radix-ui/react-switch';
+
+import { cn } from '@/shared/lib/cn';
 
 interface CustomSwitchProps {
   checked: boolean;
@@ -14,36 +15,47 @@ export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwi
 
   if (hasLabels) {
     return (
-      <div className="relative w-[120px] h-[30px] rounded-full bg-[var(--gray)] flex overflow-hidden">
-        <div
+      <div className="relative w-[120px] h-[30px]">
+        <RadixSwitch.Root
+          checked={checked}
+          onCheckedChange={onCheckedChange}
           className={cn(
-            'absolute top-0 left-0 w-1/2 h-full rounded-full transition-transform duration-200 ease-in-out',
-            checked ? 'translate-x-full bg-[var(--main-5)]' : 'translate-x-0 bg-[var(--main-5)]',
+            'relative z-10 w-full h-full rounded-full appearance-none outline-none cursor-pointer transition-colors',
+            'bg-[var(--gray)]',
           )}
-        />
-        <button
-          onClick={() => onCheckedChange(false)}
-          className={cn(
-            'flex-1 flex items-center justify-center z-10 text-[14px] font-semibold transition-colors',
-            !checked ? 'text-white' : 'text-[var(--black)]',
-          )}
+          {...props}
         >
-          {labels?.[0]}
-        </button>
-        <button
-          onClick={() => onCheckedChange(true)}
-          className={cn(
-            'flex-1 flex items-center justify-center z-10 text-[14px] font-semibold transition-colors',
-            checked ? 'text-white' : 'text-[var(--black)]',
-          )}
-        >
-          {labels?.[1]}
-        </button>
+          <div
+            className={cn(
+              'absolute top-0 left-0 h-full w-1/2 rounded-full transition-transform duration-200 ease-in-out',
+              'bg-[var(--main-5)]',
+              checked ? 'translate-x-full' : 'translate-x-0',
+            )}
+          />
+          
+          <div className="relative z-20 flex w-full h-full text-sm font-semibold">
+            <span
+              className={cn(
+                'flex-1 flex items-center justify-center transition-colors',
+                !checked ? 'text-white' : 'text-[var(--black)]',
+              )}
+            >
+              {labels?.[0]}
+            </span>
+            <span
+              className={cn(
+                'flex-1 flex items-center justify-center transition-colors',
+                checked ? 'text-white' : 'text-[var(--black)]',
+              )}
+            >
+              {labels?.[1]}
+            </span>
+          </div>
+        </RadixSwitch.Root>
       </div>
     );
   }
 
-  // 기본 토글 스위치
   return (
     <div className="relative w-[50px] h-[26px]">
       <RadixSwitch.Root

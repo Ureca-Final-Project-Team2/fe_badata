@@ -11,7 +11,7 @@ const categories = [
 
 export function GifticonFilter({ selectedCategory, onSelectCategory }: GifticonFilterProps) {
   return (
-    <div className="flex flex-col bg-white">
+    <div className="flex flex-col bg-white mb-4">
       {categories.map((row, rowIdx) => (
         <div key={rowIdx} className="flex flex-row">
           {row.map((cat) => (

@@ -1,20 +1,25 @@
-import React from 'react';
-
 import { LikeButton } from '@/shared/ui/LikeButton/LikeButton';
 
 interface LikeButtonCircleProps {
   active?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  size?: 'sm' | 'md';
+  shadow?: boolean;
 }
 
-export function LikeButtonCircle({ active = false, onClick, className }: LikeButtonCircleProps) {
+export function LikeButtonCircle({
+  active = false,
+  onClick,
+  className,
+  size = 'md',
+  shadow = false,
+}: LikeButtonCircleProps) {
   return (
     <div
-      className={`w-14 h-14 rounded-full bg-white flex items-center justify-center ${className ?? ''}`}
-      style={{ width: 56, height: 56, boxShadow: '0px 4px 4px rgba(0,0,0,0.25)' }}
+      className={`rounded-full bg-white flex items-center justify-center ${className ?? ''} ${size === 'sm' ? 'w-6 h-6' : 'w-14 h-14'}${shadow ? ' shadow-lg' : ''}`}
     >
-      <LikeButton active={active} onClick={onClick} size={50} />
+      <LikeButton active={active} onClick={onClick} size={size} />
     </div>
   );
 }

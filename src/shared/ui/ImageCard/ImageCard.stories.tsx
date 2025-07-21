@@ -1,5 +1,6 @@
+import { ImageCard } from './ImageCard';
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { ImageCard } from './IMageCard';
 
 const meta: Meta<typeof ImageCard> = {
   title: 'Components/ImageCard',
@@ -12,6 +13,7 @@ const meta: Meta<typeof ImageCard> = {
   },
 };
 
+export default meta;
 type Story = StoryObj<typeof ImageCard>;
 
 export const Default: Story = {};

@@ -1,10 +1,9 @@
-import React, { forwardRef } from 'react';
-
 import { cn } from '@/shared/lib/cn';
 import { cva } from 'class-variance-authority';
+import React, { forwardRef } from 'react';
 
 const cardWrapperVariants = cva(
-  'w-[380px] h-[225px] rounded-[20px] bg-white p-4 flex flex-col justify-between shadow-sm',
+  'w-full h-[225px] rounded-[20px] bg-white p-4 flex flex-col justify-between shadow-sm',
 );
 
 export interface DataUsageCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -54,12 +53,15 @@ export const DataUsageCard = forwardRef<HTMLDivElement, DataUsageCardProps>(
             <p className="text-black font-semibold text-[16px] leading-tight">{phoneMasked}</p>
             <p className="text-[12px] text-[var(--gray-mid)] mt-[2px]">{planName}</p>
           </div>
-          <button
-            className="px-3 py-1 rounded-full bg-[var(--main-5)] text-white text-[12px] font-medium"
-            type="button"
-          >
-            {chargeLabel}
-          </button>
+
+          <div className="w-[86px]">
+            <button
+              className="w-full py-1 rounded-full bg-[var(--main-5)] text-white text-[16px] font-title-regular text-center"
+              type="button"
+            >
+              {chargeLabel}
+            </button>
+          </div>
         </div>
 
         <div className="border-t border-[var(--gray-light)] my-3" />
