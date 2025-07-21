@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from 'react';
 
-import { renderStoreMarkers } from '@/pages/rental/map/lib/renderStoreMarkers';
 import { useFetchStoresHooks } from '@/pages/rental/map/model/useFetchStoresHooks';
 import { useKakaoMapHooks } from '@/pages/rental/map/model/useKakaoMapHooks';
+import { DragBottomSheet } from '@/pages/rental/map/ui/DragBottomSheet';
+import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
+
+import { renderStoreMarkers } from '../lib/renderStoreMarkers';
 
 import type { DateRange } from 'react-day-picker';
 
@@ -43,6 +46,29 @@ const RentalPage = () => {
       }
     >
       <div ref={mapRef} className="w-full h-full" />
+      {/* DragBottomSheet Drawer */}
+      <DragBottomSheet open={false}>
+        <div className="flex flex-col gap-3 px-4 pt-3 pb-6 bg-[#e6f6fd] rounded-t-2xl">
+          {stores.stores?.map((store) => (
+            <StoreCard
+              key={store.id}
+              store={store}
+              storeDetail={{
+                storeId: store.id,
+                imageUrl: '',
+                detailAddress: '서울 강남구 대치동',
+                phoneNumber: '',
+                distanceFromMe: 530,
+                reviewRating: 0,
+                isOpening: true,
+                startTime: '10:00:00',
+                endTime: '20:00:00',
+              }}
+              deviceCount={3}
+            />
+          ))}
+        </div>
+      </DragBottomSheet>
     </BaseLayout>
   );
 };
