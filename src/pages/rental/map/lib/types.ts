@@ -28,3 +28,8 @@ export interface StoreCardProps {
   isLiked?: boolean;
   className?: string;
 }
+export interface ScoreProps {
+  value?: number;
+  onChange?: (score: number) => void;
+  readOnly?: boolean;
+}

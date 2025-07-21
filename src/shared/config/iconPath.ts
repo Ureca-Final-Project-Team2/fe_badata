@@ -5,6 +5,7 @@ import coin from '@/shared/icons/coin.png';
 import filterIcon from '@/shared/icons/filter-icon.png';
 import likeActive from '@/shared/icons/like-active.png';
 import likeNonactive from '@/shared/icons/like-nonactive.png';
+import likeActiveHalf from '@/shared/icons/like_active_half.png';
 import notification from '@/shared/icons/notification.png';
 import rentalLike from '@/shared/icons/rental-like-shop.png';
 import rentalList from '@/shared/icons/rental-list.png';
@@ -26,6 +27,7 @@ export const ICONS = {
     LIKE_NONACTIVE: likeNonactive,
     BACKICON: backIcon,
     FILTERICON: filterIcon,
+    LIKE_ACTIVE_HALF: likeActiveHalf,
   },
   MYPAGE: {
     COIN: coin,
