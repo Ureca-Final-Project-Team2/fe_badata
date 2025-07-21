@@ -82,8 +82,6 @@ export default function SalesHistoryPage() {
     <div className="min-h-screen bg-[var(--white)] flex flex-col items-center relative">
       <div className="w-full max-w-[428px]">
         <PageHeader title="판매 내역" onBack={() => router.back()} />
-
-        {/* 상단 프로필 카드 + 요약 박스 */}
         <div className="flex flex-col items-center px-4 mt-4">
           <MyProfileCard name={profile.name} days={profile.days} avatarSrc={profile.avatarSrc} />
 

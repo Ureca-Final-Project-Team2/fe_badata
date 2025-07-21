@@ -1,7 +1,5 @@
 'use client';
 
-
-
 import { useRouter } from 'next/navigation';
 
 import { BottomNav } from '@/shared/ui/BottomNav';
@@ -46,15 +44,12 @@ export default function RentalHistoryPage() {
   const router = useRouter();
   return (
     <div className="min-h-screen bg-white flex flex-col items-center relative">
-      {/* 상단 헤더 고정 */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[428px] z-20">
         <PageHeader title="공유기 대여 내역" onBack={() => router.back()} />
       </div>
-      {/* 리스트 영역: 헤더/바텀바 높이만큼 패딩, 스크롤 */}
       <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-[88px] pb-[84px] px-4">
         {rentalHistoryData.map((item, idx) => (
           <div key={idx} className={`relative mb-8${idx === 0 ? ' mt-4' : ''}`}>
-            {/* 날짜/요일 박스 바깥 왼쪽 상단 */}
             <div className="absolute -top-6 left-2 flex items-center gap-2">
               <span
                 className="text-[16px] font-semibold"
@@ -103,7 +98,6 @@ export default function RentalHistoryPage() {
           </div>
         ))}
       </div>
-      {/* 하단바 고정 */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[428px] z-20">
         <BottomNav />
       </div>

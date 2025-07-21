@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { ArcElement, Chart, Tooltip } from 'chart.js';
@@ -10,7 +11,6 @@ import { Doughnut } from 'react-chartjs-2';
 import { useUserCoinQuery } from '@/entities/coin/model/queries';
 import { useUserDataUsageQuery } from '@/entities/data/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
-import Image from 'next/image';
 
 Chart.register(ArcElement, Tooltip);
 
