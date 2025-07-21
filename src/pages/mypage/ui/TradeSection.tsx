@@ -18,7 +18,7 @@ export const TradeSection = () => (
           />
           <span className="text-[--font-body-regular] font-sans font-normal">판매 내역</span>
         </Link>
-        <Link href="#" className="flex flex-col items-center justify-end gap-1 min-h-[60px] hover:bg-[--main-3] rounded-xl transition cursor-pointer">
+        <Link href="/mypage/purchase-history" className="flex flex-col items-center justify-end gap-1 min-h-[60px] hover:bg-[--main-3] rounded-xl transition cursor-pointer">
           <Image
             src={ICONS.MYPAGE.TRADE_BUY}
             alt="구매 내역"
