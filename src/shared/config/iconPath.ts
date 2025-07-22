@@ -28,8 +28,6 @@ export const ICONS = {
     LIKE_NONACTIVE: likeNonactive,
     BACKICON: backIcon,
     FILTERICON: filterIcon,
-    SHELL: shell,
-    SHELL_GRAY: shellGray,
   },
   MYPAGE: {
     COIN: coin,

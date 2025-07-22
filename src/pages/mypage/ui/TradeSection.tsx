@@ -3,6 +3,8 @@ import Link from 'next/link';
 
 import { ICONS } from '@/shared/config/iconPath';
 
+import { ICONS } from '@/shared/config/iconPath';
+
 export const TradeSection = () => (
   <>
     <h2 className="mb-2 text-[20px] font-sans font-semibold">나의 거래</h2>
