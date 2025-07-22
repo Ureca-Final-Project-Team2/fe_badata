@@ -6,12 +6,16 @@ import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
+import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
+
+import RentalFilterContent from '../ui/RentalFilterContent';
 
 import type { DateRange } from 'react-day-picker';
 
 const RentalPage = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 
   return (
     <BaseLayout
@@ -29,13 +33,24 @@ const RentalPage = () => {
                 placeholder="대여 기간을 선택해주세요"
               />
             </div>
-            <FilterIcon alt="" className="w-8 h-8 ml-4 flex-shrink-0" />
+            <FilterIcon
+              alt=""
+              className="w-8 h-8 ml-4 flex-shrink-0"
+              onClick={() => setFilterDrawerOpen(true)}
+            />
           </div>
         </div>
       }
     >
       <MapSection />
       <DrawerSection />
+      <FilterDrawer
+        isOpen={filterDrawerOpen}
+        onClose={() => setFilterDrawerOpen(false)}
+        className="bg-[var(--main-2)]"
+      >
+        <RentalFilterContent />
+      </FilterDrawer>
     </BaseLayout>
   );
 };
