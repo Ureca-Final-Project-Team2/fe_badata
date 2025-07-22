@@ -40,3 +40,7 @@ export interface GifticonPost extends BasePost {
   issueDate?: string;
   gifticonCategory?: string | null;
 }
+
+export interface LikeContent {
+  likeId: number;
+}

@@ -6,20 +6,20 @@ import DdayBadge from '@/shared/ui/DdayBadge';
 import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PostStatusBadge from '@/shared/ui/PostStatusBadge';
 import PriceText from '@/shared/ui/PriceText';
-
 const DEFAULT_IMAGE = ICONS.LOGO.DETAIL;
 
 interface TradePostCardProps {
-  imageUrl: string;
+  imageUrl?: string;
   title: string;
-  partner: string;
   price: number | string;
   likeCount: number;
+  partner?: string;
   hasDday?: boolean;
   dday?: number | string;
   isCompleted?: boolean;
   isLiked?: boolean;
   onLikeChange?: (liked: boolean) => void;
+  onCardClick?: () => void;
   className?: string;
 }
 
@@ -46,21 +46,53 @@ const TradePostCard = ({
   isCompleted = false,
   isLiked = false,
   onLikeChange,
+  onCardClick,
   className = '',
 }: TradePostCardProps) => {
+  const getSafeImageUrl = (url?: string): string => {
+    if (!url || url.trim() === '' || url === 'null' || url === 'undefined' || url === 'no image') {
+      return DEFAULT_IMAGE;
+    }
+
+    // URL 유효성 검사
+    if (
+      !url.startsWith('/') &&
+      !url.startsWith('http://') &&
+      !url.startsWith('https://') &&
+      !url.startsWith('./')
+    ) {
+      return DEFAULT_IMAGE;
+    }
+
+    return url;
+  };
+
+  const handleLikeClick = () => {
+    if (onLikeChange) {
+      onLikeChange(!isLiked);
+    }
+  };
+
+  const handleCardClick = () => {
+    onCardClick?.();
+  };
+
   return (
-    <div className={`w-[178px] flex-shrink-0 rounded-[15px] bg-white flex flex-col ${className}`}>
+    <div
+      className={`w-[178px] flex-shrink-0 rounded-[15px] bg-white flex flex-col cursor-pointer ${className}`}
+      onClick={handleCardClick}
+    >
       <div className="relative w-[178px] h-[163px] overflow-hidden bg-white flex items-center justify-center">
         {hasDday && (
           <div className="absolute top-2 left-2 z-10">
             <DdayBadge dday={dday} size="md" />
           </div>
         )}
-        <div className="absolute bottom-2 right-2 z-10">
-          <PostLikeButton active={isLiked} onClick={() => onLikeChange?.(!isLiked)} />
+        <div className="absolute bottom-2 right-2 z-10" onClick={handleLikeClick}>
+          <PostLikeButton active={isLiked} onClick={handleLikeClick} />
         </div>
         <Image
-          src={imageUrl || DEFAULT_IMAGE}
+          src={getSafeImageUrl(imageUrl)}
           alt={title}
           width={178}
           height={163}

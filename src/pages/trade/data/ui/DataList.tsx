@@ -1,7 +1,11 @@
 import { ListFilter } from 'lucide-react';
 
-import { Product } from '@/shared/ui/Product';
+import {
+  useDeleteTradePostLikeMutation,
+  usePostTradePostLikeMutation,
+} from '@/entities/trade-post/model/mutations';
 import { SortButton } from '@/shared/ui/SortButton';
+import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
 
@@ -10,9 +14,13 @@ interface DataListProps {
   isLoading: boolean;
   sortLabel: string;
   onSortClick: () => void;
+  onItemClick?: (item: AllPost) => void;
 }
 
-export function DataList({ items, isLoading, sortLabel, onSortClick }: DataListProps) {
+export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick }: DataListProps) {
+  const postLikeMutation = usePostTradePostLikeMutation();
+  const deleteLikeMutation = useDeleteTradePostLikeMutation();
+
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--black)]">로딩 중...</div>;
   }
@@ -20,6 +28,19 @@ export function DataList({ items, isLoading, sortLabel, onSortClick }: DataListP
     return <div className="py-4 text-center text-[var(--black)]">게시물이 없습니다.</div>;
   }
 
+  const handleLikeChange = (postId: number, currentLikeStatus: boolean) => {
+    if (currentLikeStatus) {
+      deleteLikeMutation.mutate(postId);
+    } else {
+      postLikeMutation.mutate(postId);
+    }
+  };
+
+  const handleCardClick = (item: AllPost) => {
+    if (onItemClick) {
+      onItemClick(item);
+    }
+  };
   return (
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
@@ -31,14 +52,18 @@ export function DataList({ items, isLoading, sortLabel, onSortClick }: DataListP
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-2 gap-4 py-4">
         {items.map((item) => (
-          <Product
+          <TradePostCard
             key={item.id}
-            name={item.title}
+            imageUrl={item.postImage}
+            title={item.title}
+            partner={item.partner}
             price={item.price}
-            imageSrc={item.postImage}
             likeCount={item.likesCount}
+            isLiked={item.isLiked}
+            onLikeChange={(liked) => handleLikeChange(item.id, !liked)}
+            onCardClick={() => handleCardClick(item)}
           />
         ))}
       </div>
