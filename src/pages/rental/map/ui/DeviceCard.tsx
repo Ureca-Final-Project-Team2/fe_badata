@@ -8,27 +8,49 @@ interface DeviceCardProps {
   storeDetail: StoreDetail;
   device: StoreDevice;
   price?: number;
+  size?: 'sm' | 'md';
 }
 
-export default function DeviceCard({ device, price = 1900 }: DeviceCardProps) {
+const CARD_SIZE = {
+  md: {
+    w: 'w-[310px]',
+    h: 'h-[260px]',
+    img: 'h-[140px]',
+    radius: 'rounded-32',
+    imgRadius: 'rounded-t-[40px]',
+  },
+  sm: {
+    w: 'w-[270px]',
+    h: 'h-[230px]',
+    img: 'h-[135px]',
+    radius: 'rounded-20',
+    imgRadius: 'rounded-t-[30px]',
+  },
+};
+
+export default function DeviceCard({ device, price = 1900, size = 'sm' }: DeviceCardProps) {
+  const sz = CARD_SIZE[size];
+  const nameClass = size === 'sm' ? 'font-label-semibold' : 'font-body-semibold';
+  const priceClass = size === 'sm' ? 'font-label-semibold' : 'font-body-semibold';
+  const capacityClass = size === 'sm' ? 'font-small-light' : 'font-label-light';
+  const capacityNumberClass = size === 'sm' ? 'font-small-semibold' : 'font-label-semibold';
+
   return (
-    <div className="rounded-32 bg-white w-[310px] h-[260px] overflow-hidden flex flex-col">
-      <div className="w-full h-[140px] rounded-t-[40px] rounded-b-none">
+    <div className={`${sz.radius} bg-white ${sz.w} ${sz.h} overflow-hidden flex flex-col`}>
+      <div className={`w-full ${sz.img} ${sz.imgRadius} rounded-b-none`}>
         <DeviceImage url={device.imageUrl} alt={device.deviceName} />
       </div>
       {/* 정보 영역 */}
       <div className="flex flex-col px-4 py-3 flex-1">
         <div className="flex items-center justify-between w-full">
           <span className="text-black m-0">
-            <span className="font-label-light">매일 </span>
-            <span className="font-label-semibold">{device.dataCapacity}GB</span>
+            <span className={capacityClass}>매일 </span>
+            <span className={capacityNumberClass}>{device.dataCapacity}GB</span>
           </span>
-          <ReserveButton>예약</ReserveButton>
+          <ReserveButton size={size}>예약</ReserveButton>
         </div>
-        <div className="font-body-semibold text-black">{device.deviceName}</div>
-        <div className="font-body-semibold text-[var(--main-5)] text-label-semibold">
-          {price.toLocaleString()}원
-        </div>
+        <div className={`text-black ${nameClass} mb-1`}>{device.deviceName}</div>
+        <div className={`text-[var(--main-5)] ${priceClass}`}>{price.toLocaleString()}원</div>
       </div>
     </div>
   );
