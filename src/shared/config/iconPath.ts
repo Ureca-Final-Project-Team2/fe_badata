@@ -10,6 +10,7 @@ import notification from '@/shared/icons/notification.png';
 import rentalLike from '@/shared/icons/rental-like-shop.png';
 import rentalList from '@/shared/icons/rental-list.png';
 import rentalNotification from '@/shared/icons/rental-notification.png';
+import shell from '@/shared/icons/shell.png';
 import mySos from '@/shared/icons/sos-siren.png';
 import tradeBuy from '@/shared/icons/trade-buy-list.png';
 import tradeCell from '@/shared/icons/trade-cell-list.png';
@@ -28,6 +29,7 @@ export const ICONS = {
     BACKICON: backIcon,
     FILTERICON: filterIcon,
     LIKE_ACTIVE_HALF: likeActiveHalf,
+    SHELL: shell,
   },
   MYPAGE: {
     COIN: coin,
@@ -39,5 +41,12 @@ export const ICONS = {
     RENTAL_NOTIFICATION: rentalNotification,
     MYSOS: mySos,
     NOTIFICATION: notification,
+  },
+  TRADE: {
+    BRAND_LOGO: {
+      KT: '/assets/KT_Logo.png',
+      UPLUS: '/assets/LGU_Logo.png',
+      SKT: '/assets/SKT_Logo.png',
+    },
   },
 };

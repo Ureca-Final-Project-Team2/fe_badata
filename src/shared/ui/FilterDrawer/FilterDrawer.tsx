@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { createPortal } from 'react-dom';
+
 import { cn } from '@/shared/lib/cn';
 
 interface FilterDrawerProps {
@@ -12,7 +14,7 @@ interface FilterDrawerProps {
 export function FilterDrawer({ isOpen, onClose, children, className }: FilterDrawerProps) {
   if (!isOpen) return null;
 
-  return (
+  const drawerContent = (
     <div
       className="fixed inset-0 z-[1000] flex items-end justify-center bg-[var(--black)]/50"
       onClick={onClose}
@@ -34,4 +36,9 @@ export function FilterDrawer({ isOpen, onClose, children, className }: FilterDra
       </div>
     </div>
   );
+
+  if (typeof window !== 'undefined') {
+    return createPortal(drawerContent, document.body);
+  }
+  return null;
 }

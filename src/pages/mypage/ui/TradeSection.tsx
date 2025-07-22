@@ -1,5 +1,6 @@
-import { ICONS } from '@/shared/config/iconPath';
 import Image from 'next/image';
+
+import { ICONS } from '@/shared/config/iconPath';
 
 export const TradeSection = () => (
   <>

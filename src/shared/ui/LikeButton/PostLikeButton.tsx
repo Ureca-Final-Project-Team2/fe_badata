@@ -1,6 +1,8 @@
-import { ICONS } from '@/shared/config/iconPath';
-import Image from 'next/image';
 import React from 'react';
+
+import Image from 'next/image';
+
+import { ICONS } from '@/shared/config/iconPath';
 
 interface PostLikeButtonProps {
   active?: boolean;

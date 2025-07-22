@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 
 import Providers from '@/app/_providers';
 
@@ -22,6 +23,8 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
+        <Script src="https://cdn.portone.io/v2/browser-sdk.js" strategy="beforeInteractive" />
+        <Script src="https://cdn.iamport.kr/v1/iamport.js" strategy="beforeInteractive" />
         <Providers>{children}</Providers>
       </body>
     </html>
