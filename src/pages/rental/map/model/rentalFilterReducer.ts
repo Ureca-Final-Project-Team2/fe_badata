@@ -8,12 +8,15 @@ export type RentalDataType = (typeof RENTAL_DATA_TYPES)[number];
 export const RENTAL_DEVICE_COUNTS = ['2대', '5대', '무제한'] as const;
 export type RentalDeviceCount = (typeof RENTAL_DEVICE_COUNTS)[number];
 
+import type { DateRange } from 'react-day-picker';
+
 export interface RentalFilterState {
   star: number; // 0~5
   price: number;
   dataAmount?: RentalDataAmount;
   dataType?: RentalDataType;
   deviceCount?: RentalDeviceCount;
+  dateRange?: DateRange;
 }
 
 export type RentalFilterAction =
@@ -22,6 +25,7 @@ export type RentalFilterAction =
   | { type: 'SET_DATA_AMOUNT'; payload: RentalDataAmount }
   | { type: 'SET_DATA_TYPE'; payload: RentalDataType }
   | { type: 'SET_DEVICE_COUNT'; payload: RentalDeviceCount }
+  | { type: 'SET_DATE_RANGE'; payload: DateRange | undefined }
   | { type: 'RESET' };
 
 export const initialRentalFilterState: RentalFilterState = {
@@ -30,6 +34,8 @@ export const initialRentalFilterState: RentalFilterState = {
   dataAmount: undefined,
   dataType: undefined,
   deviceCount: undefined,
+  dateRange: undefined,
+  date: undefined,
 };
 
 export function rentalFilterReducer(
@@ -47,6 +53,8 @@ export function rentalFilterReducer(
       return { ...state, dataType: action.payload };
     case 'SET_DEVICE_COUNT':
       return { ...state, deviceCount: action.payload };
+    case 'SET_DATE_RANGE':
+      return { ...state, dateRange: action.payload };
     case 'RESET':
       return initialRentalFilterState;
     default:
