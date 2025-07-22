@@ -87,8 +87,8 @@ export default function SalesHistoryPage() {
 
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
             <div className="flex flex-col items-center flex-1">
-              <span className="text-[16px] font-semibold text-[var(--black)]">거래 내역</span>
-              <span className="text-[18px] font-bold text-[var(--black)] mt-1">
+              <span className="font-label-semibold text-[var(--black)]">거래 내역</span>
+              <span className="font-body-semibold text-[var(--black)] mt-1">
                 {profile.tradeCount}
               </span>
             </div>
@@ -96,8 +96,8 @@ export default function SalesHistoryPage() {
               className="flex flex-col items-center flex-1 cursor-pointer"
               onClick={() => router.push('/mypage/follower')}
             >
-              <span className="text-[16px] font-semibold text-[var(--black)]">팔로워</span>
-              <span className="text-[18px] font-bold text-[var(--black)] mt-1">
+              <span className="font-label-semibold text-[var(--black)]">팔로워</span>
+              <span className="font-body-semibold text-[var(--black)] mt-1">
                 {profile.follower}
               </span>
             </div>
@@ -105,8 +105,8 @@ export default function SalesHistoryPage() {
               className="flex flex-col items-center flex-1 cursor-pointer"
               onClick={() => router.push('/mypage/following')}
             >
-              <span className="text-[16px] font-semibold text-[var(--black)]">팔로잉</span>
-              <span className="text-[18px] font-bold text-[var(--black)] mt-1">
+              <span className="font-label-semibold text-[var(--black)]">팔로잉</span>
+              <span className="font-body-semibold text-[var(--black)] mt-1">
                 {profile.following}
               </span>
             </div>

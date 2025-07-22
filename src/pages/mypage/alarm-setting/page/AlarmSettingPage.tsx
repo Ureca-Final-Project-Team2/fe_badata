@@ -28,7 +28,7 @@ export default function AlarmSettingPage() {
           <PageHeader title="알림 설정" onBack={() => router.back()} />
 
           <div className="px-4 pt-6 pb-10">
-            <h2 className="text-[20px] font-semibold mb-6">알림 설정</h2>
+            <h2 className="font-body-semibold mb-6">알림 설정</h2>
             <ul className="flex flex-col gap-5">
               <AlarmItem
                 title="BADATA에서 보내는 소식"
@@ -75,8 +75,8 @@ function AlarmItem({ title, desc, checked, onChange }: AlarmItemProps) {
   return (
     <li className="flex justify-between items-start">
       <div className="pr-4">
-        <p className="text-[16px] font-semibold">{title}</p>
-        <p className="text-[12.8px] text-[#9b9b9b] leading-[16px]">{desc}</p>
+        <p className="font-label-semibold">{title}</p>
+        <p className="font-small-regular text-[#9b9b9b] leading-[16px]">{desc}</p>
       </div>
       <Switch checked={checked} onCheckedChange={onChange} />
     </li>

@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { AlarmSettingSection } from '@/pages/mypage/ui/AlarmSettingSection';
 import { DataUsageCardSection } from '@/pages/mypage/ui/DataUsageCardSection';
 import { RentalSection } from '@/pages/mypage/ui/RentalSection';
@@ -12,7 +10,6 @@ import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header } from '@/shared/ui/Header';
 
 export default function MyPage() {
-  const router = useRouter();
   return (
     <BaseLayout header={<Header />}>
       <div className="space-y-6">

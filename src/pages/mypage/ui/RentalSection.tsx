@@ -5,7 +5,7 @@ import { ICONS } from '@/shared/config/iconPath';
 
 export const RentalSection = () => (
   <>
-    <h2 className="text-[20px] font-sans font-semibold">나의 공유기 대여</h2>
+    <h2 className="font-title-semibold">나의 공유기 대여</h2>
     <section className="bg-white rounded-xl p-4 shadow-sm">
       <ul className="space-y-5">
         <li>
@@ -17,7 +17,7 @@ export const RentalSection = () => (
               height={20}
               className="object-contain"
             />
-            <span className="text-[--font-body-regular] font-sans font-normal">공유기 대여 내역</span>
+            <span className="font-label-regular">공유기 대여 내역</span>
           </Link>
         </li>
         <li>
@@ -29,7 +29,7 @@ export const RentalSection = () => (
               height={20}
               className="object-contain"
             />
-            <span className="text-[--font-body-regular] font-sans font-normal">관심 매장</span>
+            <span className="font-label-regular">관심 매장</span>
           </Link>
         </li>
         <li>
@@ -41,7 +41,7 @@ export const RentalSection = () => (
               height={20}
               className="object-contain"
             />
-            <span className="text-[--font-body-regular] font-sans font-normal">재입고 알림</span>
+            <span className="font-label-regular">재입고 알림</span>
           </Link>
         </li>
       </ul>

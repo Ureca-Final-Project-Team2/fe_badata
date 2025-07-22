@@ -9,8 +9,6 @@ import notification from '@/shared/icons/notification.png';
 import rentalLike from '@/shared/icons/rental-like-shop.png';
 import rentalList from '@/shared/icons/rental-list.png';
 import rentalNotification from '@/shared/icons/rental-notification.png';
-import shellGray from '@/shared/icons/seashell_gray.png';
-import shell from '@/shared/icons/shell.png';
 import mySos from '@/shared/icons/sos-siren.png';
 import tradeBuy from '@/shared/icons/trade-buy-list.png';
 import tradeCell from '@/shared/icons/trade-cell-list.png';

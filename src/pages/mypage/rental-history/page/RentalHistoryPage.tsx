@@ -60,7 +60,7 @@ export default function RentalHistoryPage() {
             </div>
             <div className="border-2 border-[var(--gray-light)] rounded-2xl bg-white px-4 py-4 pt-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-title-semibold">
+                <span className="font-body-semibold">
                   {item.store}
                 </span>
                 {item.isReview && (
@@ -77,7 +77,7 @@ export default function RentalHistoryPage() {
                 >
                   {item.status}
                 </button>
-                <span className="font-title-semibold">
+                <span className="font-body-semibold">
                   {item.price}
                 </span>
               </div>

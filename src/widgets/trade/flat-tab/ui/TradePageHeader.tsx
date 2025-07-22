@@ -13,9 +13,9 @@ export function TradeFlatTab() {
     { id: 'gifticon', label: '쿠폰', content: null },
   ];
 
-  const defaultValue = pathname.includes('/data')
+  const defaultValue = pathname?.includes('/data')
     ? 'data'
-    : pathname.includes('/gifticon')
+    : pathname?.includes('/gifticon')
       ? 'gifticon'
       : 'all';
 

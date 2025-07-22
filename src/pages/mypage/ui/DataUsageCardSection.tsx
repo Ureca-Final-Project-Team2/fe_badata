@@ -48,12 +48,12 @@ export const DataUsageCardSection = () => {
       <div className="flex flex-col items-center">
         <div className="relative w-[160px] h-[160px]">
           <Doughnut data={chartData} options={options} />
-          <div className="absolute inset-0 flex flex-col items-center justify-center font-semibold text-main-1">
+          <div className="absolute inset-0 flex flex-col items-center justify-center font-label-semibold text-main-1">
             <span>{used}GB 사용</span>
           </div>
         </div>
         <div className="flex justify-between w-full mt-4">
-          <span>코인 모으기</span>
+          <span className="font-label-regular">코인 모으기</span>
           <Link
             href="/mypage/coin"
             className="flex items-center gap-1.5 hover:underline hover:font-semibold"
@@ -65,7 +65,7 @@ export const DataUsageCardSection = () => {
               height={16}
               className="object-contain"
             />
-            현재 <span className="font-semibold">{coinAmount}</span> 코인
+            현재 <span className="font-label-semibold">{coinAmount}</span> 코인
           </Link>
         </div>
       </div>

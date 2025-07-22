@@ -31,8 +31,8 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
         </div>
       </div>
       <div className="flex-1 pt-1">
-        <div className="text-base font-semibold text-gray-900 mb-1">{text}</div>
-        <div className="text-sm text-[var(--gray-mid)]">{date}</div>
+        <div className="font-body-xs-semibold text-gray-900 mb-1">{text}</div>
+        <div className="font-small-regular text-[var(--gray-mid)]">{date}</div>
       </div>
     </li>
   );
@@ -46,7 +46,7 @@ export default function ReportHistoryPage() {
       <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
         <PageHeader title="신고 내역" onBack={() => router.back()} />
         <div className="px-4 pt-6 pb-24">
-          <h2 className="text-[20px] font-semibold mb-4">신고 게시물</h2>
+          <h2 className="font-body-semibold mb-4">신고 게시물</h2>
           <TradePostCard
             imageUrl="/assets/trade-sample.png"
             title="올리브영 기프티콘"
@@ -57,7 +57,7 @@ export default function ReportHistoryPage() {
             isLiked={false}
           />
 
-          <h2 className="text-[20px] font-semibold mt-8 mb-4">신고 진행 과정</h2>
+          <h2 className="font-body-semibold mt-8 mb-4">신고 진행 과정</h2>
           <ul className="flex flex-col gap-6">
             <TimelineItem label="판매" text="구매 결제" date="2025-07-07 17:07" color="gray" />
             <TimelineItem
