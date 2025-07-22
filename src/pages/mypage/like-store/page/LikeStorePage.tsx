@@ -57,7 +57,7 @@ export default function LikeStorePage() {
   const router = useRouter();
   return (
     <BaseLayout header={<PageHeader title="관심 매장" onBack={() => router.back()} />} showBottomNav>
-      <div className="flex flex-col gap-4 px-4 pt-6 pb-[96px]">
+      <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
         {likeStores.map((item) => (
           <StoreCard
             key={item.store.id}
@@ -67,7 +67,7 @@ export default function LikeStorePage() {
             deviceCount={item.deviceCount}
             isLiked={item.isLiked}
             showDistance={false}
-            className="font-title-regular"
+            className="font-title-regular w-[95%] max-w-[400px]"
           />
         ))}
       </div>

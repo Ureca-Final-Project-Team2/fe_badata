@@ -33,7 +33,7 @@ export default function RestockAlarmPage() {
 
   return (
     <BaseLayout header={<PageHeader title="재입고 알림 내역" onBack={() => router.back()} />} showBottomNav>
-      <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-[56px] pb-[84px] px-4">
+      <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-0 pb-[84px] px-4">
         <div className="flex items-center justify-between mt-6 mb-4">
           <span className="font-body-semibold text-[var(--black)]">
             전체 <span className="text-[var(--main-5)]">{alarms.length}</span>개
@@ -71,7 +71,7 @@ export default function RestockAlarmPage() {
                   </button>
                 </div>
                 <div className="flex items-end justify-start w-full mt-1">
-                  <span className="font-body-semibold text-[var(--main-5)]">{item.price}</span>
+                  <span className="font-body-xs-semibold text-[var(--main-5)]">{item.price}</span>
                 </div>
               </div>
             </li>
