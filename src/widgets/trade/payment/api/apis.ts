@@ -5,11 +5,20 @@
  * @returns {Promise<any>} 결제 검증 결과 응답 객체
  */
 
+import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 export async function verifyPayment(impUid: string, postId: number) {
-  const res = await axiosInstance.post(`/api/v1/trades/order/payment/${impUid}/${postId}`);
-  return res;
+  try {
+    const res = await axiosInstance.post(END_POINTS.TRADES.VERIFY_PAYMENT(impUid, postId));
+    return res;
+  } catch (error: unknown) {
+    let message = '결제 검증 중 오류가 발생했습니다.';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    throw new Error(message);
+  }
 }
 
 /**
@@ -20,8 +29,8 @@ export async function verifyPayment(impUid: string, postId: number) {
 
 export async function createPayment(postId: number) {
   try {
-    const res = await axiosInstance.post(`/api/v1/trades/create/${postId}`);
-    return res; // { merchantUid: string }
+    const res = await axiosInstance.post(END_POINTS.TRADES.CREATE_PAYMENT(postId));
+    return res;
   } catch (error: unknown) {
     let message = 'merchantUid 발급 중 오류가 발생했습니다.';
     if (error instanceof Error) {
