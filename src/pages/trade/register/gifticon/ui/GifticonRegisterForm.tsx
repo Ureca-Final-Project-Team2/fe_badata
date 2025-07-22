@@ -47,6 +47,9 @@ export function TradeGifticonRegisterForm() {
         return;
       }
       const reader = new FileReader();
+      reader.onerror = () => {
+        makeToast('이미지 파일을 읽는데 실패했습니다.', 'warning');
+      };
       reader.onloadend = () => {
         dispatch({
           type: 'SET_IMAGE_FILE',
