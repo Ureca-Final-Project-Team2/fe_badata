@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 
+import { ICONS } from '@/shared/config/iconPath';
 import { SectionDivider } from '@/shared/ui/SectionDivider';
 
 interface TradeDetailProductSectionProps {
@@ -16,12 +17,6 @@ interface TradeDetailProductSectionProps {
   capacity?: number;
 }
 
-const brandImageMap: Record<string, string> = {
-  KT: '/assets/KT_Logo.png',
-  UPLUS: '/assets/LGU_Logo.png',
-  SKT: '/assets/SKT_Logo.png',
-};
-
 export const TradeDetailProductSection = ({
   postType,
   thumbnailUrl = '/assets/trade-detail.jpg',
@@ -33,7 +28,8 @@ export const TradeDetailProductSection = ({
   description = 'CU에서 사용 가능한 모바일 금액권 3000원 쿠폰입니다. 전국 매장에서 사용 가능하며 현금처럼 사용하실 수 있습니다.',
   capacity,
 }: TradeDetailProductSectionProps) => {
-  const brandImageSrc = brandImageMap[brand ?? ''] || '/assets/LGU_Logo.png';
+  const brandKey = brand === 'KT' || brand === 'UPLUS' || brand === 'SKT' ? brand : 'UPLUS';
+  const brandImageSrc = ICONS.TRADE.BRAND_LOGO[brandKey];
   return (
     <section>
       {/* 썸네일 이미지 */}

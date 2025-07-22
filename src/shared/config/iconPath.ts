@@ -40,4 +40,11 @@ export const ICONS = {
     MYSOS: mySos,
     NOTIFICATION: notification,
   },
+  TRADE: {
+    BRAND_LOGO: {
+      KT: '/assets/KT_Logo.png',
+      UPLUS: '/assets/LGU_Logo.png',
+      SKT: '/assets/SKT_Logo.png',
+    },
+  },
 };
