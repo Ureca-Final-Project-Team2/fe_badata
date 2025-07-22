@@ -1,53 +1,11 @@
 import { useReducer } from 'react';
 
+import { initialState, reducer } from '@/pages/trade/register/data/model/dataRegisterReducer';
 import { usePostTradeDataMutation } from '@/pages/trade/register/data/model/mutations';
 import { toRawPrice } from '@/shared/lib/formatPrice';
 import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
-
-interface State {
-  form: {
-    title: string;
-    deadLine: string;
-    capacity: string;
-    price: string;
-    comment: string;
-  };
-  isSubmitting: boolean;
-}
-
-type Action =
-  | { type: 'CHANGE_FIELD'; field: keyof State['form']; value: string }
-  | { type: 'SET_SUBMITTING'; value: boolean }
-  | { type: 'RESET' };
-
-const initialState: State = {
-  form: {
-    title: '',
-    deadLine: '',
-    capacity: '',
-    price: '',
-    comment: '',
-  },
-  isSubmitting: false,
-};
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'CHANGE_FIELD':
-      return {
-        ...state,
-        form: { ...state.form, [action.field]: action.value },
-      };
-    case 'SET_SUBMITTING':
-      return { ...state, isSubmitting: action.value };
-    case 'RESET':
-      return initialState;
-    default:
-      return state;
-  }
-}
 
 export function TradeDataRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);

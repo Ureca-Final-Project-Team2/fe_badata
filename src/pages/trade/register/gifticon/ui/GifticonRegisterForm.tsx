@@ -7,91 +7,18 @@ import Image from 'next/image';
 import { ImageUp } from 'lucide-react';
 
 import { getCategoryByPartner } from '@/pages/trade/register/gifticon/lib/getCategoryByPartner';
+import {
+  initialState,
+  reducer,
+} from '@/pages/trade/register/gifticon/model/gifticonRegisterReducer';
 import { usePostTradeGifticonMutation } from '@/pages/trade/register/gifticon/model/mutations';
 import { toRawPrice } from '@/shared/lib/formatPrice';
 import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
 
-import type {
-  GifticonCategory,
-  PostTradeGifticonRequest,
-} from '@/pages/trade/register/gifticon/lib/types';
-
-interface State {
-  form: {
-    price: string;
-    comment: string;
-  };
-  ocrResult: {
-    title: string;
-    partner: string;
-    gifticonNumber: string;
-    deadLine: string;
-    issueDate: string;
-    image: string;
-  };
-  category: GifticonCategory | undefined;
-  imageFile: File | null;
-  imagePreview: string | null;
-  isSubmitting: boolean;
-}
-
-type Action =
-  | { type: 'CHANGE_FIELD'; field: keyof State['form']; value: string }
-  | { type: 'SET_OCR_RESULT'; payload: Partial<State['ocrResult']> }
-  | { type: 'SET_CATEGORY'; payload: GifticonCategory | undefined }
-  | { type: 'SET_IMAGE_FILE'; payload: { file: File | null; preview: string | null } }
-  | { type: 'SET_SUBMITTING'; value: boolean }
-  | { type: 'RESET' };
-
-const initialState: State = {
-  form: {
-    price: '',
-    comment: '',
-  },
-  ocrResult: {
-    title: '메가커피 아메리카노',
-    partner: '메가MGC커피',
-    gifticonNumber: 'MGC123456789',
-    deadLine: '2025-07-19',
-    issueDate: '2025-06-18T00:00:00.009',
-    image: 'no-image',
-  },
-  category: undefined,
-  imageFile: null,
-  imagePreview: null,
-  isSubmitting: false,
-};
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'CHANGE_FIELD':
-      return {
-        ...state,
-        form: { ...state.form, [action.field]: action.value },
-      };
-    case 'SET_OCR_RESULT':
-      return {
-        ...state,
-        ocrResult: { ...state.ocrResult, ...action.payload },
-      };
-    case 'SET_CATEGORY':
-      return { ...state, category: action.payload };
-    case 'SET_IMAGE_FILE':
-      return {
-        ...state,
-        imageFile: action.payload.file,
-        imagePreview: action.payload.preview,
-      };
-    case 'SET_SUBMITTING':
-      return { ...state, isSubmitting: action.value };
-    case 'RESET':
-      return initialState;
-    default:
-      return state;
-  }
-}
+import type { PostTradeGifticonRequest } from '@/pages/trade/register/gifticon/lib/types';
+import type { State } from '@/pages/trade/register/gifticon/model/gifticonRegisterReducer';
 
 export function TradeGifticonRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
