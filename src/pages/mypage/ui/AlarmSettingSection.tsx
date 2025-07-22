@@ -1,8 +1,9 @@
 'use client';
 
-import { ICONS } from '@/shared/config/iconPath';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { ICONS } from '@/shared/config/iconPath';
 
 export const AlarmSettingSection = () => (
   <>
