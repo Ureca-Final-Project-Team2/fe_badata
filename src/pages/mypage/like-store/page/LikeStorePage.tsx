@@ -69,6 +69,7 @@ export default function LikeStorePage() {
               deviceCount={item.deviceCount}
               isLiked={item.isLiked}
               showDistance={false}
+              className="font-title-regular"
             />
           ))}
         </div>
