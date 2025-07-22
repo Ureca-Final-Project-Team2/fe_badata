@@ -39,14 +39,12 @@ export default function RestockAlarmPage() {
       <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-[56px] pb-[84px] px-4">
         <div className="flex items-center justify-between mt-6 mb-4">
           <span
-            className="text-[20px] font-semibold"
-            style={{ fontFamily: 'var(--font-title-semibold)' }}
+            className="text-[20px] font-semibold font-title-semibold"
           >
-            전체 <span style={{ color: 'var(--main-5)' }}>{alarms.length}</span>개
+            전체 <span className="text-[var(--main-5)]">{alarms.length}</span>개
           </span>
           <button
-            className="text-[12.8px] text-[var(--gray-mid)] font-light"
-            style={{ fontFamily: 'var(--font-body-light-lh)' }}
+            className="text-[12.8px] text-[var(--gray-mid)] font-light font-body-light-lh"
             onClick={() => setAlarms([])}
           >
             전체 삭제
@@ -60,7 +58,7 @@ export default function RestockAlarmPage() {
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-between h-[72px]">
                 <div className="flex items-start w-full">
-                  <div className="text-[16px] font-semibold leading-tight break-words whitespace-pre-line overflow-hidden max-h-[52px] flex-1" style={{ fontFamily: 'var(--font-body-semibold)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                  <div className="text-[16px] font-semibold leading-tight break-words whitespace-pre-line overflow-hidden max-h-[52px] flex-1 font-body-semibold" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                     {item.title}
                   </div>
                   <button
@@ -73,7 +71,7 @@ export default function RestockAlarmPage() {
                   </button>
                 </div>
                 <div className="flex items-end justify-start w-full mt-1">
-                  <span className="text-[16px] font-semibold text-[var(--main-5)]" style={{ fontFamily: 'var(--font-body-semibold)' }}>
+                  <span className="text-[16px] font-semibold text-[var(--main-5)] font-body-semibold">
                     {item.price}
                   </span>
                 </div>
@@ -82,16 +80,16 @@ export default function RestockAlarmPage() {
           ))}
         </ul>
         <div className="mt-6 rounded-xl border-2 border-[var(--gray-light)] bg-white overflow-hidden">
-          <div className="flex items-center gap-2 px-3 py-2" style={{ background: '#ececec' }}>
-            <span className="text-[16px] font-semibold" style={{ fontFamily: 'var(--font-body-semibold)', color: 'var(--main-5)' }}>ⓘ</span>
-            <span className="text-[16px] font-semibold" style={{ fontFamily: 'var(--font-body-semibold)' }}>이용안내</span>
+          <div className="flex items-center gap-2 px-3 py-2 bg-[var(--main-1)]">
+            <span className="text-[16px] font-semibold font-body-semibold text-[var(--main-5)]">ⓘ</span>
+            <span className="text-[16px] font-semibold font-body-semibold">이용안내</span>
           </div>
           <div className="px-3 pb-3 pt-0 bg-white">
             <ul className="list-disc pl-4">
-              <li className="text-[12.8px] text-[var(--gray-mid)] mb-1" style={{ fontFamily: 'var(--font-body-light-lh)' }}>
+              <li className="text-[12.8px] text-[var(--gray-mid)] mb-1 font-body-light-lh">
                 기기의 입고 시점에 따라 1회 발송되고, 이미 발송된 재입고 알림은 다시 발송되지 않으므로 고객님께서 확인 후 원하실 때만 알림을 다시 받고 싶으실 경우 해당 상품 페이지에서 재신청해주시기 바랍니다.
               </li>
-              <li className="text-[12.8px] text-[var(--gray-mid)]" style={{ fontFamily: 'var(--font-body-light-lh)' }}>
+              <li className="text-[12.8px] text-[var(--gray-mid)] font-body-light-lh">
                 대여 기간 내에 기기가 재고로 되지 않게 되면 재입고 알림 신청 내역에서 자동으로 삭제됩니다.
               </li>
             </ul>

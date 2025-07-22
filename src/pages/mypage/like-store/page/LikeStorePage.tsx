@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { StoreCardNoDistance } from '@/pages/rental/map/ui/StoreCard';
+import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { PageHeader } from '@/shared/ui/Header';
 
@@ -61,13 +61,14 @@ export default function LikeStorePage() {
         <PageHeader title="관심 매장" onBack={() => router.back()} />
         <div className="flex flex-col gap-4 px-4 pt-6 pb-[96px]">
           {likeStores.map((item) => (
-            <StoreCardNoDistance
+            <StoreCard
               key={item.store.id}
               id={item.store.id}
               store={item.store}
               storeDetail={item.storeDetail}
               deviceCount={item.deviceCount}
               isLiked={item.isLiked}
+              showDistance={false}
             />
           ))}
         </div>

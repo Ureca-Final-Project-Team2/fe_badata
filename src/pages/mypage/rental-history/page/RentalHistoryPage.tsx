@@ -52,14 +52,12 @@ export default function RentalHistoryPage() {
           <div key={idx} className={`relative mb-8${idx === 0 ? ' mt-4' : ''}`}>
             <div className="absolute -top-6 left-2 flex items-center gap-2">
               <span
-                className="text-[16px] font-semibold"
-                style={{ fontFamily: 'var(--font-body-semibold)' }}
+                className="text-[16px] font-semibold font-body-semibold"
               >
                 {item.date}
               </span>
               <span
-                className="text-[16px] font-semibold"
-                style={{ color: 'var(--gray-mid)', fontFamily: 'var(--font-body-semibold)' }}
+                className="text-[16px] font-semibold text-[var(--gray-mid)] font-body-semibold"
               >
                 {item.day}
               </span>
@@ -67,15 +65,13 @@ export default function RentalHistoryPage() {
             <div className="border-2 border-[var(--gray-light)] rounded-2xl bg-white px-4 py-4 pt-6">
               <div className="flex items-center justify-between mb-2">
                 <span
-                  className="text-[20px] font-semibold"
-                  style={{ fontFamily: 'var(--font-title-semibold)' }}
+                  className="text-[20px] font-semibold font-title-semibold"
                 >
                   {item.store}
                 </span>
                 {item.isReview && (
                   <button
                     className="flex items-center gap-1 text-[var(--main-5)] text-[14px] font-title-regular"
-                    style={{ fontFamily: 'var(--font-title-regular)' }}
                   >
                     <span role="img" aria-label="연필">✏️</span> 리뷰쓰기
                   </button>
@@ -85,12 +81,11 @@ export default function RentalHistoryPage() {
               <div className="flex items-center justify-between">
                 <button
                   className="w-[86px] py-1 rounded-full text-center font-title-regular text-[16px] bg-[var(--main-5)] text-white"
-                  style={{ fontFamily: 'var(--font-title-regular)' }}
                   type="button"
                 >
                   {item.status}
                 </button>
-                <span className="text-[20px] font-semibold" style={{ fontFamily: 'var(--font-title-semibold)' }}>
+                <span className="text-[20px] font-semibold font-title-semibold">
                   {item.price}
                 </span>
               </div>
