@@ -101,7 +101,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
 
           <div className="w-full h-[8px] bg-[var(--gray-light)] rounded-full relative overflow-hidden">
             <div
-              className="bg-[var(--main-3)] rounded-full transition-all duration-200 absolute top-0 left-0 h-[8px]"
+              className="bg-[var(--main-4)] rounded-full absolute top-0 left-0 h-[8px]"
               style={{ width: `${percentage}%` }}
             />
           </div>
@@ -125,9 +125,9 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
 
           <div
             className={cn(
-              'absolute bg-white rounded-full transition-all duration-200 pointer-events-none border-2 border-white w-5 h-5 top-1/2 -translate-y-1/2',
+              'absolute bg-white rounded-full pointer-events-none border-2 border-white w-5 h-5 top-1/2 -translate-y-1/2',
               !disabled && (isDragging ? 'shadow-xl scale-110' : 'shadow-md'),
-              disabled && 'bg-gray-400 border-gray-400',
+              disabled && 'bg-[var(--gray)] border-[var(--gray)]',
             )}
             style={{
               left: `calc(${percentage}% - 10px)`,
