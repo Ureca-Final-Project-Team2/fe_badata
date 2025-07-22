@@ -1,49 +1,35 @@
 import { useRouter } from 'next/navigation';
 
-import { ArrowDownUp, ListFilter } from 'lucide-react';
+import { ListFilter } from 'lucide-react';
 
-import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
 import { PATH } from '@/shared/config/path';
 import { Product } from '@/shared/ui/Product';
+import { SortButton } from '@/shared/ui/SortButton';
 
-type SortOption = 'latest' | 'popular';
+import type { AllPost } from '@/entities/trade-post/lib/types';
 
 interface GifticonListProps {
-  sortOption: SortOption;
+  items: AllPost[];
+  isLoading: boolean;
+  sortLabel: string;
   onSortClick: () => void;
-  selectedCategory: string;
 }
 
-export function GifticonList({ sortOption, onSortClick, selectedCategory }: GifticonListProps) {
-  const { posts, isLoading } = useTradePostsQuery();
+export function GifticonList({ items, isLoading, sortLabel, onSortClick }: GifticonListProps) {
   const router = useRouter();
 
   if (isLoading) {
     return <div>로딩 중...</div>;
   }
 
-  if (!posts || posts.length === 0) {
+  if (items.length === 0) {
     return <div>쿠폰 게시물이 없습니다.</div>;
   }
-  const gifticonPosts = posts.filter((p) => p.postCategory === 'GIFTICON');
-
-  const filtered = gifticonPosts.filter(
-    (p) => selectedCategory === '전체' || p.gifticonCategory === selectedCategory,
-  );
-
-  const sorted = [...filtered].sort((a, b) =>
-    sortOption === 'latest'
-      ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      : b.likesCount - a.likesCount,
-  );
 
   return (
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
-        <button onClick={onSortClick} className="flex flex-row gap-1 items-center font-semibold">
-          <ArrowDownUp size={16} />
-          {sortOption === 'latest' ? '최신순' : '인기순'}
-        </button>
+        <SortButton onClick={onSortClick} label={sortLabel} />
 
         <div className="flex flex-row gap-1 items-center font-semibold">
           조건
@@ -52,7 +38,7 @@ export function GifticonList({ sortOption, onSortClick, selectedCategory }: Gift
       </div>
 
       <div className="flex flex-col gap-4 py-4">
-        {sorted.map((item) => (
+        {items.map((item) => (
           <div
             key={item.id}
             onClick={() => router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(item.id)))}

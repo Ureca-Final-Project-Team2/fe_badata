@@ -1,43 +1,34 @@
 import { useRouter } from 'next/navigation';
 
-import { ArrowDownUp, ListFilter } from 'lucide-react';
+import { ListFilter } from 'lucide-react';
 
-import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
 import { PATH } from '@/shared/config/path';
 import { Product } from '@/shared/ui/Product';
+import { SortButton } from '@/shared/ui/SortButton';
 
-type SortOption = 'latest' | 'popular';
+import type { AllPost } from '@/entities/trade-post/lib/types';
 
 interface DataListProps {
-  sortOption: SortOption;
+  items: AllPost[];
+  isLoading: boolean;
+  sortLabel: string;
   onSortClick: () => void;
 }
 
-export function DataList({ sortOption, onSortClick }: DataListProps) {
-  const { posts, isLoading } = useTradePostsQuery();
+export function DataList({ items, isLoading, sortLabel, onSortClick }: DataListProps) {
   const router = useRouter();
 
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--black)]">로딩 중...</div>;
   }
-  if (!posts || posts.length === 0) {
+  if (items.length === 0) {
     return <div className="py-4 text-center text-[var(--black)]">게시물이 없습니다.</div>;
   }
-
-  const dataPosts = posts.filter((p) => p.postCategory === 'DATA');
-  const sorted = [...dataPosts].sort((a, b) =>
-    sortOption === 'latest'
-      ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      : b.likesCount - a.likesCount,
-  );
 
   return (
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
-        <button onClick={onSortClick} className="flex flex-row gap-1 items-center font-semibold">
-          <ArrowDownUp size={16} />
-          {sortOption === 'latest' ? '최신순' : '인기순'}
-        </button>
+        <SortButton label={sortLabel} onClick={onSortClick} />
 
         <div className="flex flex-row gap-1 items-center font-semibold">
           조건
@@ -46,7 +37,7 @@ export function DataList({ sortOption, onSortClick }: DataListProps) {
       </div>
 
       <div className="flex flex-col gap-4">
-        {sorted.map((item) => (
+        {items.map((item) => (
           <div
             key={item.id}
             onClick={() => router.push(PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id)))}
