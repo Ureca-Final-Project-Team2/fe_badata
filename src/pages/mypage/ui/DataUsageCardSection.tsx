@@ -53,11 +53,8 @@ export const DataUsageCardSection = () => {
           </div>
         </div>
         <div className="flex justify-between w-full mt-4">
-          <span className="font-label-regular">코인 모으기</span>
-          <Link
-            href="/mypage/coin"
-            className="flex items-center gap-1.5 hover:underline hover:font-semibold"
-          >
+          <span className="font-label-semibold">코인 모으기</span>
+          <Link href="/mypage/coin-history" className="flex items-center gap-1.5 group hover:font-semibold">
             <Image
               src={ICONS.MYPAGE.COIN}
               alt="coin"
@@ -65,7 +62,11 @@ export const DataUsageCardSection = () => {
               height={16}
               className="object-contain"
             />
-            현재 <span className="font-label-semibold">{coinAmount}</span> 코인
+            현재{' '}
+            <span className="font-label-semibold group-hover:text-[var(--main-3)]">
+              {coinAmount}
+            </span>{' '}
+            코인
           </Link>
         </div>
       </div>
