@@ -17,7 +17,8 @@ export function StoreCard({
   onLikeClick,
   isLiked = false,
   className,
-}: StoreCardProps) {
+  showDistance = true,
+}: StoreCardProps & { showDistance?: boolean }) {
   const operatingStatus = storeDetail.isOpening ? '영업 중' : '영업 종료';
 
   return (
@@ -26,7 +27,6 @@ export function StoreCard({
     >
       {/* 왼쪽: 스토어 이미지 */}
       <ImageBox size="xs" url={storeDetail.imageUrl} />
-
       {/* 중앙: content 영역 */}
       <div className="flex flex-col flex-1 h-[68px] justify-between">
         {/* 타이틀: 상단 고정 */}
@@ -39,9 +39,11 @@ export function StoreCard({
         {/* 거리/주소/남은 공유기: 하단 고정 */}
         <div className="flex gap-2">
           <div className="flex items-end gap-2 flex-1">
-            <span className="text-[var(--main-5)] font-small-semibold">
-              {formatDistance(storeDetail.distanceFromMe)}
-            </span>
+            {showDistance && (
+              <span className="text-[var(--main-5)] font-small-semibold">
+                {formatDistance(storeDetail.distanceFromMe)}
+              </span>
+            )}
             <span className="font-small-regular text-[var(--main-5)] truncate">
               {storeDetail.detailAddress}
             </span>
