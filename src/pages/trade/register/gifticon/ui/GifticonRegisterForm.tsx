@@ -43,7 +43,7 @@ export function TradeGifticonRegisterForm() {
     const file = e.target.files?.[0];
     if (file) {
       if (file.type !== 'image/jpeg') {
-        alert('jpeg 파일만 업로드 가능합니다.');
+        makeToast('jpeg 파일만 업로드 가능합니다.', 'warning');
         return;
       }
       const reader = new FileReader();
