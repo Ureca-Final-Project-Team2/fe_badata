@@ -1,5 +1,6 @@
 'use client';
 
+import { ICONS } from '@/shared/config/iconPath';
 import { useUserTradePostsQuery } from '@/widgets/trade/post-detail/model/queries';
 import SellerPostCard from '@/widgets/trade/ui/SellerPostCard';
 import UserProfileCard from '@/widgets/user/ui/UserProfileCard';
@@ -46,9 +47,7 @@ export const TradeDetailSellerSection = ({
             {posts.map((item) => (
               <SellerPostCard
                 key={item.id}
-                imageUrl={
-                  item.postImage === 'no image' ? '/assets/trade-detail.jpg' : item.postImage
-                }
+                imageUrl={item.postImage === 'no image' ? ICONS.LOGO.DETAIL : item.postImage}
                 title={item.title}
                 partner={item.partner || ''}
                 price={item.price}
