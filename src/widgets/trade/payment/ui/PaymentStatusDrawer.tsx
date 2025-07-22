@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Lottie from 'lottie-react';
 import confettiAnimation from 'public/assets/CongratsAnimation.json';
 
-import { Drawer } from '@/shared/ui/Drawer/Drawer';
+import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 
 interface PaymentStatusDrawerProps {
   open: boolean;
@@ -12,7 +12,7 @@ interface PaymentStatusDrawerProps {
 
 export default function PaymentStatusDrawer({ open, onClose }: PaymentStatusDrawerProps) {
   return (
-    <Drawer isOpen={open} onClose={onClose}>
+    <FilterDrawer isOpen={open} onClose={onClose}>
       <div className="flex flex-col items-center py-6">
         <div className="w-24 h-18">
           <Lottie animationData={confettiAnimation} loop={false} />
@@ -33,6 +33,6 @@ export default function PaymentStatusDrawer({ open, onClose }: PaymentStatusDraw
           닫기
         </button>
       </div>
-    </Drawer>
+    </FilterDrawer>
   );
 }
