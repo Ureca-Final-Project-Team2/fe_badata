@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import { BottomNav } from '@/shared/ui/BottomNav';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
 const initialAlarms = [
@@ -32,10 +32,7 @@ export default function RestockAlarmPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center relative">
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[428px] z-20">
-        <PageHeader title="재입고 알림 내역" onBack={() => router.back()} />
-      </div>
+    <BaseLayout header={<PageHeader title="재입고 알림 내역" onBack={() => router.back()} />} showBottomNav>
       <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-[56px] pb-[84px] px-4">
         <div className="flex items-center justify-between mt-6 mb-4">
           <span className="font-body-semibold text-[var(--black)]">
@@ -100,9 +97,6 @@ export default function RestockAlarmPage() {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[428px] z-20">
-        <BottomNav />
-      </div>
-    </div>
+    </BaseLayout>
   );
 } 

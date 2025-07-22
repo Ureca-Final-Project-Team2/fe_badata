@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Switch } from '@/components/ui/switch';
-import { BottomNav } from '@/shared/ui/BottomNav';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
 export default function AlarmSettingPage() {
@@ -22,11 +22,9 @@ export default function AlarmSettingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center">
+    <BaseLayout header={<PageHeader title="알림 설정" onBack={() => router.back()} />} showBottomNav>
       <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
         <div>
-          <PageHeader title="알림 설정" onBack={() => router.back()} />
-
           <div className="px-4 pt-6 pb-10">
             <h2 className="font-body-semibold mb-6">알림 설정</h2>
             <ul className="flex flex-col gap-5">
@@ -57,10 +55,8 @@ export default function AlarmSettingPage() {
             </ul>
           </div>
         </div>
-
-        <BottomNav />
       </div>
-    </div>
+    </BaseLayout>
   );
 }
 

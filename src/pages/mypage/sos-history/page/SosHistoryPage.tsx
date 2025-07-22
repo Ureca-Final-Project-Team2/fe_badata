@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { BottomNav } from '@/shared/ui/BottomNav';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { PageHeader } from '@/shared/ui/Header';
 
@@ -22,10 +22,8 @@ export default function SosHistoryPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--white)] flex flex-col items-center relative">
+    <BaseLayout header={<PageHeader title="SOS 요청 내역" onBack={() => router.back()} />} showBottomNav>
       <div className="w-full max-w-[428px]">
-        <PageHeader title="SOS 요청 내역" onBack={() => router.back()} />
-
         <div className="px-4 pt-0 pb-[96px]">
           <h2 className="font-body-semibold mb-4 mt-4">나의 데이터 요금</h2>
           <DataUsageCard
@@ -60,11 +58,7 @@ export default function SosHistoryPage() {
           </ul>
         </div>
       </div>
-
-      <div className="fixed bottom-0 w-full max-w-[428px]">
-        <BottomNav />
-      </div>
-    </div>
+    </BaseLayout>
   );
 }
 

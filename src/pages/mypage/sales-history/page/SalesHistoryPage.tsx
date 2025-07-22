@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { BottomNav } from '@/shared/ui/BottomNav';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab';
 import { PageHeader } from '@/shared/ui/Header';
 import { Switch } from '@/shared/ui/Switch/Switch';
@@ -79,9 +79,8 @@ export default function SalesHistoryPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--white)] flex flex-col items-center relative">
+    <BaseLayout header={<PageHeader title="판매 내역" onBack={() => router.back()} />} showBottomNav>
       <div className="w-full max-w-[428px]">
-        <PageHeader title="판매 내역" onBack={() => router.back()} />
         <div className="flex flex-col items-center px-4 mt-4">
           <MyProfileCard name={profile.name} days={profile.days} avatarSrc={profile.avatarSrc} />
 
@@ -133,10 +132,6 @@ export default function SalesHistoryPage() {
           </div>
         </div>
       </div>
-
-      <div className="fixed bottom-0 w-full max-w-[428px]">
-        <BottomNav />
-      </div>
-    </div>
+    </BaseLayout>
   );
 }

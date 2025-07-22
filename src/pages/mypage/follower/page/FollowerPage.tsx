@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { BottomNav } from '@/shared/ui/BottomNav';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { Profile } from '@/shared/ui/Profile';
 
@@ -25,25 +25,19 @@ export default function FollowerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--white)] flex flex-col items-center relative">
-      <div className="w-full max-w-[428px]">
-        <PageHeader title="팔로워 목록" onBack={() => router.back()} />
-        <ul className="px-4 pt-6 pb-[96px] flex flex-col gap-4">
-          {followers.map((user) => (
-            <li key={user.id} className="w-full">
-              <Profile
-                name={user.name}
-                avatar={user.avatar}
-                showCloseButton
-                onClose={() => handleRemove(user.id)}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="fixed bottom-0 w-full max-w-[428px]">
-        <BottomNav />
-      </div>
-    </div>
+    <BaseLayout header={<PageHeader title="팔로워 목록" onBack={() => router.back()} />} showBottomNav>
+      <ul className="px-4 pt-6 pb-[96px] flex flex-col gap-4">
+        {followers.map((user) => (
+          <li key={user.id} className="w-full">
+            <Profile
+              name={user.name}
+              avatar={user.avatar}
+              showCloseButton
+              onClose={() => handleRemove(user.id)}
+            />
+          </li>
+        ))}
+      </ul>
+    </BaseLayout>
   );
 } 

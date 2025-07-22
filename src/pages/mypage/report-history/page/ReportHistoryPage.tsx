@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { BottomNav } from '@/shared/ui/BottomNav';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
@@ -42,9 +42,8 @@ export default function ReportHistoryPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-[var(--white)] flex flex-col items-center">
+    <BaseLayout header={<PageHeader title="신고 내역" onBack={() => router.back()} />} showBottomNav>
       <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
-        <PageHeader title="신고 내역" onBack={() => router.back()} />
         <div className="px-4 pt-6 pb-24">
           <h2 className="font-body-semibold mb-4">신고 게시물</h2>
           <TradePostCard
@@ -81,8 +80,7 @@ export default function ReportHistoryPage() {
             />
           </ul>
         </div>
-        <BottomNav />
       </div>
-    </div>
+    </BaseLayout>
   );
 }
