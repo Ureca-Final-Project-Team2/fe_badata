@@ -58,7 +58,7 @@ export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick
             key={item.id}
             imageUrl={item.postImage}
             title={item.title}
-            partner={item.partner}
+            mobileCarrier={item.mobileCarrier}
             price={item.price}
             likeCount={item.likesCount}
             isLiked={item.isLiked}
