@@ -1,4 +1,3 @@
-// src/pages/rental/map/ui/useScore.ts
 import { useState } from 'react';
 
 export function useScore(initialScore = 0) {
