@@ -3,6 +3,7 @@
 import { useEffect, useReducer } from 'react';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { ImageUp } from 'lucide-react';
 
@@ -12,7 +13,9 @@ import {
   reducer,
 } from '@/pages/trade/register/gifticon/model/gifticonRegisterReducer';
 import { usePostTradeGifticonMutation } from '@/pages/trade/register/gifticon/model/mutations';
+import { PATH } from '@/shared/config/path';
 import { toRawPrice } from '@/shared/lib/formatPrice';
+import { makeToast } from '@/shared/lib/makeToast';
 import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
@@ -23,6 +26,7 @@ import type { State } from '@/pages/trade/register/gifticon/model/gifticonRegist
 export function TradeGifticonRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = usePostTradeGifticonMutation();
+  const router = useRouter();
 
   useEffect(() => {
     const cat = getCategoryByPartner(state.ocrResult.partner);
@@ -86,6 +90,13 @@ export function TradeGifticonRegisterForm() {
         : basePayload;
 
     mutate(payload, {
+      onSuccess: () => {
+        makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
+        router.push(PATH.TRADE.GIFTICON);
+      },
+      onError: () => {
+        makeToast('게시물 등록에 실패했습니다.', 'warning');
+      },
       onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
     });
   };

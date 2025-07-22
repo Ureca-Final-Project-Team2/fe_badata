@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 
 import Providers from '@/app/_providers';
+import { Toaster } from '@/shared/ui/Toaster';
 
 import './globals.css';
 
@@ -22,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
-        <Providers>{children}</Providers>
+        <Providers>
+          <Toaster />
+          {children}
+        </Providers>
       </body>
     </html>
   );

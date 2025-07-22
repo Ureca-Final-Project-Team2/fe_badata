@@ -1,8 +1,12 @@
 import { useReducer } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { initialState, reducer } from '@/pages/trade/register/data/model/dataRegisterReducer';
 import { usePostTradeDataMutation } from '@/pages/trade/register/data/model/mutations';
+import { PATH } from '@/shared/config/path';
 import { toRawPrice } from '@/shared/lib/formatPrice';
+import { makeToast } from '@/shared/lib/makeToast';
 import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
@@ -10,6 +14,7 @@ import { TextAreaField } from '@/shared/ui/TextAreaField';
 export function TradeDataRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = usePostTradeDataMutation();
+  const router = useRouter();
 
   const handleSubmit = () => {
     const { title, deadLine, capacity, price, comment } = state.form;
@@ -26,6 +31,13 @@ export function TradeDataRegisterForm() {
         comment,
       },
       {
+        onSuccess: () => {
+          makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
+          router.push(PATH.TRADE.DATA);
+        },
+        onError: () => {
+          makeToast('게시물 등록에 실패했습니다.', 'warning');
+        },
         onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
       },
     );
@@ -55,7 +67,6 @@ export function TradeDataRegisterForm() {
         errorMessage="상품명을 입력해주세요."
       />
       <InputField label="통신사" value="UPLUS" readOnly variant="ocr" />
-
       <InputField
         label="만료일"
         isRequired

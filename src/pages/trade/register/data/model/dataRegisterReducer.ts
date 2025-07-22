@@ -5,6 +5,7 @@ export interface State {
     capacity: string;
     price: string;
     comment: string;
+    mobileCarrier: string;
   };
   isSubmitting: boolean;
 }
@@ -21,6 +22,7 @@ export const initialState: State = {
     capacity: '',
     price: '',
     comment: '',
+    mobileCarrier: 'UPLUS',
   },
   isSubmitting: false,
 };
