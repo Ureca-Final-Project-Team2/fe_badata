@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 
 import {
   initialRentalFilterState,
@@ -15,6 +15,7 @@ import { Slider } from '@/shared/ui/Slider';
 const dataAmountOptions = RENTAL_DATA_AMOUNTS;
 const dataTypeOptions = RENTAL_DATA_TYPES;
 const deviceCountOptions = RENTAL_DEVICE_COUNTS;
+const LOCAL_STORAGE_KEY = 'rentalFilterState';
 
 // SectionField: 공통 필터 섹션 컴포넌트
 function SectionField({ title, children }: { title: string; children: React.ReactNode }) {
@@ -27,7 +28,20 @@ function SectionField({ title, children }: { title: string; children: React.Reac
 }
 
 export default function RentalFilterContent() {
-  const [state, dispatch] = useReducer(rentalFilterReducer, initialRentalFilterState);
+  // localStorage에서 초기값 불러오기
+  const getInitialState = () => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    }
+    return initialRentalFilterState;
+  };
+  const [state, dispatch] = useReducer(rentalFilterReducer, undefined, getInitialState);
+
+  // 상태가 바뀔 때마다 localStorage에 저장
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
 
   return (
     <form className="flex flex-col rounded-lg p-4 ">
