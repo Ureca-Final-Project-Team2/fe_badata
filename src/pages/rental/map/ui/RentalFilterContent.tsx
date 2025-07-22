@@ -9,6 +9,8 @@ import {
 } from '@/pages/rental/map/model/rentalFilterReducer';
 import { Score } from '@/pages/rental/map/ui';
 import { OptionButton } from '@/pages/rental/map/ui/OptionButton';
+import SectionField from '@/pages/rental/map/ui/SectionField';
+import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { Slider } from '@/shared/ui/Slider';
 
@@ -16,16 +18,6 @@ const dataAmountOptions = RENTAL_DATA_AMOUNTS;
 const dataTypeOptions = RENTAL_DATA_TYPES;
 const deviceCountOptions = RENTAL_DEVICE_COUNTS;
 const LOCAL_STORAGE_KEY = 'rentalFilterState';
-
-// SectionField: 공통 필터 섹션 컴포넌트
-function SectionField({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="font-label-semibold">{title}</div>
-      {children}
-    </div>
-  );
-}
 
 export default function RentalFilterContent() {
   // localStorage에서 초기값 불러오기
@@ -55,6 +47,13 @@ export default function RentalFilterContent() {
             ×
           </button>
         </div>
+        <SectionField title="대여 기간">
+          <DatePicker
+            value={state.dateRange}
+            onChange={(range) => dispatch({ type: 'SET_DATE_RANGE', payload: range })}
+            placeholder="대여 기간을 선택해주세요"
+          />
+        </SectionField>
         <SectionField title="별점">
           <Score value={state.star} onChange={(n) => dispatch({ type: 'SET_STAR', payload: n })} />
         </SectionField>
