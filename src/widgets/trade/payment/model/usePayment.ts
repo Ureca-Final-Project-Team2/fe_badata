@@ -47,10 +47,17 @@ export function usePayment(postId: number, title: string, price: number) {
       return;
     }
 
+    const channelKey = process.env.NEXT_PUBLIC_IAMPORT_CHANNEL_KEY;
+    if (!channelKey) {
+      alert('결제 설정 오류: 채널 키가 설정되지 않았습니다.');
+      setLoading(false);
+      return;
+    }
+
     window.IMP.init('imp84603310');
     window.IMP.request_pay(
       {
-        channelKey: process.env.NEXT_PUBLIC_IAMPORT_CHANNEL_KEY!,
+        channelKey,
         pay_method: 'CARD',
         merchant_uid,
         name: title,
