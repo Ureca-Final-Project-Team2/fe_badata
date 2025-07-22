@@ -19,6 +19,14 @@ export async function verifyPayment(impUid: string, postId: number) {
  */
 
 export async function createPayment(postId: number) {
-  const res = await axiosInstance.post(`/api/v1/trades/create/${postId}`);
-  return res; // { merchantUid: string }
+  try {
+    const res = await axiosInstance.post(`/api/v1/trades/create/${postId}`);
+    return res; // { merchantUid: string }
+  } catch (error: unknown) {
+    let message = 'merchantUid 발급 중 오류가 발생했습니다.';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    throw new Error(message);
+  }
 }

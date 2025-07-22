@@ -28,7 +28,12 @@ export function usePayment(postId: number, title: string, price: number) {
     try {
       const res = await createPayment(postId);
       console.log('createPayment 응답:', res);
-      merchant_uid = res.merchantUid;
+      if (!res || typeof res !== 'object' || !('merchantUid' in res)) {
+        alert('결제 고유 ID 응답이 올바르지 않습니다.');
+        setLoading(false);
+        return;
+      }
+      merchant_uid = res.merchantUid as string;
     } catch (e) {
       console.error('createPayment 에러:', e);
       alert('결제 고유 ID 발급 실패');
