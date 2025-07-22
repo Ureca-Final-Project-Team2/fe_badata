@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
@@ -17,8 +17,8 @@ export default function SosHistoryPage() {
   const router = useRouter();
 
   const sosHistoryData = [
-    { name: '홍길동', date: '2024-06-01', amount: '2GB', status: '완료' },
-    { name: '김철수', date: '2024-06-02', amount: '1GB', status: '대기' },
+    { name: '신짱구', date: '2024-06-01', amount: '100MB', status: '완료' },
+    { name: '김철수', date: '2024-06-02', amount: '100MB', status: '대기' },
   ];
 
   return (
