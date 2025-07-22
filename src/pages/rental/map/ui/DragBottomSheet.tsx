@@ -50,44 +50,41 @@ export const DragBottomSheet = ({ open, onClose, children, storeList }: DragBott
     return null;
   }
 
+  // overlay div 제거!
   return (
-    <div className="fixed inset-0 z-30 pointer-events-none">
-      {/* overlay는 항상 전체 window 덮음 */}
-      {open && <div className="fixed inset-0 z-30 pointer-events-auto" onClick={onClose} />}
-      <motion.div
-        drag="y"
-        dragConstraints={{ top: expandedY, bottom: collapsedY }}
-        dragElastic={0.2}
-        onDragEnd={handleDragEnd}
-        initial={false}
-        animate={controls}
-        style={{
-          y,
-          height: `calc(${windowHeight}px - ${y.get()}px)`,
-        }}
-        className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
-      >
-        {/* Header 부분 */}
-        <div className="px-4 pt-4 pb-2">
-          <div className="w-12 h-1.5 bg-gray rounded-full mx-auto" />
-          <div className="font-small-bold text-[var(--gray-dark)]">
-            정렬 기준 (총 {storeList?.length || 0}개 매장)
-          </div>
+    <motion.div
+      drag="y"
+      dragConstraints={{ top: expandedY, bottom: collapsedY }}
+      dragElastic={0.2}
+      onDragEnd={handleDragEnd}
+      initial={false}
+      animate={controls}
+      style={{
+        y,
+        height: `calc(${windowHeight}px - ${y.get()}px)`,
+      }}
+      className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
+    >
+      {/* Header 부분 */}
+      <div className="px-4 pt-4 pb-2">
+        <div className="w-12 h-1.5 bg-gray rounded-full mx-auto" />
+        <div className="font-small-bold text-[var(--gray-dark)]">
+          정렬 기준 (총 {storeList?.length || 0}개 매장)
         </div>
+      </div>
 
-        {/* StoreCard 리스트 */}
-        <div className="flex-1 mb-35 overflow-y-auto custom-scrollbar">
-          {storeList && storeList.length > 0 ? (
-            <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
-              {storeList.map((store, idx) => (
-                <StoreCard key={store.id || idx} {...store} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3 px-4 pt-3 pb-6">{children}</div>
-          )}
-        </div>
-      </motion.div>
-    </div>
+      {/* StoreCard 리스트 */}
+      <div className="flex-1 mb-35 overflow-y-auto custom-scrollbar">
+        {storeList && storeList.length > 0 ? (
+          <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
+            {storeList.map((store, idx) => (
+              <StoreCard key={store.id || idx} {...store} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3 px-4 pt-3 pb-6">{children}</div>
+        )}
+      </div>
+    </motion.div>
   );
 };
