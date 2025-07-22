@@ -1,6 +1,9 @@
+import { useRouter } from 'next/navigation';
+
 import { ArrowDownUp, ListFilter } from 'lucide-react';
 
 import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
+import { PATH } from '@/shared/config/path';
 import { Product } from '@/shared/ui/Product';
 
 type SortOption = 'latest' | 'popular';
@@ -13,6 +16,7 @@ interface GifticonListProps {
 
 export function GifticonList({ sortOption, onSortClick, selectedCategory }: GifticonListProps) {
   const { posts, isLoading } = useTradePostsQuery();
+  const router = useRouter();
 
   if (isLoading) {
     return <div>로딩 중...</div>;
@@ -49,14 +53,19 @@ export function GifticonList({ sortOption, onSortClick, selectedCategory }: Gift
 
       <div className="flex flex-col gap-4 py-4">
         {sorted.map((item) => (
-          <Product
+          <div
             key={item.id}
-            brand={item.partner}
-            name={item.title}
-            price={item.price}
-            imageSrc={item.postImage}
-            likeCount={item.likesCount}
-          />
+            onClick={() => router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(item.id)))}
+            className="cursor-pointer"
+          >
+            <Product
+              brand={item.partner}
+              name={item.title}
+              price={item.price}
+              imageSrc={item.postImage}
+              likeCount={item.likesCount}
+            />
+          </div>
         ))}
       </div>
     </section>

@@ -1,6 +1,9 @@
+import { useRouter } from 'next/navigation';
+
 import { ArrowDownUp, ListFilter } from 'lucide-react';
 
 import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
+import { PATH } from '@/shared/config/path';
 import { Product } from '@/shared/ui/Product';
 
 type SortOption = 'latest' | 'popular';
@@ -12,6 +15,7 @@ interface DataListProps {
 
 export function DataList({ sortOption, onSortClick }: DataListProps) {
   const { posts, isLoading } = useTradePostsQuery();
+  const router = useRouter();
 
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--black)]">로딩 중...</div>;
@@ -43,13 +47,18 @@ export function DataList({ sortOption, onSortClick }: DataListProps) {
 
       <div className="flex flex-col gap-4">
         {sorted.map((item) => (
-          <Product
+          <div
             key={item.id}
-            name={item.title}
-            price={item.price}
-            imageSrc={item.postImage}
-            likeCount={item.likesCount}
-          />
+            onClick={() => router.push(PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id)))}
+          >
+            <Product
+              key={item.id}
+              name={item.title}
+              price={item.price}
+              imageSrc={item.postImage}
+              likeCount={item.likesCount}
+            />
+          </div>
         ))}
       </div>
     </section>
