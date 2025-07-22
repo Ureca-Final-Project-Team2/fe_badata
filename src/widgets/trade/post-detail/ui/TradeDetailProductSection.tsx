@@ -19,7 +19,7 @@ interface TradeDetailProductSectionProps {
 
 export const TradeDetailProductSection = ({
   postType,
-  thumbnailUrl = '/assets/trade-detail.jpg',
+  thumbnailUrl = ICONS.LOGO.DETAIL,
   brand = 'CU',
   name = '모바일 금액권 3천원권',
   price = 2050,
