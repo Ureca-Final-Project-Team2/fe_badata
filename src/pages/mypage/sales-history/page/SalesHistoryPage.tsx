@@ -92,20 +92,20 @@ export default function SalesHistoryPage() {
               </span>
             </div>
             <div
-              className="flex flex-col items-center flex-1 cursor-pointer"
+              className="flex flex-col items-center flex-1 cursor-pointer group"
               onClick={() => router.push('/mypage/follower')}
             >
               <span className="font-label-semibold text-[var(--black)]">팔로워</span>
-              <span className="font-body-semibold text-[var(--black)] mt-1">
+              <span className="font-body-semibold text-[var(--black)] mt-1 group-hover:text-[var(--main-3)]">
                 {profile.follower}
               </span>
             </div>
             <div
-              className="flex flex-col items-center flex-1 cursor-pointer"
+              className="flex flex-col items-center flex-1 cursor-pointer group"
               onClick={() => router.push('/mypage/following')}
             >
               <span className="font-label-semibold text-[var(--black)]">팔로잉</span>
-              <span className="font-body-semibold text-[var(--black)] mt-1">
+              <span className="font-body-semibold text-[var(--black)] mt-1 group-hover:text-[var(--main-3)]">
                 {profile.following}
               </span>
             </div>

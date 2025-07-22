@@ -5,8 +5,8 @@ import Link from 'next/link';
 export const ReportStatusSection = () => (
   <>
     <div className="flex justify-between items-end mb-2 mt-6">
-      <h2 className="font-title-semibold leading-[28px]">나의 신고 내역 조회</h2>
-      <Link href="/mypage/report-history">접수 내역보기 &gt;</Link>
+      <h2 className="font-body-semibold leading-[28px]">나의 신고 내역 조회</h2>
+      <Link href="/mypage/report-history" className="hover:text-[var(--main-3)]">접수 내역보기 &gt;</Link>
     </div>
 
     <section className="grid grid-cols-3 gap-2 text-center">
@@ -16,7 +16,7 @@ export const ReportStatusSection = () => (
         { count: 1, label: '신고 완료' },
       ].map(({ count, label }) => (
         <div key={label} className="bg-white rounded-xl p-4 shadow-sm flex flex-col items-center">
-          <div className="font-title-semibold">{count}</div>
+          <div className="font-body-semibold">{count}</div>
           <div className="font-label-regular mt-1">{label}</div>
         </div>
       ))}
