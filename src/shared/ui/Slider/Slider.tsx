@@ -129,10 +129,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
               !disabled && (isDragging ? 'shadow-xl scale-110' : 'shadow-md'),
               disabled && 'bg-[var(--gray)] border-[var(--gray)]',
             )}
-            style={{
-              left: `calc(${percentage}% - 10px)`,
-              zIndex: 10,
-            }}
+            style={{ left: `calc(${percentage}% - 10px)` }}
           />
         </div>
       </div>
