@@ -1,23 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-interface OptionButtonProps {
+export interface OptionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  selected?: boolean;
   children: React.ReactNode;
+  className?: string;
 }
 
-export const OptionButton = ({ children }: OptionButtonProps) => {
-  const [selected, setSelected] = useState(false);
+const OptionButtonComponent = ({
+  selected = false,
+  children,
+  className = '',
+  ...rest
+}: OptionButtonProps) => (
+  <button
+    type="button"
+    className={`w-[85px] h-[34px] rounded-full flex items-center justify-center font-label-semilbold border-none shadow-none transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[var(--main-5)] ${
+      selected ? 'bg-[var(--main-5)] text-white' : 'bg-white text-[var(--main-5)]'
+    } ${className}`}
+    {...rest}
+  >
+    {children}
+  </button>
+);
 
-  return (
-    <button
-      className={`w-[85px] h-[34px] rounded-full flex items-center justify-center font-body-medium  border-none shadow-none transition-colors duration-150 ${
-        selected ? 'bg-[var(--main-5)] text-white' : 'bg-white text-[var(--main-5)]'
-      } `}
-      type="button"
-      onClick={() => setSelected((prev) => !prev)}
-    >
-      {children}
-    </button>
-  );
-};
+OptionButtonComponent.displayName = 'OptionButton';
+
+export const OptionButton = React.memo(OptionButtonComponent);
 
 export default OptionButton;
