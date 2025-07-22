@@ -19,7 +19,11 @@ const dataTypeOptions = RENTAL_DATA_TYPES;
 const deviceCountOptions = RENTAL_DEVICE_COUNTS;
 const LOCAL_STORAGE_KEY = 'rentalFilterState';
 
-export default function RentalFilterContent() {
+interface RentalFilterContentProps {
+  onClose?: () => void;
+}
+
+export default function RentalFilterContent({ onClose }: RentalFilterContentProps) {
   // localStorage에서 초기값 불러오기
   const getInitialState = () => {
     if (typeof window !== 'undefined') {
@@ -43,7 +47,11 @@ export default function RentalFilterContent() {
           <span className="font-body-semibold">플레이스 필터</span>
           <span className="text-[var(--gray-dark)] text-small-regular">|</span>
           <span className="text-small-regular">지도</span>
-          <button type="button" className="ml-auto text-2xl text-[var(--gray-dark)]">
+          <button
+            type="button"
+            className="ml-auto text-2xl text-[var(--gray-dark)]"
+            onClick={onClose}
+          >
             ×
           </button>
         </div>

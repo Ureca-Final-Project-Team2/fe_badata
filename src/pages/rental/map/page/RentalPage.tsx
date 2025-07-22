@@ -49,7 +49,7 @@ const RentalPage = () => {
         onClose={() => setFilterDrawerOpen(false)}
         className="bg-[var(--main-2)]"
       >
-        <RentalFilterContent />
+        <RentalFilterContent onClose={() => setFilterDrawerOpen(false)} />
       </FilterDrawer>
     </BaseLayout>
   );
