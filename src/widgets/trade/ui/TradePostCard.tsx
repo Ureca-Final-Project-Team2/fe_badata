@@ -6,6 +6,8 @@ import DdayBadge from '@/shared/ui/DdayBadge';
 import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PostStatusBadge from '@/shared/ui/PostStatusBadge';
 import PriceText from '@/shared/ui/PriceText';
+
+import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
 const DEFAULT_IMAGE = ICONS.LOGO.DETAIL;
 
 interface TradePostCardProps {
@@ -14,6 +16,7 @@ interface TradePostCardProps {
   price: number | string;
   likeCount: number;
   partner?: string;
+  mobileCarrier?: MobileCarrier;
   hasDday?: boolean;
   dday?: number | string;
   isCompleted?: boolean;
@@ -39,6 +42,7 @@ const TradePostCard = ({
   imageUrl,
   title,
   partner,
+  mobileCarrier,
   price,
   likeCount,
   hasDday = false,
@@ -107,7 +111,7 @@ const TradePostCard = ({
           {title}
         </span>
         <span className="text-[var(--black)] text-[12.8px] mt-1.5 font-pretendard font-light leading-none truncate">
-          {partner}
+          {partner ? partner : mobileCarrier}
         </span>
         <div className="flex items-center justify-between mt-1.5">
           <PriceText value={formatPrice(String(price))} size="md" />
