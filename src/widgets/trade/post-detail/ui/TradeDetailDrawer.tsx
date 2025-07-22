@@ -15,7 +15,7 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId }: Props) => {
   const isOwner = useIsPostOwner(postUserId);
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} variant="default">
+    <Drawer isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col">
         {isOwner ? (
           <div>

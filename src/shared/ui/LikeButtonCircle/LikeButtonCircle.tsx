@@ -13,7 +13,7 @@ export function LikeButtonCircle({
   onClick,
   className,
   size = 'md',
-  shadow = false,
+  shadow = true,
 }: LikeButtonCircleProps) {
   return (
     <div

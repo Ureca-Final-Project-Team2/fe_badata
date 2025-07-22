@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import UserProfileCard from './UserProfileCard';
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta: Meta<typeof UserProfileCard> = {
   title: 'Widgets/User/UserProfileCard',
