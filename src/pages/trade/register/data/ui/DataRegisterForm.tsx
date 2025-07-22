@@ -12,8 +12,6 @@ import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
 
-import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
-
 export function TradeDataRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = usePostTradeDataMutation();
@@ -27,7 +25,7 @@ export function TradeDataRegisterForm() {
     mutate(
       {
         title,
-        mobileCarrier: 'UPLUS',
+        mobileCarrier: state.form.mobileCarrier,
         deadLine,
         capacity: Number(capacity),
         price: toRawPrice(price),
@@ -70,7 +68,7 @@ export function TradeDataRegisterForm() {
         errorMessage="상품명을 입력해주세요."
       />
       <MobileCarrierSelect
-        value={state.form.mobileCarrier as MobileCarrier}
+        value={state.form.mobileCarrier}
         onChange={(val) => dispatch({ type: 'CHANGE_FIELD', field: 'mobileCarrier', value: val })}
         required
       />

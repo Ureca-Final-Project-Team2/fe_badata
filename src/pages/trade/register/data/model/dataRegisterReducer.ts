@@ -1,3 +1,5 @@
+import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
+
 export interface State {
   form: {
     title: string;
@@ -5,13 +7,14 @@ export interface State {
     capacity: string;
     price: string;
     comment: string;
-    mobileCarrier: string;
+    mobileCarrier: MobileCarrier;
   };
   isSubmitting: boolean;
 }
 
 export type Action =
-  | { type: 'CHANGE_FIELD'; field: keyof State['form']; value: string }
+  | { type: 'CHANGE_FIELD'; field: keyof Omit<State['form'], 'mobileCarrier'>; value: string }
+  | { type: 'CHANGE_FIELD'; field: 'mobileCarrier'; value: MobileCarrier }
   | { type: 'SET_SUBMITTING'; value: boolean }
   | { type: 'RESET' };
 
