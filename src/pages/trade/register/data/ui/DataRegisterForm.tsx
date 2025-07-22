@@ -4,12 +4,15 @@ import { useRouter } from 'next/navigation';
 
 import { initialState, reducer } from '@/pages/trade/register/data/model/dataRegisterReducer';
 import { usePostTradeDataMutation } from '@/pages/trade/register/data/model/mutations';
+import { MobileCarrierSelect } from '@/pages/trade/register/data/ui/MobileCarrierSelect';
 import { PATH } from '@/shared/config/path';
 import { toRawPrice } from '@/shared/lib/formatPrice';
 import { makeToast } from '@/shared/lib/makeToast';
 import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
+
+import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
 
 export function TradeDataRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -66,7 +69,11 @@ export function TradeDataRegisterForm() {
         placeholder="데이터 상품명"
         errorMessage="상품명을 입력해주세요."
       />
-      <InputField label="통신사" value="UPLUS" readOnly variant="ocr" />
+      <MobileCarrierSelect
+        value={state.form.mobileCarrier as MobileCarrier}
+        onChange={(val) => dispatch({ type: 'CHANGE_FIELD', field: 'mobileCarrier', value: val })}
+        required
+      />
       <InputField
         label="만료일"
         isRequired
