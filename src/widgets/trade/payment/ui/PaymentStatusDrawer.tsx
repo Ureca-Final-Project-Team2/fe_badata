@@ -12,7 +12,7 @@ interface PaymentStatusDrawerProps {
 
 export default function PaymentStatusDrawer({ open, onClose }: PaymentStatusDrawerProps) {
   return (
-    <Drawer isOpen={open} onClose={onClose} variant="filter">
+    <Drawer isOpen={open} onClose={onClose}>
       <div className="flex flex-col items-center py-6">
         <div className="w-24 h-18">
           <Lottie animationData={confettiAnimation} loop={false} />
