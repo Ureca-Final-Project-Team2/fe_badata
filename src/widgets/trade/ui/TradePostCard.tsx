@@ -1,10 +1,11 @@
+import Image from 'next/image';
+
 import { ICONS } from '@/shared/config/iconPath';
 import { formatPrice } from '@/shared/lib/formatPrice';
 import DdayBadge from '@/shared/ui/DdayBadge';
 import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PostStatusBadge from '@/shared/ui/PostStatusBadge';
 import PriceText from '@/shared/ui/PriceText';
-import Image from 'next/image';
 
 const DEFAULT_IMAGE = ICONS.LOGO.DETAIL;
 
@@ -82,7 +83,7 @@ const TradePostCard = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 mt-0.5">
             <Image
-              src={ICONS.ETC.SHELL_GRAY}
+              src={ICONS.ETC.LIKE_NONACTIVE}
               alt="좋아요"
               width={20}
               height={20}

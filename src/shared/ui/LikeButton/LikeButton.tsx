@@ -7,6 +7,7 @@ import { ICONS } from '@/shared/config/iconPath';
 interface LikeButtonProps {
   active?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+
   size?: 'sm' | 'md';
 }
 

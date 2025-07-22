@@ -1,9 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { PageHeader } from '@/shared/ui/Header';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
-import { useRouter } from 'next/navigation';
 
 interface TimelineItemProps {
   label: string;
@@ -45,7 +46,6 @@ export default function ReportHistoryPage() {
       <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
         <PageHeader title="신고 내역" onBack={() => router.back()} />
         <div className="px-4 pt-6 pb-24">
-          {/* 신고 게시물 */}
           <h2 className="text-[20px] font-semibold mb-4">신고 게시물</h2>
           <TradePostCard
             imageUrl="/assets/trade-sample.png"
@@ -57,7 +57,6 @@ export default function ReportHistoryPage() {
             isLiked={false}
           />
 
-          {/* 신고 진행 과정 */}
           <h2 className="text-[20px] font-semibold mt-8 mb-4">신고 진행 과정</h2>
           <ul className="flex flex-col gap-6">
             <TimelineItem label="판매" text="구매 결제" date="2025-07-07 17:07" color="gray" />
