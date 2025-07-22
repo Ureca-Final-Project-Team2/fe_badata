@@ -4,7 +4,7 @@ import path from 'path';
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['badatabucket.s3.ap-northeast-2.amazonaws.com'],
+    domains: ['badatabucket.s3.ap-northeast-2.amazonaws.com', 'images.unsplash.com'],
   },
   webpack: (config) => {
     config.resolve.alias = {
