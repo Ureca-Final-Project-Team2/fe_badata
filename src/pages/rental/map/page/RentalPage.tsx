@@ -4,12 +4,11 @@ import { useState } from 'react';
 
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
+import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
-
-import RentalFilterContent from '../ui/RentalFilterContent';
 
 import type { DateRange } from 'react-day-picker';
 
