@@ -15,8 +15,7 @@ export function BuyButton({ onClick, likeActive = false, onLikeClick, children }
       <button
         type="button"
         onClick={onClick}
-        className="w-[300px] h-[55px] rounded-[20px] bg-[var(--main-5)] active:bg-[var(--main-4)] text-white flex items-center justify-center transition-colors"
-        style={{ minWidth: 0, minHeight: 0 }}
+        className="w-[300px] h-[55px] rounded-[20px] bg-[var(--main-5)] active:bg-[var(--main-4)] text-white flex items-center justify-center transition-colors min-w-0 min-h-0"
       >
         <span style={{ fontSize: 'var(--font-title-semibold)', fontWeight: 600 }}>
           {children ?? '구매하기'}
