@@ -80,7 +80,7 @@ const SellerPostCard = ({
       </div>
       <div className="flex items-center w-full px-2 gap-1 mt-0.5 min-w-0">
         <Image
-          src={ICONS.ETC.SHELL_GRAY}
+          src={ICONS.ETC.LIKE_NONACTIVE}
           alt="좋아요"
           width={20}
           height={20}
