@@ -76,7 +76,7 @@ export const DragBottomSheet = ({ open, onClose, children, storeList }: DragBott
         </div>
 
         {/* StoreCard 리스트 */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="flex-1 mb-35 overflow-y-auto custom-scrollbar">
           {storeList && storeList.length > 0 ? (
             <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
               {storeList.map((store, idx) => (
