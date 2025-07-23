@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { END_POINTS, SUCCESS_CODE } from '@/shared/api/endpoints';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
 
@@ -11,7 +12,9 @@ import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 export const applyInterceptors = (instance: AxiosInstance): void => {
   instance.interceptors.request.use((config) => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('accessToken');
+      // authStore에서 토큰을 가져오기
+      const token = useAuthStore.getState().accessToken;
+
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -40,6 +43,8 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
 
       return content as T;
     },
-    (error: AxiosError<ErrorResponse>) => handleAPIError(error),
+    (error: AxiosError<ErrorResponse>) => {
+      return handleAPIError(error);
+    },
   );
 };
