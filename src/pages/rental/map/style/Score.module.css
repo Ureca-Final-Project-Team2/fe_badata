@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  user-select: none;
+  width: calc(51px * 5 + 6px * 4);
+}
+
+.interactive {
+  cursor: pointer;
+}
+
+.iconWrapper {
+  width: 51px;
+  height: 51px;
+  margin-right: 6px;
+  position: relative;
+  display: inline-block;
+}
+
+.iconWrapper:last-child {
+  margin-right: 0;
+}
+
+.iconImg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 51px;
+  height: 51px;
+  object-fit: contain;
+}
