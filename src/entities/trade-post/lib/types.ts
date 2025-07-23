@@ -40,3 +40,8 @@ export interface GifticonPost extends BasePost {
   issueDate?: string;
   gifticonCategory?: string | null;
 }
+
+export interface DeletePostResponse {
+  success: boolean;
+  message: string;
+}
