@@ -18,6 +18,16 @@ export const usePostTradePostLikeMutation = () => {
         );
       });
     },
+    onError: (error, postId) => {
+      queryClient.setQueryData<AllPost[]>(['trade-posts'], (old) => {
+        return old?.map((post) =>
+          post.id === postId
+            ? { ...post, isLiked: false, likesCount: Math.max(0, post.likesCount - 1) }
+            : post,
+        );
+      });
+      console.error('좋아요 처리 실패', error);
+    },
   });
 };
 
@@ -35,24 +45,13 @@ export const useDeleteTradePostLikeMutation = () => {
         );
       });
     },
+    onError: (error, postId) => {
+      queryClient.setQueryData<AllPost[]>(['trade-posts'], (old) => {
+        return old?.map((post) =>
+          post.id === postId ? { ...post, isLiked: true, likesCont: post.likesCount + 1 } : post,
+        );
+      });
+      console.error('좋아요 취소 실패', error);
+    },
   });
-};
-
-export const useTradePostLike = (postId: number) => {
-  const postLikeMutation = usePostTradePostLikeMutation();
-  const deleteLikeMutation = useDeleteTradePostLikeMutation();
-
-  const toggleLike = (currentLikeStatus: boolean) => {
-    if (currentLikeStatus) {
-      deleteLikeMutation.mutate(postId);
-    } else {
-      postLikeMutation.mutate(postId);
-    }
-  };
-
-  return {
-    toggleLike,
-    postLike: () => postLikeMutation.mutate(postId),
-    deleteLike: () => deleteLikeMutation.mutate(postId),
-  };
 };
