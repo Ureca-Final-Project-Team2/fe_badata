@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { BottomNav } from '@/shared/ui/BottomNav';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { PageHeader } from '@/shared/ui/Header';
 
@@ -22,12 +22,10 @@ export default function SosHistoryPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--white)] flex flex-col items-center relative">
+    <BaseLayout header={<PageHeader title="SOS 요청 내역" onBack={() => router.back()} />} showBottomNav>
       <div className="w-full max-w-[428px]">
-        <PageHeader title="SOS 요청 내역" onBack={() => router.back()} />
-
         <div className="px-4 pt-0 pb-[96px]">
-          <h2 className="text-[20px] font-semibold mb-4 mt-4">나의 데이터 요금</h2>
+          <h2 className="font-body-semibold mb-4 mt-4">나의 데이터 요금</h2>
           <DataUsageCard
             phoneMasked="010-1**4-5**8"
             planName="5G 청춘 요금제"
@@ -40,16 +38,16 @@ export default function SosHistoryPage() {
             remainingValue={5}
           />
 
-          <h2 className="text-[20px] font-semibold mt-8 mb-4">나의 SOS 요청 내역</h2>
+          <h2 className="font-body-semibold mt-8 mb-4">나의 SOS 요청 내역</h2>
           <ul className="flex flex-col gap-4">
             {sosHistoryData.length > 0 ? (
               sosHistoryData.map((item, index) => (
-                <SosHistoryList 
+                <SosHistoryList
                   key={index}
-                  name={item.name} 
-                  date={item.date} 
-                  amount={item.amount} 
-                  status={item.status} 
+                  name={item.name}
+                  date={item.date}
+                  amount={item.amount}
+                  status={item.status}
                 />
               ))
             ) : (
@@ -60,11 +58,7 @@ export default function SosHistoryPage() {
           </ul>
         </div>
       </div>
-
-      <div className="fixed bottom-0 w-full max-w-[428px]">
-        <BottomNav />
-      </div>
-    </div>
+    </BaseLayout>
   );
 }
 

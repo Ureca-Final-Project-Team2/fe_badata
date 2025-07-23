@@ -1,13 +1,17 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { ICONS } from '@/shared/config/iconPath';
 
 export const TradeSection = () => (
   <>
-    <h2 className="mb-2 text-[20px] font-sans font-semibold">나의 거래</h2>
+    <h2 className="mb-2 font-body-semibold">나의 거래</h2>
     <section className="bg-white rounded-xl p-4 shadow-sm">
       <div className="grid grid-cols-3 gap-4 text-center">
-        <div className="flex flex-col items-center justify-end gap-1 min-h-[60px]">
+        <Link
+          href="/mypage/sales-history"
+          className="flex flex-col items-center justify-end gap-1 min-h-[60px] rounded-xl transition cursor-pointer group"
+        >
           <Image
             src={ICONS.MYPAGE.TRADE_CELL}
             alt="판매 내역"
@@ -15,9 +19,12 @@ export const TradeSection = () => (
             height={18}
             className="object-contain"
           />
-          <span className="text-[--font-body-regular] font-sans font-normal">판매 내역</span>
-        </div>
-        <div className="flex flex-col items-center justify-end gap-1 min-h-[60px]">
+          <span className="font-label-regular group-hover:text-[var(--main-3)]">판매 내역</span>
+        </Link>
+        <Link
+          href="/mypage/purchase-history"
+          className="flex flex-col items-center justify-end gap-1 min-h-[60px] rounded-xl transition cursor-pointer group"
+        >
           <Image
             src={ICONS.MYPAGE.TRADE_BUY}
             alt="구매 내역"
@@ -25,10 +32,12 @@ export const TradeSection = () => (
             height={22}
             className="object-contain"
           />
-
-          <span className="text-[--font-body-regular] font-sans font-normal">구매 내역</span>
-        </div>
-        <div className="flex flex-col items-center justify-end gap-1 min-h-[60px]">
+          <span className="font-label-regular group-hover:text-[var(--main-3)]">구매 내역</span>
+        </Link>
+        <Link
+          href="/mypage/like-trade-post"
+          className="flex flex-col items-center justify-end gap-1 min-h-[60px] rounded-xl transition cursor-pointer group"
+        >
           <Image
             src={ICONS.MYPAGE.TRADE_LIKE}
             alt="찜 목록"
@@ -36,8 +45,8 @@ export const TradeSection = () => (
             height={15}
             className="object-contain"
           />
-          <span className="text-[--font-body-regular] font-sans font-normal">찜 목록</span>
-        </div>
+          <span className="font-label-regular group-hover:text-[var(--main-3)]">찜 목록</span>
+        </Link>
       </div>
     </section>
   </>

@@ -264,3 +264,12 @@ body {
     font-weight: var(--font-light);
   }
 }
+
+@keyframes slideUpDrawer {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

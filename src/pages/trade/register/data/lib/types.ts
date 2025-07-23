@@ -1,11 +1,10 @@
-export type MobileCarrier = 'LGU+';
+export type MobileCarrier = 'UPLUS' | 'KT' | 'SKT';
 
 export interface PostTradeDataRequest {
   title: string;
   mobileCarrier: MobileCarrier;
-  deadLine: Date;
+  deadLine: string;
   capacity: number;
   price: number;
-  comment: string;
-  file: string;
+  comment?: string;
 }

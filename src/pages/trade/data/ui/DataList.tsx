@@ -1,5 +1,8 @@
+import { useRouter } from 'next/navigation';
+
 import { ListFilter } from 'lucide-react';
 
+import { PATH } from '@/shared/config/path';
 import { Product } from '@/shared/ui/Product';
 import { SortButton } from '@/shared/ui/SortButton';
 
@@ -13,6 +16,8 @@ interface DataListProps {
 }
 
 export function DataList({ items, isLoading, sortLabel, onSortClick }: DataListProps) {
+  const router = useRouter();
+
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--black)]">로딩 중...</div>;
   }
@@ -33,13 +38,18 @@ export function DataList({ items, isLoading, sortLabel, onSortClick }: DataListP
 
       <div className="flex flex-col gap-4">
         {items.map((item) => (
-          <Product
+          <div
             key={item.id}
-            name={item.title}
-            price={item.price}
-            imageSrc={item.postImage}
-            likeCount={item.likesCount}
-          />
+            onClick={() => router.push(PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id)))}
+          >
+            <Product
+              key={item.id}
+              name={item.title}
+              price={item.price}
+              imageSrc={item.postImage}
+              likeCount={item.likesCount}
+            />
+          </div>
         ))}
       </div>
     </section>

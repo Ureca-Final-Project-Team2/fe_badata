@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
-import { BottomNav } from '@/shared/ui/BottomNav';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
 const likeStores = [
@@ -56,27 +56,21 @@ const likeStores = [
 export default function LikeStorePage() {
   const router = useRouter();
   return (
-    <div className="min-h-screen bg-[var(--white)] flex flex-col items-center relative">
-      <div className="w-full max-w-[428px]">
-        <PageHeader title="관심 매장" onBack={() => router.back()} />
-        <div className="flex flex-col gap-4 px-4 pt-6 pb-[96px]">
-          {likeStores.map((item) => (
-            <StoreCard
-              key={item.store.id}
-              id={item.store.id}
-              store={item.store}
-              storeDetail={item.storeDetail}
-              deviceCount={item.deviceCount}
-              isLiked={item.isLiked}
-              showDistance={false}
-              className="font-title-regular"
-            />
-          ))}
-        </div>
+    <BaseLayout header={<PageHeader title="관심 매장" onBack={() => router.back()} />} showBottomNav>
+      <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
+        {likeStores.map((item) => (
+          <StoreCard
+            key={item.store.id}
+            id={item.store.id}
+            store={item.store}
+            storeDetail={item.storeDetail}
+            deviceCount={item.deviceCount}
+            isLiked={item.isLiked}
+            showDistance={false}
+            className="font-title-regular w-[95%] max-w-[400px]"
+          />
+        ))}
       </div>
-      <div className="fixed bottom-0 w-full max-w-[428px]">
-        <BottomNav />
-      </div>
-    </div>
+    </BaseLayout>
   );
 } 

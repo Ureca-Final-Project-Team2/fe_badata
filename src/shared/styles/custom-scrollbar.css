@@ -1,0 +1,4 @@
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--main-3) var(--main-1);
+}

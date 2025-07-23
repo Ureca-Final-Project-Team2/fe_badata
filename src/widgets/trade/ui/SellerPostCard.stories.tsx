@@ -122,18 +122,6 @@ export const ZeroLikes: Story = {
   },
 };
 
-export const WithCustomClass: Story = {
-  args: {
-    imageUrl: '/assets/trade-sample.png',
-    title: '커스텀 스타일',
-    partner: '커스텀 브랜드',
-    price: 8000,
-    likeCount: 12,
-    className: 'border-2 border-blue-500',
-    isLiked: false,
-  },
-};
-
 // 인터랙티브 스토리 - 좋아요 버튼이 실제로 작동함
 export const Interactive: Story = {
   render: () => {

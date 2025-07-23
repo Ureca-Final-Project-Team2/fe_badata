@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 
 import Providers from '@/app/_providers';
+import { Toaster } from '@/shared/ui/Toaster';
 
 import './globals.css';
 
@@ -25,7 +26,11 @@ export default function RootLayout({
       <body className="antialiased">
         <Script src="https://cdn.portone.io/v2/browser-sdk.js" strategy="beforeInteractive" />
         <Script src="https://cdn.iamport.kr/v1/iamport.js" strategy="beforeInteractive" />
-        <Providers>{children}</Providers>
+        {/* <Providers>{children}</Providers> */}
+        <Providers>
+          <Toaster />
+          {children}
+        </Providers>
       </body>
     </html>
   );
