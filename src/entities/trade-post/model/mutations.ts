@@ -48,7 +48,7 @@ export const useDeleteTradePostLikeMutation = () => {
     onError: (error, postId) => {
       queryClient.setQueryData<AllPost[]>(['trade-posts'], (old) => {
         return old?.map((post) =>
-          post.id === postId ? { ...post, isLiked: true, likesCont: post.likesCount + 1 } : post,
+          post.id === postId ? { ...post, isLiked: true, likesCount: post.likesCount + 1 } : post,
         );
       });
       console.error('좋아요 취소 실패', error);
