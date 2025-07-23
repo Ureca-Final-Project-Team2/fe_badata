@@ -16,31 +16,16 @@ interface Props {
   onClose: () => void;
   postUserId: number;
   postId: number;
+  postType: 'GIFTICON' | 'DATA';
 }
 
-export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId }: Props) => {
+export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId, postType }: Props) => {
   const isOwner = useIsPostOwner(postUserId);
   const router = useRouter();
   const deleteMutation = useDeleteTradePostMutation();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // 현재 로그인 상태 확인
-  const { isLoggedIn, accessToken } = useAuthStore();
-
-  // 디버깅을 위한 로그
-  console.log('현재 로그인 상태:', { isLoggedIn, hasToken: !!accessToken, isOwner });
-
   const handleDelete = async () => {
-    // 디버깅: 현재 상태 로그
-    console.log('삭제 시도:', {
-      isLoggedIn,
-      hasToken: !!accessToken,
-      tokenLength: accessToken?.length,
-      isOwner,
-      postId,
-      postUserId,
-    });
-
     try {
       await deleteMutation.mutateAsync(postId);
       onClose();
@@ -80,7 +65,18 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId }: Props
       <div className="flex flex-col">
         {isOwner ? (
           <div>
-            <DrawerButton icon={<Pencil />} onClick={() => alert('게시글 수정')}>
+            <DrawerButton
+              icon={<Pencil />}
+              onClick={() => {
+                onClose();
+                // 게시물 타입에 따라 다른 수정 페이지로 이동
+                const editPath =
+                  postType === 'GIFTICON'
+                    ? `/trade/register/gifticon/edit/${postId}`
+                    : `/trade/register/data/edit/${postId}`;
+                router.push(editPath);
+              }}
+            >
               게시글 수정
             </DrawerButton>
             <DrawerButton
