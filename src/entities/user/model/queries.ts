@@ -10,7 +10,7 @@ export const useFollowStatusQuery = (userId: number) => {
     queryKey: ['user', 'follow-status', userId],
     queryFn: () => userApis.readFollowStatus(userId),
     enabled: !!userId, // userId가 있을 때만 실행
-    staleTime: 5 * 60 * 1000, // 5분간 캐시
+    staleTime: 5 * 60 * 1000,
   });
 };
 
