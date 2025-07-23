@@ -7,13 +7,13 @@ import { useParams } from 'next/navigation';
 import { Calendar as CalendarIcon, CircleCheck } from 'lucide-react';
 
 import { Calendar } from '@/components/ui/calendar';
-import DeviceCard from '@/pages/rental/map/ui/ReservationDeviceCard';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
 
 import type { DateRange } from 'react-day-picker';
+import ReservationDeviceCard from '@/pages/rental/map/ui/ReservationDeviceCard';
 
 // 예시 mock 데이터
 const mockDevices = [
@@ -29,6 +29,8 @@ const ReservationPage = () => {
   const [tab, setTab] = useState('예약');
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(undefined);
   const [agreed, setAgreed] = useState(false);
+  // 1. 상태 추가
+  const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
 
   const tabList = [
     { label: '예약', value: '예약' },
@@ -68,11 +70,13 @@ const ReservationPage = () => {
           {/* 가로 스크롤 디바이스 카드 */}
           <div className="flex flex-row gap-6 overflow-x-auto pb-2 pl-1">
             {mockDevices.map((device) => (
-              <DeviceCard
+              <ReservationDeviceCard
                 key={device.id}
                 name={device.name}
                 price={device.price}
                 image={device.image}
+                selected={selectedDeviceId === device.id}
+                onClick={() => setSelectedDeviceId(device.id)}
               />
             ))}
           </div>
