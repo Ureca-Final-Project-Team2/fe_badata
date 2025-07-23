@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { mockStoreList } from '@/pages/rental/map/__mocks__/storeList.mock';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
@@ -42,7 +43,7 @@ const RentalPage = () => {
       }
     >
       <MapSection />
-      <DrawerSection />
+      <DrawerSection open={false} storeList={mockStoreList} />
       <FilterDrawer
         isOpen={filterDrawerOpen}
         onClose={() => setFilterDrawerOpen(false)}

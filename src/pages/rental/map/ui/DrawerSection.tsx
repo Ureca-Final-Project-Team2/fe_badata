@@ -1,9 +1,15 @@
 'use client';
 
-import { mockStoreList } from '@/pages/rental/map/__mocks__/storeList.mock';
 import { DragBottomSheet } from '@/pages/rental/map/ui/DragBottomSheet';
 
-export const DrawerSection = () => {
-  // 필요하다면 open 상태, storeList 등 prop으로 받을 수 있음
-  return <DragBottomSheet open={true} storeList={mockStoreList} />;
+import type { StoreCardProps } from '@/pages/rental/map/lib/types';
+
+interface DrawerSectionProps {
+  open: boolean;
+  storeList: StoreCardProps[];
+  onClose?: () => void;
+}
+
+export const DrawerSection = ({ open, storeList, onClose }: DrawerSectionProps) => {
+  return <DragBottomSheet open={open} storeList={storeList} onClose={onClose} />;
 };
