@@ -6,13 +6,21 @@ import DeviceReceiptItem from '@/pages/rental/store/reservation/ui/DeviceReciptI
 import { ICONS } from '@/shared/config/iconPath';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
 
+interface DeviceItem {
+  name: string;
+  price: string;
+  count: number;
+}
+
 interface ReceiptSectionProps {
   periodDate: string;
   periodDays: string;
-  devices: { name: string; price: string; count: number }[];
+  devices: DeviceItem[];
   onPay?: () => void;
   onClose?: () => void;
 }
+
+const getNumber = (str: string) => Number(str.replace(/[^0-9]/g, ''));
 
 const ReceiptSection: React.FC<ReceiptSectionProps> = ({
   periodDate,
@@ -21,37 +29,38 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
   onPay,
   onClose,
 }) => {
-  const getNumber = (str: string) => Number(str.replace(/[^0-9]/g, ''));
   const total =
     devices.reduce((sum, d) => sum + getNumber(d.price) * d.count, 0).toLocaleString() + '원';
 
   return (
     <div className="flex flex-col items-center justify-center py-10">
       <div className="bg-white rounded-t-2xl shadow-lg w-[320px] mx-auto p-6 relative flex flex-col items-center">
-        {/* 상단: 로고, 날짜, 닫기 */}
-        <div className="flex w-full items-center justify-between mb-4 relative">
-          <Image
-            src={ICONS.LOGO.BADATA}
-            alt="badata logo"
-            width={80}
-            height={24}
-            className="object-contain"
-          />
-          <div className="text-xs text-gray-400 text-right">
-            <div>{periodDate}</div>
-            <div>{periodDays}</div>
-          </div>
-          {onClose && (
-            <button
-              className="absolute top-0 right-0 text-gray-400 hover:text-black text-2xl"
-              onClick={onClose}
-              aria-label="Close"
-              style={{ transform: 'translate(120%, -20%)' }}
-            >
-              ×
-            </button>
-          )}
+        {/* X 버튼: 카드 상단 우측 */}
+        {onClose && (
+          <button
+            className="absolute top-3 right-5 text-[var(--gray-dark)] hover:text-black font-title-semibold"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            ×
+          </button>
+        )}
+        {/* 바다 로고: 카드 상단 좌측 absolute */}
+        <Image
+          src={ICONS.LOGO.BADATA}
+          alt="badata logo"
+          width={60}
+          height={18}
+          className="object-contain absolute top-3 left-5"
+        />
+        {/* period(날짜) row, X와의 간격 mt-8 */}
+        <div className="w-full flex flex-col items-start mt-18">
+          <span className="font-body-semibold text-black leading-tight">{periodDate}</span>
+          <span className="font-label-regular text-[var(--gray-dark)] leading-tight">
+            {periodDays}
+          </span>
         </div>
+        <div className="border-t border-dashed border- my-3 w-full" />
         {/* 디바이스 리스트 */}
         <div className="w-full flex flex-col gap-2 mb-2">
           {devices.map((d, i) => (
@@ -61,11 +70,11 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
         <div className="border-t border-dashed border-gray-200 my-3 w-full" />
         {/* Total */}
         <div className="w-full flex justify-between items-center mb-1">
-          <span className="font-bold text-base text-black">Total</span>
-          <span className="font-bold text-2xl text-black">{total}</span>
+          <span className="font-title-semibold text-black">Total</span>
+          <span className="font-title-semibold text-black">{total}</span>
         </div>
       </div>
-      {/* 구불구불한 하단 SVG */}
+      {/* 구불구불 SVG */}
       <svg
         width="320"
         height="20"
@@ -81,7 +90,7 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
         ))}
       </svg>
       <RegisterButton
-        className="mt-8 w-[180px] h-[54px] rounded-xl bg-[var(--main-5)] text-white font-bold text-xl shadow-md hover:bg-[var(--main-4)] transition"
+        className="mt-8 w-[180px] h-[54px] rounded-xl bg-[var(--main-5)] text-white font-title-semibold shadow-md hover:bg-[var(--main-4)] transition"
         size="lg"
         isFormValid={true}
         onClick={onPay}

@@ -7,7 +7,7 @@ const DeviceReceiptItem = ({
   price: string;
   count: number;
 }) => (
-  <div className="flex justify-between text-gray-400 text-sm">
+  <div className="flex justify-between text-[var(--gray-dark)] text-sm">
     <span>{name}</span>
     <span className="text-black">
       {price} x {count}
