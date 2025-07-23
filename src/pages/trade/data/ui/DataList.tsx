@@ -35,7 +35,7 @@ export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick
       <div className="flex flex-row justify-between py-2">
         <SortButton label={sortLabel} onClick={onSortClick} />
 
-        <div className="flex flex-row gap-1 items-center font-semibold">
+        <div className="flex flex-row gap-1 items-center font-label-semibold">
           조건
           <ListFilter size={14} />
         </div>

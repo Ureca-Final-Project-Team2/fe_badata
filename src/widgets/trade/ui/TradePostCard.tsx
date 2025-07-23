@@ -112,10 +112,10 @@ const TradePostCard = ({
         />
       </div>
       <div className="flex flex-col px-2 py-2 flex-1">
-        <span className="text-[var(--black)] text-[18px] mt-1.5 font-pretendard font-semibold leading-none truncate">
+        <span className="text-[var(--black)] mt-1.5 font-body-semibold leading-none truncate">
           {title}
         </span>
-        <span className="text-[var(--black)] text-[12.8px] mt-1.5 font-pretendard font-light leading-none truncate">
+        <span className="text-[var(--black)] mt-1.5 font-small-regular leading-none truncate">
           {partner ? partner : mobileCarrier}
         </span>
         <div className="flex items-center justify-between mt-1.5">
@@ -130,7 +130,7 @@ const TradePostCard = ({
               height={20}
               className="w-5 h-5"
             />
-            <span className="flex items-center text-[var(--black)] text-[12.8px] font-pretendard font-normal leading-[20px]">
+            <span className="flex items-center text-[var(--black)] font-small-regular leading-[20px]">
               {likeCount}
             </span>
           </div>

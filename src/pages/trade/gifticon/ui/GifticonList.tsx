@@ -42,7 +42,7 @@ export function GifticonList({
       <div className="flex flex-row justify-between py-2">
         <SortButton onClick={onSortClick} label={sortLabel} />
 
-        <div className="flex flex-row gap-1 items-center font-semibold">
+        <div className="flex flex-row gap-1 items-center font-label-semibold">
           조건
           <ListFilter size={14} />
         </div>
