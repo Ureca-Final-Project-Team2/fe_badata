@@ -17,6 +17,7 @@ export interface RentalFilterState {
   dataType?: RentalDataType;
   deviceCount?: RentalDeviceCount;
   dateRange?: DateRange;
+  date?: Date;
 }
 
 export type RentalFilterAction =
