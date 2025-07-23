@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { BellRing } from 'lucide-react';
 
 import DeviceImage from '@/pages/rental/map/ui/DeviceImage';
@@ -36,6 +38,8 @@ export default function ReservationDeviceCard({
   const { deviceName, imageUrl, dataCapacity, price, remainCount } = device;
   const canIncrement = count < (max ?? 99);
   const isSoldOut = (remainCount ?? 0) === 0;
+  const [notifyActive, setNotifyActive] = React.useState(false);
+
   return (
     <div
       className={`${sz.radius} bg-white ${sz.w} ${sz.h} overflow-hidden flex flex-col border transition
@@ -51,13 +55,33 @@ export default function ReservationDeviceCard({
         {/* 품절 시 블러 및 오버레이 (이미지 위에만) */}
         {isSoldOut && (
           <>
-            <div className="absolute inset-0 z-10 backdrop-blur-[8px] bg-white/40" />
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
-              <BellRing size={40} className="text-[var(--main-5)] mb-2 fill-[var(--main-5)]" />
-              <span className="font-title-semibold text-[var(--main-5)] text-lg">
-                재입고 알림 신청
+            <div
+              className={`absolute inset-0 z-10 backdrop-blur-[8px] transition-colors duration-200 ${
+                notifyActive ? 'bg-[var(--main-5)]/60' : 'bg-white/40'
+              }`}
+            />
+            <button
+              type="button"
+              className="absolute inset-0 z-20 flex flex-col items-center justify-center w-full h-full focus:outline-none"
+              onClick={() => setNotifyActive((prev) => !prev)}
+              tabIndex={0}
+            >
+              <BellRing
+                size={40}
+                className={`mb-2 transition-colors duration-200 ${
+                  notifyActive
+                    ? 'text-white fill-white'
+                    : 'text-[var(--main-5)] fill-[var(--main-5)]'
+                }`}
+              />
+              <span
+                className={`font-title-semibold text-lg transition-colors duration-200 ${
+                  notifyActive ? 'text-white' : 'text-[var(--main-5)]'
+                }`}
+              >
+                {notifyActive ? '알림 취소' : '재입고 알림 신청'}
               </span>
-            </div>
+            </button>
           </>
         )}
       </div>
