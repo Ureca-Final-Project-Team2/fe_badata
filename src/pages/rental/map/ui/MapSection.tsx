@@ -10,7 +10,11 @@ import type { StoreDevice } from '@/pages/rental/map/lib/types';
 import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 
 interface MapSectionProps {
-  onStoreMarkerClick?: (devices: StoreDevice[], storeDetail?: StoreDetail) => void;
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void;
 }
 
 export const MapSection = ({ onStoreMarkerClick }: MapSectionProps) => {
@@ -19,8 +23,8 @@ export const MapSection = ({ onStoreMarkerClick }: MapSectionProps) => {
 
   useEffect(() => {
     if (!map || stores.isLoading) return;
-    renderStoreMarkers(map, stores.stores, (devices, storeDetail) => {
-      onStoreMarkerClick?.(devices, storeDetail);
+    renderStoreMarkers(map, stores.stores, (devices, storeDetail, storeId) => {
+      onStoreMarkerClick?.(devices, storeDetail, storeId);
     });
   }, [map, stores.stores, stores.isLoading, onStoreMarkerClick]);
 

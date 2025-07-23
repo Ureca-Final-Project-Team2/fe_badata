@@ -104,7 +104,11 @@ const setupMarkerEventListeners = (
   infowindow: kakao.maps.InfoWindow,
   store: Store,
   safeDevices: StoreDevice[],
-  onStoreMarkerClick?: (devices: StoreDevice[], storeDetail?: StoreDetail) => void,
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void,
 ) => {
   window.kakao.maps.event.addListener(marker, 'mouseover', () => {
     infowindow.open(map, marker);
@@ -124,7 +128,7 @@ const setupMarkerEventListeners = (
       const lng = center.getLng();
       storeDetail = await fetchStoreDetail(store.id, lat, lng);
     } catch {}
-    if (onStoreMarkerClick) onStoreMarkerClick(safeDevices, storeDetail);
+    if (onStoreMarkerClick) onStoreMarkerClick(safeDevices, storeDetail, store.id);
   });
 };
 
@@ -132,7 +136,11 @@ const setupMarkerEventListeners = (
 const createStoreMarker = async (
   store: Store,
   map: kakao.maps.Map,
-  onStoreMarkerClick?: (devices: StoreDevice[], storeDetail?: StoreDetail) => void,
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void,
 ): Promise<void> => {
   try {
     // 오타 수정!
@@ -169,7 +177,11 @@ const processBatch = async (
   stores: Store[],
   map: kakao.maps.Map,
   batchSize: number = 5,
-  onStoreMarkerClick?: (devices: StoreDevice[], storeDetail?: StoreDetail) => void,
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void,
 ): Promise<void> => {
   for (let i = 0; i < stores.length; i += batchSize) {
     const batch = stores.slice(i, i + batchSize);
@@ -187,7 +199,11 @@ const processBatch = async (
 export const renderStoreMarkers = async (
   map: kakao.maps.Map,
   stores: Store[],
-  onStoreMarkerClick?: (devices: StoreDevice[], storeDetail?: StoreDetail) => void,
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void,
 ): Promise<void> => {
   if (!map || !window.kakao || !stores || stores.length === 0) {
     console.log('마커 렌더링 조건 불충족:', {
