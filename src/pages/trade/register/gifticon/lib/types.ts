@@ -63,6 +63,6 @@ export interface PostTradeGifticonRequest {
   deadLine: string;
   issueDate: string;
   price: number;
-  comment: string;
-  file: string | null;
+  comment?: string;
+  file: File;
 }
