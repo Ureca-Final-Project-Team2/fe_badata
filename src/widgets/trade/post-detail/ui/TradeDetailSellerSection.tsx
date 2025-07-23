@@ -25,8 +25,7 @@ export const TradeDetailSellerSection = ({
   const posts = data?.soldingPostsResponse?.postsResponse || [];
 
   return (
-    <section className="mt-30">
-      {/* 판매자의 프로필 */}
+    <div className="mt-20">
       <UserProfileCard
         userId={sellerId}
         name={sellerName}
@@ -41,7 +40,7 @@ export const TradeDetailSellerSection = ({
 
       {/* 판매자의 다른 상품 리스트 */}
       <div className="mt-6">
-        <h3 className="font-title-semibold text-[var(--black)] mb-6">판매자의 다른 상품</h3>
+        <h3 className="font-body-semibold text-[var(--black)] mb-2">판매자의 다른 상품</h3>
 
         {isLoading ? (
           <div>로딩 중...</div>
@@ -70,6 +69,6 @@ export const TradeDetailSellerSection = ({
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
