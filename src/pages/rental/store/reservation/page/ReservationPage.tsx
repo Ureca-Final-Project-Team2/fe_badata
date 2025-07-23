@@ -15,6 +15,7 @@ import { initialState, reducer } from '../model/reservationReducer';
 import CalendarSection from './CalendarSection';
 import DeviceSelectSection from './DeviceSelectSection';
 import NoticeSection from './NoticeSection';
+import ReceiptSection from './ReceiptSection';
 
 // 예시 mock 데이터
 const mockDevices = [
@@ -29,6 +30,7 @@ const ReservationPage = () => {
     typeof params === 'object' && params !== null ? (params['storeId'] as string) : '';
   const [tab, setTab] = useState('예약');
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [showReceiptModal, setShowReceiptModal] = useState(false);
 
   const tabList = [
     { label: '예약', value: '예약' },
@@ -88,11 +90,34 @@ const ReservationPage = () => {
                 if (!isDateFuture) {
                   makeToast('날짜를 다시 선택해주세요', 'warning');
                   e.preventDefault();
+                  return;
                 }
+                setShowReceiptModal(true);
               }}
             >
               예약하기
             </RegisterButton>
+          </div>
+        </div>
+      )}
+      {/* Receipt 모달 */}
+      {showReceiptModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="relative">
+            <ReceiptSection
+              periodDate="2025.05.02~2025.05.03"
+              periodDays="(2일)"
+              devices={[
+                { name: '포켓 와이파이 A', price: '15,000원', count: 1 },
+                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+              ]}
+              onPay={() => setShowReceiptModal(false)}
+              onClose={() => setShowReceiptModal(false)}
+            />
           </div>
         </div>
       )}
