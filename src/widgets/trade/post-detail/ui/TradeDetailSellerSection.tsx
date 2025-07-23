@@ -10,6 +10,7 @@ interface TradeDetailSellerSectionProps {
   sellerName: string;
   likesCount: number;
   isFollowing: boolean; // 팔로우 여부
+  onFollowChange?: (isFollowing: boolean) => void; // 팔로우 상태 변경 콜백
 }
 
 export const TradeDetailSellerSection = ({
@@ -17,6 +18,7 @@ export const TradeDetailSellerSection = ({
   sellerName,
   likesCount,
   isFollowing,
+  onFollowChange,
 }: TradeDetailSellerSectionProps) => {
   const { data, isLoading, error } = useUserTradePostsQuery(sellerId);
 
@@ -26,22 +28,31 @@ export const TradeDetailSellerSection = ({
     <section className="mt-30">
       {/* 판매자의 프로필 */}
       <UserProfileCard
+        userId={sellerId}
         name={sellerName}
         tradeCount={likesCount}
         isFollowing={isFollowing}
-        onFollowClick={() => alert('팔로우 기능 연결 예정')}
+        onFollowClick={() => {
+          // 팔로우 상태 변경 후 추가적인 로직이 필요하다면 여기에 구현
+          console.log('팔로우 상태가 변경되었습니다.');
+        }}
+        onFollowChange={onFollowChange}
       />
 
       {/* 판매자의 다른 상품 리스트 */}
       <div className="mt-6">
-        <h3 className="text-[20px] font-semibold text-black mb-6">판매자의 다른 상품</h3>
+        <h3 className="font-title-semibold text-[var(--black)] mb-6">판매자의 다른 상품</h3>
 
         {isLoading ? (
           <div>로딩 중...</div>
         ) : error ? (
-          <div className="text-gray-500 text-center py-4">상품 정보를 불러올 수 없습니다.</div>
+          <div className="text-[var(--gray-mid)] text-center py-4">
+            상품 정보를 불러올 수 없습니다.
+          </div>
         ) : posts.length === 0 ? (
-          <div className="text-gray-500 text-center py-4">판매 중인 다른 상품이 없습니다.</div>
+          <div className="text-[var(--gray-mid)] text-center py-4">
+            판매 중인 다른 상품이 없습니다.
+          </div>
         ) : (
           <div className="flex overflow-x-auto gap-4 mb-20 scrollbar-hide">
             {posts.map((item) => (
