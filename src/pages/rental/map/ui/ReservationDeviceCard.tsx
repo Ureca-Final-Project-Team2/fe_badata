@@ -1,3 +1,5 @@
+import { BellRing } from 'lucide-react';
+
 import DeviceImage from '@/pages/rental/map/ui/DeviceImage';
 
 interface ReservationDeviceCardProps {
@@ -33,18 +35,31 @@ export default function ReservationDeviceCard({
   const sz = CARD_SIZE;
   const { deviceName, imageUrl, dataCapacity, price, remainCount } = device;
   const canIncrement = count < (max ?? 99);
+  const isSoldOut = (remainCount ?? 0) === 0;
   return (
     <div
       className={`${sz.radius} bg-white ${sz.w} ${sz.h} overflow-hidden flex flex-col border transition
-        ${selected ? 'border-[var(--main-5)] border-2' : 'border border-[var(--gray-light)]'} flex-shrink-0 min-w-[270px]`}
+        ${selected ? 'border-[var(--main-5)] border-2' : 'border border-[var(--gray-light)]'} flex-shrink-0 min-w-[270px] relative`}
       style={{ cursor: 'default' }}
     >
-      <div className={`w-full ${sz.img} ${sz.imgRadius} rounded-b-none overflow-hidden`}>
+      <div className={`w-full ${sz.img} ${sz.imgRadius} rounded-b-none overflow-hidden relative`}>
         <DeviceImage
           url={imageUrl ?? ''}
           alt={deviceName ?? ''}
           className={`w-full h-full object-cover ${sz.imgRadius}`}
         />
+        {/* 품절 시 블러 및 오버레이 (이미지 위에만) */}
+        {isSoldOut && (
+          <>
+            <div className="absolute inset-0 z-10 backdrop-blur-[8px] bg-white/40" />
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
+              <BellRing size={40} className="text-[var(--main-5)] mb-2 fill-[var(--main-5)]" />
+              <span className="font-title-semibold text-[var(--main-5)] text-lg">
+                재입고 알림 신청
+              </span>
+            </div>
+          </>
+        )}
       </div>
       {/* 정보 영역 */}
       <div className="flex flex-col px-4 py-3 flex-1">
