@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { CircleCheck } from 'lucide-react';
 
@@ -27,6 +27,10 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
   const [counts, setCounts] = React.useState<Record<number, number>>(
     devices.reduce((acc, d) => ({ ...acc, [d.id]: 0 }), {} as Record<number, number>),
   );
+
+  useEffect(() => {
+    setCounts(devices.reduce((acc, d) => ({ ...acc, [d.id]: 0 }), {} as Record<number, number>));
+  }, [devices]);
 
   const handleCountChange = (id: number, newCount: number, remainCount: number) => {
     const safeCount = Math.max(0, Math.min(newCount, remainCount));
