@@ -15,32 +15,18 @@ interface Device {
 
 interface DeviceSelectSectionProps {
   devices: Device[];
-  selectedDeviceId: number | null;
-  onSelect: (id: number | null) => void;
+  selectedDevices: Record<number, number>;
+  onCountChange: (deviceId: number, count: number, remainCount: number) => void;
 }
 
 const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
   devices,
-  selectedDeviceId,
-  onSelect,
+  selectedDevices,
+  onCountChange,
 }) => {
-  const [counts, setCounts] = React.useState<Record<number, number>>(
-    devices.reduce((acc, d) => ({ ...acc, [d.id]: 0 }), {} as Record<number, number>),
-  );
-
   useEffect(() => {
-    setCounts(devices.reduce((acc, d) => ({ ...acc, [d.id]: 0 }), {} as Record<number, number>));
+    // No-op, kept for possible future logic
   }, [devices]);
-
-  const handleCountChange = (id: number, newCount: number, remainCount: number) => {
-    const safeCount = Math.max(0, Math.min(newCount, remainCount));
-    setCounts((prev) => ({ ...prev, [id]: safeCount }));
-    if (safeCount > 0) {
-      onSelect(id);
-    } else if (selectedDeviceId === id) {
-      onSelect(null);
-    }
-  };
 
   return (
     <>
@@ -53,9 +39,11 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
           <ReservationDeviceCard
             key={device.id}
             device={device}
-            count={counts[device.id] ?? 0}
-            onCountChange={(newCount) => handleCountChange(device.id, newCount, device.remainCount)}
-            selected={selectedDeviceId === device.id}
+            count={selectedDevices[device.id] ?? 0}
+            onCountChange={(newCount: number) =>
+              onCountChange(device.id, newCount, device.remainCount)
+            }
+            selected={!!selectedDevices[device.id]}
             max={device.remainCount}
           />
         ))}

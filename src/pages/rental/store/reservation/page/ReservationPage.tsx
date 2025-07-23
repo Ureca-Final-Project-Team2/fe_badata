@@ -33,7 +33,7 @@ const ReservationPage = () => {
 
   // 날짜, 기기, 동의 체크 모두 선택되어야 예약하기 버튼 활성화
   const isDateSelected = !!(state.dateRange && state.dateRange.from && state.dateRange.to);
-  const isDeviceSelected = !!state.selectedDeviceId;
+  const isDeviceSelected = Object.keys(state.selectedDevices).length > 0;
   const isFormValid = isDateSelected && isDeviceSelected && state.agreed;
 
   // 오늘 이후 날짜인지 검사
@@ -43,6 +43,19 @@ const ReservationPage = () => {
     today.setHours(0, 0, 0, 0);
     return state.dateRange.from >= today && state.dateRange.to >= today;
   })();
+
+  // 여러 디바이스와 개수에 맞게 영수증용 리스트 생성
+  const receiptDevices = Object.entries(state.selectedDevices)
+    .map(([deviceId, count]) => {
+      const device = mockReservationDevices.find((d) => d.id === Number(deviceId));
+      if (!device || count === 0) return undefined;
+      return {
+        name: device.deviceName || '',
+        price: device.price ? `${device.price.toLocaleString()}원` : '-',
+        count,
+      };
+    })
+    .filter((d): d is { name: string; price: string; count: number } => !!d);
 
   return (
     <>
@@ -67,8 +80,10 @@ const ReservationPage = () => {
                 {/* 기기 선택 */}
                 <DeviceSelectSection
                   devices={mockReservationDevices}
-                  selectedDeviceId={state.selectedDeviceId}
-                  onSelect={(id) => dispatch({ type: 'SET_SELECTED_DEVICE', payload: id })}
+                  selectedDevices={state.selectedDevices}
+                  onCountChange={(deviceId: number, count: number) =>
+                    dispatch({ type: 'SET_DEVICE_COUNT', payload: { deviceId, count } })
+                  }
                 />
                 {/* 안내사항 및 예약하기 버튼 */}
                 <div className="mt-6 w-full flex flex-col items-center">
@@ -100,24 +115,23 @@ const ReservationPage = () => {
             )}
             {/* Receipt 모달 */}
             {showReceiptModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                <div className="relative">
-                  <ReceiptSection
-                    periodDate="2025.05.02~2025.05.03"
-                    periodDays="(2일)"
-                    devices={[
-                      { name: '포켓 와이파이 A', price: '15,000원', count: 1 },
-                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                    ]}
-                    onPay={() => setShowReceiptModal(false)}
-                    onClose={() => setShowReceiptModal(false)}
-                  />
-                </div>
-              </div>
+              <ReceiptSection
+                periodDate={
+                  state.dateRange
+                    ? `${state.dateRange.from?.toLocaleDateString()} ~ ${state.dateRange.to?.toLocaleDateString()}`
+                    : ''
+                }
+                periodDays={
+                  state.dateRange
+                    ? `${Math.ceil(((state.dateRange.to?.getTime() ?? 0) - (state.dateRange.from?.getTime() ?? 0)) / (1000 * 60 * 60 * 24)) + 1}일`
+                    : ''
+                }
+                devices={receiptDevices}
+                onPay={() => {
+                  /* 결제 로직 */
+                }}
+                onClose={() => setShowReceiptModal(false)}
+              />
             )}
           </div>
         </div>
