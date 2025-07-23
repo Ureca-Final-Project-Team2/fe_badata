@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { FlatTab } from './FlatTab';
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta: Meta<typeof FlatTab> = {
   title: 'Components/FlatTab',
