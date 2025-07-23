@@ -2,11 +2,11 @@ import { useRouter } from 'next/navigation';
 
 import { ListFilter } from 'lucide-react';
 
-import { PATH } from '@/shared/config/path';
 import {
   useDeleteTradePostLikeMutation,
   usePostTradePostLikeMutation,
 } from '@/entities/trade-post/model/mutations';
+import { PATH } from '@/shared/config/path';
 import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
