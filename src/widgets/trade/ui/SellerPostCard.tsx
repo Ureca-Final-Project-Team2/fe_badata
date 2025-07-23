@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ICONS } from '@/shared/config/iconPath';
 import { formatPrice } from '@/shared/lib/formatPrice';
 import DdayBadge from '@/shared/ui/DdayBadge';
-import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
+import { PostLikeButton } from '@/shared/ui/LikeButton';
 import PriceText from '@/shared/ui/PriceText';
 
 const DEFAULT_IMAGE = ICONS.LOGO.DETAIL;
@@ -46,7 +46,7 @@ const SellerPostCard = ({
 }: SellerPostCardProps) => {
   return (
     <div
-      className={`w-[120px] h-[189px] rounded-[20px] bg-[var(--gray-light)] flex flex-col items-center p-1.5 ${className}`}
+      className={`w-[120px] h-[189px] rounded-[20px] bg-[var(--gray-light)] flex flex-col items-center p-1.5 flex-shrink-0 ${className}`}
     >
       <div className="relative w-[106px] h-[102px] rounded-[15px] overflow-hidden bg-[var(--white)] flex items-center justify-center">
         {hasDday && (
@@ -63,23 +63,30 @@ const SellerPostCard = ({
           width={106}
           height={102}
           className="w-full h-full object-cover"
+          sizes="106px"
           onError={(e) => {
             e.currentTarget.src = DEFAULT_IMAGE;
           }}
         />
       </div>
-      <div className="flex flex-col w-full px-2 mt-2.5">
-        <span className="text-[var(--black)] text-[12px] mt-0.5 font-sans font-semibold leading-none truncate">
+      <div className="flex flex-col w-full px-2 mt-2.5 min-w-0">
+        <span className="text-[var(--black)] text-[12px] mt-0.5 font-sans font-semibold leading-none truncate w-full">
           {title}
         </span>
-        <span className="text-[var(--black)] text-[10px] mt-1.5 font-sans font-light leading-none truncate">
+        <span className="text-[var(--black)] text-[10px] mt-1.5 font-sans font-light leading-none truncate w-full">
           {partner}
         </span>
         <PriceText value={formatPrice(String(price))} size="sm" className="mt-1.5" />
       </div>
-      <div className="flex items-center w-full px-2 gap-1 mt-0.5">
-        <Image src={ICONS.ETC.SHELL_GRAY} alt="좋아요" width={20} height={20} className="w-5 h-5" />
-        <span className="text-[var(--black)] text-[12px] font-sans font-normal leading-none">
+      <div className="flex items-center w-full px-2 gap-1 mt-0.5 min-w-0">
+        <Image
+          src={ICONS.ETC.LIKE_NONACTIVE}
+          alt="좋아요"
+          width={20}
+          height={20}
+          className="w-5 h-5 flex-shrink-0"
+        />
+        <span className="text-[var(--black)] text-[12px] font-sans font-normal leading-none truncate">
           {likeCount}
         </span>
       </div>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
-import { BuyButton } from '@/shared/ui/RegisterButton';
+import BuyButtonWithPayment from '@/widgets/trade/payment/ui/BuyButtonWithPayment';
 import { TradeDetailDrawer } from '@/widgets/trade/post-detail/ui/TradeDetailDrawer';
 import { TradeDetailProductSection } from '@/widgets/trade/post-detail/ui/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@/widgets/trade/post-detail/ui/TradeDetailSellerSection';
@@ -46,7 +46,11 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
     >
       <TradeDetailProductSection
         postType={postType}
-        thumbnailUrl={post.postImage === 'no image' ? '/assets/trade_detail.jpg' : post.postImage}
+        thumbnailUrl={
+          !post.postImage || post.postImage === '' || post.postImage === 'no image'
+            ? '/assets/trade-detail.jpg'
+            : post.postImage
+        }
         brand={postType === 'GIFTICON' ? post.partner : post.mobileCarrier}
         name={post.title}
         price={post.price}
@@ -65,9 +69,7 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
 
       {/* 구매하기 버튼 */}
       <div className="fixed bottom-[84px] left-1/2 -translate-x-1/2 z-20">
-        <BuyButton variant="primary" size="lg_thin" onClick={() => console.log('구매하기')}>
-          구매하기
-        </BuyButton>
+        <BuyButtonWithPayment postId={post.id} title={post.title} price={post.price} />
       </div>
 
       <TradeDetailDrawer
