@@ -113,25 +113,29 @@ const ReservationPage = () => {
                 </div>
               </div>
             )}
-            {/* Receipt 모달 */}
+            {/* 영수증 모달 */}
             {showReceiptModal && (
-              <ReceiptSection
-                periodDate={
-                  state.dateRange
-                    ? `${state.dateRange.from?.toLocaleDateString()} ~ ${state.dateRange.to?.toLocaleDateString()}`
-                    : ''
-                }
-                periodDays={
-                  state.dateRange
-                    ? `${Math.ceil(((state.dateRange.to?.getTime() ?? 0) - (state.dateRange.from?.getTime() ?? 0)) / (1000 * 60 * 60 * 24)) + 1}일`
-                    : ''
-                }
-                devices={receiptDevices}
-                onPay={() => {
-                  /* 결제 로직 */
-                }}
-                onClose={() => setShowReceiptModal(false)}
-              />
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                <div className="relative">
+                  <ReceiptSection
+                    periodDate={
+                      state.dateRange
+                        ? `${state.dateRange.from?.toLocaleDateString()} ~ ${state.dateRange.to?.toLocaleDateString()}`
+                        : ''
+                    }
+                    periodDays={
+                      state.dateRange
+                        ? `${Math.ceil(((state.dateRange.to?.getTime() ?? 0) - (state.dateRange.from?.getTime() ?? 0)) / (1000 * 60 * 60 * 24)) + 1}일`
+                        : ''
+                    }
+                    devices={receiptDevices}
+                    onPay={() => {
+                      /* 결제 로직 */
+                    }}
+                    onClose={() => setShowReceiptModal(false)}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </div>
