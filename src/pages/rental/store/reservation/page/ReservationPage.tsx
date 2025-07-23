@@ -53,12 +53,12 @@ const ReservationPage = () => {
           <div className="fixed bottom-0 left-0 w-full z-30"></div>
           {/* 스크롤 가능한 컨텐츠 영역 */}
           <div
-            className="pt-28 pb-16 overflow-y-auto"
+            className="pt-10 pb-16 overflow-y-auto"
             style={{ height: '100vh', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             <style>{`.scrollbar-hide::-webkit-scrollbar { display: none; }`}</style>
             {tab === '예약' && (
-              <div className="flex flex-col gap-4 mt-4 w-full">
+              <div className="flex flex-col gap-4 w-full">
                 {/* 날짜 선택 */}
                 <CalendarSection
                   dateRange={state.dateRange}
