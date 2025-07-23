@@ -156,9 +156,9 @@ export const Interactive: Story = {
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(5);
 
-    const handleLikeChange = (liked: boolean) => {
-      setIsLiked(liked);
-      setLikeCount((prev) => (liked ? prev + 1 : prev - 1));
+    const handleLikeToggle = () => {
+      setIsLiked((prev) => !prev);
+      setLikeCount((prev) => (isLiked ? prev - 1 : prev - 1));
     };
 
     return (
@@ -170,7 +170,7 @@ export const Interactive: Story = {
           price={15000}
           likeCount={likeCount}
           isLiked={isLiked}
-          onLikeChange={handleLikeChange}
+          onLikeToggle={handleLikeToggle}
         />
         <p className="text-sm text-gray-600">
           좋아요 상태: {isLiked ? '활성' : '비활성'} | 좋아요 수: {likeCount}

@@ -40,11 +40,11 @@ export function GifticonList({
     return <div>쿠폰 게시물이 없습니다.</div>;
   }
 
-  const handleLikeChange = (postId: number, currentLikeStatus: boolean) => {
-    if (currentLikeStatus) {
-      deleteLikeMutation.mutate(postId);
+  const handleLikeToggle = (item: AllPost) => {
+    if (item.isLiked) {
+      deleteLikeMutation.mutate(item.id);
     } else {
-      postLikeMutation.mutate(postId);
+      postLikeMutation.mutate(item.id);
     }
   };
 
@@ -79,7 +79,7 @@ export function GifticonList({
               imageUrl={item.postImage}
               likeCount={item.likesCount}
               isLiked={item.isLiked}
-              onLikeChange={(liked) => handleLikeChange(item.id, !liked)}
+              onLikeToggle={() => handleLikeToggle(item)}
               onCardClick={() => handleCardClick(item)}
             />
           </div>

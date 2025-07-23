@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Image from 'next/image';
 
 import { ICONS } from '@/shared/config/iconPath';
@@ -21,7 +23,7 @@ interface TradePostCardProps {
   dday?: number | string;
   isCompleted?: boolean;
   isLiked?: boolean;
-  onLikeChange?: (liked: boolean) => void;
+  onLikeToggle?: () => void;
   onCardClick?: () => void;
   className?: string;
 }
@@ -49,7 +51,7 @@ const TradePostCard = ({
   dday,
   isCompleted = false,
   isLiked = false,
-  onLikeChange,
+  onLikeToggle,
   onCardClick,
   className = '',
 }: TradePostCardProps) => {
@@ -71,10 +73,9 @@ const TradePostCard = ({
     return url;
   };
 
-  const handleLikeClick = () => {
-    if (onLikeChange) {
-      onLikeChange(!isLiked);
-    }
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onLikeToggle?.();
   };
 
   const handleCardClick = () => {
@@ -92,7 +93,7 @@ const TradePostCard = ({
             <DdayBadge dday={dday} size="md" />
           </div>
         )}
-        <div className="absolute bottom-2 right-2 z-10" onClick={handleLikeClick}>
+        <div className="absolute bottom-2 right-2 z-10">
           <PostLikeButton active={isLiked} onClick={handleLikeClick} />
         </div>
         <Image
