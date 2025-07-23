@@ -12,7 +12,7 @@ interface ReservationDeviceCardProps {
   count?: number;
   onCountChange?: (newCount: number) => void;
   selected?: boolean;
-  onClick?: () => void;
+  max?: number;
 }
 
 const CARD_SIZE = {
@@ -28,24 +28,20 @@ export default function ReservationDeviceCard({
   count = 0,
   onCountChange = () => {},
   selected,
-  onClick,
+  max = 99,
 }: ReservationDeviceCardProps) {
   const sz = CARD_SIZE;
   const { deviceName, imageUrl, dataCapacity, price, remainCount } = device;
-
+  const canIncrement = count < (max ?? 99);
   return (
     <div
       className={`${sz.radius} bg-white ${sz.w} ${sz.h} overflow-hidden flex flex-col border transition
-        ${selected ? 'border-[var(--main-5)] border-2' : 'border border-[var(--gray-light)] '} flex-shrink-0 min-w-[270px]`}
-      onClick={onClick}
-      style={{ cursor: onClick ? 'pointer' : undefined }}
+        ${selected ? 'border-[var(--main-5)] border-2' : 'border border-[var(--gray-light)]'} flex-shrink-0 min-w-[270px]`}
+      style={{ cursor: 'default' }}
     >
       <div className={`w-full ${sz.img} ${sz.imgRadius} rounded-b-none overflow-hidden`}>
         <DeviceImage
-          url={
-            imageUrl ||
-            'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80'
-          }
+          url={imageUrl ?? ''}
           alt={deviceName ?? ''}
           className={`w-full h-full object-cover ${sz.imgRadius}`}
         />
@@ -75,17 +71,23 @@ export default function ReservationDeviceCard({
                 onCountChange(Math.max(0, count - 1));
               }}
               type="button"
+              disabled={count <= 0}
             >
               –
             </button>
-            <span className="font-label-semibold text-black w-6 text-center">{count}</span>
+            <span
+              className={`font-label-semibold w-6 text-center ${count > 0 ? 'text-[var(--main-5)]' : 'text-black'}`}
+            >
+              {count}
+            </span>
             <button
-              className="w-7 h-7 rounded bg-[var(--gray-light)] text-title-semibold flex items-center justify-center"
+              className={`w-7 h-7 rounded bg-[var(--gray-light)] text-title-semibold flex items-center justify-center ${!canIncrement ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={(e) => {
                 e.stopPropagation();
                 onCountChange(count + 1);
               }}
               type="button"
+              disabled={!canIncrement}
             >
               +
             </button>
