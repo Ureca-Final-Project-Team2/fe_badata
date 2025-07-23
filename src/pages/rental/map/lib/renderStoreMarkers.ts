@@ -131,10 +131,10 @@ const setupMarkerEventListeners = (
 // 단일 스토어 마커 생성 함수
 const createStoreMarker = async (store: Store, map: kakao.maps.Map): Promise<void> => {
   try {
-    const position = new window.kakao.maps.LatLng(store.latitude, store.longitude);
+    // 오타 수정!
+    const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
 
     // 디바이스 데이터 조회
-
     const devices = await fetchStoreDevices(store.id, {});
     const safeDevices = Array.isArray(devices) ? devices : [];
 
@@ -155,6 +155,9 @@ const createStoreMarker = async (store: Store, map: kakao.maps.Map): Promise<voi
 
     // 이벤트 리스너 설정
     setupMarkerEventListeners(marker, map, infowindow, store, safeDevices);
+
+    // 디버깅용
+    console.log('마커 좌표:', store.latitude, store.longitude, position);
   } catch (error) {
     console.error(`스토어 ${store.name} 마커 생성 실패:`, error);
   }
