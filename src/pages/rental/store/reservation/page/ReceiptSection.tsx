@@ -2,7 +2,7 @@ import React from 'react';
 
 import Image from 'next/image';
 
-import DeviceReceiptItem from '@/pages/rental/store/reservation/ui/DeviceReciptItem';
+import DeviceReceiptItem from '@/pages/rental/store/reservation/ui/DeviceReceiptItem';
 import { ICONS } from '@/shared/config/iconPath';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
 
