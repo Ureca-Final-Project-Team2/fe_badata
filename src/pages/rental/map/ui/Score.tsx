@@ -42,9 +42,28 @@ export const Score: React.FC<ScoreProps> = ({ value, onChange, readOnly = false 
     <div
       ref={containerRef}
       className={styles.container + (readOnly ? '' : ' ' + styles.interactive)}
+      role="slider"
+      aria-label="평점"
+      aria-valuemin={0}
+      aria-valuemax={5}
+      aria-valuenow={score}
+      aria-valuetext={`5점 만점에 ${score}점`}
+      tabIndex={readOnly ? -1 : 0}
       onClick={handleSetScore}
       onMouseMove={(e) => {
         if (e.buttons === 1 && !readOnly) handleSetScore(e);
+      }}
+      onKeyDown={(e) => {
+        if (readOnly) return;
+        if (e.key === 'ArrowLeft' && score > 0) {
+          const newScore = Math.max(0, score - 0.5);
+          if (!isControlled) setScore(newScore);
+          onChange?.(newScore);
+        } else if (e.key === 'ArrowRight' && score < 5) {
+          const newScore = Math.min(5, score + 0.5);
+          if (!isControlled) setScore(newScore);
+          onChange?.(newScore);
+        }
       }}
     >
       {[1, 2, 3, 4, 5].map((i) => {
