@@ -21,6 +21,7 @@ interface Props {
 
 export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Props) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false); // 팔로우 상태 관리
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -64,7 +65,8 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
         sellerId={postUserId}
         sellerName={sellerName}
         likesCount={post.likesCount}
-        isFollowing={false} // 실제 follow API 연동 전까지 false 고정
+        isFollowing={isFollowing}
+        onFollowChange={setIsFollowing}
       />
 
       {/* 구매하기 버튼 */}
@@ -76,6 +78,7 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
         isOpen={isMoreOpen}
         onClose={() => setIsMoreOpen(false)}
         postUserId={postUserId}
+        postId={post.id}
       />
     </BaseLayout>
   );
