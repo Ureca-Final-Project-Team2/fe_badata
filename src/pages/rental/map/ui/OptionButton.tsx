@@ -14,6 +14,7 @@ const OptionButtonComponent = ({
 }: OptionButtonProps) => (
   <button
     type="button"
+    aria-pressed={selected}
     className={`w-[85px] h-[34px] rounded-full flex items-center justify-center font-label-semibold border-none shadow-none transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[var(--main-5)] ${
       selected ? 'bg-[var(--main-5)] text-white' : 'bg-white text-[var(--main-5)]'
     } ${className}`}
