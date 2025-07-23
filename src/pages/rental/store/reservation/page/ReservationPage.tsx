@@ -7,13 +7,13 @@ import { useParams } from 'next/navigation';
 import { Calendar as CalendarIcon, CircleCheck } from 'lucide-react';
 
 import { Calendar } from '@/components/ui/calendar';
+import ReservationDeviceCard from '@/pages/rental/map/ui/ReservationDeviceCard';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
 
 import type { DateRange } from 'react-day-picker';
-import ReservationDeviceCard from '@/pages/rental/map/ui/ReservationDeviceCard';
 
 // 예시 mock 데이터
 const mockDevices = [
@@ -37,6 +37,11 @@ const ReservationPage = () => {
     { label: '상세정보', value: '상세정보' },
     { label: '리뷰', value: '리뷰' },
   ];
+
+  // 날짜, 기기, 동의 체크 모두 선택되어야 예약하기 버튼 활성화
+  const isDateSelected = !!(selectedRange && selectedRange.from && selectedRange.to);
+  const isDeviceSelected = !!selectedDeviceId;
+  const isFormValid = isDateSelected && isDeviceSelected && agreed;
 
   return (
     <BaseLayout
@@ -160,9 +165,14 @@ const ReservationPage = () => {
               </div>
             </div>
             <RegisterButton
-              className={`w-full mb-10 ${agreed ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
+              className={`w-full mb-10 ${isFormValid ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
               size="lg"
-              isFormValid={agreed}
+              isFormValid={isFormValid}
+              onClick={(e) => {
+                if (!isFormValid) {
+                  e.preventDefault();
+                }
+              }}
             >
               예약하기
             </RegisterButton>
