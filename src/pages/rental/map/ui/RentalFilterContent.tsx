@@ -27,8 +27,13 @@ export default function RentalFilterContent({ onClose }: RentalFilterContentProp
   // localStorage에서 초기값 불러오기
   const getInitialState = () => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
+      try {
+        const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+      } catch (error) {
+        console.warn('Failed to load saved filter state:', error);
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+      }
     }
     return initialRentalFilterState;
   };
