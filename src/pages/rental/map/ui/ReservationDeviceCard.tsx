@@ -85,6 +85,12 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
                 type="button"
                 className="absolute inset-0 z-20 flex flex-col items-center justify-center w-full h-full focus:outline-none"
                 onClick={handleNotifyToggle}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleNotifyToggle();
+                  }
+                }}
                 tabIndex={0}
               >
                 <BellRing
