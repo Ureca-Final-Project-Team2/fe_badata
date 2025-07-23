@@ -28,6 +28,7 @@ const ReservationPage = () => {
     typeof params === 'object' && params !== null ? (params['storeId'] as string) : '';
   const [tab, setTab] = useState('예약');
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(undefined);
+  const [agreed, setAgreed] = useState(false);
 
   const tabList = [
     { label: '예약', value: '예약' },
@@ -125,12 +126,39 @@ const ReservationPage = () => {
                   <span className="text-[var(--main-5)] font-semibold">책임이 없습니다</span>.
                 </li>
               </ul>
-              <div className="my-10 text-center font-label-medium">위 사항에 동의하십니까?</div>
+              <div className="my-10 text-center font-label-medium flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  aria-checked={agreed}
+                  onClick={() => setAgreed((prev) => !prev)}
+                  className="w-6 h-6 rounded border-2 border-[var(--main-5)] flex items-center justify-center mr-2 focus:outline-none focus:ring-2 focus:ring-[var(--main-5)] bg-white"
+                  style={{ minWidth: 24 }}
+                >
+                  {agreed && (
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4 8.5L7 11.5L12 5.5"
+                        stroke="#3e9fdc"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </button>
+                위 사항에 동의하십니까?
+              </div>
             </div>
             <RegisterButton
-              className="w-full bg-[var(--main-5)] text-white mb-10"
+              className={`w-full mb-10 ${agreed ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
               size="lg"
-              isFormValid={false}
+              isFormValid={agreed}
             >
               예약하기
             </RegisterButton>
