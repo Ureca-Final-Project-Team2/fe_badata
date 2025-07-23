@@ -1,20 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 
 import { useParams } from 'next/navigation';
 
-import { Calendar as CalendarIcon, CircleCheck } from 'lucide-react';
-
-import { Calendar } from '@/components/ui/calendar';
-import ReservationDeviceCard from '@/pages/rental/map/ui/ReservationDeviceCard';
 import { makeToast } from '@/shared/lib/makeToast';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
 
-import type { DateRange } from 'react-day-picker';
+import { initialState, reducer } from '../model/reservationReducer';
+
+import CalendarSection from './CalendarSection';
+import DeviceSelectSection from './DeviceSelectSection';
+import NoticeSection from './NoticeSection';
 
 // 예시 mock 데이터
 const mockDevices = [
@@ -28,10 +28,7 @@ const ReservationPage = () => {
   const storeId =
     typeof params === 'object' && params !== null ? (params['storeId'] as string) : '';
   const [tab, setTab] = useState('예약');
-  const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(undefined);
-  const [agreed, setAgreed] = useState(false);
-  // 1. 상태 추가
-  const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const tabList = [
     { label: '예약', value: '예약' },
@@ -40,16 +37,16 @@ const ReservationPage = () => {
   ];
 
   // 날짜, 기기, 동의 체크 모두 선택되어야 예약하기 버튼 활성화
-  const isDateSelected = !!(selectedRange && selectedRange.from && selectedRange.to);
-  const isDeviceSelected = !!selectedDeviceId;
-  const isFormValid = isDateSelected && isDeviceSelected && agreed;
+  const isDateSelected = !!(state.dateRange && state.dateRange.from && state.dateRange.to);
+  const isDeviceSelected = !!state.selectedDeviceId;
+  const isFormValid = isDateSelected && isDeviceSelected && state.agreed;
 
   // 오늘 이후 날짜인지 검사
   const isDateFuture = (() => {
-    if (!selectedRange || !selectedRange.from || !selectedRange.to) return true;
+    if (!state.dateRange || !state.dateRange.from || !state.dateRange.to) return true;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return selectedRange.from >= today && selectedRange.to >= today;
+    return state.dateRange.from >= today && state.dateRange.to >= today;
   })();
 
   return (
@@ -63,116 +60,22 @@ const ReservationPage = () => {
       {tab === '예약' && (
         <div className="flex flex-col gap-4 mt-4 w-full">
           {/* 날짜 선택 */}
-          <div className="font-body-semibold text-lg flex items-center gap-2">
-            <CalendarIcon size={20} className="text-[var(--main-5)]" />
-            날짜를 선택해 주세요
-          </div>
-          <div className="w-full">
-            <Calendar
-              mode="range"
-              selected={selectedRange}
-              onSelect={setSelectedRange}
-              required
-              className="rounded-md w-full"
-            />
-          </div>
+          <CalendarSection
+            dateRange={state.dateRange}
+            onChange={(range) => dispatch({ type: 'SET_DATE_RANGE', payload: range })}
+          />
           {/* 기기 선택 */}
-          <div className="font-body-semibold text-lg flex items-center gap-2 mt-6">
-            <CircleCheck size={28} className="text-[var(--main-5)]" />
-            기기를 선택해 주세요
-          </div>
-          {/* 가로 스크롤 디바이스 카드 */}
-          <div className="flex flex-row gap-6 overflow-x-auto pb-2 pl-1">
-            {mockDevices.map((device) => (
-              <ReservationDeviceCard
-                key={device.id}
-                name={device.name}
-                price={device.price}
-                image={device.image}
-                selected={selectedDeviceId === device.id}
-                onClick={() => setSelectedDeviceId(device.id)}
-              />
-            ))}
-          </div>
+          <DeviceSelectSection
+            devices={mockDevices}
+            selectedDeviceId={state.selectedDeviceId}
+            onSelect={(id) => dispatch({ type: 'SET_SELECTED_DEVICE', payload: id })}
+          />
           {/* 안내사항 및 예약하기 버튼 */}
           <div className="mt-6 w-full flex flex-col items-center">
-            <div className="w-full bg-white rounded-xl px-2 pt-4 pb-2 text-black">
-              <div className="font-body-semibold mt-5 mb-10 text-center">
-                아래 주의 사항을 꼭 읽어보시고
-                <br />
-                약관 내용에 동의해 주세요
-              </div>
-              <ul className="list-disc pl-5 space-y-1 font-label-regular">
-                <li>
-                  기기는 반드시{' '}
-                  <span className="text-[var(--main-5)] font-semibold">
-                    대여 신청 당일 대리점 영업시간 내에 수령
-                  </span>
-                  하셔야 합니다.
-                </li>
-                <li>
-                  대여 신청 당일에 수령하지 않을 시 해당 기기에 대한 예약 내역은{' '}
-                  <span className="text-[var(--main-5)] font-semibold">자동 취소</span>되오니 신중히
-                  예약 부탁드립니다.
-                </li>
-                <li>
-                  반납은{' '}
-                  <span className="text-[var(--main-5)] font-semibold">
-                    대여 종료일 당일 대리점 영업시간 내에
-                  </span>{' '}
-                  하셔야 합니다.
-                </li>
-                <li>
-                  기기 미반납 시{' '}
-                  <span className="text-[var(--main-5)] font-semibold">
-                    연체료 및 기기 손해배상금
-                  </span>
-                  이 발생하며, 법적 조치를 취할 수 있습니다.
-                </li>
-                <li>
-                  단말기에 대한 손실 및 파손 발생 시,{' '}
-                  <span className="text-[var(--main-5)] font-semibold">추가 비용</span>이 발생할 수
-                  있습니다.
-                </li>
-                <li>
-                  분실/파손/기기 반환지연이 반복적으로 발생되는 경우, 고객은{' '}
-                  <span className="text-[var(--main-5)] font-semibold">즉시 대여이용이 제한</span>될
-                  수 있습니다.
-                </li>
-                <li>
-                  단말기 대리점으로 연락하지 않고 미반납/미수령 시, 대리점은 이에 대한{' '}
-                  <span className="text-[var(--main-5)] font-semibold">책임이 없습니다</span>.
-                </li>
-              </ul>
-              <div className="my-10 text-center font-label-medium flex items-center justify-center gap-2">
-                <button
-                  type="button"
-                  aria-checked={agreed}
-                  onClick={() => setAgreed((prev) => !prev)}
-                  className="w-6 h-6 rounded border-2 border-[var(--main-5)] flex items-center justify-center mr-2 focus:outline-none focus:ring-2 focus:ring-[var(--main-5)] bg-white"
-                  style={{ minWidth: 24 }}
-                >
-                  {agreed && (
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M4 8.5L7 11.5L12 5.5"
-                        stroke="#3e9fdc"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </button>
-                위 사항에 동의하십니까?
-              </div>
-            </div>
+            <NoticeSection
+              agreed={state.agreed}
+              onToggleAgreed={() => dispatch({ type: 'SET_AGREED', payload: !state.agreed })}
+            />
             <RegisterButton
               className={`w-full mb-10 ${isFormValid ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
               size="lg"
