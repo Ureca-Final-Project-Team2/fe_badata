@@ -11,6 +11,9 @@ export const END_POINTS = {
     REGISTER_DATA: '/api/v1/trades/posts/data',
     REGISTER_GIFTICON: '/api/v1/trades/posts/gifticon',
     USER_POST: (userId: number) => `/api/v1/trades/posts/${userId}`,
+    VERIFY_PAYMENT: (impUid: string, postId: number) =>
+      `/api/v1/trades/order/payment/${encodeURIComponent(impUid)}/${encodeURIComponent(postId.toString())}`,
+    CREATE_PAYMENT: (postId: number) => `/api/v1/trades/create/${postId}`,
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',

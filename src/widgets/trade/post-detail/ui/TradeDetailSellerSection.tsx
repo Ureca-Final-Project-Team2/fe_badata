@@ -1,10 +1,9 @@
 'use client';
 
-import { ImageBox } from '@/shared/ui/ImageBox';
-import { LikeButton } from '@/shared/ui/LikeButton';
-import { ProductInfo } from '@/shared/ui/ProductInfo';
-import { Profile } from '@/shared/ui/Profile';
+import { ICONS } from '@/shared/config/iconPath';
 import { useUserTradePostsQuery } from '@/widgets/trade/post-detail/model/queries';
+import SellerPostCard from '@/widgets/trade/ui/SellerPostCard';
+import UserProfileCard from '@/widgets/user/ui/UserProfileCard';
 
 interface TradeDetailSellerSectionProps {
   sellerId: number; // 판매자 userId
@@ -26,12 +25,9 @@ export const TradeDetailSellerSection = ({
   return (
     <section className="mt-30">
       {/* 판매자의 프로필 */}
-      <Profile
-        size="sm"
-        avatarSize="sm"
+      <UserProfileCard
         name={sellerName}
-        subtitle={`좋아요 ${likesCount}`}
-        showFollowButton
+        tradeCount={likesCount}
         isFollowing={isFollowing}
         onFollowClick={() => alert('팔로우 기능 연결 예정')}
       />
@@ -47,32 +43,18 @@ export const TradeDetailSellerSection = ({
         ) : posts.length === 0 ? (
           <div className="text-gray-500 text-center py-4">판매 중인 다른 상품이 없습니다.</div>
         ) : (
-          <div className="flex overflow-x-auto gap-4 scrollbar-hide">
+          <div className="flex overflow-x-auto gap-4 mb-20 scrollbar-hide">
             {posts.map((item) => (
-              <div
+              <SellerPostCard
                 key={item.id}
-                className="w-[98px] flex-shrink-0 flex flex-col gap-2 mb-10 items-center"
-              >
-                <div className="relative w-[100px] h-[100px]">
-                  <ImageBox
-                    size="sm"
-                    url={
-                      item.postImage === 'no image' ? '/assets/trade_detail.jpg' : item.postImage
-                    }
-                  />
-                  <div className="absolute bottom-2.5 right-2.5 z-10">
-                    <LikeButton active={item.isLiked} />
-                  </div>
-                </div>
-                <div className="w-[98px] mt-1">
-                  <ProductInfo
-                    brand={item.partner || ''}
-                    name={item.title}
-                    price={item.price}
-                    size="sm"
-                  />
-                </div>
-              </div>
+                imageUrl={item.postImage === 'no image' ? ICONS.LOGO.DETAIL : item.postImage}
+                title={item.title}
+                partner={item.partner || ''}
+                price={item.price}
+                likeCount={item.likesCount}
+                isLiked={item.isLiked}
+                onLikeChange={() => alert('좋아요 기능 연결 예정')}
+              />
             ))}
           </div>
         )}

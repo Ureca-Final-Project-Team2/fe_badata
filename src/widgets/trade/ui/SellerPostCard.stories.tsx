@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
+
 import SellerPostCard from './SellerPostCard';
+
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta: Meta<typeof SellerPostCard> = {
   title: 'Widgets/Trade/SellerPostCard',
