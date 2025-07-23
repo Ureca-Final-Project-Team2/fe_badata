@@ -73,7 +73,7 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
             {periodDays}
           </span>
         </div>
-        <div className="border-t border-dashed border- my-3 w-full" />
+        <div className="border-t border-dashed border-gray-200 my-3 w-full" />
         {/* 디바이스 리스트 */}
         <div className="w-full flex flex-col gap-2 mb-2">
           {devices.map((d, i) => (
