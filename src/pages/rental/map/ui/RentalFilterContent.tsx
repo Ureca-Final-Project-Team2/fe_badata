@@ -41,7 +41,11 @@ export default function RentalFilterContent({ onClose }: RentalFilterContentProp
 
   // 상태가 바뀔 때마다 localStorage에 저장
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      console.warn('Failed to save filter state:', error);
+    }
   }, [state]);
 
   return (
