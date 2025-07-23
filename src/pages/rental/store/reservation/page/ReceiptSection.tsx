@@ -38,7 +38,12 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
   onClose,
 }) => {
   const total =
-    devices.reduce((sum, d) => sum + getNumber(d.price) * d.count, 0).toLocaleString() + '원';
+    devices
+      .reduce((sum, d) => {
+        const price = getNumber(d.price);
+        return sum + price * d.count;
+      }, 0)
+      .toLocaleString() + '원';
 
   return (
     <div className="flex flex-col items-center justify-center py-10">
