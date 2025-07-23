@@ -8,6 +8,7 @@ import { Calendar as CalendarIcon, CircleCheck } from 'lucide-react';
 
 import { Calendar } from '@/components/ui/calendar';
 import ReservationDeviceCard from '@/pages/rental/map/ui/ReservationDeviceCard';
+import { makeToast } from '@/shared/lib/makeToast';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
@@ -42,6 +43,14 @@ const ReservationPage = () => {
   const isDateSelected = !!(selectedRange && selectedRange.from && selectedRange.to);
   const isDeviceSelected = !!selectedDeviceId;
   const isFormValid = isDateSelected && isDeviceSelected && agreed;
+
+  // 오늘 이후 날짜인지 검사
+  const isDateFuture = (() => {
+    if (!selectedRange || !selectedRange.from || !selectedRange.to) return true;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return selectedRange.from >= today && selectedRange.to >= today;
+  })();
 
   return (
     <BaseLayout
@@ -170,6 +179,11 @@ const ReservationPage = () => {
               isFormValid={isFormValid}
               onClick={(e) => {
                 if (!isFormValid) {
+                  e.preventDefault();
+                  return;
+                }
+                if (!isDateFuture) {
+                  makeToast('날짜를 다시 선택해주세요', 'warning');
                   e.preventDefault();
                 }
               }}
