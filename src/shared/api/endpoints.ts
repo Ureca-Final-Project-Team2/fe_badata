@@ -7,6 +7,7 @@ export const END_POINTS = {
     LIST: '/api/v1/trades/posts',
     DETAIL: (postId: number) => `/api/v1/trades/${postId}/post`,
     DELETE: (postId: number) => `/api/v1/trades/${postId}/post`,
+    UPDATE: (postId: number) => `/api/v1/trades/posts/${postId}`,
     DEADLINE: '/api/v1/trades/posts/deadline',
     SEARCH: (keyword: string) => `/api/v1/trades/posts?query=${keyword}`,
     REGISTER_DATA: '/api/v1/trades/posts/data',
