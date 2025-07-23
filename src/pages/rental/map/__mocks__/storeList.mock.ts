@@ -1,4 +1,4 @@
-import type { StoreCardProps } from '../ui/StoreCard';
+import type { StoreCardProps } from '@/pages/rental/map/lib/types';
 
 export const mockStoreList: StoreCardProps[] = [
   {
