@@ -6,6 +6,7 @@ export const END_POINTS = {
   TRADES: {
     LIST: '/api/v1/trades/posts',
     DETAIL: (postId: number) => `/api/v1/trades/${postId}/post`,
+    DELETE: (postId: number) => `/api/v1/trades/${postId}/post`,
     DEADLINE: '/api/v1/trades/posts/deadline',
     SEARCH: (keyword: string) => `/api/v1/trades/posts?query=${keyword}`,
     REGISTER_DATA: '/api/v1/trades/posts/data',
@@ -18,6 +19,8 @@ export const END_POINTS = {
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
     REISSUE: '/api/v1/auth/reissue/token',
+    FOLLOW: (userId: number) => `/api/v1/users/${userId}/follows`,
+    GET_FOLLOWS: '/api/v1/users/follows',
   },
   STORES: {
     ALLSTORE: (storeId: number) => `/api/v1/stores/${storeId}/devices`,
