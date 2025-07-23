@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 
+import { CenterScrollSwiper } from '@/entities/scroll';
 import { mockStoreList } from '@/pages/rental/map/__mocks__/storeList.mock';
+import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
@@ -11,11 +13,17 @@ import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
+import type { StoreDevice } from '@/pages/rental/map/lib/types';
+import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 import type { DateRange } from 'react-day-picker';
 
 const RentalPage = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [selectedDevices, setSelectedDevices] = useState<StoreDevice[]>([]);
+  const [selectedStoreDetail, setSelectedStoreDetail] = useState<StoreDetail | undefined>(
+    undefined,
+  );
 
   return (
     <BaseLayout
@@ -42,7 +50,13 @@ const RentalPage = () => {
         </div>
       }
     >
-      <MapSection />
+      <MapSection
+        onStoreMarkerClick={(devices, storeDetail) => {
+          console.log('[RentalPage] onStoreMarkerClick:', devices, storeDetail);
+          setSelectedDevices(devices);
+          setSelectedStoreDetail(storeDetail);
+        }}
+      />
       <DrawerSection open={false} storeList={mockStoreList} />
       <FilterDrawer
         isOpen={filterDrawerOpen}
@@ -51,6 +65,15 @@ const RentalPage = () => {
       >
         <RentalFilterContent onClose={() => setFilterDrawerOpen(false)} />
       </FilterDrawer>
+      {selectedDevices.length > 0 && (
+        <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
+          <CenterScrollSwiper items={selectedDevices}>
+            {(device) => {
+              return <DeviceCard device={device} />;
+            }}
+          </CenterScrollSwiper>
+        </div>
+      )}
     </BaseLayout>
   );
 };

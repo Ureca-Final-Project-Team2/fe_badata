@@ -2,13 +2,6 @@ import DeviceImage from '@/pages/rental/map/ui/DeviceImage';
 import ReserveButton from '@/pages/rental/map/ui/ReserveButton';
 
 import type { StoreDevice } from '@/pages/rental/map/lib/types';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
-
-interface DeviceCardProps {
-  storeDetail: StoreDetail;
-  device: StoreDevice;
-  price?: number;
-}
 
 const CARD_SIZE = {
   w: 'w-[270px]',
@@ -17,6 +10,11 @@ const CARD_SIZE = {
   radius: 'rounded-20',
   imgRadius: 'rounded-t-[30px]',
 };
+
+interface DeviceCardProps {
+  device: StoreDevice;
+  price?: number;
+}
 
 export default function DeviceCard({ device, price = 1900 }: DeviceCardProps) {
   const sz = CARD_SIZE;
