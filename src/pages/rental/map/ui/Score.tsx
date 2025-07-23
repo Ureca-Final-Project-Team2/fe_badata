@@ -19,9 +19,10 @@ export const Score: React.FC<ScoreProps> = ({ value, onChange, readOnly = false 
 
   // 외부 value가 바뀌면 내부 상태도 동기화 (uncontrolled → controlled 전환 대응)
   useEffect(() => {
-    if (isControlled) setScore(value!);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+    if (isControlled && value !== internalScore) {
+      setScore(value!);
+    }
+  }, [isControlled, value, internalScore, setScore]);
 
   const handleSetScore = (e: React.MouseEvent) => {
     if (readOnly || !containerRef.current) return;
