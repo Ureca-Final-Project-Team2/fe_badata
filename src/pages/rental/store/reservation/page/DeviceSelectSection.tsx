@@ -16,7 +16,7 @@ interface Device {
 interface DeviceSelectSectionProps {
   devices: Device[];
   selectedDeviceId: number | null;
-  onSelect: (id: number) => void;
+  onSelect: (id: number | null) => void;
 }
 
 const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
@@ -38,7 +38,7 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
     if (safeCount > 0) {
       onSelect(id);
     } else if (selectedDeviceId === id) {
-      onSelect(-1);
+      onSelect(null);
     }
   };
 
