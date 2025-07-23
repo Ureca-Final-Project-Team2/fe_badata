@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
+@import '../shared/styles/radius.css';
 @import '../shared/styles/custom-scrollbar.css';
 
 @custom-variant dark (&:is(.dark *));

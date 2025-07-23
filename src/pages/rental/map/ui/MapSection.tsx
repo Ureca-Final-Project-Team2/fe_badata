@@ -6,14 +6,27 @@ import { renderStoreMarkers } from '@/pages/rental/map/lib/renderStoreMarkers';
 import { useFetchStoresHooks } from '@/pages/rental/map/model/useFetchStoresHooks';
 import { useKakaoMapHooks } from '@/pages/rental/map/model/useKakaoMapHooks';
 
-export const MapSection = () => {
+import type { StoreDevice } from '@/pages/rental/map/lib/types';
+import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+
+interface MapSectionProps {
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void;
+}
+
+export const MapSection = ({ onStoreMarkerClick }: MapSectionProps) => {
   const { mapRef, map } = useKakaoMapHooks();
   const stores = useFetchStoresHooks(map);
 
   useEffect(() => {
     if (!map || stores.isLoading) return;
-    renderStoreMarkers(map, stores.stores);
-  }, [map, stores.stores, stores.isLoading]);
+    renderStoreMarkers(map, stores.stores, (devices, storeDetail, storeId) => {
+      onStoreMarkerClick?.(devices, storeDetail, storeId);
+    });
+  }, [map, stores.stores, stores.isLoading, onStoreMarkerClick]);
 
   return <div ref={mapRef} className="w-full h-full" />;
 };

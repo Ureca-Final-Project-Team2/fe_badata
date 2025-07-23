@@ -1,7 +1,8 @@
 import { fetchStoreDetail, fetchStoreDevices } from '@/pages/rental/map/api/apis';
 import { ICONS } from '@/shared/config/iconPath';
 
-import type { Store } from '@/pages/rental/map/lib/types';
+import type { Store, StoreDevice } from '@/pages/rental/map/lib/types';
+import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 
 // 상수 정의
 const MARKER_SIZE = 36;
@@ -102,7 +103,12 @@ const setupMarkerEventListeners = (
   map: kakao.maps.Map,
   infowindow: kakao.maps.InfoWindow,
   store: Store,
-  safeDevices: unknown[],
+  safeDevices: StoreDevice[],
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void,
 ) => {
   window.kakao.maps.event.addListener(marker, 'mouseover', () => {
     infowindow.open(map, marker);
@@ -115,26 +121,32 @@ const setupMarkerEventListeners = (
   window.kakao.maps.event.addListener(marker, 'click', async () => {
     console.log(`📦 ${store.name}의 기기 목록:`, safeDevices);
 
-    const center = map.getCenter();
-    const lat = center.getLat();
-    const lng = center.getLng();
-
+    let storeDetail: StoreDetail | undefined = undefined;
     try {
-      const storeDetail = await fetchStoreDetail(store.id, lat, lng);
-      console.log(`${store.name}의 상세 정보:`, storeDetail);
-    } catch (error) {
-      console.error('가맹점 상세정보 요청 실패:', error);
-    }
+      const center = map.getCenter();
+      const lat = center.getLat();
+      const lng = center.getLng();
+      storeDetail = await fetchStoreDetail(store.id, lat, lng);
+    } catch {}
+    if (onStoreMarkerClick) onStoreMarkerClick(safeDevices, storeDetail, store.id);
   });
 };
 
 // 단일 스토어 마커 생성 함수
-const createStoreMarker = async (store: Store, map: kakao.maps.Map): Promise<void> => {
+const createStoreMarker = async (
+  store: Store,
+  map: kakao.maps.Map,
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void,
+): Promise<void> => {
   try {
-    const position = new window.kakao.maps.LatLng(store.latitude, store.longitude);
+    // 오타 수정!
+    const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
 
     // 디바이스 데이터 조회
-
     const devices = await fetchStoreDevices(store.id, {});
     const safeDevices = Array.isArray(devices) ? devices : [];
 
@@ -154,7 +166,7 @@ const createStoreMarker = async (store: Store, map: kakao.maps.Map): Promise<voi
     const infowindow = createInfoWindow(store.name);
 
     // 이벤트 리스너 설정
-    setupMarkerEventListeners(marker, map, infowindow, store, safeDevices);
+    setupMarkerEventListeners(marker, map, infowindow, store, safeDevices, onStoreMarkerClick);
   } catch (error) {
     console.error(`스토어 ${store.name} 마커 생성 실패:`, error);
   }
@@ -165,12 +177,17 @@ const processBatch = async (
   stores: Store[],
   map: kakao.maps.Map,
   batchSize: number = 5,
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void,
 ): Promise<void> => {
   for (let i = 0; i < stores.length; i += batchSize) {
     const batch = stores.slice(i, i + batchSize);
 
     // 배치 내에서는 병렬 처리, 배치 간에는 순차 처리
-    await Promise.all(batch.map((store) => createStoreMarker(store, map)));
+    await Promise.all(batch.map((store) => createStoreMarker(store, map, onStoreMarkerClick)));
 
     // 배치 간 약간의 지연을 두어 브라우저 리소스 회복 시간 제공
     if (i + batchSize < stores.length) {
@@ -179,7 +196,15 @@ const processBatch = async (
   }
 };
 
-export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]): Promise<void> => {
+export const renderStoreMarkers = async (
+  map: kakao.maps.Map,
+  stores: Store[],
+  onStoreMarkerClick?: (
+    devices: StoreDevice[],
+    storeDetail?: StoreDetail,
+    storeId?: number,
+  ) => void,
+): Promise<void> => {
   if (!map || !window.kakao || !stores || stores.length === 0) {
     console.log('마커 렌더링 조건 불충족:', {
       map: !!map,
@@ -195,9 +220,7 @@ export const renderStoreMarkers = async (map: kakao.maps.Map, stores: Store[]): 
     showCurrentLocation(map);
 
     // 배치 처리로 변경하여 브라우저 리소스 부족 방지
-    await processBatch(stores, map, 5); // 한 번에 5개씩 처리
-
-    console.log(`총 ${stores.length}개의 스토어 마커 생성 완료`);
+    await processBatch(stores, map, 5, onStoreMarkerClick); // 한 번에 5개씩 처리
   } catch (error) {
     console.error('마커 렌더링 중 오류 발생:', error);
   }
