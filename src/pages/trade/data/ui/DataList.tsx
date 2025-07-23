@@ -1,12 +1,9 @@
-import { useRouter } from 'next/navigation';
-
 import { ListFilter } from 'lucide-react';
 
 import {
   useDeleteTradePostLikeMutation,
   usePostTradePostLikeMutation,
 } from '@/entities/trade-post/model/mutations';
-import { PATH } from '@/shared/config/path';
 import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
@@ -21,8 +18,6 @@ interface DataListProps {
 }
 
 export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick }: DataListProps) {
-  const router = useRouter();
-
   const postLikeMutation = usePostTradePostLikeMutation();
   const deleteLikeMutation = useDeleteTradePostLikeMutation();
 
@@ -46,6 +41,7 @@ export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick
       onItemClick(item);
     }
   };
+
   return (
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
@@ -59,22 +55,17 @@ export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick
 
       <div className="grid grid-cols-2 gap-4 py-4">
         {items.map((item) => (
-          <div
+          <TradePostCard
             key={item.id}
-            onClick={() => router.push(PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id)))}
-          >
-            <TradePostCard
-              key={item.id}
-              imageUrl={item.postImage}
-              title={item.title}
-              mobileCarrier={item.mobileCarrier}
-              price={item.price}
-              likeCount={item.likesCount}
-              isLiked={item.isLiked}
-              onLikeToggle={() => handleLikeToggle(item)}
-              onCardClick={() => handleCardClick(item)}
-            />
-          </div>
+            imageUrl={item.postImage}
+            title={item.title}
+            mobileCarrier={item.mobileCarrier}
+            price={item.price}
+            likeCount={item.likesCount}
+            isLiked={item.isLiked}
+            onLikeToggle={() => handleLikeToggle(item)}
+            onCardClick={() => handleCardClick(item)}
+          />
         ))}
       </div>
     </section>

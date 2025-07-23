@@ -1,12 +1,9 @@
-import { useRouter } from 'next/navigation';
-
 import { ListFilter } from 'lucide-react';
 
 import {
   useDeleteTradePostLikeMutation,
   usePostTradePostLikeMutation,
 } from '@/entities/trade-post/model/mutations';
-import { PATH } from '@/shared/config/path';
 import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
@@ -27,8 +24,6 @@ export function GifticonList({
   onSortClick,
   onItemClick,
 }: GifticonListProps) {
-  const router = useRouter();
-
   const postLikeMutation = usePostTradePostLikeMutation();
   const deleteLikeMutation = useDeleteTradePostLikeMutation();
 
@@ -67,22 +62,17 @@ export function GifticonList({
 
       <div className="grid grid-cols-2 gap-4 py-4">
         {items.map((item) => (
-          <div
+          <TradePostCard
             key={item.id}
-            onClick={() => router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(item.id)))}
-            className="cursor-pointer"
-          >
-            <TradePostCard
-              partner={item.partner}
-              title={item.title}
-              price={item.price}
-              imageUrl={item.postImage}
-              likeCount={item.likesCount}
-              isLiked={item.isLiked}
-              onLikeToggle={() => handleLikeToggle(item)}
-              onCardClick={() => handleCardClick(item)}
-            />
-          </div>
+            partner={item.partner}
+            title={item.title}
+            price={item.price}
+            imageUrl={item.postImage}
+            likeCount={item.likesCount}
+            isLiked={item.isLiked}
+            onLikeToggle={() => handleLikeToggle(item)}
+            onCardClick={() => handleCardClick(item)}
+          />
         ))}
       </div>
     </section>
