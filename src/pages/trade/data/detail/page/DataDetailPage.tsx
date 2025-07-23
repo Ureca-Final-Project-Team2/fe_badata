@@ -76,6 +76,7 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
         isOpen={isMoreOpen}
         onClose={() => setIsMoreOpen(false)}
         postUserId={postUserId}
+        postId={post.id}
       />
     </BaseLayout>
   );

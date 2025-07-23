@@ -1,18 +1,28 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Flag, Pencil, Trash2 } from 'lucide-react';
 
 import { useIsPostOwner } from '@/entities/auth/model/useIsPostOwner';
+import { PATH } from '@/shared/config/path';
 import { Drawer, DrawerButton } from '@/shared/ui/Drawer';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   postUserId: number;
+  postId: number;
 }
 
-export const TradeDetailDrawer = ({ isOpen, onClose, postUserId }: Props) => {
+export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId }: Props) => {
+  const router = useRouter();
   const isOwner = useIsPostOwner(postUserId);
+
+  const handleReport = () => {
+    onClose();
+    router.push(PATH.TRADE.REPORT.replace(':id', String(postId)));
+  };
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose}>
@@ -27,7 +37,7 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId }: Props) => {
             </DrawerButton>
           </div>
         ) : (
-          <DrawerButton icon={<Flag />} variant="point" onClick={() => alert('신고')}>
+          <DrawerButton icon={<Flag />} variant="point" onClick={handleReport}>
             신고하기
           </DrawerButton>
         )}
