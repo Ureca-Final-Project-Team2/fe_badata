@@ -4,25 +4,17 @@ import { useReducer, useState } from 'react';
 
 import { useParams } from 'next/navigation';
 
+import { mockReservationDevices } from '@/pages/rental/map/__mocks__/reservationDeviceCard.mock';
+import { initialState, reducer } from '@/pages/rental/store/reservation/model/reservationReducer';
+import CalendarSection from '@/pages/rental/store/reservation/page/CalendarSection';
+import DeviceSelectSection from '@/pages/rental/store/reservation/page/DeviceSelectSection';
+import NoticeSection from '@/pages/rental/store/reservation/page/NoticeSection';
+import ReceiptSection from '@/pages/rental/store/reservation/page/ReceiptSection';
 import { makeToast } from '@/shared/lib/makeToast';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
-
-import { initialState, reducer } from '../model/reservationReducer';
-
-import CalendarSection from './CalendarSection';
-import DeviceSelectSection from './DeviceSelectSection';
-import NoticeSection from './NoticeSection';
-import ReceiptSection from './ReceiptSection';
-
-// 예시 mock 데이터
-const mockDevices = [
-  { id: 1, name: '기기 이름', price: '10,000원', image: '' },
-  { id: 2, name: '기기 이름', price: '10,000원', image: '' },
-  { id: 3, name: '기기 이름', price: '10,000원', image: '' },
-];
 
 const ReservationPage = () => {
   const params = useParams();
@@ -68,7 +60,14 @@ const ReservationPage = () => {
           />
           {/* 기기 선택 */}
           <DeviceSelectSection
-            devices={mockDevices}
+            devices={mockReservationDevices.map((device) => ({
+              id: device.id,
+              deviceName: device.deviceName,
+              imageUrl: device.imageUrl,
+              dataCapacity: device.dataCapacity,
+              remainCount: device.remainCount,
+              price: device.price,
+            }))}
             selectedDeviceId={state.selectedDeviceId}
             onSelect={(id) => dispatch({ type: 'SET_SELECTED_DEVICE', payload: id })}
           />
