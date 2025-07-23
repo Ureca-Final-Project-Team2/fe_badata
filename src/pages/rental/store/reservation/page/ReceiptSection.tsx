@@ -20,7 +20,15 @@ interface ReceiptSectionProps {
   onClose?: () => void;
 }
 
-const getNumber = (str: string) => Number(str.replace(/[^0-9]/g, ''));
+const getNumber = (str: string) => {
+  const cleanStr = str.replace(/[^0-9]/g, '');
+  const parsed = Number(cleanStr);
+  if (isNaN(parsed)) {
+    console.warn(`Failed to parse price: ${str}`);
+    return 0;
+  }
+  return parsed;
+};
 
 const ReceiptSection: React.FC<ReceiptSectionProps> = ({
   periodDate,
