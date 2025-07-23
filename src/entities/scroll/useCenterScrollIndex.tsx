@@ -1,66 +1,50 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-interface UseCenterScrollIndexOptions {
-  itemCount: number;
-  cardWidth?: number;
-  gap?: number;
+interface UseCenterScrollIndexOptions<T> {
+  items: T[];
   initial?: number;
 }
 
-export function useCenterScrollIndex({
-  itemCount,
-  cardWidth = 270,
-  gap = 16,
-  initial = 0,
-}: UseCenterScrollIndexOptions) {
+export function useCenterScrollIndex<T>({ items, initial = 0 }: UseCenterScrollIndexOptions<T>) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [centerIndex, setCenterIndex] = useState(initial);
-  const [cardScales, setCardScales] = useState<number[]>(Array(itemCount).fill(0.9));
-  // 드래그 상태
+  const [cardScales, setCardScales] = useState<number[]>(Array(items.length).fill(0.9));
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  useEffect(() => {
-    if (!scrollRef.current) return;
-    setContainerWidth(scrollRef.current.offsetWidth);
-  }, []);
-
-  // 패딩 계산
-  const sidePadding = useMemo(
-    () => ((containerWidth - cardWidth) / 2 > 0 ? (containerWidth - cardWidth) / 2 : 0),
-    [containerWidth, cardWidth],
-  );
-
-  // scale 계산
+  // 중심 카드 계산 및 scale 적용
   const updateCardScales = useCallback(() => {
-    if (!scrollRef.current) return;
+    if (!scrollRef.current || items.length === 0) return;
     const container = scrollRef.current;
-    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
-    const newScales = Array(itemCount)
-      .fill(0)
-      .map((_, idx) => {
-        const cardCenter = idx * (cardWidth + gap) + cardWidth / 2 + sidePadding;
-        const distance = Math.abs(containerCenter - cardCenter);
-        const maxDistance = container.offsetWidth / 2 + cardWidth;
-        // 가까울수록 1, 멀수록 0.85로 선형 보간
-        const scale = 1 - Math.min(distance / maxDistance, 1) * 0.15;
-        return scale;
-      });
+    const containerRect = container.getBoundingClientRect();
+    const containerCenter = containerRect.left + containerRect.width / 2;
+    let minDistance = Infinity;
+    let newCenterIndex = 0;
+    const newScales = items.map((_, idx) => {
+      const card = cardRefs.current[idx];
+      if (!card) return 0.9;
+      const cardRect = card.getBoundingClientRect();
+      const cardCenter = cardRect.left + cardRect.width / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
+        newCenterIndex = idx;
+      }
+      // 가까울수록 1, 멀수록 0.85
+      const maxDistance = containerRect.width / 2 + cardRect.width;
+      const scale = 1 - Math.min(distance / maxDistance, 1) * 0.15;
+      return scale;
+    });
+    setCenterIndex(newCenterIndex);
     setCardScales(newScales);
-  }, [itemCount, cardWidth, gap, sidePadding]);
+  }, [items]);
 
-  // 중심 인덱스 계산
+  // 스크롤 이벤트 핸들러
   const handleScroll = useCallback(() => {
-    if (!scrollRef.current) return;
-    const container = scrollRef.current;
-    const scrollLeft = container.scrollLeft;
-    const containerCenter = scrollLeft + container.offsetWidth / 2;
-    const idx = Math.round((containerCenter - cardWidth / 2 - sidePadding) / (cardWidth + gap));
-    setCenterIndex(Math.max(0, Math.min(itemCount - 1, idx)));
     updateCardScales();
-  }, [itemCount, cardWidth, gap, sidePadding, updateCardScales]);
+  }, [updateCardScales]);
 
   // 마우스 드래그 핸들러
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -83,28 +67,24 @@ export function useCenterScrollIndex({
   const onMouseUp = useCallback(() => setIsDragging(false), []);
   const onMouseLeave = useCallback(() => setIsDragging(false), []);
 
-  // 중심 카드가 바뀔 때마다 중앙에 오도록 스크롤
-  const scrollToCenter = useCallback(
-    (idx: number) => {
-      if (!scrollRef.current) return;
-      const container = scrollRef.current;
-      const cardCenter = idx * (cardWidth + gap) + cardWidth / 2 + sidePadding;
-      const scrollTo = cardCenter - container.offsetWidth / 2;
-      container.scrollTo({ left: scrollTo, behavior: 'smooth' });
-    },
-    [cardWidth, gap, sidePadding],
-  );
-
+  // 최초 렌더/아이템 변경 시 scale 업데이트
   useEffect(() => {
-    updateCardScales();
-  }, [itemCount, updateCardScales]);
+    setTimeout(updateCardScales, 0);
+  }, [items, updateCardScales]);
 
+  // 스크롤/드래그 시 scale 업데이트
   useEffect(() => {
-    scrollToCenter(centerIndex);
-  }, [centerIndex, scrollToCenter]);
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    container.addEventListener('scroll', updateCardScales);
+    return () => {
+      container.removeEventListener('scroll', updateCardScales);
+    };
+  }, [updateCardScales]);
 
   return {
     scrollRef,
+    cardRefs,
     cardScales,
     centerIndex,
     setCenterIndex,
@@ -113,7 +93,6 @@ export function useCenterScrollIndex({
     onMouseMove,
     onMouseUp,
     onMouseLeave,
-    sidePadding,
     isDragging,
   };
 }
