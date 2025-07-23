@@ -9,8 +9,8 @@ interface ReserveButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const BTN_SIZE = {
-  md: 'gap-2 px-2 py-1 font-label-semibold',
-  sm: 'gap-2 px-2 py-1 font-small-semibold',
+  md: 'gap-2 px-2 py-1',
+  sm: 'gap-2 px-2 py-1',
 };
 const ICON_SIZE = {
   md: 20,
