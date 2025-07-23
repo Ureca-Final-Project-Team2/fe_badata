@@ -67,10 +67,11 @@ const RentalPage = () => {
       </FilterDrawer>
       {selectedDevices.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
-          <CenterScrollSwiper items={selectedDevices}>
-            {(device) => {
-              return <DeviceCard device={device} />;
-            }}
+          <CenterScrollSwiper
+            key={selectedDevices.map((d) => d.storeDeviceId).join('-')}
+            items={selectedDevices}
+          >
+            {(device) => <DeviceCard device={device} />}
           </CenterScrollSwiper>
         </div>
       )}
