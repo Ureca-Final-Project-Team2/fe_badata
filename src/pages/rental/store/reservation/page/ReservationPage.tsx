@@ -15,6 +15,7 @@ import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
+import { Toaster } from '@/shared/ui/Toaster/Toaster';
 
 const ReservationPage = () => {
   const params = useParams();
@@ -44,83 +45,84 @@ const ReservationPage = () => {
   })();
 
   return (
-    <BaseLayout
-      header={<Header_Detail title={`LG유플러스 플러자 ${storeId}호점`} />}
-      showHeader
-      showBottomNav
-      className="custom-scrollbar"
-    >
-      <FlatTab items={tabList} value={tab} onValueChange={setTab} />
-      {tab === '예약' && (
-        <div className="flex flex-col gap-4 mt-4 w-full">
-          {/* 날짜 선택 */}
-          <CalendarSection
-            dateRange={state.dateRange}
-            onChange={(range) => dispatch({ type: 'SET_DATE_RANGE', payload: range })}
-          />
-          {/* 기기 선택 */}
-          <DeviceSelectSection
-            devices={mockReservationDevices.map((device) => ({
-              id: device.id,
-              deviceName: device.deviceName,
-              imageUrl: device.imageUrl,
-              dataCapacity: device.dataCapacity,
-              remainCount: device.remainCount,
-              price: device.price,
-            }))}
-            selectedDeviceId={state.selectedDeviceId}
-            onSelect={(id) => dispatch({ type: 'SET_SELECTED_DEVICE', payload: id })}
-          />
-          {/* 안내사항 및 예약하기 버튼 */}
-          <div className="mt-6 w-full flex flex-col items-center">
-            <NoticeSection
-              agreed={state.agreed}
-              onToggleAgreed={() => dispatch({ type: 'SET_AGREED', payload: !state.agreed })}
-            />
-            <RegisterButton
-              className={`w-full mb-10 ${isFormValid ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
-              size="lg"
-              isFormValid={isFormValid}
-              onClick={(e) => {
-                if (!isFormValid) {
-                  e.preventDefault();
-                  return;
-                }
-                if (!isDateFuture) {
-                  makeToast('날짜를 다시 선택해주세요', 'warning');
-                  e.preventDefault();
-                  return;
-                }
-                setShowReceiptModal(true);
-              }}
-            >
-              예약하기
-            </RegisterButton>
+    <>
+      <BaseLayout header={<Header_Detail title={`LG유플러스 플러자 ${storeId}호점`} />}>
+        <Toaster />
+        <div className="relative min-h-screen bg-white scrollbar-hide">
+          <div className="fixed bottom-0 left-0 w-full z-30"></div>
+          {/* 스크롤 가능한 컨텐츠 영역 */}
+          <div
+            className="pt-14 pb-16 overflow-y-auto"
+            style={{ height: '100vh', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            <style>{`.scrollbar-hide::-webkit-scrollbar { display: none; }`}</style>
+            <FlatTab items={tabList} value={tab} onValueChange={setTab} />
+            {tab === '예약' && (
+              <div className="flex flex-col gap-4 mt-4 w-full">
+                {/* 날짜 선택 */}
+                <CalendarSection
+                  dateRange={state.dateRange}
+                  onChange={(range) => dispatch({ type: 'SET_DATE_RANGE', payload: range })}
+                />
+                {/* 기기 선택 */}
+                <DeviceSelectSection
+                  devices={mockReservationDevices}
+                  selectedDeviceId={state.selectedDeviceId}
+                  onSelect={(id) => dispatch({ type: 'SET_SELECTED_DEVICE', payload: id })}
+                />
+                {/* 안내사항 및 예약하기 버튼 */}
+                <div className="mt-6 w-full flex flex-col items-center">
+                  <NoticeSection
+                    agreed={state.agreed}
+                    onToggleAgreed={() => dispatch({ type: 'SET_AGREED', payload: !state.agreed })}
+                  />
+                  <RegisterButton
+                    className={`w-full mb-10 ${isFormValid ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
+                    size="lg"
+                    isFormValid={isFormValid}
+                    onClick={(e) => {
+                      if (!isFormValid) {
+                        e.preventDefault();
+                        return;
+                      }
+                      if (!isDateFuture) {
+                        makeToast('날짜를 다시 선택해주세요', 'warning');
+                        e.preventDefault();
+                        return;
+                      }
+                      setShowReceiptModal(true);
+                    }}
+                  >
+                    예약하기
+                  </RegisterButton>
+                </div>
+              </div>
+            )}
+            {/* Receipt 모달 */}
+            {showReceiptModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                <div className="relative">
+                  <ReceiptSection
+                    periodDate="2025.05.02~2025.05.03"
+                    periodDays="(2일)"
+                    devices={[
+                      { name: '포켓 와이파이 A', price: '15,000원', count: 1 },
+                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                      { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
+                    ]}
+                    onPay={() => setShowReceiptModal(false)}
+                    onClose={() => setShowReceiptModal(false)}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      )}
-      {/* Receipt 모달 */}
-      {showReceiptModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="relative">
-            <ReceiptSection
-              periodDate="2025.05.02~2025.05.03"
-              periodDays="(2일)"
-              devices={[
-                { name: '포켓 와이파이 A', price: '15,000원', count: 1 },
-                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-                { name: '포켓 와이파이 B', price: '20,000원', count: 2 },
-              ]}
-              onPay={() => setShowReceiptModal(false)}
-              onClose={() => setShowReceiptModal(false)}
-            />
-          </div>
-        </div>
-      )}
-    </BaseLayout>
+      </BaseLayout>
+    </>
   );
 };
 
