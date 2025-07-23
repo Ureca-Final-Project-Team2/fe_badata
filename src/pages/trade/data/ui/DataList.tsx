@@ -1,9 +1,6 @@
 import { ListFilter } from 'lucide-react';
 
-import {
-  useDeleteTradePostLikeMutation,
-  usePostTradePostLikeMutation,
-} from '@/entities/trade-post/model/mutations';
+import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
 import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
@@ -18,8 +15,7 @@ interface DataListProps {
 }
 
 export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick }: DataListProps) {
-  const postLikeMutation = usePostTradePostLikeMutation();
-  const deleteLikeMutation = useDeleteTradePostLikeMutation();
+  const { toggleLike, isLoading: isLikeLoading } = useTradePostLikeHooks();
 
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--black)]">로딩 중...</div>;
@@ -27,14 +23,6 @@ export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick
   if (items.length === 0) {
     return <div className="py-4 text-center text-[var(--black)]">게시물이 없습니다.</div>;
   }
-
-  const handleLikeToggle = (item: AllPost) => {
-    if (item.isLiked) {
-      deleteLikeMutation.mutate(item.id);
-    } else {
-      postLikeMutation.mutate(item.id);
-    }
-  };
 
   const handleCardClick = (item: AllPost) => {
     if (onItemClick) {
@@ -63,8 +51,9 @@ export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick
             price={item.price}
             likeCount={item.likesCount}
             isLiked={item.isLiked}
-            onLikeToggle={() => handleLikeToggle(item)}
+            onLikeToggle={() => toggleLike(item)}
             onCardClick={() => handleCardClick(item)}
+            isLikeLoading={isLikeLoading}
           />
         ))}
       </div>

@@ -1,9 +1,6 @@
 import { ListFilter } from 'lucide-react';
 
-import {
-  useDeleteTradePostLikeMutation,
-  usePostTradePostLikeMutation,
-} from '@/entities/trade-post/model/mutations';
+import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
 import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
@@ -24,8 +21,7 @@ export function GifticonList({
   onSortClick,
   onItemClick,
 }: GifticonListProps) {
-  const postLikeMutation = usePostTradePostLikeMutation();
-  const deleteLikeMutation = useDeleteTradePostLikeMutation();
+  const { toggleLike, isLoading: isLikeLoading } = useTradePostLikeHooks();
 
   if (isLoading) {
     return <div>로딩 중...</div>;
@@ -34,14 +30,6 @@ export function GifticonList({
   if (items.length === 0) {
     return <div>쿠폰 게시물이 없습니다.</div>;
   }
-
-  const handleLikeToggle = (item: AllPost) => {
-    if (item.isLiked) {
-      deleteLikeMutation.mutate(item.id);
-    } else {
-      postLikeMutation.mutate(item.id);
-    }
-  };
 
   const handleCardClick = (item: AllPost) => {
     if (onItemClick) {
@@ -70,8 +58,9 @@ export function GifticonList({
             imageUrl={item.postImage}
             likeCount={item.likesCount}
             isLiked={item.isLiked}
-            onLikeToggle={() => handleLikeToggle(item)}
+            onLikeToggle={() => toggleLike(item)}
             onCardClick={() => handleCardClick(item)}
+            isLikeLoading={isLikeLoading}
           />
         ))}
       </div>

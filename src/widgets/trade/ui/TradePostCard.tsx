@@ -26,6 +26,7 @@ interface TradePostCardProps {
   onLikeToggle?: () => void;
   onCardClick?: () => void;
   className?: string;
+  isLikeLoading?: boolean;
 }
 
 /**
@@ -54,6 +55,7 @@ const TradePostCard = ({
   onLikeToggle,
   onCardClick,
   className = '',
+  isLikeLoading = false,
 }: TradePostCardProps) => {
   const getSafeImageUrl = (url?: string): string => {
     if (!url || url.trim() === '' || url === 'null' || url === 'undefined' || url === 'no image') {
@@ -75,7 +77,9 @@ const TradePostCard = ({
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onLikeToggle?.();
+    if (!isLikeLoading) {
+      onLikeToggle?.();
+    }
   };
 
   const handleCardClick = () => {
@@ -94,7 +98,7 @@ const TradePostCard = ({
           </div>
         )}
         <div className="absolute bottom-2 right-2 z-10">
-          <PostLikeButton active={isLiked} onClick={handleLikeClick} />
+          <PostLikeButton active={isLiked} onClick={handleLikeClick} disabled={isLikeLoading} />
         </div>
         <Image
           src={getSafeImageUrl(imageUrl)}
