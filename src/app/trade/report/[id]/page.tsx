@@ -1,4 +1,4 @@
-import { ReportPage } from '@/pages/trade/report/pages/ReportPage';
+import { ReportPage } from '@/pages/trade/report/page/ReportPage';
 
 interface Props {
   params: {
