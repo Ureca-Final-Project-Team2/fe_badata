@@ -25,23 +25,29 @@ export const TradeDetailProductSection = ({
   description,
   capacity,
 }: TradeDetailProductSectionProps) => {
-  const brandKey = brand === 'KT' || brand === 'UPLUS' || brand === 'SKT' ? brand : 'UPLUS';
-  const brandImageSrc = ICONS.TRADE.BRAND_LOGO[brandKey];
+  const brandKey = brand === 'KT' || brand === 'UPLUS' || brand === 'SKT' ? brand : null;
+  const brandImageSrc = brandKey ? ICONS.TRADE.BRAND_LOGO[brandKey] : null;
 
   return (
     <>
       {/* 브랜드 */}
       <div className="mb-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[var(--gray)] rounded-full">
-          <div className="w-4 h-4">
-            <Image
-              src={brandImageSrc}
-              alt={brand || '브랜드'}
-              width={16}
-              height={16}
-              className="object-contain"
-            />
-          </div>
+          {brandImageSrc ? (
+            <div className="w-4 h-4">
+              <Image
+                src={brandImageSrc}
+                alt={brand || '브랜드'}
+                width={16}
+                height={16}
+                className="object-contain"
+              />
+            </div>
+          ) : (
+            <div className="w-4 h-4 flex items-center justify-center">
+              <span className="text-xs font-medium text-[var(--gray-dark)]">?</span>
+            </div>
+          )}
           <span className="font-label-regular text-[var(--black)]">{brand}</span>
         </div>
       </div>
