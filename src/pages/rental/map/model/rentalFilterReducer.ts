@@ -5,7 +5,7 @@ export type RentalDataAmount = (typeof RENTAL_DATA_AMOUNTS)[number];
 export const RENTAL_DATA_TYPES = ['5G', '4G/LTE'] as const;
 export type RentalDataType = (typeof RENTAL_DATA_TYPES)[number];
 
-export const RENTAL_MAX_SUPPORT_CONNECTIONS = [2, 5, 10] as const;
+export const RENTAL_MAX_SUPPORT_CONNECTIONS = [8, 10, 64] as const;
 export type RentalMaxSupportConnection = (typeof RENTAL_MAX_SUPPORT_CONNECTIONS)[number];
 
 import type { DateRange } from 'react-day-picker';
