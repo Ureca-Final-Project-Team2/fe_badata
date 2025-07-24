@@ -21,6 +21,27 @@ export interface FollowingsResponse {
   };
 }
 
+export interface SalesItem {
+  postId: number;
+  postCategory: string;
+  partner: string | null;
+  title: string;
+  price: number;
+  postLikes: number;
+  postImage: string | null;
+  isSold: boolean;
+}
+
+export interface SalesResponse {
+  code: number;
+  message: string | null;
+  content: {
+    item: SalesItem[];
+    nextCursor: number;
+    hasNext: boolean;
+  };
+}
+
 export interface UserProfile {
   id: number;
   name: string;

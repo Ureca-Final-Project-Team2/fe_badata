@@ -1,20 +1,19 @@
 import { useState } from 'react';
 
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
-import { useFollowStatusQuery } from '@/entities/user/model/queries';
+import { useFollowStatusQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
 import UserAvatar from '@/shared/ui/UserAvatar';
 
 import type { ErrorCode } from '@/shared/config/errorCodes';
 
 interface UserProfileCardProps {
-  userId: number; // 사용자 ID 추가
+  userId: number;
   name: string;
-  tradeCount: number;
   avatarSrc?: string;
   isFollowing?: boolean;
   onFollowClick?: () => void;
-  onFollowChange?: (isFollowing: boolean) => void; // 팔로우 상태 변경 콜백
+  onFollowChange?: (isFollowing: boolean) => void;
   className?: string;
 }
 
@@ -22,7 +21,6 @@ interface UserProfileCardProps {
  * UserProfileCard - 일반 사용자 프로필 카드
  * @param userId - 사용자 ID
  * @param name - 사용자 이름
- * @param tradeCount - 거래내역 수
  * @param avatarSrc - 아바타 이미지 URL
  * @param isFollowing - 팔로잉 상태 (초기값)
  * @param onFollowClick - 팔로우/팔로잉 버튼 클릭 핸들러
@@ -32,7 +30,6 @@ interface UserProfileCardProps {
 const UserProfileCard = ({
   userId,
   name,
-  tradeCount,
   avatarSrc,
   isFollowing = false,
   onFollowClick,
@@ -42,12 +39,17 @@ const UserProfileCard = ({
   const createFollowMutation = useCreateFollowMutation();
 
   const { data: followStatus, isLoading: isLoadingFollowStatus } = useFollowStatusQuery(userId);
+  const { data: soldPostsCount, isLoading: isLoadingSoldCount } =
+    useUserSoldPostsCountQuery(userId);
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   // 서버 데이터가 있으면 우선, 없으면 prop fallback
   const currentIsFollowing = followStatus?.content?.following ?? isFollowing;
+
+  // 거래된 총 게시물의 수 (API에서 가져온 실제 데이터만 사용)
+  const displayTradeCount = soldPostsCount ?? 0;
 
   const handleFollowClick = async () => {
     try {
@@ -101,7 +103,7 @@ const UserProfileCard = ({
             </button>
           </div>
           <span className="text-[var(--black)] font-small-regular leading-none mt-2">
-            거래내역 {tradeCount}
+            거래내역 {isLoadingSoldCount ? '로딩중...' : displayTradeCount}
           </span>
         </div>
       </div>
