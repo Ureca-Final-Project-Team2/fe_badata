@@ -28,7 +28,7 @@ export function DeadlineList({
   }
 
   if (items.length === 0) {
-    return <div>쿠폰 게시물이 없습니다.</div>;
+    return <div>마감 임박 게시물이 없습니다.</div>;
   }
 
   const handleCardClick = (item: DeadlinePost) => {
