@@ -1,6 +1,7 @@
+import Image from 'next/image';
+
 import { ICONS } from '@/shared/config/iconPath';
 import { HEADER_WIDTH } from '@/shared/config/ui';
-import Image from 'next/image';
 
 interface HeaderDetailProps {
   title: string;
@@ -17,7 +18,7 @@ export function Header_Detail({ title }: HeaderDetailProps) {
     >
       <div className="flex items-center justify-center w-[60px] h-[58px] absolute left-[24px] top-1/2 -translate-y-1/2">
         <Image
-          src={ICONS.ETC.BACKICON} 
+          src={ICONS.ETC.BACKICON}
           alt="뒤로가기"
           width={60}
           height={58}

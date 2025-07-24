@@ -31,13 +31,13 @@ export default function DeviceCard({ device, price = 1900 }: DeviceCardProps) {
       {/* 정보 영역 */}
       <div className="flex flex-col px-4 py-3 flex-1">
         <div className="flex items-center justify-between w-full">
-          <span className="text-black m-0">
+          <span className="text-[var(--black)] m-0">
             <span className={capacityClass}>매일 </span>
             <span className={capacityNumberClass}>{device.dataCapacity}GB</span>
           </span>
           <ReserveButton>예약</ReserveButton>
         </div>
-        <div className={`text-black ${nameClass} mb-1`}>{device.deviceName}</div>
+        <div className={`text-[var(--black)] ${nameClass} mb-1`}>{device.deviceName}</div>
         <div className={`text-[var(--main-5)] ${priceClass}`}>{price.toLocaleString()}원</div>
       </div>
     </div>

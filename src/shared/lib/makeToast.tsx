@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 type ToastVariant = 'success' | 'warning';
 
 export const makeToast = (message: string, variant: ToastVariant) => {
+  toast.dismiss();
   toast.custom(
     () => (
       <div className="flex items-center w-[350px] gap-4 px-10 py-6 rounded-xl bg-[var(--black)]/80 shadow-md">
