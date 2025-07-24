@@ -8,6 +8,8 @@ interface InfoSectionProps {
   reviewRating: number;
   distanceFromMe: number;
   phoneNumber: string;
+  isLiked: boolean;
+  onLikeToggle?: () => void;
 }
 
 interface InfoActionProps {
@@ -40,6 +42,8 @@ export default function InfoSection({
   reviewRating,
   distanceFromMe,
   phoneNumber,
+  isLiked,
+  onLikeToggle,
 }: InfoSectionProps) {
   const likeStoreIcon =
     typeof ICONS.ETC.LIKE_NONACTIVE === 'string'
@@ -70,7 +74,8 @@ export default function InfoSection({
         <InfoAction
           icon={<Image src={likeStoreIcon} alt="찜" width={30} height={30} />}
           label="찜"
-          active
+          active={isLiked}
+          onClick={onLikeToggle}
         />
         <div className="w-px bg-[var(--gray-light)] mx-2" />
         <InfoAction icon={<Share size={24} className="text-[var(--gray-dark)]" />} label="공유" />
