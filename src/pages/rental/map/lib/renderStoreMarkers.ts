@@ -150,6 +150,9 @@ const createStoreMarker = async (
     const devices = await fetchStoreDevices(store.id, {});
     const safeDevices = Array.isArray(devices) ? devices : [];
 
+    // leftCount 총합 계산
+    const totalLeftCount = safeDevices.reduce((sum, device) => sum + (device.leftCount ?? 0), 0);
+
     // 마커 생성
     const markerImage = createMarkerImage();
     const marker = new window.kakao.maps.Marker({
@@ -158,8 +161,8 @@ const createStoreMarker = async (
       image: markerImage,
     });
 
-    // 디바이스 개수 오버레이 생성
-    const overlay = createDeviceCountOverlay(position, safeDevices.length);
+    // 디바이스 개수 오버레이 생성 (leftCount 총합 사용)
+    const overlay = createDeviceCountOverlay(position, totalLeftCount);
     overlay.setMap(map);
 
     // 인포윈도우 생성
