@@ -1,10 +1,19 @@
 'use client';
 
-import type { ToasterProps } from 'sonner';
+import React from 'react';
+
 import { Toaster as Sonner } from 'sonner';
 
-export function Toaster(props: ToasterProps) {
+type ToasterProps = React.ComponentProps<typeof Sonner>;
+
+export function Toaster({ ...props }: ToasterProps) {
   return (
-    <Sonner position="top-center" className="!left-1/2 !-translate-x-1/2 !right-auto" {...props} />
+    <Sonner
+      position="bottom-center"
+      toastOptions={{
+        className: 'mb-[80px]',
+      }}
+      {...props}
+    />
   );
 }

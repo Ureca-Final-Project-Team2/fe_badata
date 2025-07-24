@@ -16,14 +16,26 @@ export default function ContentSection({ store }: ContentSectionProps) {
     }
   };
 
+  const handleAddressCopy = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(store.detailAddress);
+      makeToast('주소가 복사되었습니다', 'success');
+    }
+  };
+
   return (
     <div className="flex flex-col w-full p-4 mb-4 gap-2">
       <div className="flex items-start gap-2 mb-2 text-body-semibold">
         <MapPin size={30} className="text-[var(--gray-dark)] mt-0.5" />
-        <span>{store.detailAddress}</span>
+        <span
+          className="cursor-pointer transition-colors hover:text-[var(--main-5)] active:text-[var(--main-4)]"
+          onClick={handleAddressCopy}
+        >
+          {store.detailAddress}
+        </span>
       </div>
       <div className="flex items-center gap-2 mb-2 text-body-semibold">
-        <Clock9 size={20} className="text-[var(--gray-dark)]" />
+        <Clock9 size={20} className="text-[var(--gray)]" />
         <span>영업 종료 · {store.startTime.slice(0, 5)}에 영업 시작</span>
       </div>
       <div className="flex items-center gap-2 mb-2 text-body-semibold">
