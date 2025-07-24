@@ -3,10 +3,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import { PATH } from '@/shared/config/path';
 import { FlatTab } from '@/shared/ui/FlatTab';
 
-interface TradeFlatTabProps {
+interface DeadlineFlatTabProps {
   className?: string;
 }
-export function TradeFlatTab({ className }: TradeFlatTabProps) {
+export function DeadlineFlatTab({ className }: DeadlineFlatTabProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -16,22 +16,22 @@ export function TradeFlatTab({ className }: TradeFlatTabProps) {
     { id: 'gifticon', label: '기프티콘', content: null },
   ];
 
-  const defaultValue = pathname?.includes('/data')
+  const defaultValue = pathname?.includes('/deadline/data')
     ? 'data'
-    : pathname?.includes('/gifticon')
+    : pathname?.includes('/deadline/gifticon')
       ? 'gifticon'
       : 'all';
 
   const handleTabChange = (tabId: string) => {
     switch (tabId) {
       case 'all':
-        router.push(PATH.TRADE.MAIN);
+        router.push(PATH.TRADE.DEADLINE);
         break;
       case 'data':
-        router.push(PATH.TRADE.DATA);
+        router.push(PATH.TRADE.DEADLINE_DATA);
         break;
       case 'gifticon':
-        router.push(PATH.TRADE.GIFTICON);
+        router.push(PATH.TRADE.DEADLINE_GIFTICON);
         break;
     }
   };

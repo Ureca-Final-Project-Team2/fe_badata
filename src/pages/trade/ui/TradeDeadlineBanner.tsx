@@ -42,7 +42,11 @@ export function TradeDeadlineBanner() {
     <section className="bg-white">
       <div className="flex items-center justify-between pb-2 px-1">
         <h2 className="font-body-semibold">마감임박 데려가세요!</h2>
-        <ChevronRight className="text-[var(--gray-dark)]" size={20} />
+        <ChevronRight
+          className="text-[var(--gray-dark)] cursor-pointer"
+          size={20}
+          onClick={() => router.push(PATH.TRADE.DEADLINE)}
+        />
       </div>
 
       <AutoSwiper
