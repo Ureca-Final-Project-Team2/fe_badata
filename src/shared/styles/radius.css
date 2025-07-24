@@ -1,0 +1,15 @@
+:root {
+  --radius-20: 20px;
+  --radius-32: 32px;
+  --radius-40: 40px;
+}
+
+.rounded-20 {
+  border-radius: var(--radius-20);
+}
+.rounded-32 {
+  border-radius: var(--radius-32);
+}
+.rounded-40 {
+  border-radius: var(--radius-40);
+}

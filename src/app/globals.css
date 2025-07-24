@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
+@import '../shared/styles/radius.css';
 @import '../shared/styles/custom-scrollbar.css';
 
 @custom-variant dark (&:is(.dark *));
@@ -261,5 +262,14 @@ body {
     font-family: var(--font-sans);
     font-size: var(--font-small-size);
     font-weight: var(--font-light);
+  }
+}
+
+@keyframes slideUpDrawer {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
   }
 }

@@ -10,7 +10,7 @@ export function SortButton({ label, onClick }: SortButtonProps) {
     <button
       type="button"
       onClick={onClick}
-      className="flex flex-row gap-1 items-center font-semibold"
+      className="flex flex-row gap-1 items-center font-label-semibold"
     >
       <ArrowDownUp size={16} />
       {label}

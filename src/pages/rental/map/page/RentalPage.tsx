@@ -1,27 +1,34 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useReducer, useState } from 'react';
 
+import { CenterScrollSwiper } from '@/entities/scroll';
 import { mockStoreList } from '@/pages/rental/map/__mocks__/storeList.mock';
-import { renderStoreMarkers } from '@/pages/rental/map/lib/renderStoreMarkers';
-import { useFetchStoresHooks } from '@/pages/rental/map/model/useFetchStoresHooks';
-import { useKakaoMapHooks } from '@/pages/rental/map/model/useKakaoMapHooks';
-import { DragBottomSheet } from '@/pages/rental/map/ui/DragBottomSheet';
+import {
+  initialSelectedStoreState,
+  selectedStoreReducer,
+} from '@/pages/rental/map/model/selectedStoreReducer';
+import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
+import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
+import { MapSection } from '@/pages/rental/map/ui/MapSection';
+import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
+import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
+import type { StoreDevice } from '@/pages/rental/map/lib/types';
+import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 import type { DateRange } from 'react-day-picker';
 
 const RentalPage = () => {
-  const { mapRef, map } = useKakaoMapHooks();
-  const stores = useFetchStoresHooks(map);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [selectedStore, dispatchSelectedStore] = useReducer(
+    selectedStoreReducer,
+    initialSelectedStoreState,
+  );
 
-  useEffect(() => {
-    if (!map || stores.isLoading) return;
-    renderStoreMarkers(map, stores.stores);
-  }, [map, stores.stores, stores.isLoading]);
   return (
     <BaseLayout
       centered
@@ -29,7 +36,7 @@ const RentalPage = () => {
       showHeader
       showBottomNav
       header={
-        <div className="max-w-[428px] px-4 pb-4 bg-white/80 z-30 flex flex-row items-center justify-between">
+        <div className="max-w-[428px] px-4 pt-4 bg-white/80 z-30 flex flex-row items-center justify-between">
           <div className="flex flex-row items-center w-full">
             <div className="w-[90%]">
               <DatePicker
@@ -38,14 +45,47 @@ const RentalPage = () => {
                 placeholder="대여 기간을 선택해주세요"
               />
             </div>
-            <FilterIcon alt="" className="w-8 h-8 ml-4 flex-shrink-0" />
+            <FilterIcon
+              alt=""
+              className="w-8 h-8 ml-4 flex-shrink-0"
+              onClick={() => setFilterDrawerOpen(true)}
+            />
           </div>
         </div>
       }
     >
-      <div ref={mapRef} className="w-full h-full" />
-      {/* DragBottomSheet Drawer */}
-      <DragBottomSheet open={true} storeList={mockStoreList} />
+      <MapSection
+        onStoreMarkerClick={(
+          devices: StoreDevice[],
+          storeDetail?: StoreDetail,
+          storeId?: number,
+        ) => {
+          dispatchSelectedStore({
+            type: 'SELECT_STORE',
+            devices,
+            storeId: storeId ?? 0,
+            storeDetail,
+          });
+        }}
+      />
+      <DrawerSection open={false} storeList={mockStoreList} />
+      <FilterDrawer
+        isOpen={filterDrawerOpen}
+        onClose={() => setFilterDrawerOpen(false)}
+        className="bg-[var(--main-2)]"
+      >
+        <RentalFilterContent onClose={() => setFilterDrawerOpen(false)} />
+      </FilterDrawer>
+      {selectedStore.selectedDevices.length > 0 && (
+        <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
+          <CenterScrollSwiper
+            key={selectedStore.selectedDevices.map((d) => d.storeDeviceId).join('-')}
+            items={selectedStore.selectedDevices}
+          >
+            {(device) => <DeviceCard device={device} />}
+          </CenterScrollSwiper>
+        </div>
+      )}
     </BaseLayout>
   );
 };

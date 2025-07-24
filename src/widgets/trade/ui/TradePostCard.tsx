@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Image from 'next/image';
 
 import { ICONS } from '@/shared/config/iconPath';
@@ -7,20 +9,24 @@ import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PostStatusBadge from '@/shared/ui/PostStatusBadge';
 import PriceText from '@/shared/ui/PriceText';
 
+import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
 const DEFAULT_IMAGE = ICONS.LOGO.DETAIL;
 
 interface TradePostCardProps {
-  imageUrl: string;
+  imageUrl?: string;
   title: string;
-  partner: string;
   price: number | string;
   likeCount: number;
+  partner?: string;
+  mobileCarrier?: MobileCarrier;
   hasDday?: boolean;
   dday?: number | string;
   isCompleted?: boolean;
   isLiked?: boolean;
-  onLikeChange?: (liked: boolean) => void;
+  onLikeToggle?: () => void;
+  onCardClick?: () => void;
   className?: string;
+  isLikeLoading?: boolean;
 }
 
 /**
@@ -39,17 +45,52 @@ const TradePostCard = ({
   imageUrl,
   title,
   partner,
+  mobileCarrier,
   price,
   likeCount,
   hasDday = false,
   dday,
   isCompleted = false,
   isLiked = false,
-  onLikeChange,
+  onLikeToggle,
+  onCardClick,
   className = '',
+  isLikeLoading = false,
 }: TradePostCardProps) => {
+  const getSafeImageUrl = (url?: string): string => {
+    if (!url || url.trim() === '' || url === 'null' || url === 'undefined' || url === 'no image') {
+      return DEFAULT_IMAGE;
+    }
+
+    // URL 유효성 검사
+    if (
+      !url.startsWith('/') &&
+      !url.startsWith('http://') &&
+      !url.startsWith('https://') &&
+      !url.startsWith('./')
+    ) {
+      return DEFAULT_IMAGE;
+    }
+
+    return url;
+  };
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLikeLoading) {
+      onLikeToggle?.();
+    }
+  };
+
+  const handleCardClick = () => {
+    onCardClick?.();
+  };
+
   return (
-    <div className={`w-[178px] flex-shrink-0 rounded-[15px] bg-white flex flex-col ${className}`}>
+    <div
+      className={`w-[178px] flex-shrink-0 rounded-[15px] bg-white flex flex-col cursor-pointer ${className}`}
+      onClick={handleCardClick}
+    >
       <div className="relative w-[178px] h-[163px] overflow-hidden bg-white flex items-center justify-center">
         {hasDday && (
           <div className="absolute top-2 left-2 z-10">
@@ -57,10 +98,10 @@ const TradePostCard = ({
           </div>
         )}
         <div className="absolute bottom-2 right-2 z-10">
-          <PostLikeButton active={isLiked} onClick={() => onLikeChange?.(!isLiked)} />
+          <PostLikeButton active={isLiked} onClick={handleLikeClick} disabled={isLikeLoading} />
         </div>
         <Image
-          src={imageUrl || DEFAULT_IMAGE}
+          src={getSafeImageUrl(imageUrl)}
           alt={title}
           width={178}
           height={163}
@@ -71,11 +112,11 @@ const TradePostCard = ({
         />
       </div>
       <div className="flex flex-col px-2 py-2 flex-1">
-        <span className="text-[var(--black)] text-[18px] mt-1.5 font-pretendard font-semibold leading-none truncate">
+        <span className="text-[var(--black)] mt-1.5 font-body-semibold leading-none truncate">
           {title}
         </span>
-        <span className="text-[var(--black)] text-[12.8px] mt-1.5 font-pretendard font-light leading-none truncate">
-          {partner}
+        <span className="text-[var(--black)] mt-1.5 font-small-regular leading-none truncate">
+          {partner ? partner : mobileCarrier}
         </span>
         <div className="flex items-center justify-between mt-1.5">
           <PriceText value={formatPrice(String(price))} size="md" />
@@ -89,7 +130,7 @@ const TradePostCard = ({
               height={20}
               className="w-5 h-5"
             />
-            <span className="flex items-center text-[var(--black)] text-[12.8px] font-pretendard font-normal leading-[20px]">
+            <span className="flex items-center text-[var(--black)] font-small-regular leading-[20px]">
               {likeCount}
             </span>
           </div>

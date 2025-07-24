@@ -1,10 +1,10 @@
-import type { StoreDetail } from '../../store/store-detail/lib/types';
+import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 
 export interface Store {
   id: number;
   name: string;
   latitude: number;
-  longitude: number;
+  longititude: number;
 }
 export interface StoreDevice {
   storeDeviceId: number;
@@ -27,4 +27,9 @@ export interface StoreCardProps {
   onLikeClick?: () => void;
   isLiked?: boolean;
   className?: string;
+}
+export interface ScoreProps {
+  value?: number;
+  onChange?: (score: number) => void;
+  readOnly?: boolean;
 }
