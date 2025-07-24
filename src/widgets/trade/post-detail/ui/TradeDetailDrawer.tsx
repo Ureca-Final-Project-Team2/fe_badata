@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useRouter } from 'next/navigation';
+
+import { useState } from 'react';
 
 import { AxiosError } from 'axios';
 import { Flag, Pencil, Trash2 } from 'lucide-react';
@@ -11,6 +11,7 @@ import { createPortal } from 'react-dom';
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useIsPostOwner } from '@/entities/auth/model/useIsPostOwner';
 import { useDeleteTradePostMutation } from '@/entities/trade-post/model/mutations';
+import { PATH } from '@/shared/config/path';
 import { makeToast } from '@/shared/lib/makeToast';
 import { Drawer, DrawerButton } from '@/shared/ui/Drawer';
 
@@ -80,6 +81,11 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId, postTyp
     setShowDeleteConfirm(false);
   };
 
+  const handleReport = () => {
+    onClose();
+    router.push(PATH.TRADE.REPORT.replace(':id', String(postId)));
+  };
+
   return (
     <Drawer isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col">
@@ -113,7 +119,7 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId, postTyp
             icon={<Flag />}
             variant="point"
             className="rounded-b-[12px]"
-            onClick={() => alert('신고')}
+            onClick={handleReport}
           >
             신고하기
           </DrawerButton>

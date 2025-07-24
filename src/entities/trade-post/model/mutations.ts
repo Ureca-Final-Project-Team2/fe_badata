@@ -5,14 +5,17 @@ import {
   deleteTradePostLike,
   patchTradePost,
   postTradePostLike,
+  reportTradePost,
 } from '@/entities/trade-post/api/apis';
 
 import type {
   AllPost,
   DeletePostResponse,
+  ReportRequest,
   UpdatePostRequest,
   UpdatePostResponse,
 } from '@/entities/trade-post/lib/types';
+import { makeToast } from '@/shared/lib/makeToast';
 
 export const usePostTradePostLikeMutation = () => {
   const queryClient = useQueryClient();
@@ -87,6 +90,20 @@ export const useUpdateTradePostMutation = () => {
     onSuccess: (data, { postId }) => {
       queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
       queryClient.invalidateQueries({ queryKey: ['trade', 'detail', postId] });
+    },
+  });
+};
+
+export const useReportTradePostMutation = () => {
+  return useMutation({
+    mutationFn: ({ postId, reportData }: { postId: number; reportData: ReportRequest }) =>
+      reportTradePost(postId, reportData),
+    onSuccess: () => {
+      makeToast('게시물 신고가 접수되었습니다!', 'success');
+    },
+    onError: (error) => {
+      console.error('게시물 신고 처리 실패:', error);
+      makeToast('게시물 신고 처리에 실패했습니다.', 'warning');
     },
   });
 };
