@@ -10,6 +10,7 @@ import BuyButtonWithPayment from '@/widgets/trade/payment/ui/BuyButtonWithPaymen
 import { TradeDetailDrawer } from '@/widgets/trade/post-detail/ui/TradeDetailDrawer';
 import { TradeDetailProductSection } from '@/widgets/trade/post-detail/ui/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@/widgets/trade/post-detail/ui/TradeDetailSellerSection';
+import { useFollowState } from '@/widgets/user/model/useFollowState';
 
 import type { PostType, TradeDetailPost } from '@/widgets/trade/post-detail/lib/types';
 
@@ -23,7 +24,7 @@ interface Props {
 
 export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Props) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false); // 팔로우 상태 관리
+  const { isFollowing, setIsFollowing } = useFollowState(postUserId);
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -87,7 +88,7 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
             sellerId={postUserId}
             sellerName={sellerName}
             likesCount={post.likesCount}
-            isFollowing={isFollowing}
+            isFollowing={isFollowing ?? false}
             onFollowChange={setIsFollowing}
           />
         </div>
