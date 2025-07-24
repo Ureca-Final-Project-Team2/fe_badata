@@ -21,16 +21,20 @@ export const userApis = {
 
   // 특정 사용자 팔로우 상태 확인
   readFollowStatus: async (targetUserId: number) => {
-    // 충분히 큰 size로 팔로잉 목록을 가져와서 검색
-    const params = new URLSearchParams();
-    params.append('followType', 'FOLLOWINGS');
-    params.append('size', '100');
+    let cursor: number | undefined;
+    let isFollowing = false;
 
-    const response = await axiosInstance.get(`${END_POINTS.USER.GET_FOLLOWS}?${params}`);
-    const followings = response.data.content?.item || [];
+    do {
+      const data = await userApis.readFollowings(cursor, 100);
+      const items = data.content?.item || [];
 
-    // 특정 사용자가 팔로잉 목록에 있는지 확인
-    const isFollowing = followings.some((user: { userId: number }) => user.userId === targetUserId);
+      if (items.some((user: { userId: number }) => user.userId === targetUserId)) {
+        isFollowing = true;
+        break;
+      }
+
+      cursor = data.content?.lastCursor;
+    } while (cursor);
 
     return {
       code: 20000,
