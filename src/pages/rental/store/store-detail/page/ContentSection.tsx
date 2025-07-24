@@ -8,6 +8,20 @@ interface ContentSectionProps {
   store: StoreDetail;
 }
 
+function getBusinessStatus(startTime: string, endTime: string) {
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const [startHour, startMin] = startTime.split(':').map(Number);
+  const [endHour, endMin] = endTime.split(':').map(Number);
+  const startMinutes = startHour * 60 + startMin;
+  const endMinutes = endHour * 60 + endMin;
+
+  if (nowMinutes < startMinutes) return { status: '영업 전', color: 'text-[var(--gray)]' };
+  if (nowMinutes >= startMinutes && nowMinutes <= endMinutes)
+    return { status: '영업 중', color: 'text-[var(--main-5)]' };
+  return { status: '영업 종료', color: 'text-[var(--gray)]' };
+}
+
 export default function ContentSection({ store }: ContentSectionProps) {
   const handleCopy = () => {
     if (navigator.clipboard) {
@@ -23,6 +37,8 @@ export default function ContentSection({ store }: ContentSectionProps) {
     }
   };
 
+  const { status, color } = getBusinessStatus(store.startTime, store.endTime);
+
   return (
     <div className="flex flex-col w-full p-4 mb-4 gap-2">
       <div className="flex items-start gap-2 mb-2 text-body-semibold">
@@ -36,7 +52,7 @@ export default function ContentSection({ store }: ContentSectionProps) {
       </div>
       <div className="flex items-center gap-2 mb-2 text-body-semibold">
         <Clock9 size={20} className="text-[var(--gray-dark)]" />
-        <span className="text-[var(--gray)]">영업 종료</span>
+        <span className={color}>{status}</span>
         <span className="text-[var(--gray-dark)]">
           {' '}
           · {store.startTime.slice(0, 5)}에 영업 시작
