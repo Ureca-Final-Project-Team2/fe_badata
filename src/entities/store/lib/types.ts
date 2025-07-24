@@ -13,7 +13,7 @@ export interface FetchStoresParams {
   maxPrice?: number | null;
   dataCapacity?: number[];
   is5G?: boolean;
-  maxSupportConnection?: number[];
+  maxSupportConnection?: number | number[];
 }
 
 export interface FetchStoreDevicesParams extends FetchStoresParams {

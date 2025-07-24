@@ -151,15 +151,19 @@ const createStoreMarker = async (
     // 디바이스 데이터 조회 (필터 파라미터 전달)
     const deviceParams = {
       ...filterParams,
-      maxSupportConnection: filterParams.maxSupportConnection
-        ? [filterParams.maxSupportConnection]
-        : undefined,
+      maxSupportConnection: filterParams.maxSupportConnection ?? undefined,
     };
     const devices = await fetchStoreDevices(store.id, deviceParams);
     const safeDevices = Array.isArray(devices) ? devices : [];
 
     // leftCount 총합 계산
     const totalLeftCount = safeDevices.reduce((sum, device) => sum + (device.leftCount ?? 0), 0);
+
+    // 디바이스가 0개면 마커 생성하지 않음, 1개 이상이면 항상 마커 생성
+    if (safeDevices.length === 0 || totalLeftCount === 0) {
+      // 마커가 이미 생성되어 있다면 제거(중복 방지, 필요시 구현)
+      return;
+    }
 
     // 마커 생성
     const markerImage = createMarkerImage();
