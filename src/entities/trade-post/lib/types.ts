@@ -60,6 +60,7 @@ export interface UpdatePostResponse {
   content: {
     postId: number;
   };
+}
 
 export interface LikeContent {
   likeId: number;
