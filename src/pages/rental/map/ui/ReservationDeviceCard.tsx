@@ -15,7 +15,7 @@ interface ReservationDeviceCardProps {
     id?: number;
   };
   count?: number;
-  onCountChange?: (id: number, newCount: number, remainCount: number) => void;
+  onCountChange?: (newCount: number) => void;
   selected?: boolean;
   max?: number;
 }
@@ -31,8 +31,9 @@ const CARD_SIZE = {
 const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
   ({ device, count = 0, onCountChange = () => {}, selected, max = 99 }) => {
     const sz = CARD_SIZE;
-    const { deviceName, imageUrl, dataCapacity, price, remainCount, id } = device;
-    const canIncrement = count < (max ?? 99);
+    const { deviceName, imageUrl, dataCapacity, price, remainCount } = device;
+    const maxCount = max ?? device.remainCount ?? 99;
+    const canIncrement = count < maxCount;
     const isSoldOut = (remainCount ?? 0) === 0;
     const [notifyActive, setNotifyActive] = useState(false);
 
@@ -48,17 +49,21 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
     const handleDecrement = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (id !== undefined) onCountChange(id, Math.max(0, count - 1), remainCount ?? 0);
+        onCountChange(Math.max(0, count - 1));
       },
-      [id, count, onCountChange, remainCount],
+      [count, onCountChange],
     );
 
     const handleIncrement = useCallback(
       (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (id !== undefined && canIncrement) onCountChange(id, count + 1, remainCount ?? 0);
+        if (count >= maxCount) {
+          makeToast('남은 수량까지만 선택할 수 있습니다.', 'warning');
+          return;
+        }
+        onCountChange(count + 1);
       },
-      [id, count, onCountChange, remainCount, canIncrement],
+      [count, onCountChange, maxCount],
     );
 
     return (

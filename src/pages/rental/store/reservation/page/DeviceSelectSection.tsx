@@ -16,7 +16,7 @@ interface Device {
 interface DeviceSelectSectionProps {
   devices: Device[];
   selectedDevices: Record<number, number>;
-  onCountChange: (deviceId: number, count: number, remainCount: number) => void;
+  onCountChange: (deviceId: number, count: number) => void;
 }
 
 const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
@@ -60,10 +60,6 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
     scrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
   };
 
-  useEffect(() => {
-    // No-op, kept for possible future logic
-  }, [devices]);
-
   return (
     <>
       <div className="font-body-semibold text-lg flex items-center gap-2 mt-6">
@@ -81,9 +77,7 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
             key={device.id}
             device={device}
             count={selectedDevices[device.id] ?? 0}
-            onCountChange={(newCount: number) =>
-              onCountChange(device.id, newCount, device.remainCount)
-            }
+            onCountChange={(newCount: number) => onCountChange(device.id, newCount)}
             selected={!!selectedDevices[device.id]}
             max={device.remainCount}
           />
