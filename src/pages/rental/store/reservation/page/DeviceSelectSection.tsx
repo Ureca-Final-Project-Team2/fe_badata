@@ -62,7 +62,7 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
 
   return (
     <>
-      <div className="font-body-semibold text-lg flex items-center gap-2 mt-6">
+      <div className="font-body-semibold flex items-center gap-2 mt-6">
         <CircleCheck size={28} className="text-[var(--main-5)]" />
         기기를 선택해 주세요
       </div>

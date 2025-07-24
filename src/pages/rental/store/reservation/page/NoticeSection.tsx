@@ -6,7 +6,7 @@ interface NoticeSectionProps {
 }
 
 const NoticeSection: React.FC<NoticeSectionProps> = ({ agreed, onToggleAgreed }) => (
-  <div className="w-full bg-white rounded-xl px-2 pt-4 pb-2 text-black flex flex-col items-center">
+  <div className="w-full bg-white rounded-xl px-2 pt-4 pb-2 text-[var(--black)] flex flex-col items-center">
     <div className="font-body-semibold mt-5 mb-10 text-center">
       아래 주의 사항을 꼭 읽어보시고
       <br />

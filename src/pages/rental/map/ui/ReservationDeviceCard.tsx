@@ -107,7 +107,7 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
                   }`}
                 />
                 <span
-                  className={`font-title-semibold text-lg transition-colors duration-200 ${
+                  className={`font-title-semibold transition-colors duration-200 ${
                     notifyActive ? 'text-white' : 'text-[var(--main-5)]'
                   }`}
                 >
@@ -120,7 +120,7 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
         {/* 정보 영역 */}
         <div className="flex flex-col px-4 py-3 flex-1">
           <div className="flex items-center justify-between w-full mb-1">
-            <span className="text-black">
+            <span className="text-[var(--black)]">
               <span className="font-label-regular">매일 </span>
               <span className="font-label-semibold">{dataCapacity}GB</span>
             </span>
@@ -128,7 +128,7 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
               남은 공유기 <span className="font-label-semibold">{remainCount}대</span>
             </span>
           </div>
-          <div className="font-label-semibold text-black mb-1">{deviceName}</div>
+          <div className="font-label-semibold text-[var(--black)] mb-1">{deviceName}</div>
           {/* 가격 + 수량조절 한 줄에 */}
           <div className="flex items-center justify-between mb-2">
             <div className="font-label-semibold text-[var(--main-5)]">
@@ -144,7 +144,7 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
                 –
               </button>
               <span
-                className={`font-label-semibold w-6 text-center ${count > 0 ? 'text-[var(--main-5)]' : 'text-black'}`}
+                className={`font-label-semibold w-6 text-center ${count > 0 ? 'text-[var(--main-5)]' : 'text-[var(--black)]'}`}
               >
                 {count}
               </span>

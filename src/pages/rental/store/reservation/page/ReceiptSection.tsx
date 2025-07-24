@@ -51,7 +51,7 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
         {/* X 버튼: 카드 상단 우측 */}
         {onClose && (
           <button
-            className="absolute top-3 right-5 text-[var(--gray-dark)] hover:text-black font-title-semibold"
+            className="absolute top-3 right-5 text-[var(--gray-dark)] hover:text-[var(--black)] font-title-semibold"
             onClick={onClose}
             aria-label="Close"
           >
@@ -68,7 +68,7 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
         />
         {/* period(날짜) row, X와의 간격 mt-8 */}
         <div className="w-full flex flex-col items-start mt-18">
-          <span className="font-body-semibold text-black leading-tight">{periodDate}</span>
+          <span className="font-body-semibold text-[var(--black)] leading-tight">{periodDate}</span>
           <span className="font-label-regular text-[var(--gray-dark)] leading-tight">
             {periodDays}
           </span>
@@ -83,8 +83,8 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
         <div className="border-t border-dashed border-gray-200 my-3 w-full" />
         {/* Total */}
         <div className="w-full flex justify-between items-center mb-1">
-          <span className="font-title-semibold text-black">Total</span>
-          <span className="font-title-semibold text-black">{total}</span>
+          <span className="font-title-semibold text-[var(--black)]">Total</span>
+          <span className="font-title-semibold text-[var(--black)]">{total}</span>
         </div>
       </div>
       {/* 구불구불 SVG */}

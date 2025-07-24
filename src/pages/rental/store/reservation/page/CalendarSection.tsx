@@ -13,7 +13,7 @@ interface CalendarSectionProps {
 
 const CalendarSection: React.FC<CalendarSectionProps> = ({ dateRange, onChange }) => (
   <>
-    <div className="font-body-semibold text-lg flex items-center gap-2">
+    <div className="font-body-semibold flex items-center gap-2">
       <CalendarIcon size={20} className="text-[var(--main-5)]" />
       날짜를 선택해 주세요
     </div>
