@@ -6,7 +6,7 @@ import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostL
 import { useTradeDeadlineQuery } from '@/pages/trade/model/queries';
 import BannerItem from '@/pages/trade/ui/BannerItem';
 import { PATH } from '@/shared/config/path';
-import { AutoSwiper } from '@/shared/ui/AutoSwipter';
+import { AutoSwiper } from '@/shared/ui/AutoSwiper';
 
 export function TradeDeadlineBanner() {
   const router = useRouter();
@@ -51,6 +51,7 @@ export function TradeDeadlineBanner() {
 
       <AutoSwiper
         items={deadlinePosts.slice(0, 10)}
+        getKey={(item) => item.id}
         autoPlayDelay={2000}
         slidesPerView={1}
         spaceBetween={120}

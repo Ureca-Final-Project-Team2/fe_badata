@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface AutoSwiperProps<T> {
   items: T[];
+  getKey: (item: T) => string | number;
   autoPlayDelay?: number;
   slidesPerView?: number;
   spaceBetween?: number;
@@ -15,6 +16,7 @@ interface AutoSwiperProps<T> {
 
 export function AutoSwiper<T>({
   items,
+  getKey,
   autoPlayDelay = 2000,
   slidesPerView = 1,
   spaceBetween = 16,
@@ -41,7 +43,7 @@ export function AutoSwiper<T>({
         grabCursor={true}
       >
         {items.map((item, index) => (
-          <SwiperSlide key={index}>{children(item, index)}</SwiperSlide>
+          <SwiperSlide key={getKey(item)}>{children(item, index)}</SwiperSlide>
         ))}
       </Swiper>
     </div>
