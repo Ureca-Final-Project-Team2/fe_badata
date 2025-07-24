@@ -82,12 +82,12 @@ export default function RentalFilterContent({
         <Slider
           min={0}
           max={50000}
-          value={filterState.minPrice ?? 0}
-          onValueChange={(min: number) =>
+          value={filterState.maxPrice ?? 50000}
+          onValueChange={(max: number) =>
             setFilterState({
               ...filterState,
-              minPrice: min,
-              // Optionally, you may want to keep maxPrice in sync or validate here
+              maxPrice: max,
+              minPrice: filterState.minPrice ?? 0,
             })
           }
         />
