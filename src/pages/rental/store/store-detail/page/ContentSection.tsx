@@ -14,8 +14,18 @@ function getBusinessStatus(startTime: string, endTime: string) {
   const [startHour, startMin] = startTime.split(':').map(Number);
   const [endHour, endMin] = endTime.split(':').map(Number);
   const startMinutes = startHour * 60 + startMin;
-  const endMinutes = endHour * 60 + endMin;
+  let endMinutes = endHour * 60 + endMin;
 
+  // 자정을 넘나드는 경우 처리 (예: 22:00-02:00)
+  if (endMinutes < startMinutes) {
+    endMinutes += 24 * 60; // 다음날로 연장
+    if (nowMinutes < startMinutes) {
+      const adjustedNow = nowMinutes + 24 * 60;
+      if (adjustedNow >= startMinutes && adjustedNow <= endMinutes) {
+        return { status: '영업 중', color: 'text-[var(--main-5)]' };
+      }
+    }
+  }
   if (nowMinutes < startMinutes) return { status: '영업 전', color: 'text-[var(--gray)]' };
   if (nowMinutes >= startMinutes && nowMinutes <= endMinutes)
     return { status: '영업 중', color: 'text-[var(--main-5)]' };
