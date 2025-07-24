@@ -2,9 +2,12 @@
 
 import { useMemo, useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
 import { GifticonFilter } from '@/pages/trade/gifticon/ui/GifticonFilter';
 import { GifticonList } from '@/pages/trade/gifticon/ui/GifticonList';
+import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header } from '@/shared/ui/Header';
@@ -13,12 +16,16 @@ import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFlo
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
+import type { AllPost } from '@/entities/trade-post/lib/types';
+
 const SORT_OPTIONS = [
   { value: 'latest', label: '최신순' },
   { value: 'popular', label: '인기순' },
 ];
 
 export default function GifticonPage() {
+  const router = useRouter();
+
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const { sortOption, setSortOption, isSortDrawerOpen, openDrawer, closeDrawer } = useSortStateHook<
     'latest' | 'popular'
@@ -43,6 +50,11 @@ export default function GifticonPage() {
   }, [posts, selectedCategory, sortOption]);
 
   const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortOption)?.label ?? '최신순';
+
+  const handleItemClick = (item: AllPost) => {
+    router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(item.id)));
+  };
+
   return (
     <>
       <BaseLayout
@@ -61,6 +73,7 @@ export default function GifticonPage() {
           isLoading={isLoading}
           sortLabel={currentSortLabel}
           onSortClick={openDrawer}
+          onItemClick={handleItemClick}
         />
       </BaseLayout>
       <TradeSortFilter
