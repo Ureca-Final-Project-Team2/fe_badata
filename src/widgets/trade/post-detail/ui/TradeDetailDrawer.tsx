@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { AxiosError } from 'axios';
 import { Flag, Pencil, Trash2 } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useIsPostOwner } from '@/entities/auth/model/useIsPostOwner';
@@ -124,33 +125,41 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId, postTyp
       </div>
 
       {/* 삭제 확인 모달 */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-[var(--white)] rounded-lg p-6 max-w-sm w-full mx-4">
-            <h3 className="font-title-semibold mb-4">게시물 삭제</h3>
-            <p className="text-[var(--gray-mid)] font-body-regular mb-6">
-              정말로 이 게시물을 삭제하시겠습니까?
-            </p>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={handleCancelDelete}
-                className="flex-1 px-4 py-2 border border-[var(--gray)] rounded-md text-[var(--gray-dark)] hover:bg-[var(--gray-light)] font-label-medium"
-              >
-                취소
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirmDelete}
-                disabled={deleteMutation.isPending}
-                className="flex-1 px-4 py-2 bg-[var(--red)] text-[var(--white)] rounded-md hover:bg-red-700 disabled:opacity-50 font-label-medium"
-              >
-                {deleteMutation.isPending ? '삭제 중...' : '삭제'}
-              </button>
+      {showDeleteConfirm &&
+        createPortal(
+          <div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            onClick={handleCancelDelete}
+          >
+            <div
+              className="bg-[var(--white)] rounded-lg p-6 max-w-sm w-full mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="font-title-semibold mb-4">게시물 삭제</h3>
+              <p className="text-[var(--gray-mid)] font-body-regular mb-6">
+                정말로 이 게시물을 삭제하시겠습니까?
+              </p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleCancelDelete}
+                  className="flex-1 px-4 py-2 border border-[var(--gray)] rounded-md text-[var(--gray-dark)] hover:bg-[var(--gray-light)] font-label-medium"
+                >
+                  취소
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmDelete}
+                  disabled={deleteMutation.isPending}
+                  className="flex-1 px-4 py-2 bg-[var(--red)] text-[var(--white)] rounded-md hover:bg-red-700 disabled:opacity-50 font-label-medium"
+                >
+                  {deleteMutation.isPending ? '삭제 중...' : '삭제'}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </Drawer>
   );
 };
