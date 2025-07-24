@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useParams } from 'next/navigation';
+
 import { mockStoreDetail } from '@/pages/rental/map/__mocks__/detail.mock';
 import ContentSection from '@/pages/rental/store/store-detail/page/ContentSection';
 import ImageSection from '@/pages/rental/store/store-detail/page/ImageSection';
@@ -11,6 +13,8 @@ import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
 
 export default function StoreDetailPage() {
+  const params = useParams();
+  const storeId = params.storeId;
   const [tab, setTab] = useState('상세정보');
   const tabList = [
     { label: '예약', value: '예약' },
@@ -19,7 +23,10 @@ export default function StoreDetailPage() {
   ];
 
   return (
-    <BaseLayout header={<Header_Detail title="LG유플러스 플라자 선릉 2호점" />} paddingX={false}>
+    <BaseLayout
+      header={<Header_Detail title={mockStoreDetail.storeName || '매장 상세정보'} />}
+      paddingX={false}
+    >
       {/* FlatTab 가운데 정렬 및 고정 */}
       <div className="fixed max-w-[428px] mx-auto top-[70px] left-0 right-0 z-20 flex justify-center bg-[var(--white)]">
         <FlatTab items={tabList} value={tab} onValueChange={setTab} />
