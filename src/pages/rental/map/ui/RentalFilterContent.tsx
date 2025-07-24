@@ -98,7 +98,12 @@ export default function RentalFilterContent({
               <OptionButton
                 key={opt}
                 selected={filterState.dataAmount === opt}
-                onClick={() => setFilterState({ ...filterState, dataAmount: opt })}
+                onClick={() =>
+                  setFilterState({
+                    ...filterState,
+                    dataAmount: filterState.dataAmount === opt ? undefined : opt,
+                  })
+                }
               >
                 {opt}
               </OptionButton>
@@ -111,7 +116,12 @@ export default function RentalFilterContent({
               <OptionButton
                 key={opt}
                 selected={filterState.dataType === opt}
-                onClick={() => setFilterState({ ...filterState, dataType: opt })}
+                onClick={() =>
+                  setFilterState({
+                    ...filterState,
+                    dataType: filterState.dataType === opt ? undefined : opt,
+                  })
+                }
               >
                 {opt}
               </OptionButton>
@@ -124,7 +134,13 @@ export default function RentalFilterContent({
               <OptionButton
                 key={opt}
                 selected={filterState.maxSupportConnection === opt}
-                onClick={() => setFilterState({ ...filterState, maxSupportConnection: opt })}
+                onClick={() =>
+                  setFilterState({
+                    ...filterState,
+                    maxSupportConnection:
+                      filterState.maxSupportConnection === opt ? undefined : opt,
+                  })
+                }
               >
                 {opt}대
               </OptionButton>
