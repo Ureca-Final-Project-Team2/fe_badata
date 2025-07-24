@@ -11,5 +11,6 @@ export const PATH = {
     GIFTICON_REGISTER: '/trade/register/gifticon',
     SEARCH: '/trade/search',
     REPORT: '/trade/report/:id',
+    DEADLINE: '/trade/deadline',
   },
 } as const;
