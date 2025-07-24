@@ -35,8 +35,16 @@ function getBusinessStatus(startTime: string, endTime: string) {
 export default function ContentSection({ store }: ContentSectionProps) {
   const handleCopy = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(store.phoneNumber);
-      makeToast('번호가 복사되었습니다', 'success');
+      navigator.clipboard
+        .writeText(store.phoneNumber)
+        .then(() => {
+          makeToast('번호가 복사되었습니다', 'success');
+        })
+        .catch(() => {
+          makeToast('복사에 실패했습니다', 'warning');
+        });
+    } else {
+      makeToast('클립보드를 지원하지 않는 브라우저입니다', 'warning');
     }
   };
 
