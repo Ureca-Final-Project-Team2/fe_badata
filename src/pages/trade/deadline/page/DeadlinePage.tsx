@@ -24,7 +24,7 @@ const SORT_OPTIONS = [
 export default function DeadlinePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const page = searchParams!.get('page') ?? 'all';
+  const page = searchParams?.get('page') ?? 'all';
 
   const { deadlinePosts: posts, isLoading } = useTradeDeadlineQuery();
   const { sortOption, setSortOption, isSortDrawerOpen, openDrawer, closeDrawer } = useSortStateHook<
