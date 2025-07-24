@@ -44,6 +44,23 @@ export interface GifticonPost extends BasePost {
   gifticonCategory?: string | null;
 }
 
+export interface DeletePostResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface UpdatePostRequest {
+  comment: string;
+  price: number;
+}
+
+export interface UpdatePostResponse {
+  code: number;
+  message: string;
+  content: {
+    postId: number;
+  };
+
 export interface LikeContent {
   likeId: number;
 }

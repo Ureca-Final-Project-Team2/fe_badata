@@ -18,16 +18,20 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       user: null,
       login: (token, user) => {
-        localStorage.setItem('accessToken', token); 
         set({ isLoggedIn: true, accessToken: token, user });
       },
       logout: () => {
-        localStorage.removeItem('accessToken'); 
         set({ isLoggedIn: false, accessToken: null, user: null });
       },
     }),
     {
       name: 'auth-storage',
+      // localStorage에 저장할 필드 지정
+      partialize: (state) => ({
+        isLoggedIn: state.isLoggedIn,
+        accessToken: state.accessToken,
+        user: state.user,
+      }),
     },
   ),
 );

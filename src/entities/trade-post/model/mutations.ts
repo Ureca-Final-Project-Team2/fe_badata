@@ -1,13 +1,21 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
+  deleteTradePost,
   deleteTradePostLike,
+  patchTradePost,
   postTradePostLike,
   reportTradePost,
 } from '@/entities/trade-post/api/apis';
-import { makeToast } from '@/shared/lib/makeToast';
 
-import type { AllPost, ReportRequest } from '@/entities/trade-post/lib/types';
+import type {
+  AllPost,
+  DeletePostResponse,
+  ReportRequest,
+  UpdatePostRequest,
+  UpdatePostResponse,
+} from '@/entities/trade-post/lib/types';
+import { makeToast } from '@/shared/lib/makeToast';
 
 export const usePostTradePostLikeMutation = () => {
   const queryClient = useQueryClient();
@@ -58,6 +66,30 @@ export const useDeleteTradePostLikeMutation = () => {
         queryClient.setQueryData(['trade-posts'], context.previousPosts);
       }
       console.error('좋아요 취소 실패', error);
+    },
+  });
+};
+
+export const useDeleteTradePostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<DeletePostResponse, Error, number>({
+    mutationFn: deleteTradePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['trade', 'detail'] });
+    },
+  });
+};
+
+export const useUpdateTradePostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<UpdatePostResponse, Error, { postId: number; data: UpdatePostRequest }>({
+    mutationFn: ({ postId, data }) => patchTradePost(postId, data),
+    onSuccess: (data, { postId }) => {
+      queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['trade', 'detail', postId] });
     },
   });
 };
