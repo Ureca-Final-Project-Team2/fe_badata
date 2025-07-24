@@ -8,7 +8,7 @@ import type { FollowResponse } from '../lib/types';
 export const useFollowStatusQuery = (userId: number) => {
   return useQuery<FollowResponse>({
     queryKey: ['user', 'follow-status', userId],
-    queryFn: () => userApis.readFollowStatus(userId),
+    queryFn: () => userApis.getFollowStatus(userId),
     enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });

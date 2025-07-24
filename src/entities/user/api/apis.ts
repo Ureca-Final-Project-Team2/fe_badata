@@ -3,13 +3,13 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 export const userApis = {
   // 팔로우/언팔로우 토글
-  createFollow: async (userId: number) => {
+  postFollowToggle: async (userId: number) => {
     const response = await axiosInstance.post(END_POINTS.USER.FOLLOW(userId));
     return response.data;
   },
 
   // 팔로잉 목록 조회
-  readFollowings: async (cursor?: number, size: number = 10) => {
+  getFollowings: async (cursor?: number, size: number = 10) => {
     const params = new URLSearchParams();
     params.append('followType', 'FOLLOWINGS');
     if (cursor !== undefined) params.append('cursor', cursor.toString());
@@ -20,12 +20,12 @@ export const userApis = {
   },
 
   // 특정 사용자 팔로우 상태 확인
-  readFollowStatus: async (targetUserId: number) => {
+  getFollowStatus: async (targetUserId: number) => {
     let cursor: number | undefined;
     let isFollowing = false;
 
     do {
-      const data = await userApis.readFollowings(cursor, 100);
+      const data = await userApis.getFollowings(cursor, 100);
       const items = data.content?.item || [];
 
       if (items.some((user: { userId: number }) => user.userId === targetUserId)) {

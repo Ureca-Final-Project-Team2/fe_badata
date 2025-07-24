@@ -8,7 +8,7 @@ export const useCreateFollowMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<FollowResponse, Error, number>({
-    mutationFn: (userId: number) => userApis.createFollow(userId),
+    mutationFn: (userId: number) => userApis.postFollowToggle(userId),
     onSuccess: (data, userId) => {
       // 팔로우/언팔로우 성공 시 관련 쿼리들을 무효화하여 UI를 업데이트
       queryClient.invalidateQueries({ queryKey: ['user', 'profile', userId] });
