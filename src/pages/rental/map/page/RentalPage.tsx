@@ -9,6 +9,7 @@ import {
   initialSelectedStoreState,
   selectedStoreReducer,
 } from '@/pages/rental/map/model/selectedStoreReducer';
+import { useFilteredDevices } from '@/pages/rental/map/model/useFilteredDevices';
 import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
@@ -35,19 +36,9 @@ const RentalPage = () => {
     useState<RentalFilterState>(initialRentalFilterState);
 
   // 필터링 조건이 바뀔 때마다 현재 선택된 가맹점의 디바이스도 다시 필터링
+  const filteredDevices = useFilteredDevices(selectedStore.selectedDevices, filterState);
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
-    const filteredDevices = selectedStore.selectedDevices.filter((device) => {
-      if (filterState.minPrice !== undefined && device.price < filterState.minPrice) return false;
-      if (filterState.maxPrice !== undefined && device.price > filterState.maxPrice) return false;
-      if (
-        filterState.dataAmount &&
-        device.dataCapacity &&
-        `${device.dataCapacity}GB` !== filterState.dataAmount
-      )
-        return false;
-      return true;
-    });
     if (filteredDevices.length === 0) {
       dispatchSelectedStore({
         type: 'SELECT_STORE',
@@ -100,23 +91,9 @@ const RentalPage = () => {
           storeDetail?: StoreDetail,
           storeId?: number,
         ) => {
-          // 디바이스 필터링 로직 추가
-          const filteredDevices = devices.filter((device) => {
-            if (filterState.minPrice !== undefined && device.price < filterState.minPrice)
-              return false;
-            if (filterState.maxPrice !== undefined && device.price > filterState.maxPrice)
-              return false;
-            if (
-              filterState.dataAmount &&
-              device.dataCapacity &&
-              `${device.dataCapacity}GB` !== filterState.dataAmount
-            )
-              return false;
-            return true;
-          });
           dispatchSelectedStore({
             type: 'SELECT_STORE',
-            devices: filteredDevices,
+            devices,
             storeId: storeId ?? 0,
             storeDetail,
           });
@@ -138,13 +115,13 @@ const RentalPage = () => {
           }}
         />
       </FilterDrawer>
-      {selectedStore.selectedDevices.length > 0 && (
+      {filteredDevices.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
           <CenterScrollSwiper
-            key={selectedStore.selectedDevices.map((d) => d.storeDeviceId).join('-')}
-            items={selectedStore.selectedDevices}
+            key={filteredDevices.map((d: StoreDevice) => d.storeDeviceId).join('-')}
+            items={filteredDevices}
           >
-            {(device) => <DeviceCard device={device} />}
+            {(device: StoreDevice) => <DeviceCard device={device} />}
           </CenterScrollSwiper>
         </div>
       )}
