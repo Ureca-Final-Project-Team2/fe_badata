@@ -146,7 +146,7 @@ export const Interactive: Story = {
 
     const handleLikeToggle = () => {
       setIsLiked((prev) => !prev);
-      setLikeCount((prev) => (isLiked ? prev - 1 : prev - 1));
+      setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     };
 
     return (
