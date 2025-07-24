@@ -7,6 +7,7 @@ import {
   postTradePostLike,
   reportTradePost,
 } from '@/entities/trade-post/api/apis';
+import { makeToast } from '@/shared/lib/makeToast';
 
 import type {
   AllPost,
@@ -15,7 +16,6 @@ import type {
   UpdatePostRequest,
   UpdatePostResponse,
 } from '@/entities/trade-post/lib/types';
-import { makeToast } from '@/shared/lib/makeToast';
 
 export const usePostTradePostLikeMutation = () => {
   const queryClient = useQueryClient();
@@ -65,6 +65,25 @@ export const useDeleteTradePostLikeMutation = () => {
       if (context?.previousPosts) {
         queryClient.setQueryData(['trade-posts'], context.previousPosts);
       }
+      console.error('좋아요 취소 실패', error);
+    },
+  });
+};
+
+// 상세페이지용 좋아요 뮤테이션 (optimistic update 없음)
+export const usePostTradePostLikeDetailMutation = () => {
+  return useMutation({
+    mutationFn: (postId: number) => postTradePostLike(postId),
+    onError: (error) => {
+      console.error('좋아요 처리 실패', error);
+    },
+  });
+};
+
+export const useDeleteTradePostLikeDetailMutation = () => {
+  return useMutation({
+    mutationFn: (postId: number) => deleteTradePostLike(postId),
+    onError: (error) => {
       console.error('좋아요 취소 실패', error);
     },
   });
