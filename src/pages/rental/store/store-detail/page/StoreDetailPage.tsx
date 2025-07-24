@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
-import { useParams } from 'next/navigation';
-
 import { mockStoreDetail } from '@/pages/rental/map/__mocks__/detail.mock';
+import ReservationPage from '@/pages/rental/store/reservation/page/ReservationPage';
+import ReviewPage from '@/pages/rental/store/review/page/ReviewPage';
 import ContentSection from '@/pages/rental/store/store-detail/page/ContentSection';
 import ImageSection from '@/pages/rental/store/store-detail/page/ImageSection';
 import InfoSection from '@/pages/rental/store/store-detail/page/InfoSection';
@@ -13,13 +13,11 @@ import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
 
 export default function StoreDetailPage() {
-  const params = useParams();
-  const storeId = params.storeId;
   const [tab, setTab] = useState('상세정보');
   const tabList = [
-    { label: '예약', value: '예약' },
-    { label: '상세정보', value: '상세정보' },
-    { label: '리뷰', value: '리뷰' },
+    { id: '예약', label: '예약', value: '예약' },
+    { id: '상세정보', label: '상세정보', value: '상세정보' },
+    { id: '리뷰', label: '리뷰', value: '리뷰' },
   ];
 
   return (
@@ -33,17 +31,25 @@ export default function StoreDetailPage() {
       </div>
       {/* 이미지 영역은 패딩 없이 전체 너비 */}
       <div className="pt-[50px] pb-16 overflow-y-auto">
-        <div className="w-full">
-          <ImageSection imageUrl={mockStoreDetail.imageUrl} />
-        </div>
+        {tab === '상세정보' && (
+          <div className="w-full">
+            <ImageSection imageUrl={mockStoreDetail.imageUrl} />
+          </div>
+        )}
         {/* 아래 컨텐츠는 패딩 적용 */}
         <div className="px-6">
-          <InfoSection
-            reviewRating={mockStoreDetail.reviewRating}
-            distanceFromMe={mockStoreDetail.distanceFromMe}
-            phoneNumber={mockStoreDetail.phoneNumber}
-          />
-          <ContentSection store={mockStoreDetail} />
+          {tab === '예약' && <ReservationPage />}
+          {tab === '상세정보' && (
+            <>
+              <InfoSection
+                reviewRating={mockStoreDetail.reviewRating}
+                distanceFromMe={mockStoreDetail.distanceFromMe}
+                phoneNumber={mockStoreDetail.phoneNumber}
+              />
+              <ContentSection store={mockStoreDetail} />
+            </>
+          )}
+          {tab === '리뷰' && <ReviewPage />}
         </div>
       </div>
     </BaseLayout>
