@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { deleteTradePost, readTradePosts, updateTradePost } from '@/entities/trade-post/api/apis';
+import { deleteTradePost, getTradePosts, patchTradePost } from '@/entities/trade-post/api/apis';
 import { getTradePostDetail } from '@/pages/trade/data/detail/api/apis';
 
 import type {
@@ -13,7 +13,7 @@ import type {
 export const useTradePostsQuery = () => {
   const { data: posts, isLoading } = useQuery<AllPost[]>({
     queryKey: ['trade-posts'],
-    queryFn: readTradePosts,
+    queryFn: getTradePosts,
     gcTime: 5 * 60 * 1000,
     staleTime: 5 * 60 * 1000,
   });
@@ -60,7 +60,7 @@ export const useUpdateTradePostMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<UpdatePostResponse, Error, { postId: number; data: UpdatePostRequest }>({
-    mutationFn: ({ postId, data }) => updateTradePost(postId, data),
+    mutationFn: ({ postId, data }) => patchTradePost(postId, data),
     onSuccess: (data, { postId }) => {
       // 수정 성공 시 관련 쿼리들을 무효화
       queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
