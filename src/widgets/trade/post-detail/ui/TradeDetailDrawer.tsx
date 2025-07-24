@@ -4,11 +4,13 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { AxiosError } from 'axios';
 import { Flag, Pencil, Trash2 } from 'lucide-react';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useIsPostOwner } from '@/entities/auth/model/useIsPostOwner';
 import { useDeleteTradePostMutation } from '@/entities/trade-post/model/queries';
+import { makeToast } from '@/shared/lib/makeToast';
 import { Drawer, DrawerButton } from '@/shared/ui/Drawer';
 
 interface Props {
@@ -34,15 +36,32 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId, postTyp
     } catch (error) {
       console.error('게시물 삭제 실패:', error);
 
-      // 401 에러인 경우 로그인 상태를 확인하도록 안내
-      if (error instanceof Error && error.message.includes('인증예외')) {
-        alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-        // 로그아웃 처리
-        useAuthStore.getState().logout();
-        // 로그인 페이지로 이동
-        router.push('/landing');
+      // axios 에러인 경우 status code 확인
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          makeToast('로그인이 만료되었습니다. 다시 로그인해주세요.', 'warning');
+          useAuthStore.getState().logout();
+          router.push('/landing');
+        } else if (error.response?.status === 403) {
+          makeToast('삭제 권한이 없습니다. 본인이 작성한 게시물만 삭제할 수 있습니다.', 'warning');
+        } else if (error.response?.status === 404) {
+          makeToast(
+            '게시물을 찾을 수 없습니다. 이미 삭제되었거나 존재하지 않는 게시물입니다.',
+            'warning',
+          );
+        } else if (error.response?.status && error.response.status >= 500) {
+          makeToast('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'warning');
+        } else {
+          makeToast(
+            `게시물 삭제에 실패했습니다. (오류 코드: ${error.response?.status || '알 수 없음'})`,
+            'warning',
+          );
+        }
       } else {
-        alert('게시물 삭제에 실패했습니다. 다시 시도해주세요.');
+        makeToast(
+          '네트워크 연결을 확인해주세요. 인터넷 연결 상태를 점검 후 다시 시도해주세요.',
+          'warning',
+        );
       }
     }
   };
