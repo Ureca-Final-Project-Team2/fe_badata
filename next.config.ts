@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       'imgnews.pstatic.net',
       'img.danawa.com',
       'ae-pic-a1.aliexpress-media.com',
+      'ae01.alicdn.com',
     ],
   },
   webpack: (config) => {

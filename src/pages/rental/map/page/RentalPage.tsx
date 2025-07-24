@@ -31,6 +31,8 @@ const RentalPage = () => {
     initialSelectedStoreState,
   );
   const [filterState, setFilterState] = useState<RentalFilterState>(initialRentalFilterState);
+  const [tempFilterState, setTempFilterState] =
+    useState<RentalFilterState>(initialRentalFilterState);
 
   return (
     <BaseLayout
@@ -51,7 +53,10 @@ const RentalPage = () => {
             <FilterIcon
               alt=""
               className="w-8 h-8 ml-4 flex-shrink-0"
-              onClick={() => setFilterDrawerOpen(true)}
+              onClick={() => {
+                setTempFilterState(filterState); // Drawer 열 때 tempFilterState를 filterState로 초기화
+                setFilterDrawerOpen(true);
+              }}
             />
           </div>
         </div>
@@ -96,10 +101,10 @@ const RentalPage = () => {
       >
         <RentalFilterContent
           onClose={() => setFilterDrawerOpen(false)}
-          filterState={filterState}
-          setFilterState={setFilterState}
+          filterState={tempFilterState}
+          setFilterState={setTempFilterState}
           onSubmit={(filters) => {
-            setFilterState(filters);
+            setFilterState(filters); // 결과보기 클릭 시에만 실제 filterState 반영
             setFilterDrawerOpen(false);
           }}
         />
