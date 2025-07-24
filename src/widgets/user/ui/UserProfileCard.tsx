@@ -42,9 +42,9 @@ const UserProfileCard = ({
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const isFollowingFromServer = followStatus?.content?.following;
-  const currentIsFollowing =
-    isFollowingFromServer !== undefined ? isFollowingFromServer : isFollowing;
+
+  // 서버 데이터가 있으면 우선, 없으면 prop fallback
+  const currentIsFollowing = followStatus?.content?.following ?? isFollowing;
 
   const handleFollowClick = async () => {
     try {
