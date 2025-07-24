@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { CircleCheck } from 'lucide-react';
 
@@ -24,6 +24,42 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
   selectedDevices,
   onCountChange,
 }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+  const [dragging, setDragging] = React.useState(false);
+
+  // document 이벤트 등록/해제
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current || !scrollRef.current) return;
+      e.preventDefault();
+      const x = e.pageX - scrollRef.current.offsetLeft;
+      const walk = x - startX.current;
+      scrollRef.current.scrollLeft = scrollLeft.current - walk;
+    };
+    const handleMouseUp = () => {
+      isDragging.current = false;
+      setDragging(false);
+    };
+    if (dragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [dragging]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    setDragging(true);
+    startX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
+    scrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
+  };
+
   useEffect(() => {
     // No-op, kept for possible future logic
   }, [devices]);
@@ -34,7 +70,12 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
         <CircleCheck size={28} className="text-[var(--main-5)]" />
         기기를 선택해 주세요
       </div>
-      <div className="flex flex-row gap-6 overflow-x-auto pb-2 pl-1">
+      <div
+        ref={scrollRef}
+        className="flex flex-row gap-6 overflow-x-auto pb-2 pl-1"
+        style={{ cursor: dragging ? 'grabbing' : 'grab' }}
+        onMouseDown={handleMouseDown}
+      >
         {devices.map((device) => (
           <ReservationDeviceCard
             key={device.id}
