@@ -41,7 +41,7 @@ export default function ContentSection({ store }: ContentSectionProps) {
 
   return (
     <div className="flex flex-col w-full p-4 mb-4 gap-2">
-      <div className="flex items-start gap-2 mb-2 text-body-semibold">
+      <div className="flex items-start gap-2 mb-2 font-label-regular">
         <MapPin size={30} className="text-[var(--gray-dark)] mt-0.5" />
         <span
           className="cursor-pointer transition-colors hover:text-[var(--main-5)] active:text-[var(--main-4)]"
@@ -50,7 +50,7 @@ export default function ContentSection({ store }: ContentSectionProps) {
           {store.detailAddress}
         </span>
       </div>
-      <div className="flex items-center gap-2 mb-2 text-body-semibold">
+      <div className="flex items-center gap-2 mb-2 font-label-regular">
         <Clock9 size={20} className="text-[var(--gray-dark)]" />
         <span className={color}>{status}</span>
         <span className="text-[var(--gray-dark)]">
@@ -58,7 +58,7 @@ export default function ContentSection({ store }: ContentSectionProps) {
           · {store.startTime.slice(0, 5)}에 영업 시작
         </span>
       </div>
-      <div className="flex items-center gap-2 mb-2 text-body-semibold">
+      <div className="flex items-center gap-2 mb-2 font-label-regular">
         <PhoneIcon size={20} className="text-[var(--gray-dark)]" />
         <a
           href={`tel:${store.phoneNumber}`}
@@ -67,7 +67,7 @@ export default function ContentSection({ store }: ContentSectionProps) {
           {store.phoneNumber}
         </a>
         <span
-          className="text-[var(--main-5)] cursor-pointer text-body-semibold ml-1"
+          className="text-[var(--main-5)] cursor-pointer font-label-regular ml-1"
           onClick={handleCopy}
         >
           복사

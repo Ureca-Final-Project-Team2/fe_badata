@@ -51,9 +51,9 @@ export default function InfoSection({
       <div className="flex items-center w-full justify-between mb-2">
         <div className="flex items-center gap-1">
           <Image src={likeStoreIcon} alt="찜" width={30} height={30} />
-          <span className="text-lg font-semibold">{reviewRating.toFixed(1)}</span>
+          <span className="font-label-semibold">{reviewRating.toFixed(1)}</span>
         </div>
-        <span className="text-small-regular text-[var(--black)] pr-4">
+        <span className="font-label-regular text-[var(--black)] pr-4">
           나와의 거리{' '}
           <span className="text-[var(--main-5)] font-label-semibold">{distanceFromMe}m</span>
         </span>
