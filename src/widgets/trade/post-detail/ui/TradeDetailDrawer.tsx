@@ -124,7 +124,7 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId, postTyp
         </DrawerButton>
       </div>
 
-      {/* 삭제 확인 모달 */}
+      {/* 삭제 확인 모달 컴포넌트 */}
       {showDeleteConfirm &&
         createPortal(
           <div
