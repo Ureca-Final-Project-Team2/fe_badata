@@ -2,7 +2,10 @@ import { useState } from 'react';
 
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
 import { useFollowStatusQuery } from '@/entities/user/model/queries';
+import { ErrorMessageMap } from '@/shared/config/errorCodes';
 import UserAvatar from '@/shared/ui/UserAvatar';
+
+import type { ErrorCode } from '@/shared/config/errorCodes';
 
 interface UserProfileCardProps {
   userId: number; // 사용자 ID 추가
@@ -59,10 +62,10 @@ const UserProfileCard = ({
       console.error('팔로우/언팔로우 실패:', error);
 
       const errorObj = error as { code?: number };
-      if (errorObj?.code === 2014) {
-        setErrorMessage('자기 자신을 팔로우할 수 없습니다.');
-      } else if (errorObj?.code === 2011) {
-        setErrorMessage('유저 정보를 찾을 수 없습니다.');
+      const errorCode = errorObj?.code as ErrorCode;
+
+      if (errorCode && errorCode in ErrorMessageMap) {
+        setErrorMessage(ErrorMessageMap[errorCode]);
       } else {
         setErrorMessage('팔로우/언팔로우에 실패했습니다.');
       }
