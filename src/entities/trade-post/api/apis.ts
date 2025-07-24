@@ -1,7 +1,7 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { AllPost } from '@/entities/trade-post/lib/types';
+import type { AllPost, LikeContent } from '@/entities/trade-post/lib/types';
 
 // 게시물 목록 조회
 export const readTradePosts = async (): Promise<AllPost[]> => {
@@ -23,4 +23,13 @@ export const updateTradePost = async (postId: number, data: { comment: string; p
     },
   });
   return response.data;
+
+export const postTradePostLike = async (postId: number): Promise<LikeContent> => {
+  const content: LikeContent = await axiosInstance.post(END_POINTS.TRADES.LIKE_POST(postId));
+  return content;
+};
+
+export const deleteTradePostLike = async (postId: number): Promise<LikeContent> => {
+  const content: LikeContent = await axiosInstance.delete(END_POINTS.TRADES.LIKE_POST(postId));
+  return content;
 };

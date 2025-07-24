@@ -56,7 +56,7 @@ export function BaseLayout({
 
         {/* 고정 바텀 네비게이션 */}
         {showBottomNav && (
-          <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[100]">
+          <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[50]">
             <BottomNav />
           </div>
         )}

@@ -1,7 +1,10 @@
+import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
+
 export interface AllPost {
   id: number;
   title: string;
   partner?: string;
+  mobileCarrier?: MobileCarrier;
   price: number;
   createdAt: Date;
   postImage: string;
@@ -57,4 +60,7 @@ export interface UpdatePostResponse {
   content: {
     postId: number;
   };
+
+export interface LikeContent {
+  likeId: number;
 }
