@@ -89,7 +89,12 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId, postTyp
             </DrawerButton>
           </div>
         ) : (
-          <DrawerButton icon={<Flag />} variant="point" onClick={() => alert('신고')}>
+          <DrawerButton
+            icon={<Flag />}
+            variant="point"
+            className="rounded-b-[12px]"
+            onClick={() => alert('신고')}
+          >
             신고하기
           </DrawerButton>
         )}

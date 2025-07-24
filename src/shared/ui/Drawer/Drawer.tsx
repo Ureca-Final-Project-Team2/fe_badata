@@ -21,8 +21,8 @@ export function Drawer({ isOpen, onClose, children, className }: DrawerProps) {
     >
       <div
         className={cn(
-          'w-full max-w-[428px] rounded-t-[20px] bg-[var(--black)]/60',
-          'mx-auto px-6 py-4',
+          'w-full max-w-[428px] rounded-t-[20px] bg-[var(--main-3)]',
+          'mx-auto px-6 pt-6 pb-4',
           className,
         )}
         onClick={(e) => e.stopPropagation()}
