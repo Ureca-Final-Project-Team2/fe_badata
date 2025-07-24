@@ -17,7 +17,7 @@ interface AutoSwiperProps<T> {
 export function AutoSwiper<T>({
   items,
   getKey,
-  autoPlayDelay = 2000,
+  autoPlayDelay = 5000,
   slidesPerView = 1,
   spaceBetween = 16,
   className = '',
@@ -40,6 +40,7 @@ export function AutoSwiper<T>({
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
+        speed={1000}
         grabCursor={true}
       >
         {items.map((item, index) => (
