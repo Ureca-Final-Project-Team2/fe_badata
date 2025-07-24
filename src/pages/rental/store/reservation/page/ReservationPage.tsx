@@ -15,12 +15,10 @@ const ReservationPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
 
-  // 날짜, 기기, 동의 체크 모두 선택되어야 예약하기 버튼 활성화
   const isDateSelected = !!(state.dateRange && state.dateRange.from && state.dateRange.to);
   const isDeviceSelected = Object.keys(state.selectedDevices).length > 0;
   const isFormValid = isDateSelected && isDeviceSelected && state.agreed;
 
-  // 오늘 이후 날짜인지 검사
   const isDateFuture = (() => {
     if (!state.dateRange || !state.dateRange.from || !state.dateRange.to) return true;
     const today = new Date();
@@ -28,7 +26,6 @@ const ReservationPage = () => {
     return state.dateRange.from >= today && state.dateRange.to >= today;
   })();
 
-  // 여러 디바이스와 개수에 맞게 영수증용 리스트 생성
   const receiptDevices = Object.entries(state.selectedDevices)
     .map(([deviceId, count]) => {
       const device = mockReservationDevices.find((d) => d.id === Number(deviceId));
@@ -39,50 +36,48 @@ const ReservationPage = () => {
         count,
       };
     })
-    .filter((d): d is { name: string; price: string; count: number } => !!d);
+    .filter((d) => !!d);
 
   return (
-    <>
-      <div className="flex flex-col gap-4 w-full">
-        {/* 날짜 선택 */}
-        <CalendarSection
-          dateRange={state.dateRange}
-          onChange={(range) => dispatch({ type: 'SET_DATE_RANGE', payload: range })}
+    <div className="flex flex-col gap-4 w-full">
+      {/* 날짜 선택 */}
+      <CalendarSection
+        dateRange={state.dateRange}
+        onChange={(range) => dispatch({ type: 'SET_DATE_RANGE', payload: range })}
+      />
+      {/* 기기 선택 */}
+      <DeviceSelectSection
+        devices={mockReservationDevices}
+        selectedDevices={state.selectedDevices}
+        onCountChange={(deviceId, count) =>
+          dispatch({ type: 'SET_DEVICE_COUNT', payload: { deviceId, count } })
+        }
+      />
+      {/* 안내사항 및 예약하기 버튼 */}
+      <div className="mt-6 w-full flex flex-col items-center">
+        <NoticeSection
+          agreed={state.agreed}
+          onToggleAgreed={() => dispatch({ type: 'SET_AGREED', payload: !state.agreed })}
         />
-        {/* 기기 선택 */}
-        <DeviceSelectSection
-          devices={mockReservationDevices}
-          selectedDevices={state.selectedDevices}
-          onCountChange={(deviceId: number, count: number) =>
-            dispatch({ type: 'SET_DEVICE_COUNT', payload: { deviceId, count } })
-          }
-        />
-        {/* 안내사항 및 예약하기 버튼 */}
-        <div className="mt-6 w-full flex flex-col items-center">
-          <NoticeSection
-            agreed={state.agreed}
-            onToggleAgreed={() => dispatch({ type: 'SET_AGREED', payload: !state.agreed })}
-          />
-          <RegisterButton
-            className={`w-full ${isFormValid ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
-            size="lg"
-            isFormValid={isFormValid}
-            onClick={(e) => {
-              if (!isFormValid) {
-                e.preventDefault();
-                return;
-              }
-              if (!isDateFuture) {
-                makeToast('날짜를 다시 선택해주세요', 'warning');
-                e.preventDefault();
-                return;
-              }
-              setShowReceiptModal(true);
-            }}
-          >
-            예약하기
-          </RegisterButton>
-        </div>
+        <RegisterButton
+          className={`w-full ${isFormValid ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
+          size="lg"
+          isFormValid={isFormValid}
+          onClick={(e) => {
+            if (!isFormValid) {
+              e.preventDefault();
+              return;
+            }
+            if (!isDateFuture) {
+              makeToast('날짜를 다시 선택해주세요', 'warning');
+              e.preventDefault();
+              return;
+            }
+            setShowReceiptModal(true);
+          }}
+        >
+          예약하기
+        </RegisterButton>
       </div>
       {/* 영수증 모달 */}
       {showReceiptModal && (
@@ -108,7 +103,7 @@ const ReservationPage = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
