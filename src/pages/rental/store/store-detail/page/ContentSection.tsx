@@ -1,5 +1,7 @@
 import { Clock9, MapPin, Phone as PhoneIcon } from 'lucide-react';
 
+import { makeToast } from '@/shared/lib/makeToast';
+
 import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 
 interface ContentSectionProps {
@@ -7,6 +9,13 @@ interface ContentSectionProps {
 }
 
 export default function ContentSection({ store }: ContentSectionProps) {
+  const handleCopy = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(store.phoneNumber);
+      makeToast('번호가 복사되었습니다', 'success');
+    }
+  };
+
   return (
     <div className="flex flex-col w-full p-4 mb-4 gap-2">
       <div className="flex items-start gap-2 mb-2 text-body-semibold">
@@ -19,10 +28,18 @@ export default function ContentSection({ store }: ContentSectionProps) {
       </div>
       <div className="flex items-center gap-2 mb-2 text-body-semibold">
         <PhoneIcon size={20} className="text-[var(--gray-dark)]" />
-        <span className="cursor-pointer transition-colors group hover:text-[var(--main-5)] active:text-[var(--main-4)]">
+        <a
+          href={`tel:${store.phoneNumber}`}
+          className="cursor-pointer transition-colors group hover:text-[var(--main-5)] active:text-[var(--main-4)]"
+        >
           {store.phoneNumber}
+        </a>
+        <span
+          className="text-[var(--main-5)] cursor-pointer text-body-semibold ml-1"
+          onClick={handleCopy}
+        >
+          복사
         </span>
-        <span className="text-[var(--main-5)] cursor-pointer text-body-semibold ml-1">복사</span>
       </div>
     </div>
   );
