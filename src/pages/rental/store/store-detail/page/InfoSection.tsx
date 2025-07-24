@@ -14,11 +14,13 @@ interface InfoActionProps {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
+  onClick?: () => void;
+  href?: string;
 }
 
-function InfoAction({ icon, label, active }: InfoActionProps) {
-  return (
-    <div className="flex flex-col items-center flex-1 py-2">
+function InfoAction({ icon, label, active, href }: InfoActionProps) {
+  const content = (
+    <div className="flex flex-col items-center flex-1 py-2 cursor-pointer">
       <div className={active ? 'text-[var(--main-5)] mb-2' : 'mb-3'}>{icon}</div>
       <span
         className={active ? 'text-[var(--main-5)] font-label-regular ' : 'text-[var(--gray-dark)]'}
@@ -26,6 +28,13 @@ function InfoAction({ icon, label, active }: InfoActionProps) {
         {label}
       </span>
     </div>
+  );
+  return href ? (
+    <a href={href} className="flex-1" style={{ textDecoration: 'none' }}>
+      {content}
+    </a>
+  ) : (
+    content
   );
 }
 
@@ -53,7 +62,11 @@ export default function InfoSection({
       {/* 구분선 위 */}
       <div className="w-full border-t border-[var(--gray-light)] my-2" />
       <div className="flex items-stretch w-full relative">
-        <InfoAction icon={<Phone size={24} className="text-[var(--gray-dark)]" />} label="전화" />
+        <InfoAction
+          icon={<Phone size={24} className="text-[var(--gray-dark)]" />}
+          label="전화"
+          href={`tel:${phoneNumber}`}
+        />
         <div className="w-px bg-[var(--gray-light)] mx-2" />
         <InfoAction
           icon={<Image src={likeStoreIcon} alt="찜" width={30} height={30} />}
