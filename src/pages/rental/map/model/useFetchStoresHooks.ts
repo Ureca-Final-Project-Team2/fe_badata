@@ -61,11 +61,11 @@ export const useFetchStoresHooks = (
           if (filterState.star && filterState.star > 0) {
             mergedParams.reviewRating = filterState.star;
           }
-          // 일일 데이터 제공량 (dataAmount → dataCapacity: number[])
+          // 일일 데이터 제공량 (dataAmount → dataCapacity)
           if (filterState.dataAmount && filterState.dataAmount !== '무제한') {
-            mergedParams.dataCapacity = [parseInt(filterState.dataAmount.replace('GB', ''))];
+            mergedParams.dataCapacity = parseInt(filterState.dataAmount.replace('GB', ''));
           } else if (filterState.dataAmount === '무제한') {
-            mergedParams.dataCapacity = [99999]; // 백엔드와 협의된 값 사용
+            mergedParams.dataCapacity = 99999; // 백엔드와 협의된 값 사용
           }
           // 데이터 타입 (dataType → is5G)
           if (filterState.dataType === '5G') {

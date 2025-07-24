@@ -21,14 +21,14 @@ interface MapSectionProps {
 
 export const MapSection = ({ filterState, onStoreMarkerClick }: MapSectionProps) => {
   const { mapRef, map } = useKakaoMapHooks();
-  const stores = useFetchStoresHooks(map, filterState);
+  const storesResult = useFetchStoresHooks(map, filterState);
+  const stores = storesResult.stores;
 
   useEffect(() => {
-    if (!map || stores.isLoading) return;
-    renderStoreMarkers(map, stores.stores, filterState, (devices, storeDetail, storeId) => {
-      onStoreMarkerClick?.(devices, storeDetail, storeId);
-    });
-  }, [map, stores.stores, stores.isLoading, filterState, onStoreMarkerClick]);
+    if (!map) return;
+    // stores, filterState가 바뀔 때마다 마커를 다시 렌더링
+    renderStoreMarkers(map, stores, filterState, onStoreMarkerClick);
+  }, [map, stores, filterState, onStoreMarkerClick]);
 
   return <div ref={mapRef} className="w-full h-full" />;
 };
