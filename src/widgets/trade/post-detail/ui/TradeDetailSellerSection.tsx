@@ -9,10 +9,10 @@ import UserProfileCard from '@/widgets/user/ui/UserProfileCard';
 import type { AllPost } from '@/entities/trade-post/lib/types';
 
 interface TradeDetailSellerSectionProps {
-  sellerId: number; // 판매자 userId
+  sellerId: number;
   sellerName: string;
-  isFollowing: boolean; // 팔로우 여부
-  onFollowChange?: (isFollowing: boolean) => void; // 팔로우 상태 변경 콜백
+  isFollowing: boolean;
+  onFollowChange?: (isFollowing: boolean) => void;
 }
 
 export const TradeDetailSellerSection = ({
@@ -59,7 +59,7 @@ export const TradeDetailSellerSection = ({
             판매 중인 다른 상품이 없습니다.
           </div>
         ) : (
-          <div className="flex overflow-x-auto gap-4 mb-20 scrollbar-hide">
+          <div className="flex overflow-x-auto gap-4 mb-20 no-scrollbar">
             {posts.map((item) => {
               const updatedPost = getUpdatedPost(item);
               return (
