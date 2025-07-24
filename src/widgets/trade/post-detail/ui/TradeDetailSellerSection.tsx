@@ -31,10 +31,6 @@ export const TradeDetailSellerSection = ({
         name={sellerName}
         tradeCount={likesCount}
         isFollowing={isFollowing}
-        onFollowClick={() => {
-          // 팔로우 상태 변경 후 추가적인 로직이 필요하다면 여기에 구현
-          console.log('팔로우 상태가 변경되었습니다.');
-        }}
         onFollowChange={onFollowChange}
       />
 

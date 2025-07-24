@@ -41,36 +41,22 @@ const UserProfileCard = ({
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  // 서버 상태를 우선하고, 없으면 props 값 사용
   const isFollowingFromServer = followStatus?.content?.following;
   const currentIsFollowing =
     isFollowingFromServer !== undefined ? isFollowingFromServer : isFollowing;
 
   const handleFollowClick = async () => {
     try {
-      console.log('팔로우 클릭 전 상태:', { currentIsFollowing, userId });
-      console.log('API 호출 시작...');
-
       const response = await createFollowMutation.mutateAsync(userId);
 
-      console.log('API 응답:', response);
-      console.log('응답 타입:', typeof response);
-      console.log('응답 구조:', JSON.stringify(response, null, 2));
-
       if (response?.content?.following !== undefined) {
-        console.log('팔로우 상태 업데이트:', response.content.following);
         onFollowChange?.(response.content.following);
-      } else {
-        console.log('응답에 following 정보가 없음:', response);
       }
 
-      // 부모 컴포넌트의 콜백이 있다면 호출
       onFollowClick?.();
     } catch (error: unknown) {
       console.error('팔로우/언팔로우 실패:', error);
 
-      // API 에러 코드에 따른 처리
       const errorObj = error as { code?: number };
       if (errorObj?.code === 2014) {
         setErrorMessage('자기 자신을 팔로우할 수 없습니다.');
