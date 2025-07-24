@@ -1,12 +1,17 @@
+import { useRouter } from 'next/navigation';
+
 import { ChevronRight } from 'lucide-react';
 
-import { ImageCard } from '@/shared/ui/ImageCard';
-import { ProductInfo } from '@/shared/ui/ProductInfo';
-
-import { useTradeDeadlineQuery } from '../model/queries';
+import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
+import { useTradeDeadlineQuery } from '@/pages/trade/model/queries';
+import BannerItem from '@/pages/trade/ui/BannerItem';
+import { PATH } from '@/shared/config/path';
+import { AutoSwiper } from '@/shared/ui/AutoSwipter';
 
 export function TradeDeadlineBanner() {
+  const router = useRouter();
   const { deadlinePosts, isLoading } = useTradeDeadlineQuery();
+  const { toggleLike, isItemLoading } = useTradePostLikeHooks();
 
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--gray)]">로딩 중...</div>;
@@ -15,23 +20,54 @@ export function TradeDeadlineBanner() {
     return <div className="py-4 text-center text-[var(--gray)]">게시물이 없습니다.</div>;
   }
 
+  const handleLikeToggle = (postId: number) => {
+    const item = deadlinePosts.find((post) => post.id === postId);
+    if (item) {
+      toggleLike(item);
+    }
+  };
+
+  const handleCardClick = (postId: number) => {
+    const item = deadlinePosts.find((post) => post.id === postId);
+    if (!item) return;
+
+    const path =
+      item.postCategory === 'DATA'
+        ? PATH.TRADE.DATA_DETAIL.replace(':id', String(postId))
+        : PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(postId));
+    router.push(path);
+  };
+
   return (
-    <section className="bg-white px-6">
-      <div className="flex flex-row items-center justify-between pb-2">
-        <h2 className="text-[20px] font-semibold">마감임박 데려가세요!</h2>
-        <ChevronRight />
+    <section className="bg-white">
+      <div className="flex items-center justify-between pb-2 px-1">
+        <h2 className="font-body-semibold">마감임박 데려가세요!</h2>
+        <ChevronRight className="text-[var(--gray-dark)]" size={20} />
       </div>
 
-      <div className="flex gap-4 overflow-x-auto no-scrollbar">
-        {deadlinePosts.map((item) => (
-          <div key={item.id} className="w-[98px]">
-            <ImageCard key={item.id} size="sm" url={item.postImage} defaultLiked={item.isLiked} />
-            <div className="mt-1">
-              <ProductInfo brand={item.partner} name={item.title} price={item.price} size="sm" />
-            </div>
-          </div>
-        ))}
-      </div>
+      <AutoSwiper
+        items={deadlinePosts.slice(0, 10)}
+        autoPlayDelay={2000}
+        slidesPerView={1}
+        spaceBetween={120}
+      >
+        {(item) => (
+          <BannerItem
+            key={item.id}
+            id={item.id}
+            imageUrl={item.postImage}
+            partner={item.partner}
+            mobileCarrier={item.mobileCarrier}
+            price={item.price}
+            title={item.title}
+            likeCount={item.likesCount}
+            isLiked={item.isLiked}
+            onLikeToggle={handleLikeToggle}
+            isLikeLoading={isItemLoading(item.id)}
+            onCardClick={handleCardClick}
+          />
+        )}
+      </AutoSwiper>
     </section>
   );
 }
