@@ -35,8 +35,12 @@ export default function ContentSection({ store }: ContentSectionProps) {
         </span>
       </div>
       <div className="flex items-center gap-2 mb-2 text-body-semibold">
-        <Clock9 size={20} className="text-[var(--gray)]" />
-        <span>영업 종료 · {store.startTime.slice(0, 5)}에 영업 시작</span>
+        <Clock9 size={20} className="text-[var(--gray-dark)]" />
+        <span className="text-[var(--gray)]">영업 종료</span>
+        <span className="text-[var(--gray-dark)]">
+          {' '}
+          · {store.startTime.slice(0, 5)}에 영업 시작
+        </span>
       </div>
       <div className="flex items-center gap-2 mb-2 text-body-semibold">
         <PhoneIcon size={20} className="text-[var(--gray-dark)]" />
