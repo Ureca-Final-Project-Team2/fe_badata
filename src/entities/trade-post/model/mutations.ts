@@ -10,6 +10,8 @@ export const usePostTradePostLikeMutation = () => {
   return useMutation({
     mutationFn: (postId: number) => postTradePostLike(postId),
     onMutate: async (postId) => {
+      const previousPosts = queryClient.getQueryData<AllPost[]>(['trade-posts']);
+
       queryClient.setQueryData<AllPost[]>(['trade-posts'], (old) => {
         return old?.map((post) =>
           post.id === postId
@@ -17,15 +19,13 @@ export const usePostTradePostLikeMutation = () => {
             : post,
         );
       });
+      return { previousPosts };
     },
-    onError: (error, postId) => {
-      queryClient.setQueryData<AllPost[]>(['trade-posts'], (old) => {
-        return old?.map((post) =>
-          post.id === postId
-            ? { ...post, isLiked: false, likesCount: Math.max(0, post.likesCount - 1) }
-            : post,
-        );
-      });
+    onError: (error, _, context) => {
+      if (context?.previousPosts) {
+        queryClient.setQueryData(['trade-posts'], context.previousPosts);
+      }
+
       console.error('좋아요 처리 실패', error);
     },
   });
@@ -37,20 +37,21 @@ export const useDeleteTradePostLikeMutation = () => {
   return useMutation({
     mutationFn: (postId: number) => deleteTradePostLike(postId),
     onMutate: async (postId) => {
+      const previousPosts = queryClient.getQueryData<AllPost[]>(['trade-posts']);
       queryClient.setQueryData<AllPost[]>(['trade-posts'], (old) => {
         return old?.map((post) =>
           post.id === postId
-            ? { ...post, isLiked: false, likesCount: Math.max(0, post.likesCount || 1) - 1 }
+            ? { ...post, isLiked: false, likesCount: Math.max(0, (post.likesCount || 0) - 1) }
             : post,
         );
       });
+
+      return { previousPosts };
     },
-    onError: (error, postId) => {
-      queryClient.setQueryData<AllPost[]>(['trade-posts'], (old) => {
-        return old?.map((post) =>
-          post.id === postId ? { ...post, isLiked: true, likesCount: post.likesCount + 1 } : post,
-        );
-      });
+    onError: (error, _, context) => {
+      if (context?.previousPosts) {
+        queryClient.setQueryData(['trade-posts'], context.previousPosts);
+      }
       console.error('좋아요 취소 실패', error);
     },
   });
