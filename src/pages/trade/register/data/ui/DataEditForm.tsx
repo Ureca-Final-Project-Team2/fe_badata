@@ -2,10 +2,8 @@ import { useEffect, useReducer } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import {
-  useTradePostDetailQuery,
-  useUpdateTradePostMutation,
-} from '@/entities/trade-post/model/queries';
+import { useUpdateTradePostMutation } from '@/entities/trade-post/model/mutations';
+import { useTradePostDetailQuery } from '@/entities/trade-post/model/queries';
 import { initialState, reducer } from '@/pages/trade/register/data/model/dataRegisterReducer';
 import { PATH } from '@/shared/config/path';
 import { formatPrice, toRawPrice } from '@/shared/lib/formatPrice';

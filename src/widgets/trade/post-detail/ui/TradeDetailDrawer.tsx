@@ -9,7 +9,7 @@ import { Flag, Pencil, Trash2 } from 'lucide-react';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useIsPostOwner } from '@/entities/auth/model/useIsPostOwner';
-import { useDeleteTradePostMutation } from '@/entities/trade-post/model/queries';
+import { useDeleteTradePostMutation } from '@/entities/trade-post/model/mutations';
 import { makeToast } from '@/shared/lib/makeToast';
 import { Drawer, DrawerButton } from '@/shared/ui/Drawer';
 
