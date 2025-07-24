@@ -32,5 +32,6 @@ export const END_POINTS = {
     SOS_HISTORY: '/api/v1/mypage/sos-history',
     RENTAL_HISTORY: '/api/v1/users/rentals',
     RESTOCK_ALARM: '/api/v1/users/restock',
+    LIKE_STORE: '/api/v1/users/likes/stores',
   },
 } as const;
