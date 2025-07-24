@@ -13,6 +13,8 @@ import type { DateRange } from 'react-day-picker';
 export interface RentalFilterState {
   star: number; // 0~5
   price: number;
+  minPrice?: number;
+  maxPrice?: number;
   dataAmount?: RentalDataAmount;
   dataType?: RentalDataType;
   maxSupportConnection?: RentalMaxSupportConnection;

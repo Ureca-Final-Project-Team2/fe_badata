@@ -4,6 +4,7 @@ import { useReducer, useState } from 'react';
 
 import { CenterScrollSwiper } from '@/entities/scroll';
 import { mockStoreList } from '@/pages/rental/map/__mocks__/storeList.mock';
+import { initialRentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 import {
   initialSelectedStoreState,
   selectedStoreReducer,
@@ -18,6 +19,7 @@ import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
 import type { StoreDevice } from '@/pages/rental/map/lib/types';
+import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 import type { DateRange } from 'react-day-picker';
 
@@ -28,6 +30,7 @@ const RentalPage = () => {
     selectedStoreReducer,
     initialSelectedStoreState,
   );
+  const [filterState, setFilterState] = useState<RentalFilterState>(initialRentalFilterState);
 
   return (
     <BaseLayout
@@ -55,14 +58,31 @@ const RentalPage = () => {
       }
     >
       <MapSection
+        filterState={filterState}
         onStoreMarkerClick={(
           devices: StoreDevice[],
           storeDetail?: StoreDetail,
           storeId?: number,
         ) => {
+          // 디바이스 필터링 로직 추가
+          const filteredDevices = devices.filter((device) => {
+            if (filterState.minPrice !== undefined && device.price < filterState.minPrice)
+              return false;
+            if (filterState.maxPrice !== undefined && device.price > filterState.maxPrice)
+              return false;
+            // if (filterState.dataType && device.dataType && device.dataType !== filterState.dataType) return false;
+            if (
+              filterState.dataAmount &&
+              device.dataCapacity &&
+              `${device.dataCapacity}GB` !== filterState.dataAmount
+            )
+              return false;
+            // if (filterState.maxSupportConnection && device.maxSupportConnection && device.maxSupportConnection !== filterState.maxSupportConnection) return false;
+            return true;
+          });
           dispatchSelectedStore({
             type: 'SELECT_STORE',
-            devices,
+            devices: filteredDevices,
             storeId: storeId ?? 0,
             storeDetail,
           });
@@ -74,7 +94,15 @@ const RentalPage = () => {
         onClose={() => setFilterDrawerOpen(false)}
         className="bg-[var(--main-2)]"
       >
-        <RentalFilterContent onClose={() => setFilterDrawerOpen(false)} />
+        <RentalFilterContent
+          onClose={() => setFilterDrawerOpen(false)}
+          filterState={filterState}
+          setFilterState={setFilterState}
+          onSubmit={(filters) => {
+            setFilterState(filters);
+            setFilterDrawerOpen(false);
+          }}
+        />
       </FilterDrawer>
       {selectedStore.selectedDevices.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
