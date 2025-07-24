@@ -30,5 +30,6 @@ export const END_POINTS = {
     COIN: '/api/v1/users/coin',
     DATA_USAGE: '/api/v1/users/data',
     SOS_HISTORY: '/api/v1/mypage/sos-history',
+    REPORT_LIST: '/api/v1/users/reports',
   },
 } as const;

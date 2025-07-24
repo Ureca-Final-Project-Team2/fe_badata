@@ -6,6 +6,10 @@ import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
+import { useMyReports } from '../model/useMyReportHooks';
+import { useTradeDetailsQuery } from '../model/useTradeDetailsQuery';
+
+
 interface TimelineItemProps {
   label: string;
   text: string;
@@ -40,22 +44,47 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
 
 export default function ReportHistoryPage() {
   const router = useRouter();
+  const { data: reportData, isLoading, isError } = useMyReports('ANSWER');
+  
+  const reports = reportData?.item ?? [];
+  const postIds = reports.map((report) => report.postId);
+  const postDetailsQueries = useTradeDetailsQuery(postIds);
+
+  const handleBack = () => {
+    router.back();
+  };
 
   return (
-    <BaseLayout header={<PageHeader title="신고 내역" onBack={() => router.back()} />} showBottomNav>
+    <BaseLayout header={<PageHeader title="신고 내역" onBack={handleBack} />} showBottomNav>
       <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
         <div className="px-4 pt-6 pb-24">
           <h2 className="font-body-semibold mb-4">신고 게시물</h2>
-          <TradePostCard
-            imageUrl="/assets/trade-sample.png"
-            title="올리브영 기프티콘"
-            partner="올리브영"
-            price={10000}
-            likeCount={12}
-            isCompleted={true}
-            isLiked={false}
-          />
+          {reports.map((report, idx) => {
+            const postDetail = postDetailsQueries[idx]?.data?.post;
+            const isPostLoading = postDetailsQueries[idx]?.isLoading;
+            const isPostError = postDetailsQueries[idx]?.isError;
 
+            return (
+              <div key={report.postId} className="mb-8">
+                {isPostLoading ? (
+                  <p>게시물 불러오는 중...</p>
+                ) : postDetail ? (
+                  <TradePostCard
+                    imageUrl={postDetail.postImage ?? '/assets/default.png'}
+                    title={postDetail.title}
+                    partner={postDetail.partner || '판매자'}
+                    price={postDetail.price}
+                    likeCount={postDetail.likesCount}
+                    isCompleted={postDetail.isSold}
+                    isLiked={postDetail.isLiked}
+                  />
+                ) : (
+                  <p className="text-gray-500 text-sm">거래 게시물 정보를 불러오지 못했습니다.</p>
+                )}
+                {/* 타임라인 등 추가 가능 */}
+              </div>
+            );
+          })}
           <h2 className="font-body-semibold mt-8 mb-4">신고 진행 과정</h2>
           <ul className="flex flex-col gap-6">
             <TimelineItem label="판매" text="구매 결제" date="2025-07-07 17:07" color="gray" />
