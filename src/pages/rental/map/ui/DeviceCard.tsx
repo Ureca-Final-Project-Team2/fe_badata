@@ -11,12 +11,7 @@ const CARD_SIZE = {
   imgRadius: 'rounded-t-[30px]',
 };
 
-interface DeviceCardProps {
-  device: StoreDevice;
-  price?: number;
-}
-
-export default function DeviceCard({ device, price = 1900 }: DeviceCardProps) {
+export default function DeviceCard({ device }: { device: StoreDevice }) {
   const sz = CARD_SIZE;
   const nameClass = 'font-label-semibold';
   const priceClass = 'font-label-semibold';
@@ -38,7 +33,9 @@ export default function DeviceCard({ device, price = 1900 }: DeviceCardProps) {
           <ReserveButton>예약</ReserveButton>
         </div>
         <div className={`text-[var(--black)] ${nameClass} mb-1`}>{device.deviceName}</div>
-        <div className={`text-[var(--main-5)] ${priceClass}`}>{price.toLocaleString()}원</div>
+        <div className={`text-[var(--main-5)] ${priceClass}`}>
+          {device.price.toLocaleString()}원
+        </div>
       </div>
     </div>
   );

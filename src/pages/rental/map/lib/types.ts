@@ -11,6 +11,8 @@ export interface StoreDevice {
   deviceName: string;
   dataCapacity: number;
   imageUrl: string;
+  price: number;
+  leftCount: number;
 }
 export interface DragBottomSheetProps {
   open: boolean;
