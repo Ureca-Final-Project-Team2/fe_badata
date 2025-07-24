@@ -64,6 +64,15 @@ export default function ContentSection({ store }: ContentSectionProps) {
         <span
           className="cursor-pointer transition-colors hover:text-[var(--main-5)] active:text-[var(--main-4)]"
           onClick={handleAddressCopy}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleAddressCopy();
+            }
+          }}
+          aria-label="주소 복사하기"
         >
           {store.detailAddress}
         </span>
