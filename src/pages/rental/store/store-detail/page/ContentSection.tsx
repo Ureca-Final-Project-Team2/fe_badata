@@ -8,7 +8,7 @@ interface ContentSectionProps {
 
 export default function ContentSection({ store }: ContentSectionProps) {
   return (
-    <div className="flex flex-col w-fullp-4 mb-4 gap-2">
+    <div className="flex flex-col w-full p-4 mb-4 gap-2">
       <div className="flex items-start gap-2 mb-2 text-body-semibold">
         <MapPin size={30} className="text-[var(--gray-dark)] mt-0.5" />
         <span>{store.detailAddress}</span>
@@ -19,7 +19,9 @@ export default function ContentSection({ store }: ContentSectionProps) {
       </div>
       <div className="flex items-center gap-2 mb-2 text-body-semibold">
         <PhoneIcon size={20} className="text-[var(--gray-dark)]" />
-        <span>{store.phoneNumber}</span>
+        <span className="cursor-pointer transition-colors group hover:text-[var(--main-5)] active:text-[var(--main-4)]">
+          {store.phoneNumber}
+        </span>
         <span className="text-[var(--main-5)] cursor-pointer text-body-semibold ml-1">복사</span>
       </div>
     </div>
