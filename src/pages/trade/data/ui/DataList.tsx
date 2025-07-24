@@ -15,7 +15,7 @@ interface DataListProps {
 }
 
 export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick }: DataListProps) {
-  const { toggleLike, isLoading: isLikeLoading } = useTradePostLikeHooks();
+  const { toggleLike, isItemLoading } = useTradePostLikeHooks();
 
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--black)]">로딩 중...</div>;
@@ -53,7 +53,7 @@ export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick
             isLiked={item.isLiked}
             onLikeToggle={() => toggleLike(item)}
             onCardClick={() => handleCardClick(item)}
-            isLikeLoading={isLikeLoading}
+            isLikeLoading={isItemLoading(item.id)}
           />
         ))}
       </div>

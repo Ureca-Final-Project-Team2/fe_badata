@@ -21,7 +21,7 @@ export function GifticonList({
   onSortClick,
   onItemClick,
 }: GifticonListProps) {
-  const { toggleLike, isLoading: isLikeLoading } = useTradePostLikeHooks();
+  const { toggleLike, isItemLoading } = useTradePostLikeHooks();
 
   if (isLoading) {
     return <div>로딩 중...</div>;
@@ -60,7 +60,7 @@ export function GifticonList({
             isLiked={item.isLiked}
             onLikeToggle={() => toggleLike(item)}
             onCardClick={() => handleCardClick(item)}
-            isLikeLoading={isLikeLoading}
+            isLikeLoading={isItemLoading(item.id)}
           />
         ))}
       </div>
