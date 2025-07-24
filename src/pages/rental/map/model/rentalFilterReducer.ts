@@ -5,8 +5,8 @@ export type RentalDataAmount = (typeof RENTAL_DATA_AMOUNTS)[number];
 export const RENTAL_DATA_TYPES = ['5G', '4G/LTE'] as const;
 export type RentalDataType = (typeof RENTAL_DATA_TYPES)[number];
 
-export const RENTAL_DEVICE_COUNTS = ['2대', '5대', '무제한'] as const;
-export type RentalDeviceCount = (typeof RENTAL_DEVICE_COUNTS)[number];
+export const RENTAL_MAX_SUPPORT_CONNECTIONS = [2, 5, 10] as const;
+export type RentalMaxSupportConnection = (typeof RENTAL_MAX_SUPPORT_CONNECTIONS)[number];
 
 import type { DateRange } from 'react-day-picker';
 
@@ -15,7 +15,7 @@ export interface RentalFilterState {
   price: number;
   dataAmount?: RentalDataAmount;
   dataType?: RentalDataType;
-  deviceCount?: RentalDeviceCount;
+  maxSupportConnection?: RentalMaxSupportConnection;
   dateRange?: DateRange;
   date?: Date;
 }
@@ -25,7 +25,7 @@ export type RentalFilterAction =
   | { type: 'SET_PRICE'; payload: number }
   | { type: 'SET_DATA_AMOUNT'; payload: RentalDataAmount }
   | { type: 'SET_DATA_TYPE'; payload: RentalDataType }
-  | { type: 'SET_DEVICE_COUNT'; payload: RentalDeviceCount }
+  | { type: 'SET_MAX_SUPPORT_CONNECTION'; payload: RentalMaxSupportConnection }
   | { type: 'SET_DATE_RANGE'; payload: DateRange | undefined }
   | { type: 'RESET' };
 
@@ -34,7 +34,7 @@ export const initialRentalFilterState: RentalFilterState = {
   price: 0,
   dataAmount: undefined,
   dataType: undefined,
-  deviceCount: undefined,
+  maxSupportConnection: undefined,
   dateRange: undefined,
   date: undefined,
 };
@@ -52,8 +52,8 @@ export function rentalFilterReducer(
       return { ...state, dataAmount: action.payload };
     case 'SET_DATA_TYPE':
       return { ...state, dataType: action.payload };
-    case 'SET_DEVICE_COUNT':
-      return { ...state, deviceCount: action.payload };
+    case 'SET_MAX_SUPPORT_CONNECTION':
+      return { ...state, maxSupportConnection: action.payload };
     case 'SET_DATE_RANGE':
       return { ...state, dateRange: action.payload };
     case 'RESET':

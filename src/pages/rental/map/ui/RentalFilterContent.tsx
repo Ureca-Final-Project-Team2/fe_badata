@@ -4,7 +4,7 @@ import {
   initialRentalFilterState,
   RENTAL_DATA_AMOUNTS,
   RENTAL_DATA_TYPES,
-  RENTAL_DEVICE_COUNTS,
+  RENTAL_MAX_SUPPORT_CONNECTIONS,
   rentalFilterReducer,
 } from '@/pages/rental/map/model/rentalFilterReducer';
 import { Score } from '@/pages/rental/map/ui';
@@ -16,7 +16,7 @@ import { Slider } from '@/shared/ui/Slider';
 
 const dataAmountOptions = RENTAL_DATA_AMOUNTS;
 const dataTypeOptions = RENTAL_DATA_TYPES;
-const deviceCountOptions = RENTAL_DEVICE_COUNTS;
+const maxSupportConnectionOptions = RENTAL_MAX_SUPPORT_CONNECTIONS;
 const LOCAL_STORAGE_KEY = 'rentalFilterState';
 
 interface RentalFilterContentProps {
@@ -104,13 +104,13 @@ export default function RentalFilterContent({ onClose }: RentalFilterContentProp
         </SectionField>
         <SectionField title="최대 접속 가능 기기 수">
           <div className="flex gap-2">
-            {deviceCountOptions.map((opt) => (
+            {maxSupportConnectionOptions.map((opt) => (
               <OptionButton
                 key={opt}
-                selected={state.deviceCount === opt}
-                onClick={() => dispatch({ type: 'SET_DEVICE_COUNT', payload: opt })}
+                selected={state.maxSupportConnection === opt}
+                onClick={() => dispatch({ type: 'SET_MAX_SUPPORT_CONNECTION', payload: opt })}
               >
-                {opt}
+                {opt}대
               </OptionButton>
             ))}
           </div>
