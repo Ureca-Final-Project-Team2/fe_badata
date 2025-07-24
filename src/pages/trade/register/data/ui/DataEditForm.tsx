@@ -25,7 +25,6 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
   // 게시물 상세 정보를 폼에 자동으로 채우기
   useEffect(() => {
     if (post) {
-      // axios interceptor에서 이미 content를 반환하므로 post 자체가 content입니다
       const postData = post;
       dispatch({ type: 'CHANGE_FIELD', field: 'comment', value: postData.comment || '' });
       dispatch({

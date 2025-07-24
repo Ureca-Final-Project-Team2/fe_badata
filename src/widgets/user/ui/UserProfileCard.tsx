@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { useCreateFollowMutation, useFollowStatusQuery } from '@/entities/user';
+import { useCreateFollowMutation } from '@/entities/user/model/mutations';
+import { useFollowStatusQuery } from '@/entities/user/model/queries';
 import UserAvatar from '@/shared/ui/UserAvatar';
 
 interface UserProfileCardProps {
