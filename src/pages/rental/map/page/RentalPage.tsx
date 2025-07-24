@@ -1,6 +1,6 @@
 'use client';
 
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import { CenterScrollSwiper } from '@/entities/scroll';
 import { mockStoreList } from '@/pages/rental/map/__mocks__/storeList.mock';
@@ -33,6 +33,37 @@ const RentalPage = () => {
   const [filterState, setFilterState] = useState<RentalFilterState>(initialRentalFilterState);
   const [tempFilterState, setTempFilterState] =
     useState<RentalFilterState>(initialRentalFilterState);
+
+  // 필터링 조건이 바뀔 때마다 현재 선택된 가맹점의 디바이스도 다시 필터링
+  useEffect(() => {
+    if (!selectedStore.selectedDevices.length) return;
+    const filteredDevices = selectedStore.selectedDevices.filter((device) => {
+      if (filterState.minPrice !== undefined && device.price < filterState.minPrice) return false;
+      if (filterState.maxPrice !== undefined && device.price > filterState.maxPrice) return false;
+      if (
+        filterState.dataAmount &&
+        device.dataCapacity &&
+        `${device.dataCapacity}GB` !== filterState.dataAmount
+      )
+        return false;
+      return true;
+    });
+    if (filteredDevices.length === 0) {
+      dispatchSelectedStore({
+        type: 'SELECT_STORE',
+        devices: [],
+        storeId: selectedStore.selectedStoreId ?? 0,
+        storeDetail: selectedStore.selectedStoreDetail,
+      });
+    } else if (filteredDevices.length !== selectedStore.selectedDevices.length) {
+      dispatchSelectedStore({
+        type: 'SELECT_STORE',
+        devices: filteredDevices,
+        storeId: selectedStore.selectedStoreId ?? 0,
+        storeDetail: selectedStore.selectedStoreDetail,
+      });
+    }
+  }, [filterState]);
 
   return (
     <BaseLayout
@@ -75,14 +106,12 @@ const RentalPage = () => {
               return false;
             if (filterState.maxPrice !== undefined && device.price > filterState.maxPrice)
               return false;
-            // if (filterState.dataType && device.dataType && device.dataType !== filterState.dataType) return false;
             if (
               filterState.dataAmount &&
               device.dataCapacity &&
               `${device.dataCapacity}GB` !== filterState.dataAmount
             )
               return false;
-            // if (filterState.maxSupportConnection && device.maxSupportConnection && device.maxSupportConnection !== filterState.maxSupportConnection) return false;
             return true;
           });
           dispatchSelectedStore({
