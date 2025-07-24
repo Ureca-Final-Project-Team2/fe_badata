@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { DeadlineList } from '@/pages/trade/deadline/ui/DeadlineList';
 import { useTradeDeadlineQuery } from '@/pages/trade/model/queries';
@@ -14,6 +14,8 @@ import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
 import { DeadlineFlatTab } from '../ui/DeadlineFlatTab';
 
+import type { DeadlinePost } from '@/entities/trade-post/lib/types';
+
 const SORT_OPTIONS = [
   { value: 'latest', label: '최신순' },
   { value: 'popular', label: '인기순' },
@@ -21,6 +23,9 @@ const SORT_OPTIONS = [
 
 export default function DeadlinePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = searchParams!.get('page') ?? 'all';
+
   const { deadlinePosts: posts, isLoading } = useTradeDeadlineQuery();
   const { sortOption, setSortOption, isSortDrawerOpen, openDrawer, closeDrawer } = useSortStateHook<
     'latest' | 'popular'
@@ -28,16 +33,21 @@ export default function DeadlinePage() {
 
   const processedPosts = useMemo(() => {
     if (!posts) return [];
-    return [...posts].sort((a, b) =>
+
+    const filtered = posts.filter((p) =>
+      page === 'all' ? true : p.postCategory === page.toUpperCase(),
+    );
+
+    return [...filtered].sort((a, b) =>
       sortOption === 'latest'
         ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         : b.likesCount - a.likesCount,
     );
-  }, [posts, sortOption]);
+  }, [posts, page, sortOption]);
 
   const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortOption)?.label ?? '최신순';
 
-  const handleCardClick = (item: (typeof processedPosts)[number]) => {
+  const handleCardClick = (item: DeadlinePost) => {
     const path =
       item.postCategory === 'DATA'
         ? PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id))
