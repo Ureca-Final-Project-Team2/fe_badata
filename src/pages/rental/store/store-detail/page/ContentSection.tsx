@@ -2,7 +2,7 @@ import { Clock9, MapPin, Phone as PhoneIcon } from 'lucide-react';
 
 import { makeToast } from '@/shared/lib/makeToast';
 
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type { StoreDetail } from '@/pages/rental/map/lib/types';
 
 interface ContentSectionProps {
   store: StoreDetail;

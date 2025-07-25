@@ -17,8 +17,7 @@ import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
-import type { StoreDevice } from '@/pages/rental/map/lib/types';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
 import type { DateRange } from 'react-day-picker';
 
 const RentalPage = () => {

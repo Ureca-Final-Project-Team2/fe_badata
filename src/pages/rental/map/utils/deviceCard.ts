@@ -6,8 +6,7 @@ export const mockImages = [
   'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80',
 ];
 
-import type { StoreDevice } from '@/pages/rental/map/lib/types';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
 
 export const MOCK_DEVICE: StoreDevice = {
   storeDeviceId: 1,
