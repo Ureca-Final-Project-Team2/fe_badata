@@ -1,52 +1,19 @@
-import { END_POINTS } from "@/shared/api/endpoints";
-import { axiosInstance } from "@/shared/lib/axios/axiosInstance";
+import { END_POINTS } from '@/shared/api/endpoints';
+import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
+import type { ReportHistoryResponse } from '../lib/types';
 
-export interface ReportListItem {
-  id: number;
-  postId: number;
-  reportStatus: 'QUESTION' | 'ANSWER' | 'COMPLETED';
-  reportTypeCode: string;
-  reportReason: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ReportListResponse {
-  item: ReportListItem[];
-  nextCursor: number | null;
-  hasNext: boolean;
-}
-
-export interface PostDetail {
-  id: number;
-  title: string;
-  postImage?: string;
-  price: number;
-  likesCount: number;
-  isSold: boolean;
-  isLiked: boolean;
-  partner?: string;
-}
-
-export const getMyReports = async (
-  reportStatus: string = 'ANSWER',
-  size: number = 10,
+export const getReportHistoryList = async (
+  reportStatus: string,
   cursor?: number,
-): Promise<ReportListResponse> => {
-  try {
-    const response = await axiosInstance.get<ReportListResponse>(END_POINTS.MYPAGE.REPORT_LIST, {
-      params: {
-        reportStatus,
-        size,
-        ...(cursor && { cursor }),
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Failed to fetch reports:', error);
-    throw error;
-  }
-};
+  size = 10,
+): Promise<ReportHistoryResponse['content'] | null> => {
+  const content = await axiosInstance.get(END_POINTS.MYPAGE.REPORT_LIST, {
+    params: { reportStatus, cursor, size },
+  });
 
+  console.log('[getReportHistoryList] content:', content);
+
+  return content ?? null;
+};
 

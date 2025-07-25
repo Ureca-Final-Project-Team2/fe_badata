@@ -6,9 +6,9 @@ import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
-import { useMyReports } from '../model/useMyReportHooks';
-import { useTradeDetailsQuery } from '../model/useTradeDetailsQuery';
+import { useReportHistoryListQuery } from '../model/queries';
 
+import type { ReportHistoryItem } from '../lib/types';
 
 interface TimelineItemProps {
   label: string;
@@ -44,70 +44,54 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
 
 export default function ReportHistoryPage() {
   const router = useRouter();
-  const { data: reportData, isLoading, isError } = useMyReports('ANSWER');
-  
-  const reports = reportData?.item ?? [];
-  const postIds = reports.map((report) => report.postId);
-  const postDetailsQueries = useTradeDetailsQuery(postIds);
+    const { data, isLoading, isError } = useReportHistoryListQuery('QUESTION');
+    console.log('data:', data);
+    const items: ReportHistoryItem[] = data?.item ?? [];
 
-  const handleBack = () => {
-    router.back();
-  };
-
+  console.log('items:', items);
   return (
-    <BaseLayout header={<PageHeader title="신고 내역" onBack={handleBack} />} showBottomNav>
+    <BaseLayout
+      header={<PageHeader title="신고 내역" onBack={() => router.back()} />}
+      showBottomNav
+    >
       <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
         <div className="px-4 pt-6 pb-24">
-          <h2 className="font-body-semibold mb-4">신고 게시물</h2>
-          {reports.map((report, idx) => {
-            const postDetail = postDetailsQueries[idx]?.data?.post;
-            const isPostLoading = postDetailsQueries[idx]?.isLoading;
-            const isPostError = postDetailsQueries[idx]?.isError;
-
-            return (
-              <div key={report.postId} className="mb-8">
-                {isPostLoading ? (
-                  <p>게시물 불러오는 중...</p>
-                ) : postDetail ? (
-                  <TradePostCard
-                    imageUrl={postDetail.postImage ?? '/assets/default.png'}
-                    title={postDetail.title}
-                    partner={postDetail.partner || '판매자'}
-                    price={postDetail.price}
-                    likeCount={postDetail.likesCount}
-                    isCompleted={postDetail.isSold}
-                    isLiked={postDetail.isLiked}
-                  />
-                ) : (
-                  <p className="text-gray-500 text-sm">거래 게시물 정보를 불러오지 못했습니다.</p>
-                )}
-                {/* 타임라인 등 추가 가능 */}
+          {isLoading ? (
+            <div>불러오는 중...</div>
+          ) : isError ? (
+            <div>데이터를 불러오지 못했습니다.</div>
+          ) : items.length === 0 ? (
+            <div>신고 내역이 없습니다.</div>
+          ) : (
+            <>
+              <h2 className="font-body-semibold mb-4">신고 게시물</h2>
+              <div className="flex flex-col gap-8">
+                {items.map((item) => (
+                  <div key={item.id} className="border-b pb-8 last:border-b-0 last:pb-0">
+                    <TradePostCard
+                      imageUrl="/assets/trade-sample.png"
+                      title={`신고 ID: ${item.id}`}
+                      partner={`게시물 ID: ${item.postId}`}
+                      price={0}
+                      likeCount={0}
+                      isCompleted={false}
+                      isLiked={false}
+                    />
+                    <h2 className="font-body-semibold mt-8 mb-4">신고 진행 과정</h2>
+                    <ul className="flex flex-col gap-6">
+                      <TimelineItem
+                        label={item.reportStatus}
+                        text={item.reportReason}
+                        date={item.createdAt}
+                        color="main"
+                        isLast={true}
+                      />
+                    </ul>
+                  </div>
+                ))}
               </div>
-            );
-          })}
-          <h2 className="font-body-semibold mt-8 mb-4">신고 진행 과정</h2>
-          <ul className="flex flex-col gap-6">
-            <TimelineItem label="판매" text="구매 결제" date="2025-07-07 17:07" color="gray" />
-            <TimelineItem
-              label="문의"
-              text="타인 사용 및 취소"
-              date="2025-07-09 11:21"
-              color="main"
-            />
-            <TimelineItem
-              label="답변"
-              text="사용 불가(환불 처리)"
-              date="2025-07-10 11:11"
-              color="gray"
-            />
-            <TimelineItem
-              label="완료"
-              text="환불 요청"
-              date="2025-07-10 15:32"
-              color="gray"
-              isLast={true}
-            />
-          </ul>
+            </>
+          )}
         </div>
       </div>
     </BaseLayout>
