@@ -99,7 +99,7 @@ const RentalPage = () => {
           });
         }}
       />
-      <DrawerSection open={false} storeList={mockStoreList} />
+      <DrawerSection open={true} storeList={mockStoreList} />
       <FilterDrawer
         isOpen={filterDrawerOpen}
         onClose={() => setFilterDrawerOpen(false)}
