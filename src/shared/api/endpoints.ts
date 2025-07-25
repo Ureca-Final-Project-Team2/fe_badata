@@ -29,7 +29,7 @@ export const END_POINTS = {
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     DATA_USAGE: '/api/v1/users/data',
-    SOS_HISTORY: '/api/v1/mypage/sos-history',
+    SOS_HISTORY: '/api/v1/users/sos',
     REPORT_LIST: '/api/v1/users/reports',
   },
 } as const;
