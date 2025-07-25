@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
-import { useFollowingsQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
+import { useAllFollowingsQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
 import UserAvatar from '@/shared/ui/UserAvatar';
 
@@ -35,7 +35,7 @@ const UserProfileCard = ({
 }: UserProfileCardProps) => {
   const createFollowMutation = useCreateFollowMutation();
 
-  const { data: followings, isLoading: isLoadingFollowings } = useFollowingsQuery();
+  const { data: followings, isLoading: isLoadingFollowings } = useAllFollowingsQuery();
   const { data: soldPostsCount, isLoading: isLoadingSoldCount } =
     useUserSoldPostsCountQuery(userId);
 

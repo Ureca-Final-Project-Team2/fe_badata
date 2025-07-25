@@ -15,6 +15,43 @@ export const useFollowingsQuery = (cursor?: number, size: number = 10) => {
   });
 };
 
+// 모든 팔로잉 목록 조회 훅 (팔로우 상태 확인용)
+export const useAllFollowingsQuery = () => {
+  return useQuery<ApiResponse<FollowingsContent>>({
+    queryKey: ['user', 'all-followings'],
+    queryFn: async () => {
+      let allItems: Array<{
+        id: number;
+        userId: number;
+        nickname: string;
+        profileImageUrl: string;
+      }> = [];
+      let cursor: number | undefined;
+      let hasNext = true;
+
+      while (hasNext) {
+        const response = await userApis.getFollowings(cursor, 100); // 최대 100개씩 가져오기
+        const items = response.content?.item || [];
+        allItems = [...allItems, ...items];
+
+        hasNext = response.content?.hasNext || false;
+        cursor = response.content?.nextCursor;
+      }
+
+      return {
+        code: 20000,
+        message: undefined,
+        content: {
+          item: allItems,
+          nextCursor: 0,
+          hasNext: false,
+        },
+      };
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
 // 판매 내역 조회 훅
 export const useSalesQuery = (
   userId?: number,

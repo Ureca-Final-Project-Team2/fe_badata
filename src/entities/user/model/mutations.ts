@@ -14,6 +14,7 @@ export const useCreateFollowMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['user', 'profile', userId] });
       queryClient.invalidateQueries({ queryKey: ['trade', 'seller', userId] });
       queryClient.invalidateQueries({ queryKey: ['user', 'followings'] });
+      queryClient.invalidateQueries({ queryKey: ['user', 'all-followings'] });
     },
   });
 };
