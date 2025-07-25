@@ -30,7 +30,7 @@ export function BuyButton({
         type="button"
         onClick={onClick}
         disabled={isButtonDisabled}
-        className={`w-[300px] h-[55px] rounded-[20px] text-white flex items-center justify-center transition-colors min-w-0 min-h-0 ${
+        className={`w-[300px] h-[55px] rounded-[20px] text-[var(--white)] flex items-center justify-center transition-colors min-w-0 min-h-0 ${
           isButtonDisabled
             ? 'bg-[var(--gray-mid)] cursor-not-allowed'
             : 'bg-[var(--main-5)] active:bg-[var(--main-4)]'
