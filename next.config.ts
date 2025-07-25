@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
       'ae-pic-a1.aliexpress-media.com',
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://13.124.160.115:8080/api/:path*',
+      },
+    ];
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),

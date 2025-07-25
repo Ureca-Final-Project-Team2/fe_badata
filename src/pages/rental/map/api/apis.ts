@@ -67,7 +67,7 @@ export const fetchStoreDetail = async (
  */
 export const fetchStoreList = async (params: StoreListParams): Promise<StoreListResponse> => {
   try {
-    const response = await axiosInstance.get(END_POINTS.STORES.ALLDEVICE(), {
+    const response: StoreListResponse = await axiosInstance.get(END_POINTS.STORES.STORELIST, {
       params,
     });
     return response;
