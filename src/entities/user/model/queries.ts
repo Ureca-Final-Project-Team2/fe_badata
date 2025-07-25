@@ -34,7 +34,10 @@ export const useSalesQuery = (
 export const useUserSoldPostsCountQuery = (userId?: number) => {
   return useQuery<number | string>({
     queryKey: ['user', 'sold-posts-count', userId],
-    queryFn: () => userApis.getUserSoldPostsCount(userId!),
+    queryFn: () => {
+      if (!userId) throw new Error('userId is required');
+      return userApis.getUserSoldPostsCount(userId);
+    },
     enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
