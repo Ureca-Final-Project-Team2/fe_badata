@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
+import { useShareHooks } from '@/shared/model/useShareHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import BuyButtonWithPayment from '@/widgets/trade/payment/ui/BuyButtonWithPayment';
@@ -25,10 +26,17 @@ interface Props {
 export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Props) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const { isFollowing, setIsFollowing } = useFollowState(postUserId);
+  const { share } = useShareHooks();
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert('링크가 복사되었습니다!');
+    share({
+      title: post.title,
+      price: post.price,
+      imageUrl:
+        !post.postImage || post.postImage === '' || post.postImage === 'no image'
+          ? undefined
+          : post.postImage,
+    });
   };
 
   const handleMore = () => {
