@@ -1,7 +1,7 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { SalesItem, SalesResponse } from '@/entities/user/lib/types';
+import type { SalesResponse } from '@/entities/user/lib/types';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
 
 export const userApis = {
@@ -68,33 +68,15 @@ export const userApis = {
       : `${END_POINTS.USER.SALES}?${params}`;
 
     try {
-      const response = await axiosInstance.get(url);
-
-      if (!response) {
-        throw new Error('API 응답 데이터가 없습니다');
-      }
-
-      // response가 content인 경우 (인터셉터에 의해 변환됨)
-      if (response && typeof response === 'object' && 'item' in response) {
-        return {
-          code: 200,
-          message: null,
-          content: response as unknown as {
-            item: SalesItem[];
-            nextCursor: number;
-            hasNext: boolean;
-          },
-        } as SalesResponse;
-      }
-
-      // response가 전체 응답인 경우 (예상치 못한 상황)
-      if (response && typeof response === 'object' && 'data' in response) {
-        return response.data;
-      }
-
-      throw new Error('API 응답 형태가 올바르지 않습니다');
+      const response = await axiosInstance.get<SalesResponse['content']>(url);
+      return {
+        code: 20000,
+        message: null,
+        content: response.data,
+      };
     } catch (error) {
-      throw error;
+      console.error('Sales API 호출 실패:', error);
+      throw new Error('판매 내역을 불러오는데 실패했습니다.');
     }
   },
 
