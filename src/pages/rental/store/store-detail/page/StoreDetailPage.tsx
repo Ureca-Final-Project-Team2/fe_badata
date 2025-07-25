@@ -8,6 +8,7 @@ import ReviewPage from '@/pages/rental/store/review/page/ReviewPage';
 import ContentSection from '@/pages/rental/store/store-detail/page/ContentSection';
 import ImageSection from '@/pages/rental/store/store-detail/page/ImageSection';
 import InfoSection from '@/pages/rental/store/store-detail/page/InfoSection';
+import { useLikeHooks } from '@/shared/model/useLikeHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
@@ -19,6 +20,15 @@ export default function StoreDetailPage() {
     { id: '상세정보', label: '상세정보', value: '상세정보' },
     { id: '리뷰', label: '리뷰', value: '리뷰' },
   ];
+
+  // 찜 기능 관리
+  const { liked, toggle } = useLikeHooks({
+    defaultLiked: false, // 초기값은 찜하지 않은 상태
+    onChange: (liked) => {
+      console.log('찜 상태 변경:', liked ? '찜함' : '찜 해제');
+      // 여기에 API 호출 로직 추가 가능
+    },
+  });
 
   return (
     <BaseLayout
@@ -45,6 +55,8 @@ export default function StoreDetailPage() {
                 reviewRating={mockStoreDetail.reviewRating}
                 distanceFromMe={mockStoreDetail.distanceFromMe}
                 phoneNumber={mockStoreDetail.phoneNumber}
+                liked={liked}
+                onLikeToggle={toggle}
               />
               <ContentSection store={mockStoreDetail} />
             </>

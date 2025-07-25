@@ -8,6 +8,8 @@ interface InfoSectionProps {
   reviewRating: number;
   distanceFromMe: number;
   phoneNumber: string;
+  liked: boolean;
+  onLikeToggle: () => void;
 }
 
 interface InfoActionProps {
@@ -18,11 +20,13 @@ interface InfoActionProps {
   href?: string;
 }
 
-function InfoAction({ icon, label, active, href }: InfoActionProps) {
+function InfoAction({ icon, label, active, onClick, href }: InfoActionProps) {
   const content = (
-    <div className="flex flex-col items-center flex-1 py-2 cursor-pointer">
-      <div className={active ? 'text-[var(--main-5)] mb-2 ' : 'mb-3.5'}>{icon}</div>
-      <span className={'font-label-regular text-[var(--gray-dark)] transition-colors'}>
+    <div className="flex flex-col items-center flex-1 py-2 cursor-pointer" onClick={onClick}>
+      <div className="h-[30px] flex items-center justify-center mb-2">{icon}</div>
+      <span
+        className={`font-label-regular transition-colors ${active ? 'text-[var(--main-5)]' : 'text-[var(--gray-dark)]'}`}
+      >
         {label}
       </span>
     </div>
@@ -40,8 +44,14 @@ export default function InfoSection({
   reviewRating,
   distanceFromMe,
   phoneNumber,
+  liked,
+  onLikeToggle,
 }: InfoSectionProps) {
-  const likeStoreIcon =
+  // 찜 상태에 따라 아이콘 선택
+  const likeIcon = liked ? ICONS.ETC.LIKE_ACTIVE : ICONS.ETC.LIKE_NONACTIVE;
+  const likeStoreIcon = typeof likeIcon === 'string' ? likeIcon : likeIcon.src;
+
+  const ratingIcon =
     typeof ICONS.ETC.LIKE_NONACTIVE === 'string'
       ? ICONS.ETC.LIKE_NONACTIVE
       : ICONS.ETC.LIKE_NONACTIVE.src;
@@ -50,7 +60,7 @@ export default function InfoSection({
     <div className="w-full bg-[var(--white)] flex flex-col items-center mb-4">
       <div className="flex items-center w-full justify-between mb-2">
         <div className="flex items-center gap-1">
-          <Image src={likeStoreIcon} alt="찜" width={30} height={30} />
+          <Image src={ratingIcon} alt="평점" width={30} height={30} />
           <span className="font-label-semibold">{reviewRating.toFixed(1)}</span>
         </div>
         <span className="font-label-regular text-[var(--black)] pr-4">
@@ -70,6 +80,8 @@ export default function InfoSection({
         <InfoAction
           icon={<Image src={likeStoreIcon} alt="찜" width={30} height={30} />}
           label="찜"
+          active={liked}
+          onClick={onLikeToggle}
         />
         <div className="w-px bg-[var(--gray-light)] mx-2" />
         <InfoAction icon={<Share size={24} className="text-[var(--gray-dark)]" />} label="공유" />
