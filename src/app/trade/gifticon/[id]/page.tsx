@@ -1,11 +1,11 @@
 import { getTradePostDetail } from '@/pages/trade/data/detail/api/apis';
-import { TradeDetailPage } from '@/pages/trade/data/detail/page/DataDetailPage';
+import { TradeDetailPage } from '@/pages/trade/gifticon/detail/page/GifticonDetailPage';
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default async function DataDetailPage(props: Props) {
+export default async function GifticonDetailPage(props: Props) {
   const { params } = await props;
   const { id } = await params;
 

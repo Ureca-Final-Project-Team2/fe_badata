@@ -24,6 +24,7 @@ export const END_POINTS = {
     REISSUE: '/api/v1/auth/reissue/token',
     FOLLOW: (userId: number) => `/api/v1/users/${userId}/follows`,
     GET_FOLLOWS: '/api/v1/users/follows',
+    SALES: '/api/v1/users/sales',
   },
   STORES: {
     ALLSTORE: (storeId: number) => `/api/v1/stores/${storeId}/devices`,

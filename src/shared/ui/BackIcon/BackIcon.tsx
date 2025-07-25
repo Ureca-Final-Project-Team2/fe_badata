@@ -1,5 +1,6 @@
-import { ICONS } from '@/shared/config/iconPath';
 import Image from 'next/image';
+
+import { ICONS } from '@/shared/config/iconPath';
 
 interface BackIconProps extends Omit<React.ComponentProps<typeof Image>, 'src'> {
   width?: number;
