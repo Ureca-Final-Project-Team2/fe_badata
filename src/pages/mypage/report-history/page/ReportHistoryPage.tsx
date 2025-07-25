@@ -24,12 +24,13 @@ interface TimelineItemProps {
 function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
   const isMain = color === 'main';
   const dotColor = isMain ? 'bg-[var(--main-5)]' : 'bg-[var(--gray)]';
+  const lineColor = isMain ? 'bg-[var(--main-5)]' : 'bg-[var(--gray)]';
 
   return (
     <li className="relative flex items-start">
       <div className="relative flex flex-col items-center mr-6">
         {!isLast && (
-          <div className="absolute top-5 left-1/2 transform -translate-x-1/2 w-[2px] bg-[var(--gray)] z-0 h-16"></div>
+          <div className={`absolute top-5 left-1/2 transform -translate-x-1/2 w-[2px] ${lineColor} z-0 h-16`}></div>
         )}
         <div
           className={`relative w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-semibold ${dotColor} z-10`}
@@ -54,6 +55,34 @@ export default function ReportHistoryPage() {
   // 가장 최근 신고가 앞에 오도록 정렬 (createdAt 내림차순)
   const sortedItems = [...items].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   const selectedItem = sortedItems[selectedIdx];
+
+  // 타임라인 단계 정의
+  const TIMELINE_STEPS = [
+    {
+      key: 'SALE',
+      label: '판매',
+      getText: () => '구매 결제',
+      getDate: () => '',
+    },
+    {
+      key: 'QUESTION',
+      label: '문의',
+      getText: (item: ReportHistoryItem) => item.reportReason || '',
+      getDate: (item: ReportHistoryItem) => item.createdAt || '',
+    },
+    {
+      key: 'ANSWER',
+      label: '답변',
+      getText: () => '사용 불가(환불 처리)',
+      getDate: () => '',
+    },
+    {
+      key: 'COMPLETE',
+      label: '완료',
+      getText: () => '환불 요청',
+      getDate: () => '',
+    },
+  ];
 
   return (
     <BaseLayout
@@ -90,13 +119,21 @@ export default function ReportHistoryPage() {
               <h2 className="font-body-semibold mb-4">신고 진행 과정</h2>
               {selectedItem && (
                 <ul className="flex flex-col gap-6">
-                  <TimelineItem
-                    label={selectedItem.reportStatus}
-                    text={selectedItem.reportReason}
-                    date={selectedItem.createdAt}
-                    color="main"
-                    isLast={true}
-                  />
+                  {TIMELINE_STEPS.map((step, idx) => {
+                    // 현재 진행중인 단계 index 계산
+                    const statusOrder = ['SALE', 'QUESTION', 'ANSWER', 'COMPLETE'];
+                    const currentStepIdx = statusOrder.indexOf(selectedItem.reportStatus);
+                    return (
+                      <TimelineItem
+                        key={step.key}
+                        label={step.label}
+                        text={step.getText(selectedItem)}
+                        date={step.getDate(selectedItem)}
+                        color={idx <= currentStepIdx ? 'main' : 'gray'}
+                        isLast={idx === TIMELINE_STEPS.length - 1}
+                      />
+                    );
+                  })}
                 </ul>
               )}
             </>
