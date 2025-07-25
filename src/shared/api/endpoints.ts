@@ -30,6 +30,7 @@ export const END_POINTS = {
     ALLDEVICE: () => `/api/v1/stores/map`,
     STORELIST: `/api/v1/stores`,
     STOREDETAIL: (storeId: number) => `/api/v1/stores/${storeId}`,
+    LIKESTORE: (storeId: number) => `/api/v1/stores/${storeId}/like`,
   },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
