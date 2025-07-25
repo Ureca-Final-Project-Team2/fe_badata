@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
       'imgnews.pstatic.net',
       'img.danawa.com',
       'ae-pic-a1.aliexpress-media.com',
+      'search.pstatic.net',
+      'ldb-phinf.pstatic.net',
     ],
   },
   async rewrites() {
