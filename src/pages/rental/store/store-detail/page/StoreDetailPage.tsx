@@ -131,7 +131,7 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
 
   return (
     <BaseLayout
-      header={<Header_Detail title={storeDetail.storeName || '매장 상세정보'} />}
+      header={<Header_Detail title={storeDetail.name || '매장 상세정보'} />}
       paddingX={false}
     >
       {/* FlatTab 가운데 정렬 및 고정 */}

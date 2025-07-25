@@ -82,7 +82,7 @@ export interface StoreListResponse {
   가맹점 상세 정보
 */
 export interface StoreDetail {
-  storeName: string;
+  name: string;
   storeId: number;
   imageUrl: string;
   detailAddress: string;
