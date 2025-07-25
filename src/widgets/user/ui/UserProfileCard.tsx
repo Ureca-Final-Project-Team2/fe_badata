@@ -42,18 +42,14 @@ const UserProfileCard = ({
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // 팔로우 목록에서 현재 사용자가 있는지 확인
   const currentIsFollowing =
     followings?.content?.item?.some((user) => user.userId === userId) ?? isFollowing;
 
-  // 거래된 총 게시물의 수 (API에서 가져온 실제 데이터만 사용)
   const displayTradeCount = soldPostsCount ?? 0;
 
   const handleFollowClick = async () => {
     try {
       await createFollowMutation.mutateAsync(userId);
-
-      // 팔로우 상태가 변경되었으므로 콜백 호출
       onFollowClick?.();
     } catch (error: unknown) {
       console.error('팔로우/언팔로우 실패:', error);

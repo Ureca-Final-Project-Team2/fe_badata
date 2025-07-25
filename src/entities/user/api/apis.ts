@@ -1,8 +1,6 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import { userService } from '../services/userService';
-
 import type { FollowingsContent, SalesContent } from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
@@ -33,37 +31,24 @@ export const userApis = {
     cursor?: number,
     size: number = 30,
   ): Promise<ApiResponse<SalesContent>> => {
-    try {
-      const params = new URLSearchParams();
-      if (postCategory) params.append('postCategory', postCategory);
-      if (isSold !== undefined) params.append('isSold', isSold.toString());
-      if (cursor !== undefined) params.append('cursor', cursor.toString());
-      params.append('size', size.toString());
+    const params = new URLSearchParams();
+    if (postCategory) params.append('postCategory', postCategory);
+    if (isSold !== undefined) params.append('isSold', isSold.toString());
+    if (cursor !== undefined) params.append('cursor', cursor.toString());
+    params.append('size', size.toString());
 
-      const url = userId
-        ? `${END_POINTS.USER.SALES}/${userId}?${params}`
-        : `${END_POINTS.USER.SALES}?${params}`;
+    const url = userId
+      ? `${END_POINTS.USER.SALES}/${userId}?${params}`
+      : `${END_POINTS.USER.SALES}?${params}`;
 
-      const content: SalesContent = await axiosInstance.get(url);
-      return {
-        code: 20000,
-        message: undefined,
-        content,
-      };
-    } catch (error) {
-      console.error('Sales API 호출 실패:', error);
-      throw new Error('판매 내역을 불러오는데 실패했습니다.');
-    }
+    const response = await axiosInstance.get(url);
+    return response.data;
   },
 
-  getUserSoldPostsCount: async (userId: number): Promise<number | string> => {
-    try {
-      const userTradePosts: UserTradePostsResponse = await axiosInstance.get(
-        END_POINTS.TRADES.USER_POST(userId),
-      );
-      return userService.calculateSoldPostsCount(userTradePosts);
-    } catch {
-      return 0;
-    }
+  getUserTradePosts: async (userId: number): Promise<UserTradePostsResponse> => {
+    const userTradePosts: UserTradePostsResponse = await axiosInstance.get(
+      END_POINTS.TRADES.USER_POST(userId),
+    );
+    return userTradePosts;
   },
 };

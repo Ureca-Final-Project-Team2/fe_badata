@@ -4,6 +4,7 @@ import { userApis } from '../api/apis';
 
 import type { FollowingsContent, SalesContent } from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
+import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
 
 // 팔로우 목록 조회 훅
 export const useFollowingsQuery = (cursor?: number, size: number = 10) => {
@@ -30,15 +31,29 @@ export const useSalesQuery = (
   });
 };
 
-// 특정 사용자의 거래된 총 게시물의 수 조회 훅
-export const useUserSoldPostsCountQuery = (userId?: number) => {
-  return useQuery<number | string>({
-    queryKey: ['user', 'sold-posts-count', userId],
+// 사용자 거래 게시물 조회 훅
+export const useUserTradePostsQuery = (userId?: number) => {
+  return useQuery<UserTradePostsResponse>({
+    queryKey: ['user', 'trade-posts', userId],
     queryFn: () => {
       if (!userId) throw new Error('userId is required');
-      return userApis.getUserSoldPostsCount(userId);
+      return userApis.getUserTradePosts(userId);
     },
     enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
+};
+
+// 특정 사용자의 거래된 총 게시물의 수 조회 훅
+export const useUserSoldPostsCountQuery = (userId?: number) => {
+  const { data: userTradePosts } = useUserTradePostsQuery(userId);
+
+  const soldPostsCount = userTradePosts?.soldedPostsResponse?.postsResponse?.length ?? 0;
+  const displayCount = soldPostsCount >= 100 ? '100+' : soldPostsCount;
+
+  return {
+    data: displayCount,
+    isLoading: !userTradePosts,
+    error: null,
+  };
 };
