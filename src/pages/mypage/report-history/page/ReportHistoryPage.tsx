@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
+import { SectionDivider } from '@/shared/ui/SectionDivider';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
 import { useReportHistoryListQuery } from '../model/queries';
@@ -44,11 +47,14 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
 
 export default function ReportHistoryPage() {
   const router = useRouter();
-    const { data, isLoading, isError } = useReportHistoryListQuery('QUESTION');
-    console.log('data:', data);
-    const items: ReportHistoryItem[] = data?.item ?? [];
+  const { data, isLoading, isError } = useReportHistoryListQuery('QUESTION');
+  const items: ReportHistoryItem[] = data?.item ?? [];
+  const [selectedIdx, setSelectedIdx] = useState(0); // 가장 최근 신고가 기본 선택
 
-  console.log('items:', items);
+  // 가장 최근 신고가 앞에 오도록 정렬 (createdAt 내림차순)
+  const sortedItems = [...items].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const selectedItem = sortedItems[selectedIdx];
+
   return (
     <BaseLayout
       header={<PageHeader title="신고 내역" onBack={() => router.back()} />}
@@ -60,14 +66,14 @@ export default function ReportHistoryPage() {
             <div>불러오는 중...</div>
           ) : isError ? (
             <div>데이터를 불러오지 못했습니다.</div>
-          ) : items.length === 0 ? (
+          ) : sortedItems.length === 0 ? (
             <div>신고 내역이 없습니다.</div>
           ) : (
             <>
               <h2 className="font-body-semibold mb-4">신고 게시물</h2>
-              <div className="flex flex-col gap-8">
-                {items.map((item) => (
-                  <div key={item.id} className="border-b pb-8 last:border-b-0 last:pb-0">
+              <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar pb-2">
+                {sortedItems.map((item, idx) => (
+                  <div key={item.id} className="w-[178px] flex-shrink-0" onClick={() => setSelectedIdx(idx)}>
                     <TradePostCard
                       imageUrl="/assets/trade-sample.png"
                       title={`신고 ID: ${item.id}`}
@@ -77,19 +83,22 @@ export default function ReportHistoryPage() {
                       isCompleted={false}
                       isLiked={false}
                     />
-                    <h2 className="font-body-semibold mt-8 mb-4">신고 진행 과정</h2>
-                    <ul className="flex flex-col gap-6">
-                      <TimelineItem
-                        label={item.reportStatus}
-                        text={item.reportReason}
-                        date={item.createdAt}
-                        color="main"
-                        isLast={true}
-                      />
-                    </ul>
                   </div>
                 ))}
               </div>
+              <SectionDivider className="my-6" />
+              <h2 className="font-body-semibold mb-4">신고 진행 과정</h2>
+              {selectedItem && (
+                <ul className="flex flex-col gap-6">
+                  <TimelineItem
+                    label={selectedItem.reportStatus}
+                    text={selectedItem.reportReason}
+                    date={selectedItem.createdAt}
+                    color="main"
+                    isLast={true}
+                  />
+                </ul>
+              )}
             </>
           )}
         </div>
