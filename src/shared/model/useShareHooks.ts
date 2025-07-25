@@ -10,11 +10,22 @@ interface ShareParams {
 }
 
 export const useShareHooks = () => {
+  const shareDescriptions = [
+    '늦게 보면 없어요! 지금 핫한 상품 🔥',
+    '현재 인기 있는 상품이에요👀',
+    '지금 안 사면 후회할 걸요?🤔',
+  ];
+
+  const getRandomShareDesc = () => {
+    const randomIndex = Math.floor(Math.random() * shareDescriptions.length);
+    return shareDescriptions[randomIndex];
+  };
+
   const share = ({ title, price, imageUrl, url = window.location.href }: ShareParams) => {
     const kakao = window.Kakao as KakaoShare;
 
     const shareTitle = `${title} - ${price?.toLocaleString()}원`;
-    const shareDesc = '이 상품 어때요?';
+    const shareDesc = getRandomShareDesc();
     const shareImage = imageUrl || `${window.location.origin}/assets/trade-detail.jpg`;
 
     if (kakao?.Share?.sendDefault) {
