@@ -22,9 +22,7 @@ export function useLikedStores(cursor?: number, size: number = 10) {
 export default function LikeStorePage() {
   const router = useRouter();
   const { data, isLoading, isError } = useLikedStores();
-  console.log('쿼리 data:', data);
   const items = (data?.item ?? []) as LikeStoreItem[];
-  console.log('items:', items);
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
