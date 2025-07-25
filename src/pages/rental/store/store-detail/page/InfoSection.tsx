@@ -65,7 +65,9 @@ export default function InfoSection({
         </div>
         <span className="font-label-regular text-[var(--black)] pr-4">
           나와의 거리{' '}
-          <span className="text-[var(--main-5)] font-label-semibold">{distanceFromMe}m</span>
+          <span className="text-[var(--main-5)] font-label-semibold">
+            {distanceFromMe.toFixed(1)}m
+          </span>
         </span>
       </div>
       {/* 구분선 위 */}
