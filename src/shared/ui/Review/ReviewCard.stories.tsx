@@ -1,6 +1,7 @@
-import { ReviewCard, ReviewCardProps } from './ReviewCard';
+import { ReviewCard } from './ReviewCard';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { ReviewCardProps } from './ReviewCard';
 
 const meta: Meta<typeof ReviewCard> = {
   title: 'Components/ReviewCard',
