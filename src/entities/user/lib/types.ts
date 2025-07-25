@@ -1,24 +1,12 @@
-export interface FollowResponse {
-  code: number;
-  message: string | null;
-  content: {
-    following: boolean;
-  } | null;
-}
-
-export interface FollowingsResponse {
-  code: number;
-  message: string;
-  content: {
-    item: Array<{
-      id: number;
-      userId: number;
-      nickname: string;
-      profileImageUrl: string;
-    }>;
-    nextCursor: number;
-    hasNext: boolean;
-  };
+export interface FollowingsContent {
+  item: Array<{
+    id: number;
+    userId: number;
+    nickname: string;
+    profileImageUrl: string;
+  }>;
+  nextCursor: number;
+  hasNext: boolean;
 }
 
 export interface SalesItem {
@@ -32,14 +20,10 @@ export interface SalesItem {
   isSold: boolean;
 }
 
-export interface SalesResponse {
-  code: number;
-  message: string | null;
-  content: {
-    item: SalesItem[];
-    nextCursor: number;
-    hasNext: boolean;
-  };
+export interface SalesContent {
+  item: SalesItem[];
+  nextCursor: number;
+  hasNext: boolean;
 }
 
 export interface UserProfile {

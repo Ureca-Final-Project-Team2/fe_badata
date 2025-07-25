@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 
 import { userApis } from '../api/apis';
 
-import type { FollowResponse, SalesResponse } from '@/entities/user/lib/types';
+import type { FollowingsContent, SalesContent } from '@/entities/user/lib/types';
+import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 
-// 팔로우 상태 조회 훅
-export const useFollowStatusQuery = (userId: number) => {
-  return useQuery<FollowResponse>({
-    queryKey: ['user', 'follow-status', userId],
-    queryFn: () => userApis.getFollowStatus(userId),
-    enabled: !!userId,
+// 팔로우 목록 조회 훅
+export const useFollowingsQuery = (cursor?: number, size: number = 10) => {
+  return useQuery<ApiResponse<FollowingsContent>>({
+    queryKey: ['user', 'followings', cursor, size],
+    queryFn: () => userApis.getFollowings(cursor, size),
     staleTime: 5 * 60 * 1000,
   });
 };
@@ -22,7 +22,7 @@ export const useSalesQuery = (
   cursor?: number,
   size: number = 30,
 ) => {
-  return useQuery<SalesResponse>({
+  return useQuery<ApiResponse<SalesContent>>({
     queryKey: ['user', 'sales', userId, postCategory, isSold, cursor, size],
     queryFn: () => userApis.getSales(userId, postCategory, isSold, cursor, size),
     enabled: !!userId,

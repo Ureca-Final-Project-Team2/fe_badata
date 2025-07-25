@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
-import { useFollowStatusQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
+import { useFollowingsQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
 import UserAvatar from '@/shared/ui/UserAvatar';
 
@@ -13,7 +13,6 @@ interface UserProfileCardProps {
   avatarSrc?: string;
   isFollowing?: boolean;
   onFollowClick?: () => void;
-  onFollowChange?: (isFollowing: boolean) => void;
   className?: string;
 }
 
@@ -24,7 +23,6 @@ interface UserProfileCardProps {
  * @param avatarSrc - 아바타 이미지 URL
  * @param isFollowing - 팔로잉 상태 (초기값)
  * @param onFollowClick - 팔로우/팔로잉 버튼 클릭 핸들러
- * @param onFollowChange - 팔로우 상태 변경 콜백
  * @param className - 추가 커스텀 클래스
  */
 const UserProfileCard = ({
@@ -33,32 +31,29 @@ const UserProfileCard = ({
   avatarSrc,
   isFollowing = false,
   onFollowClick,
-  onFollowChange,
   className = '',
 }: UserProfileCardProps) => {
   const createFollowMutation = useCreateFollowMutation();
 
-  const { data: followStatus, isLoading: isLoadingFollowStatus } = useFollowStatusQuery(userId);
+  const { data: followings, isLoading: isLoadingFollowings } = useFollowingsQuery();
   const { data: soldPostsCount, isLoading: isLoadingSoldCount } =
     useUserSoldPostsCountQuery(userId);
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // 서버 데이터가 있으면 우선, 없으면 prop fallback
-  const currentIsFollowing = followStatus?.content?.following ?? isFollowing;
+  // 팔로우 목록에서 현재 사용자가 있는지 확인
+  const currentIsFollowing =
+    followings?.content?.item?.some((user) => user.userId === userId) ?? isFollowing;
 
   // 거래된 총 게시물의 수 (API에서 가져온 실제 데이터만 사용)
   const displayTradeCount = soldPostsCount ?? 0;
 
   const handleFollowClick = async () => {
     try {
-      const response = await createFollowMutation.mutateAsync(userId);
+      await createFollowMutation.mutateAsync(userId);
 
-      if (response?.content?.following !== undefined) {
-        onFollowChange?.(response.content.following);
-      }
-
+      // 팔로우 상태가 변경되었으므로 콜백 호출
       onFollowClick?.();
     } catch (error: unknown) {
       console.error('팔로우/언팔로우 실패:', error);
@@ -93,9 +88,9 @@ const UserProfileCard = ({
                 ${currentIsFollowing ? 'bg-[var(--gray-dark)]' : 'bg-[var(--main-5)]'}
               `}
               onClick={handleFollowClick}
-              disabled={createFollowMutation.isPending || isLoadingFollowStatus}
+              disabled={createFollowMutation.isPending || isLoadingFollowings}
             >
-              {createFollowMutation.isPending || isLoadingFollowStatus
+              {createFollowMutation.isPending || isLoadingFollowings
                 ? '처리중...'
                 : currentIsFollowing
                   ? '팔로잉'
