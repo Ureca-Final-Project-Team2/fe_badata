@@ -13,7 +13,7 @@ const likeStores = [
       id: 101,
       name: 'LG유플러스 선릉점',
       latitude: 37.504,
-      longitude: 127.048,
+      longititude: 127.048,
     },
     storeDetail: {
       storeId: 101,
@@ -35,7 +35,7 @@ const likeStores = [
       id: 102,
       name: 'LG유플러스 선릉점',
       latitude: 37.504,
-      longitude: 127.048,
+      longititude: 127.048,
     },
     storeDetail: {
       storeId: 102,
@@ -56,7 +56,10 @@ const likeStores = [
 export default function LikeStorePage() {
   const router = useRouter();
   return (
-    <BaseLayout header={<PageHeader title="관심 매장" onBack={() => router.back()} />} showBottomNav>
+    <BaseLayout
+      header={<PageHeader title="관심 매장" onBack={() => router.back()} />}
+      showBottomNav
+    >
       <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
         {likeStores.map((item) => (
           <StoreCard
@@ -73,4 +76,4 @@ export default function LikeStorePage() {
       </div>
     </BaseLayout>
   );
-} 
+}
