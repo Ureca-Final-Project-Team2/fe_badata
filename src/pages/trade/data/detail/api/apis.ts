@@ -14,6 +14,7 @@ export const getTradePostDetail = async (
     const response = await axiosInstance.get<TradeDetailResponse>(
       END_POINTS.TRADES.DETAIL(Number(postId)),
     );
+
     const content = response.data || response;
 
     if (!content) {
