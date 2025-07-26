@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Phone, Share } from 'lucide-react';
 
 import InfoAction from '@/pages/rental/store/store-detail/page/InfoAction';
+import { formatDistanceString } from '@/pages/rental/utils/format/distanceUtils';
 import { ICONS } from '@/shared/config/iconPath';
 
 interface InfoSectionProps {
@@ -33,6 +34,9 @@ function InfoSection({
       ? ICONS.ETC.LIKE_NONACTIVE
       : ICONS.ETC.LIKE_NONACTIVE.src;
 
+  // 거리 포맷팅 및 색상 클래스 계산
+  const formattedDistance = formatDistanceString(distanceFromMe);
+
   return (
     <div className="w-full bg-[var(--white)] flex flex-col items-center mb-4">
       {/* 평점과 거리 정보 */}
@@ -42,10 +46,7 @@ function InfoSection({
           <span className="font-label-semibold">{reviewRating.toFixed(1)}</span>
         </div>
         <span className="font-label-regular text-[var(--black)] pr-4">
-          나와의 거리{' '}
-          <span className="text-[var(--main-5)] font-label-semibold">
-            {distanceFromMe.toFixed(1)}m
-          </span>
+          나와의 거리 <span className="font-label-semibold">{formattedDistance}</span>
         </span>
       </div>
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Clock9, MapPin, Phone as PhoneIcon } from 'lucide-react';
 
-import { formatDisplayTime, getBusinessStatus } from '@/pages/rental/map/utils/businessUtils';
+import { formatDisplayTime, getBusinessStatus } from '@/pages/rental/utils/businessUtils';
 import { useCopyToClipboard } from '@/shared/hooks/useCopyToClipboard';
 
 import type { StoreDetail } from '@/pages/rental/map/lib/types';

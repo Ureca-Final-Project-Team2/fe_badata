@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { fetchStoreDetail } from '@/pages/rental/map/api/apis';
 import { mockStoreDetail } from '@/pages/rental/map/utils/detaIl';
-import { getUserLocation } from '@/pages/rental/map/utils/locationUtils';
 import ReservationPage from '@/pages/rental/store/reservation/page/ReservationPage';
 import ReviewPage from '@/pages/rental/store/review/page/ReviewPage';
 import { useStoreLikeHooks } from '@/pages/rental/store/store-detail/model/useStoreLikeHooks';
@@ -15,6 +14,7 @@ import {
   StoreDetailError,
   StoreDetailLoading,
 } from '@/pages/rental/store/store-detail/page/StoreDetailStates';
+import { getUserLocation } from '@/pages/rental/utils/locationUtils';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
