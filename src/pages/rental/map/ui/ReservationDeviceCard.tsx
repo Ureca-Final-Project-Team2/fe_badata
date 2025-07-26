@@ -3,8 +3,6 @@ import React, { useCallback, useState } from 'react';
 import { BellRing } from 'lucide-react';
 
 import DeviceImage from '@/pages/rental/map/ui/DeviceImage';
-import { requestRestockNotification } from '@/pages/rental/store/reservation/api/apis';
-import { formatDateForReservation } from '@/pages/rental/store/reservation/utils/dataFormatters';
 import { makeToast } from '@/shared/lib/makeToast';
 
 interface ReservationDeviceCardProps {
@@ -14,13 +12,14 @@ interface ReservationDeviceCardProps {
     dataCapacity?: number | string;
     price?: number;
     remainCount?: number;
+    totalCount?: number; // 가맹점 보유 총 기기 수
     id?: number;
   };
   count?: number;
   onCountChange?: (newCount: number) => void;
   selected?: boolean;
   max?: number;
-  dateRange?: { from?: Date | null; to?: Date | null } | null; // 재입고 알림용 날짜 범위
+  onRestockRequest?: (device: { id: number; deviceName: string; totalCount: number }) => void; // 재입고 알림 신청 콜백
 }
 
 const CARD_SIZE = {
@@ -32,54 +31,31 @@ const CARD_SIZE = {
 };
 
 const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
-  ({ device, count = 0, onCountChange = () => {}, selected, max = 99, dateRange = null }) => {
+  ({ device, count = 0, onCountChange = () => {}, selected, max = 99, onRestockRequest }) => {
     const sz = CARD_SIZE;
-    const { deviceName, imageUrl, dataCapacity, price, remainCount } = device;
+    const { deviceName, imageUrl, dataCapacity, price, remainCount, totalCount } = device;
     const actualRemainCount = remainCount ?? 0;
+    const actualTotalCount = totalCount ?? remainCount ?? 10; // fallback to remainCount or 10
     const maxCount = max ?? Math.max(0, actualRemainCount);
     const canIncrement = count < maxCount && actualRemainCount > 0;
     const isSoldOut = actualRemainCount <= 0;
     const [notifyActive, setNotifyActive] = useState(false);
 
-    const handleNotifyToggle = useCallback(async () => {
+    const handleNotifyToggle = useCallback(() => {
       if (!notifyActive) {
-        // 재입고 알림 신청
-        if (!device.id) {
-          makeToast('장비 정보가 없습니다.', 'warning');
-          return;
-        }
-
-        // 날짜 범위가 없으면 기본값 사용 (현재 시간 기준)
-        const now = new Date();
-        const startDate = dateRange?.from && dateRange.from instanceof Date ? dateRange.from : now;
-        const endDate =
-          dateRange?.to && dateRange.to instanceof Date
-            ? dateRange.to
-            : new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24시간 후
-
-        try {
-          const result = await requestRestockNotification({
-            storeDeviceId: device.id,
-            count: 1, // 기본 1대로 신청
-            desiredStartDate: formatDateForReservation(startDate),
-            desiredEndDate: formatDateForReservation(endDate),
+        // 재입고 알림 신청 모달 열기 (상위 컴포넌트에서 처리)
+        if (onRestockRequest && device.id && device.deviceName && actualTotalCount) {
+          onRestockRequest({
+            id: device.id,
+            deviceName: device.deviceName,
+            totalCount: actualTotalCount,
           });
-
-          if (result.success) {
-            makeToast('재입고 알림 신청이 완료되었습니다', 'success');
-            setNotifyActive(true);
-          } else {
-            makeToast(result.error || '재입고 알림 신청에 실패했습니다', 'warning');
-          }
-        } catch (error) {
-          console.error('재입고 알림 신청 오류:', error);
-          makeToast('재입고 알림 신청 중 오류가 발생했습니다', 'warning');
         }
       } else {
         // 이미 재입고 알림 신청된 상태
         makeToast('이미 재입고 알림 신청을 하였습니다', 'warning');
       }
-    }, [notifyActive, device.id, dateRange]);
+    }, [notifyActive, onRestockRequest, device.id, device.deviceName, actualTotalCount]);
 
     const handleDecrement = useCallback(
       (e: React.MouseEvent) => {

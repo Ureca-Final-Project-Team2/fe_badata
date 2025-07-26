@@ -17,6 +17,7 @@ export const convertDevicesForUI = (devices: RentalDevice[]) => {
     dataCapacity: device.dataCapacity,
     price: device.price,
     remainCount: device.availableCount,
+    totalCount: device.totalCount, // 가맹점 보유 총 기기 수 추가
   }));
 };
 

@@ -19,7 +19,6 @@ interface ReservationFormProps {
     dataCapacity: number;
     price: number;
     remainCount: number;
-    totalCount: number; // 가맹점 보유 총 기기 수
   }>;
   selectedDevices: Record<string, number>;
   onDeviceCountChange: (deviceId: number, count: number) => void;
