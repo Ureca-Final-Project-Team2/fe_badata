@@ -26,4 +26,5 @@ export const MOCK_STORE_DETAIL: StoreDetail = {
   isOpening: true,
   startTime: '09:00:00',
   endTime: '21:00:00',
+  storeName: '',
 };

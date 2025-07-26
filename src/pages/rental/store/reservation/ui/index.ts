@@ -1,1 +1,1 @@
-export * from './DeviceReciptItem';
+export { default as DeviceReceiptItem } from './DeviceReceiptItem';

@@ -15,7 +15,7 @@ export interface AllPost {
 }
 
 export interface DeadlinePost extends AllPost {
-  deadLine: Date;
+  deadLine: string;
 }
 
 export interface BasePost {
