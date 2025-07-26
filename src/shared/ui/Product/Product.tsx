@@ -1,7 +1,9 @@
 'use client';
 
-import { ProductInfo } from '@/shared/ui/ProductInfo';
 import { Heart } from 'lucide-react';
+
+import { ProductInfo } from '@/shared/ui/ProductInfo';
+
 import { ImageBox } from '../ImageBox';
 
 export interface ProductProps {

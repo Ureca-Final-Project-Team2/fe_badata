@@ -15,7 +15,7 @@ export interface AllPost {
 }
 
 export interface DeadlinePost extends AllPost {
-  deadLine: Date;
+  deadLine: string;
 }
 
 export interface BasePost {
@@ -44,6 +44,54 @@ export interface GifticonPost extends BasePost {
   gifticonCategory?: string | null;
 }
 
+export interface DeletePostResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface UpdatePostRequest {
+  comment: string;
+  price: number;
+}
+
+export interface UpdatePostResponse {
+  code: number;
+  message: string;
+  content: {
+    postId: number;
+  };
+}
+
 export interface LikeContent {
   likeId: number;
+}
+
+export type ReportType =
+  | 'FRAUD'
+  | 'DUPLICATE_POST'
+  | 'RESELLING_HIGH_PRICE'
+  | 'ABOVE_MARKET_PRICE'
+  | 'FREE_OR_MONEY_REQUEST'
+  | 'ETC';
+
+export interface ReportReasons {
+  [key: string]: string;
+}
+
+export const REPORT_REASONS: ReportReasons = {
+  FRAUD: '거래 사기인 것 같아요',
+  DUPLICATE_POST: '무지성 중복 게시글인 것 같아요',
+  RESELLING_HIGH_PRICE: '나에게 구매 후 비싸게 재판매 하는 것 같아요',
+  ABOVE_MARKET_PRICE: '정가보다 비싸요',
+  FREE_OR_MONEY_REQUEST: '무료 나눔 및 금전 요구 글이에요',
+  ETC: '기타',
+};
+
+export interface ReportRequest {
+  reportType: ReportType;
+  comment: string;
+}
+
+export interface ReportResponse {
+  reportId: number;
 }

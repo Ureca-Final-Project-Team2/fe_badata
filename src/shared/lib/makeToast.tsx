@@ -13,7 +13,7 @@ export const makeToast = (message: string, variant: ToastVariant) => {
         ) : (
           <XCircle color="var(--red)" />
         )}
-        <span className="text-[18px] font-semibold text-white">{message}</span>
+        <span className="font-body-semibold text-[var(--white)]">{message}</span>
       </div>
     ),
     {
