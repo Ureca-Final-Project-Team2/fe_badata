@@ -19,7 +19,7 @@ export const getTradePosts = async (): Promise<AllPost[]> => {
 // 게시물 삭제
 export const deleteTradePost = async (postId: number) => {
   const response = await axiosInstance.delete(END_POINTS.TRADES.DELETE(postId));
-  return response.data;
+  return response;
 };
 
 // 데이터 게시물 수정
@@ -29,7 +29,7 @@ export const updateDataPost = async (postId: number, data: DataUpdateRequest) =>
       'Content-Type': 'application/json',
     },
   });
-  return response.data;
+  return response;
 };
 
 // 기프티콘 게시물 수정
@@ -39,7 +39,7 @@ export const updateGifticonPost = async (postId: number, data: GifticonUpdateReq
       'Content-Type': 'application/json',
     },
   });
-  return response.data;
+  return response;
 };
 
 // 게시물 좋아요
