@@ -16,7 +16,7 @@ export const END_POINTS = {
     USER_POST: (userId: number) => `/api/v1/trades/posts/${userId}`,
     VERIFY_PAYMENT: (impUid: string, postId: number) =>
       `/api/v1/trades/order/payment/${encodeURIComponent(impUid)}/${encodeURIComponent(postId.toString())}`,
-    CREATE_PAYMENT: (postId: number) => `/api/v1/trades/create/${postId}`,
+    CREATE_PAYMENT: (postId: number) => `/api/v1/trades/order/${postId}`,
     LIKE_POST: (postId: number) => `/api/v1/trades/${postId}/likes`,
     REPORT: (postId: number) => `/api/v1/trades/${postId}/reports`,
   },
