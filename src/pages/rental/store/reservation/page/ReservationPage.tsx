@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 
 import { fetchRentalDevices } from '@/pages/rental/store/reservation/api/apis';
 import { initialState, reducer } from '@/pages/rental/store/reservation/model/reservationReducer';
@@ -27,6 +27,9 @@ const ReservationPage = ({ storeId }: ReservationPageProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [devices, setDevices] = useState<RentalDevice[]>([]);
 
+  // 초기 로딩 완료 플래그
+  const hasInitialLoaded = useRef(false);
+
   const isDateSelected = !!(state.dateRange && state.dateRange.from && state.dateRange.to);
   const isDeviceSelected = Object.keys(state.selectedDevices).length > 0;
 
@@ -50,52 +53,46 @@ const ReservationPage = ({ storeId }: ReservationPageProps) => {
   }));
 
   // 예약 가능한 장비 목록 조회 함수
-  const loadDevices = useCallback(
-    async (startDate?: Date, endDate?: Date) => {
-      try {
-        // 날짜가 제공되지 않으면 undefined로 설정하여 모든 장비 조회
-        const params =
-          startDate && endDate
-            ? {
-                rentalStartDate: formatDateForReservation(startDate),
-                rentalEndDate: formatDateForReservation(endDate),
-              }
-            : undefined;
+  const loadDevices = useCallback(async (startDate?: Date, endDate?: Date) => {
+    try {
+      // 날짜가 제공되지 않으면 undefined로 설정하여 모든 장비 조회
+      const params =
+        startDate && endDate
+          ? {
+              rentalStartDate: formatDateForReservation(startDate),
+              rentalEndDate: formatDateForReservation(endDate),
+            }
+          : undefined;
 
-        console.log('예약 가능한 장비 조회 파라미터:', params);
-        const deviceList = await fetchRentalDevices(storeId, params);
-        console.log('조회된 예약 가능한 장비 목록:', deviceList);
-        setDevices(deviceList);
-      } catch (error) {
-        console.error('예약 가능한 장비 목록 조회 실패:', error);
-        makeToast('장비 목록을 불러오는데 실패했습니다.', 'warning');
-        setDevices([]);
-      }
-    },
-    [storeId],
-  );
+      const deviceList = await fetchRentalDevices(storeId, params);
+      setDevices(deviceList);
+    } catch (error) {
+      console.error('예약 가능한 장비 목록 조회 실패:', error);
+      makeToast('장비 목록을 불러오는데 실패했습니다.', 'warning');
+      setDevices([]);
+    }
+  }, []);
 
-  // 예약탭 진입 시 전체 예약 가능한 장비 목록 조회
+  // 초기 로딩: 컴포넌트 마운트 시 한 번만 실행
   useEffect(() => {
-    console.log('예약탭 진입 - 모든 예약 가능한 장비 조회');
-    loadDevices(); // 날짜 없이 호출하면 모든 예약 가능한 장비 조회
-  }, [loadDevices]);
+    if (!hasInitialLoaded.current) {
+      loadDevices();
+      hasInitialLoaded.current = true;
+    }
+  }, []);
 
-  // 날짜 변경 시 해당 날짜의 예약 가능한 장비 목록 조회
+  // 날짜 변경 시에만 장비 조회
   useEffect(() => {
-    if (state.dateRange?.from && state.dateRange?.to) {
+    if (hasInitialLoaded.current && state.dateRange?.from && state.dateRange?.to) {
       console.log('날짜 선택됨 - 필터링된 예약 가능한 장비 조회:', {
         from: state.dateRange.from,
         to: state.dateRange.to,
       });
       loadDevices(state.dateRange.from, state.dateRange.to);
-    } else if (state.dateRange === null || state.dateRange === undefined) {
-      // 날짜가 완전히 선택 해제된 경우 전체 예약 가능한 장비 목록 조회
-      console.log('날짜 선택 해제 - 모든 예약 가능한 장비 조회');
+    } else if (hasInitialLoaded.current && state.dateRange === null) {
       loadDevices();
     }
-    // from만 있고 to가 없는 경우는 아무것도 하지 않음 (선택 중)
-  }, [state.dateRange?.from, state.dateRange?.to, loadDevices]);
+  }, [state.dateRange?.from, state.dateRange?.to]);
 
   const receiptDevices = Object.entries(state.selectedDevices)
     .map(([deviceId, count]) => {
@@ -126,22 +123,11 @@ const ReservationPage = ({ storeId }: ReservationPageProps) => {
         rentalEndDate: formatDateForReservation(state.dateRange!.to!),
       };
 
-      console.log('예약 요청 데이터:', reservationData);
-
-      // 로그인 상태 체크 (디버깅용)
-      const accessToken = localStorage.getItem('accessToken');
-      console.log('로그인 상태:', {
-        hasAccessToken: !!accessToken,
-        tokenLength: accessToken?.length,
-        tokenPreview: accessToken?.substring(0, 20) + '...',
-      });
-
       // 예약 API 호출
       const result = await createReservationWithValidation(reservationData);
 
       if (result.success) {
         makeToast('예약이 완료되었습니다!', 'success');
-        console.log('예약 성공! 예약 ID:', result.reservationId);
 
         // 성공 후 초기화
         dispatch({ type: 'RESET' });
@@ -153,22 +139,7 @@ const ReservationPage = ({ storeId }: ReservationPageProps) => {
           errors: result.errors,
           errorMessage,
         });
-
-        // 로그인 관련 에러인지 확인
-        const isLoginError = result.errors?.some(
-          (error) =>
-            error.includes('로그인이 필요합니다') ||
-            error.includes('인증') ||
-            error.includes('권한') ||
-            error.includes('Unauthorized'),
-        );
-
-        if (isLoginError) {
-          makeToast('로그인이 필요합니다. 로그인 후 다시 시도해주세요.', 'warning');
-          // TODO: 로그인 페이지로 리다이렉트하거나 로그인 모달 표시
-        } else {
-          makeToast(errorMessage, 'warning');
-        }
+        makeToast(errorMessage, 'warning');
       }
     } catch (error) {
       console.error('예약 처리 중 오류 발생:', error);
