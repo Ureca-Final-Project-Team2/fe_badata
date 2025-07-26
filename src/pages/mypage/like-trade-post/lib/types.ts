@@ -10,12 +10,14 @@ export interface LikeTradePostItem {
   isSold: boolean;
 }
 
+export interface LikeTradePostContent {
+  item: LikeTradePostItem[];
+  nextCursor: number;
+  hasNext: boolean;
+}
+
 export interface LikeTradePostResponse {
   code: number;
   message: string | null;
-  content: {
-    item: LikeTradePostItem[];
-    nextCursor: number;
-    hasNext: boolean;
-  };
+  content: LikeTradePostContent;
 } 
