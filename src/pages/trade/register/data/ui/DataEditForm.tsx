@@ -70,7 +70,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
   if (error) {
     console.error('DataEditForm error:', error);
     return (
-      <div className="flex justify-center items-center h-64 text-red-500">
+      <div className="flex justify-center items-center h-64 text-[var(--red)]">
         게시물 정보를 불러올 수 없습니다.
         <br />
         <span className="text-sm">에러: {error.message}</span>
@@ -80,7 +80,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
 
   if (!post) {
     return (
-      <div className="flex justify-center items-center h-64 text-red-500">
+      <div className="flex justify-center items-center h-64 text-[var(--red)]">
         게시물 정보를 찾을 수 없습니다.
       </div>
     );
@@ -88,38 +88,75 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
 
   return (
     <form
-      className="flex flex-col items-center gap-4 pt-6"
+      className="flex flex-col items-center gap-4 pt-4"
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();
       }}
     >
-      <InputField
-        label="제목"
-        isRequired
-        value={state.form.title}
-        onChange={(e) => dispatch({ type: 'CHANGE_FIELD', field: 'title', value: e.target.value })}
-        placeholder="제목을 입력해주세요"
-        errorMessage="제목을 입력해주세요."
-      />
-      <InputField
-        label="판매 가격"
-        isRequired
-        variant="price"
-        value={state.form.price}
-        onChange={(e) => dispatch({ type: 'CHANGE_FIELD', field: 'price', value: e.target.value })}
-        placeholder="판매 가격"
-        errorMessage="가격을 입력해주세요."
-      />
-      <TextAreaField
-        value={state.form.comment}
-        onChange={(e) =>
-          dispatch({ type: 'CHANGE_FIELD', field: 'comment', value: e.target.value })
-        }
-        placeholder="설명 (선택)"
-      />
+      {/* 기존 정보 표시 (읽기 전용) */}
+      <div className="w-full max-w-md space-y-4">
+        <InputField
+          label="만료일"
+          value={post.deadLine}
+          disabled
+          className="bg-[var(--gray-light)]"
+        />
+        <InputField
+          label="용량"
+          value={post.capacity || '정보 없음'}
+          disabled
+          className="bg-[var(--gray-light)]"
+        />
+        <InputField
+          label="통신사"
+          value={post.mobileCarrier || '정보 없음'}
+          disabled
+          className="bg-[var(--gray-light)]"
+        />
+      </div>
 
-      <RegisterButton type="submit" loading={state.isSubmitting} isFormValid={isFormValid}>
+      {/* 수정 가능한 필드들 */}
+      <div className="w-full max-w-md space-y-4">
+        <InputField
+          label="제목"
+          isRequired
+          value={state.form.title}
+          onChange={(e) =>
+            dispatch({ type: 'CHANGE_FIELD', field: 'title', value: e.target.value })
+          }
+          placeholder="제목을 입력해주세요"
+          errorMessage="제목을 입력해주세요."
+          className="border-[var(--main-3)]"
+        />
+        <InputField
+          label="판매 가격"
+          isRequired
+          variant="price"
+          value={state.form.price}
+          onChange={(e) =>
+            dispatch({ type: 'CHANGE_FIELD', field: 'price', value: e.target.value })
+          }
+          placeholder="판매 가격"
+          errorMessage="가격을 입력해주세요."
+          className="bg-[var(--white)] border-[var(--main-3)]"
+        />
+        <TextAreaField
+          value={state.form.comment}
+          onChange={(e) =>
+            dispatch({ type: 'CHANGE_FIELD', field: 'comment', value: e.target.value })
+          }
+          placeholder="설명 (선택)"
+          className="border-[var(--main-3)]"
+        />
+      </div>
+
+      <RegisterButton
+        type="submit"
+        loading={state.isSubmitting}
+        isFormValid={isFormValid}
+        size="lg_thin"
+      >
         수정하기
       </RegisterButton>
     </form>
