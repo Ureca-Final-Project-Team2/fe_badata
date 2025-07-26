@@ -98,7 +98,7 @@ export function TradeGifticonRegisterForm() {
       title: state.ocrResult.title,
       partner: state.ocrResult.partner,
       gifticonNumber: state.ocrResult.gifticonNumber,
-      deadLine: state.ocrResult.deadLine.replace(/\./g, '-'), // 2025.09.31 -> 2025-09-31로 변환,
+      deadLine: state.ocrResult.deadLine.replace(/^(\d{4})\.(\d{2})\.(\d{2})$/, '$1-$2-$3'), // 2025.09.31 -> 2025-09-31로 변환,
       file: state.imageFile,
       category: state.category,
       price: toRawPrice(state.form.price),
