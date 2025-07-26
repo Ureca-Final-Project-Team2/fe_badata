@@ -3,6 +3,8 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 import type {
   AllPost,
+  DataUpdateRequest,
+  GifticonUpdateRequest,
   LikeContent,
   ReportRequest,
   ReportResponse,
@@ -20,9 +22,19 @@ export const deleteTradePost = async (postId: number) => {
   return response.data;
 };
 
-// 게시물 수정
-export const patchTradePost = async (postId: number, data: { comment: string; price: number }) => {
-  const response = await axiosInstance.patch(END_POINTS.TRADES.UPDATE(postId), data, {
+// 데이터 게시물 수정
+export const updateDataPost = async (postId: number, data: DataUpdateRequest) => {
+  const response = await axiosInstance.patch(END_POINTS.TRADES.UPDATE_DATA(postId), data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
+// 기프티콘 게시물 수정
+export const updateGifticonPost = async (postId: number, data: GifticonUpdateRequest) => {
+  const response = await axiosInstance.patch(END_POINTS.TRADES.UPDATE_GIFTICON(postId), data, {
     headers: {
       'Content-Type': 'application/json',
     },

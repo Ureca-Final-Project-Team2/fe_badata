@@ -2,12 +2,11 @@ import { useEffect, useReducer } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useUpdateTradePostMutation } from '@/entities/trade-post/model/mutations';
+import { useUpdateDataPostMutation } from '@/entities/trade-post/model/mutations';
 import { useTradePostDetailQuery } from '@/entities/trade-post/model/queries';
 import { initialState, reducer } from '@/pages/trade/register/data/model/dataRegisterReducer';
 import { PATH } from '@/shared/config/path';
 import { formatPrice, toRawPrice } from '@/shared/lib/formatPrice';
-import { makeToast } from '@/shared/lib/makeToast';
 import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
@@ -18,7 +17,7 @@ interface DataEditFormProps {
 
 export function TradeDataEditForm({ postId }: DataEditFormProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { mutate } = useUpdateTradePostMutation();
+  const { mutate } = useUpdateDataPostMutation();
   const { post, isLoading, error } = useTradePostDetailQuery(postId);
   const router = useRouter();
 
@@ -26,6 +25,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
   useEffect(() => {
     if (post) {
       const postData = post;
+      dispatch({ type: 'CHANGE_FIELD', field: 'title', value: postData.title || '' });
       dispatch({ type: 'CHANGE_FIELD', field: 'comment', value: postData.comment || '' });
       dispatch({
         type: 'CHANGE_FIELD',
@@ -36,33 +36,32 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
   }, [post]);
 
   const handleSubmit = () => {
-    const { price, comment } = state.form;
-    if (!price) return;
+    const { price, comment, title } = state.form;
+    if (!price || !title) return;
 
     dispatch({ type: 'SET_SUBMITTING', value: true });
     mutate(
       {
         postId,
         data: {
+          title: title || '',
           comment: comment || '',
           price: toRawPrice(price),
         },
       },
       {
         onSuccess: () => {
-          makeToast('게시물이 성공적으로 수정되었습니다!', 'success');
           router.push(`${PATH.TRADE.DATA}/${postId}`);
         },
         onError: (error) => {
           console.error('수정 실패:', error);
-          makeToast('게시물 수정에 실패했습니다.', 'warning');
         },
         onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
       },
     );
   };
 
-  const isFormValid = !!state.form.price;
+  const isFormValid = !!state.form.price && !!state.form.title;
 
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">로딩 중...</div>;
@@ -95,6 +94,14 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
         handleSubmit();
       }}
     >
+      <InputField
+        label="제목"
+        isRequired
+        value={state.form.title}
+        onChange={(e) => dispatch({ type: 'CHANGE_FIELD', field: 'title', value: e.target.value })}
+        placeholder="제목을 입력해주세요"
+        errorMessage="제목을 입력해주세요."
+      />
       <InputField
         label="판매 가격"
         isRequired
