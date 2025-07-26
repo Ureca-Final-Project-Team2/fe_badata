@@ -2,7 +2,7 @@ import type { StoreCardProps } from '@/pages/rental/map/lib/types';
 
 export const mockStoreList: StoreCardProps[] = [
   {
-    store: { id: 1, name: 'LG유플러스 선릉점', latitude: 0, longitude: 0 },
+    store: { id: 1, name: 'LG유플러스 선릉점', latitude: 0, longititude: 0 },
     storeDetail: {
       storeId: 1,
       imageUrl: '',
@@ -13,12 +13,13 @@ export const mockStoreList: StoreCardProps[] = [
       isOpening: true,
       startTime: '10:00:00',
       endTime: '20:00:00',
+      storeName: '',
     },
     deviceCount: 3,
     id: 1,
   },
   {
-    store: { id: 2, name: 'LG유플러스 선릉점', latitude: 0, longitude: 0 },
+    store: { id: 2, name: 'LG유플러스 선릉점', latitude: 0, longititude: 0 },
     storeDetail: {
       storeId: 2,
       imageUrl: '',
@@ -29,12 +30,13 @@ export const mockStoreList: StoreCardProps[] = [
       isOpening: true,
       startTime: '10:00:00',
       endTime: '20:00:00',
+      storeName: '',
     },
     deviceCount: 3,
     id: 2,
   },
   {
-    store: { id: 3, name: 'LG유플러스 선릉점', latitude: 0, longitude: 0 },
+    store: { id: 3, name: 'LG유플러스 선릉점', latitude: 0, longititude: 0 },
     storeDetail: {
       storeId: 3,
       imageUrl: '',
@@ -45,12 +47,13 @@ export const mockStoreList: StoreCardProps[] = [
       isOpening: true,
       startTime: '10:00:00',
       endTime: '20:00:00',
+      storeName: '',
     },
     deviceCount: 3,
     id: 3,
   },
   {
-    store: { id: 4, name: 'LG유플러스 선릉점', latitude: 0, longitude: 0 },
+    store: { id: 4, name: 'LG유플러스 선릉점', latitude: 0, longititude: 0 },
     storeDetail: {
       storeId: 4,
       imageUrl: '',
@@ -61,12 +64,13 @@ export const mockStoreList: StoreCardProps[] = [
       isOpening: true,
       startTime: '10:00:00',
       endTime: '20:00:00',
+      storeName: '',
     },
     deviceCount: 3,
     id: 4,
   },
   {
-    store: { id: 5, name: 'LG유플러스 선릉점', latitude: 0, longitude: 0 },
+    store: { id: 5, name: 'LG유플러스 선릉점', latitude: 0, longititude: 0 },
     storeDetail: {
       storeId: 5,
       imageUrl: '',
@@ -77,12 +81,13 @@ export const mockStoreList: StoreCardProps[] = [
       isOpening: true,
       startTime: '10:00:00',
       endTime: '20:00:00',
+      storeName: '',
     },
     deviceCount: 3,
     id: 5,
   },
   {
-    store: { id: 6, name: 'LG유플러스 선릉점', latitude: 0, longitude: 0 },
+    store: { id: 6, name: 'LG유플러스 선릉점', latitude: 0, longititude: 0 },
     storeDetail: {
       storeId: 6,
       imageUrl: '',
@@ -93,12 +98,13 @@ export const mockStoreList: StoreCardProps[] = [
       isOpening: true,
       startTime: '10:00:00',
       endTime: '20:00:00',
+      storeName: '',
     },
     deviceCount: 3,
     id: 6,
   },
   {
-    store: { id: 7, name: 'LG유플러스 선릉점', latitude: 0, longitude: 0 },
+    store: { id: 7, name: 'LG유플러스 선릉점', latitude: 0, longititude: 0 },
     storeDetail: {
       storeId: 7,
       imageUrl: '',
@@ -109,6 +115,7 @@ export const mockStoreList: StoreCardProps[] = [
       isOpening: true,
       startTime: '10:00:00',
       endTime: '20:00:00',
+      storeName: '',
     },
     deviceCount: 3,
     id: 7,

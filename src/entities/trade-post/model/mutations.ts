@@ -3,19 +3,21 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   deleteTradePost,
   deleteTradePostLike,
-  patchTradePost,
   postTradePostLike,
   reportTradePost,
+  updateDataPost,
+  updateGifticonPost,
 } from '@/entities/trade-post/api/apis';
+import { makeToast } from '@/shared/lib/makeToast';
 
 import type {
   AllPost,
+  DataUpdateRequest,
   DeletePostResponse,
+  GifticonUpdateRequest,
   ReportRequest,
-  UpdatePostRequest,
   UpdatePostResponse,
 } from '@/entities/trade-post/lib/types';
-import { makeToast } from '@/shared/lib/makeToast';
 
 export const usePostTradePostLikeMutation = () => {
   const queryClient = useQueryClient();
@@ -70,6 +72,25 @@ export const useDeleteTradePostLikeMutation = () => {
   });
 };
 
+// 상세페이지용 좋아요 뮤테이션 (optimistic update 없음)
+export const usePostTradePostLikeDetailMutation = () => {
+  return useMutation({
+    mutationFn: (postId: number) => postTradePostLike(postId),
+    onError: (error) => {
+      console.error('좋아요 처리 실패', error);
+    },
+  });
+};
+
+export const useDeleteTradePostLikeDetailMutation = () => {
+  return useMutation({
+    mutationFn: (postId: number) => deleteTradePostLike(postId),
+    onError: (error) => {
+      console.error('좋아요 취소 실패', error);
+    },
+  });
+};
+
 export const useDeleteTradePostMutation = () => {
   const queryClient = useQueryClient();
 
@@ -82,14 +103,36 @@ export const useDeleteTradePostMutation = () => {
   });
 };
 
-export const useUpdateTradePostMutation = () => {
+export const useUpdateDataPostMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<UpdatePostResponse, Error, { postId: number; data: UpdatePostRequest }>({
-    mutationFn: ({ postId, data }) => patchTradePost(postId, data),
+  return useMutation<UpdatePostResponse, Error, { postId: number; data: DataUpdateRequest }>({
+    mutationFn: ({ postId, data }) => updateDataPost(postId, data),
     onSuccess: (data, { postId }) => {
       queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
       queryClient.invalidateQueries({ queryKey: ['trade', 'detail', postId] });
+      makeToast('데이터 게시물이 수정되었습니다!', 'success');
+    },
+    onError: (error) => {
+      console.error('데이터 게시물 수정 실패:', error);
+      makeToast('데이터 게시물 수정에 실패했습니다.', 'warning');
+    },
+  });
+};
+
+export const useUpdateGifticonPostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<UpdatePostResponse, Error, { postId: number; data: GifticonUpdateRequest }>({
+    mutationFn: ({ postId, data }) => updateGifticonPost(postId, data),
+    onSuccess: (data, { postId }) => {
+      queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['trade', 'detail', postId] });
+      makeToast('기프티콘 게시물이 수정되었습니다!', 'success');
+    },
+    onError: (error) => {
+      console.error('기프티콘 게시물 수정 실패:', error);
+      makeToast('기프티콘 게시물 수정에 실패했습니다.', 'warning');
     },
   });
 };

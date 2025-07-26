@@ -3,7 +3,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import { PATH } from '@/shared/config/path';
 import { FlatTab } from '@/shared/ui/FlatTab';
 
-export function TradeFlatTab() {
+interface TradeFlatTabProps {
+  className?: string;
+}
+export function TradeFlatTab({ className }: TradeFlatTabProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -33,5 +36,12 @@ export function TradeFlatTab() {
     }
   };
 
-  return <FlatTab items={tabItems} defaultValue={defaultValue} onValueChange={handleTabChange} />;
+  return (
+    <FlatTab
+      items={tabItems}
+      defaultValue={defaultValue}
+      onValueChange={handleTabChange}
+      className={className}
+    />
+  );
 }

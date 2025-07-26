@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { mockStoreDetail } from '@/pages/rental/map/__mocks__/detail.mock';
+import { mockStoreDetail } from '@/pages/rental/map/utils/detaIl';
 import ReservationPage from '@/pages/rental/store/reservation/page/ReservationPage';
 import ReviewPage from '@/pages/rental/store/review/page/ReviewPage';
 import ContentSection from '@/pages/rental/store/store-detail/page/ContentSection';

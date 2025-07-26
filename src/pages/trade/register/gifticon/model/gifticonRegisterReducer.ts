@@ -10,8 +10,6 @@ export interface State {
     partner: string;
     gifticonNumber: string;
     deadLine: string;
-    issueDate: string;
-    image: string;
   };
   category: GifticonCategory | undefined;
   imageFile: File | null;
@@ -25,7 +23,8 @@ export type Action =
   | { type: 'SET_CATEGORY'; payload: GifticonCategory | undefined }
   | { type: 'SET_IMAGE_FILE'; payload: { file: File | null; preview: string | null } }
   | { type: 'SET_SUBMITTING'; value: boolean }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'RESET_IMAGE' };
 
 export const initialState: State = {
   form: {
@@ -33,12 +32,10 @@ export const initialState: State = {
     comment: '',
   },
   ocrResult: {
-    title: '메가커피 아메리카노',
-    partner: '메가MGC커피',
-    gifticonNumber: 'MGC123456789',
-    deadLine: '2025-07-19',
-    issueDate: '2025-06-18T00:00:00.009',
-    image: 'no-image',
+    title: '',
+    partner: '',
+    gifticonNumber: '',
+    deadLine: '',
   },
   category: undefined,
   imageFile: null,
@@ -70,6 +67,19 @@ export function reducer(state: State, action: Action): State {
       return { ...state, isSubmitting: action.value };
     case 'RESET':
       return initialState;
+    case 'RESET_IMAGE':
+      return {
+        ...state,
+        imageFile: null,
+        imagePreview: null,
+        ocrResult: {
+          title: '',
+          partner: '',
+          gifticonNumber: '',
+          deadLine: '',
+        },
+        category: undefined,
+      };
     default:
       return state;
   }

@@ -61,8 +61,16 @@ export interface PostTradeGifticonRequest {
   partner: string;
   gifticonNumber: string;
   deadLine: string;
-  issueDate: string;
   price: number;
   comment?: string;
   file: File;
+}
+
+export interface ValidationResponse {
+  ratio: number;
+  couponName: string;
+  expirationDate: string;
+  barcode: string;
+  partner: string;
+  manipulated: boolean;
 }

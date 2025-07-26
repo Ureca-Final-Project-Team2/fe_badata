@@ -2,7 +2,7 @@
 
 import { useReducer, useState } from 'react';
 
-import { mockReservationDevices } from '@/pages/rental/map/__mocks__/reservationDeviceCard.mock';
+import { mockReservationDevices } from '@/pages/rental/map/utils/reservationDeviceCard';
 import { initialState, reducer } from '@/pages/rental/store/reservation/model/reservationReducer';
 import CalendarSection from '@/pages/rental/store/reservation/page/CalendarSection';
 import DeviceSelectSection from '@/pages/rental/store/reservation/page/DeviceSelectSection';

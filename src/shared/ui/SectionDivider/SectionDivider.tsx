@@ -1,8 +1,9 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
-import { cn } from '@/shared/lib/cn';
 import { cva } from 'class-variance-authority';
+
+import { cn } from '@/shared/lib/cn';
 
 import type { VariantProps } from 'class-variance-authority';
 

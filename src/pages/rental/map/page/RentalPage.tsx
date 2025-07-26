@@ -3,7 +3,6 @@
 import { useEffect, useReducer, useState } from 'react';
 
 import { CenterScrollSwiper } from '@/entities/scroll';
-import { mockStoreList } from '@/pages/rental/map/__mocks__/storeList.mock';
 import { initialRentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 import {
   initialSelectedStoreState,
@@ -14,6 +13,7 @@ import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
+import { mockStoreList } from '@/pages/rental/map/utils/storeList';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';

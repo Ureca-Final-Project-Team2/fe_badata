@@ -35,5 +35,5 @@ export const useKakaoCallback = () => {
     };
 
     handleAuth();
-  }, []);
+  }, [login, router]);
 };
