@@ -24,7 +24,13 @@ export const initialState: State = {
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'SET_DATE_RANGE':
-      return { ...state, dateRange: action.payload };
+      // 날짜 변경 시 선택된 디바이스와 동의 상태 초기화
+      return {
+        ...state,
+        dateRange: action.payload,
+        selectedDevices: {}, // 선택된 디바이스 초기화
+        agreed: false, // 동의 상태 초기화
+      };
     case 'SET_DEVICE_COUNT': {
       const { deviceId, count } = action.payload;
       const updated = { ...state.selectedDevices };
