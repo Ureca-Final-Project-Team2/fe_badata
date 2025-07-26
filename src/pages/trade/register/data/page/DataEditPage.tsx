@@ -52,7 +52,7 @@ export default function DataEditPage({ params }: DataEditPageProps) {
 
   return (
     <BaseLayout
-      header={<PageHeader title="데이터 게시물 수정" onBack={() => router.back()} />}
+      header={<PageHeader title="게시물 수정" onBack={() => router.back()} />}
       showBottomNav={false}
     >
       <TradeDataEditForm postId={postId} />
