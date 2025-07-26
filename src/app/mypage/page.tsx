@@ -43,13 +43,15 @@ export default function MyPage() {
                 {coinData?.coin ?? 0}
               </span>
             </div>
-            <Image 
-              src={ICONS.MYPAGE.COIN_STACK} 
-              alt="코인 이미지" 
-              width={100} 
-              height={100}
-              className="w-[100px] h-[100px]"
-            />
+            <a href="/mypage/coin-history">
+              <Image 
+                src={ICONS.MYPAGE.COIN_STACK} 
+                alt="코인 이미지" 
+                width={100} 
+                height={100}
+                className="w-[100px] h-[100px] cursor-pointer"
+              />
+            </a>
           </div>
         </div>
         <div
