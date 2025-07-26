@@ -12,7 +12,6 @@ export const getRestockAlarmList = async (
       END_POINTS.MYPAGE.RESTOCK_ALARM,
       { params: { cursor, size } }
     );
-    console.log('재입고 API content:', content);
     return content;
   } catch (error: unknown) {
     throw error;
