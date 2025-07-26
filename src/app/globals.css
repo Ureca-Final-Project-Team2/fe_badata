@@ -2,6 +2,10 @@
 @import 'tailwindcss';
 @import '../shared/styles/radius.css';
 @import '../shared/styles/custom-scrollbar.css';
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import 'swiper/css/navigation';
+@import 'swiper/css/effect-coverflow';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -272,4 +276,22 @@ body {
   to {
     transform: translateY(0);
   }
+}
+
+.swiper {
+  width: 100%;
+  height: auto;
+}
+
+.swiper-wrapper {
+  align-items: stretch;
+}
+
+.swiper-slide {
+  height: auto !important;
+  display: flex !important;
+  align-items: stretch !important;
+  text-align: left !important;
+  font-size: inherit !important;
+  background: transparent !important;
 }

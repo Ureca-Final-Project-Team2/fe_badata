@@ -6,6 +6,8 @@ export const END_POINTS = {
   TRADES: {
     LIST: '/api/v1/trades/posts',
     DETAIL: (postId: number) => `/api/v1/trades/${postId}/post`,
+    DELETE: (postId: number) => `/api/v1/trades/${postId}/post`,
+    UPDATE: (postId: number) => `/api/v1/trades/posts/${postId}`,
     DEADLINE: '/api/v1/trades/posts/deadline',
     SEARCH: (keyword: string) => `/api/v1/trades/posts?query=${keyword}`,
     REGISTER_DATA: '/api/v1/trades/posts/data',
@@ -15,10 +17,14 @@ export const END_POINTS = {
       `/api/v1/trades/order/payment/${encodeURIComponent(impUid)}/${encodeURIComponent(postId.toString())}`,
     CREATE_PAYMENT: (postId: number) => `/api/v1/trades/create/${postId}`,
     LIKE_POST: (postId: number) => `/api/v1/trades/${postId}/likes`,
+    REPORT: (postId: number) => `/api/v1/trades/${postId}/reports`,
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
     REISSUE: '/api/v1/auth/reissue/token',
+    FOLLOW: (userId: number) => `/api/v1/users/${userId}/follows`,
+    GET_FOLLOWS: '/api/v1/users/follows',
+    SALES: '/api/v1/users/sales',
   },
   STORES: {
     ALLSTORE: (storeId: number) => `/api/v1/stores/${storeId}/devices`,

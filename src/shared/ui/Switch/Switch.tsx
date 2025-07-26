@@ -1,6 +1,8 @@
-import { cn } from '@/shared/lib/cn';
-import { Root as SwitchRoot, Thumb as SwitchThumb } from '@radix-ui/react-switch';
 import type { ComponentPropsWithoutRef } from 'react';
+
+import { Root as SwitchRoot, Thumb as SwitchThumb } from '@radix-ui/react-switch';
+
+import { cn } from '@/shared/lib/cn';
 
 type BaseSwitchProps = ComponentPropsWithoutRef<typeof SwitchRoot>;
 

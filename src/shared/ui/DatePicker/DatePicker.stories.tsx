@@ -23,7 +23,7 @@ export const Default: Story = {
   },
 };
 
-export const mobileDatePicker: Story = {
+export const MobileDatePicker: Story = {
   render: () => {
     const [date, setDate] = useState<Date | undefined>(new Date());
     return (

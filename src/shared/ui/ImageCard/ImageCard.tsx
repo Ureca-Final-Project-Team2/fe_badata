@@ -8,10 +8,9 @@ interface ImageCardProps {
   size?: 'sm' | 'md' | 'lg';
   url?: string;
   expireDate?: string;
-  defaultLiked?: boolean;
 }
 
-export function ImageCard({ size = 'sm', url, expireDate, defaultLiked = false }: ImageCardProps) {
+export function ImageCard({ size = 'sm', url, expireDate }: ImageCardProps) {
   const dDayText = useExpireDateHooks(expireDate);
 
   return (
