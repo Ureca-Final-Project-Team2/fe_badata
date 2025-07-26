@@ -123,7 +123,13 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
           <div className="flex items-center justify-between w-full mb-1">
             <span className="text-[var(--black)]">
               <span className="font-label-regular">매일 </span>
-              <span className="font-label-semibold">{dataCapacity}GB</span>
+              {dataCapacity === 999 || dataCapacity === '999' ? (
+                <span className="font-label-semibold"> 무제한</span>
+              ) : (
+                <>
+                  <span className="font-label-semibold">{dataCapacity}GB</span>
+                </>
+              )}
             </span>
             <span className="font-label-regular text-right text-[var(--main-5)]">
               {actualRemainCount <= 0 ? (
