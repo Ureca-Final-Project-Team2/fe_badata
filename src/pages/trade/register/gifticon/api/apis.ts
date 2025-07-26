@@ -36,7 +36,6 @@ export const validateGifticonImage = async (
       },
     });
 
-    console.log('OCR Response: ', response.data);
     return response.data;
   } catch (error) {
     console.error('validateGifticonImage API error:', error);

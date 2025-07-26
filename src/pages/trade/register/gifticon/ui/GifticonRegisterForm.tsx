@@ -67,8 +67,6 @@ export function TradeGifticonRegisterForm() {
         // 이미지 유효성 검증 API 호출
         validateImage(file, {
           onSuccess: (data: ApiResponse<ValidationResponse>) => {
-            console.log('Validation response:', data);
-
             makeToast('유효한 기프티콘 이미지입니다.', 'success');
 
             dispatch({
