@@ -23,7 +23,7 @@ const OVERLAY_STYLES = `
   line-height: ${MARKER_SIZE}px;
 `;
 
-// 사용자 현재 위치 마커 생성 함수
+// 사용자 현재 위치 마커 생성 함수 (현재는 useKakaoMapHooks에서 관리하므로 사용하지 않음)
 export const showCurrentLocation = (map: kakao.maps.Map): void => {
   if (!map || !window.kakao) return;
 
@@ -177,6 +177,9 @@ const createStoreMarker = async (
     const overlay = createDeviceCountOverlay(position, totalLeftCount);
     overlay.setMap(map);
 
+    // 생성된 마커와 오버레이를 배열에 추가 (나중에 제거하기 위해)
+    currentMarkers.push(marker, overlay);
+
     // 인포윈도우 생성
     const infowindow = createInfoWindow(store.name);
 
@@ -214,6 +217,21 @@ const processBatch = async (
   }
 };
 
+// 기존 마커들을 저장할 배열
+let currentMarkers: (kakao.maps.Marker | kakao.maps.CustomOverlay)[] = [];
+
+// 기존 마커들을 모두 제거하는 함수
+const clearAllMarkers = (): void => {
+  currentMarkers.forEach((marker) => {
+    if (marker instanceof window.kakao.maps.Marker) {
+      marker.setMap(null);
+    } else if (marker instanceof window.kakao.maps.CustomOverlay) {
+      marker.setMap(null);
+    }
+  });
+  currentMarkers = [];
+};
+
 export const renderStoreMarkers = async (
   map: kakao.maps.Map,
   stores: Store[],
@@ -225,15 +243,14 @@ export const renderStoreMarkers = async (
   ) => void,
 ): Promise<void> => {
   if (!map || !window.kakao) {
-    // stores.length 체크는 제거
     return;
   }
 
   try {
-    // 현재 위치 마커 표시 (항상 실행)
-    showCurrentLocation(map);
+    // 기존 마커들을 모두 제거
+    clearAllMarkers();
 
-    // 매장이 있을 때만 마커 렌더링
+    // 매장이 있을 때만 마커 렌더링 (현재 위치 마커는 useKakaoMapHooks에서 한 번만 생성)
     if (stores && stores.length > 0) {
       await processBatch(stores, map, filterParams, 5, onStoreMarkerClick);
     }
