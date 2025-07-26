@@ -30,11 +30,7 @@ export const validateGifticonImage = async (
   formData.append('file', file);
 
   try {
-    const response = await axiosInstance.post(END_POINTS.TRADES.IMAGE, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await axiosInstance.post(END_POINTS.TRADES.IMAGE, formData);
 
     return response.data;
   } catch (error) {
