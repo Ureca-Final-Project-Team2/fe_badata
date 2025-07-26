@@ -6,6 +6,12 @@ import { fetchStoreDetail } from '@/pages/rental/map/api/apis';
 import { mockStoreDetail } from '@/pages/rental/map/utils/detaIl';
 import ReservationPage from '@/pages/rental/store/reservation/page/ReservationPage';
 import ReviewPage from '@/pages/rental/store/review/page/ReviewPage';
+import {
+  DEFAULT_TAB,
+  STORE_DETAIL_STYLES,
+  STORE_DETAIL_TABS,
+  type TabValue,
+} from '@/pages/rental/store/store-detail/lib/storeDetailConstants';
 import { useStoreLikeHooks } from '@/pages/rental/store/store-detail/model/useStoreLikeHooks';
 import ContentSection from '@/pages/rental/store/store-detail/page/ContentSection';
 import ImageSection from '@/pages/rental/store/store-detail/page/ImageSection';
@@ -19,13 +25,6 @@ import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';
 import { Header_Detail } from '@/shared/ui/Header_Detail';
 
-import {
-  DEFAULT_TAB,
-  STORE_DETAIL_STYLES,
-  STORE_DETAIL_TABS,
-  type TabValue,
-} from '../lib/storeDetailConstants';
-
 import type { StoreDetail } from '@/pages/rental/map/lib/types';
 
 interface StoreDetailPageProps {
@@ -34,7 +33,7 @@ interface StoreDetailPageProps {
 
 export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
   const [tab, setTab] = useState<TabValue>(DEFAULT_TAB);
-  const [storeDetail, setStoreDetail] = useState<StoreDetail | null>(null);
+  const [storeDetail, setStoreDetail] = useState<StoreDetail>();
   const [isLoading, setIsLoading] = useState(true);
 
   // 가맹점 상세 정보 조회 함수 메모이제이션
@@ -84,7 +83,9 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
   }, []);
 
   // 헤더 타이틀 메모이제이션
-  const headerTitle = useMemo(() => {}, [storeDetail?.name]);
+  const headerTitle = useMemo(() => {
+    return storeDetail?.name ?? '';
+  }, [storeDetail?.name]);
 
   // 로딩 중이거나 데이터가 없는 경우
   if (isLoading) {
@@ -96,7 +97,7 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
   }
 
   return (
-    <BaseLayout header={<Header_Detail title={headerTitle ?? ''} />} paddingX={false}>
+    <BaseLayout header={<Header_Detail title={headerTitle} />} paddingX={false}>
       {/* FlatTab 가운데 정렬 및 고정 */}
       <div className={STORE_DETAIL_STYLES.TAB_CONTAINER}>
         <FlatTab items={STORE_DETAIL_TABS} value={tab} onValueChange={handleTabChange} />
