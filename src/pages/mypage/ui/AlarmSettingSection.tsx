@@ -7,9 +7,12 @@ import { ICONS } from '@/shared/config/iconPath';
 
 export const AlarmSettingSection = () => (
   <>
-    <h2 className="mb-2 font-body-semibold">설정</h2>
-    <section className="bg-white rounded-xl p-4 shadow-sm">
-      <Link href="/mypage/alarm-setting" className="flex items-center gap-3 cursor-pointer group">
+    <h2 className="mb-2 font-semibold text-gray-900">설정</h2>
+    <section className="bg-[var(--main-1)] rounded-xl p-4 shadow-sm">
+      <Link
+        href="/mypage/alarm-setting"
+        className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-2 rounded-lg transition"
+      >
         <Image
           src={ICONS.MYPAGE.NOTIFICATION}
           alt="알림 설정"
@@ -17,7 +20,7 @@ export const AlarmSettingSection = () => (
           height={20}
           className="object-contain"
         />
-        <span className="font-label-regular group-hover:text-[var(--main-3)]">알림 설정</span>
+        <span className="font-medium text-sm group-hover:text-[var(--main-3)]">알림 설정</span>
       </Link>
     </section>
   </>
