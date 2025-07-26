@@ -76,9 +76,8 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
           makeToast('재입고 알림 신청 중 오류가 발생했습니다', 'warning');
         }
       } else {
-        // 재입고 알림 취소 (현재는 로컬 상태만 변경)
-        makeToast('재입고 알림을 취소했습니다', 'success');
-        setNotifyActive(false);
+        // 이미 재입고 알림 신청된 상태
+        makeToast('이미 재입고 알림 신청을 하였습니다', 'warning');
       }
     }, [notifyActive, device.id, dateRange]);
 
@@ -147,7 +146,7 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
                     notifyActive ? 'text-white' : 'text-[var(--main-5)]'
                   }`}
                 >
-                  {notifyActive ? '알림 취소' : '재입고 알림 신청'}
+                  {notifyActive ? '알림 신청 완료' : '재입고 알림 신청'}
                 </span>
               </button>
             </>
