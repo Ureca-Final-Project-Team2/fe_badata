@@ -13,13 +13,7 @@ import type { RestockAlarmItem } from '../lib/types';
 export default function RestockAlarmPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useRestockAlarmListQuery();
-  let alarms: RestockAlarmItem[] = [];
-  if (data?.item) {
-    alarms = data.item;
-  } else if (data?.content?.item) {
-    alarms = data.content.item;
-  }
-  console.log('alarms', alarms);
+  const alarms: RestockAlarmItem[] = data?.item || [];
 
   return (
     <BaseLayout

@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getRestockAlarmList } from '../api/apis';
 
-import type { RestockAlarmResponse } from '../lib/types';
+import type { RestockAlarmItem } from '../lib/types';
 
 export const useRestockAlarmListQuery = () =>
-  useQuery<RestockAlarmResponse>({
+  useQuery<{ item: RestockAlarmItem[]; nextCursor: number; hasNext: boolean }>({
     queryKey: ['restockAlarmList'],
     queryFn: () => getRestockAlarmList(),
   });
