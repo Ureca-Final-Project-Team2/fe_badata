@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import ReservationForm from '@/pages/rental/store/reservation/components/ReservationForm';
-import ReservationModal from '@/pages/rental/store/reservation/components/ReservationModal';
 import { useReservationDevices } from '@/pages/rental/store/reservation/hooks/useReservationDevicesHooks';
 import { useReservationForm } from '@/pages/rental/store/reservation/hooks/useReservationFormHooks';
 import { useReservationPayment } from '@/pages/rental/store/reservation/hooks/useReservationPaymentHooks';
+import ReservationForm from '@/pages/rental/store/reservation/ui/ReservationForm';
+import ReservationModal from '@/pages/rental/store/reservation/ui/ReservationModal';
 import {
   calculateRentalDays,
   convertDevicesForUI,

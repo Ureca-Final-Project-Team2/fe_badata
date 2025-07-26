@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 interface RestockNotificationModalProps {
   isOpen: boolean;
@@ -17,131 +17,130 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
   totalCount,
   isSubmitting = false,
 }) => {
-  const [count, setCount] = useState(1);
+  const [requestCount, setRequestCount] = useState(1);
 
-  const handleIncrement = () => {
-    if (count < totalCount) {
-      setCount(count + 1);
+  const handleIncrement = useCallback(() => {
+    if (requestCount < totalCount) {
+      setRequestCount((prev) => prev + 1);
     }
-  };
+  }, [requestCount, totalCount]);
 
-  const handleDecrement = () => {
-    if (count > 1) {
-      setCount(count - 1);
+  const handleDecrement = useCallback(() => {
+    if (requestCount > 1) {
+      setRequestCount((prev) => prev - 1);
     }
-  };
+  }, [requestCount]);
 
-  const handleConfirm = () => {
-    onConfirm(count);
-  };
+  const handleConfirm = useCallback(() => {
+    onConfirm(requestCount);
+  }, [onConfirm, requestCount]);
 
-  const handleClose = () => {
-    setCount(1); // 모달 닫을 때 초기화
+  const handleClose = useCallback(() => {
+    setRequestCount(1); // 모달 닫을 때 초기화
     onClose();
-  };
+  }, [onClose]);
 
   if (!isOpen) return null;
 
   return (
     <>
-      {/* 모달 배경 */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-        <div className="bg-white rounded-lg p-6 w-80 max-w-[90vw]">
-          {/* 모달 헤더 */}
-          <div className="mb-4">
-            <h2 className="font-title-semibold text-lg text-[var(--black)] text-center">
-              재입고 알림 신청
-            </h2>
+      {/* 백드롭 */}
+      <div
+        className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center"
+        onClick={handleClose}
+      >
+        {/* 모달 컨테이너 */}
+        <div
+          className="bg-[var(--white)] rounded-2xl p-4 w-[85%] max-w-sm mx-4 shadow-lg"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* 제목 */}
+          <div className="text-center mb-4">
+            <h2 className="font-title-semibold text-[var(--black)] mb-1">재입고 알림 신청</h2>
+            <p className="font-body-regular text-[var(--gray-dark)]">{deviceName}</p>
           </div>
 
-          {/* 기기 정보 */}
-          <div className="mb-6">
-            <div className="text-center mb-2">
-              <span className="font-body-semibold text-[var(--black)]">{deviceName}</span>
-            </div>
-            <div className="text-center text-sm text-[var(--gray-dark)]">
-              가맹점 보유 기기: <span className="font-label-semibold">{totalCount}대</span>
+          {/* 보유 기기 수 표시 */}
+          <div className="bg-[var(--gray-light)] rounded-lg p-3 mb-4">
+            <div className="flex justify-between items-center">
+              <span className="font-body-regular text-[var(--black)]">가맹점 보유 기기 수</span>
+              <span className="font-body-semibold text-[var(--main-5)]">총 {totalCount}대</span>
             </div>
           </div>
 
-          {/* 수량 선택 */}
+          {/* 신청 대수 선택 */}
           <div className="mb-6">
-            <div className="text-center mb-3">
-              <span className="font-body-regular text-[var(--black)]">신청할 대수</span>
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-body-semibold text-[var(--black)]">신청 대수</span>
             </div>
-            <div className="flex items-center justify-center gap-4">
+
+            <div className="flex items-center justify-center gap-3">
               <button
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-lg font-semibold ${
-                  count <= 1
-                    ? 'border-[var(--gray-light)] text-[var(--gray)] cursor-not-allowed'
-                    : 'border-[var(--main-5)] text-[var(--main-5)] hover:bg-[var(--main-5)] hover:text-white'
-                } transition-colors`}
+                type="button"
+                className={`w-8 h-8 rounded-lg bg-[var(--gray-light)] flex items-center justify-center font-title-semibold ${
+                  requestCount <= 1 ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
                 onClick={handleDecrement}
-                disabled={count <= 1 || isSubmitting}
-                type="button"
+                disabled={requestCount <= 1}
               >
-                −
+                –
               </button>
-              <div className="w-16 text-center">
-                <span className="font-title-semibold text-xl text-[var(--black)]">{count}</span>
+
+              <div className="min-w-[50px] text-center">
+                <span className="font-title-bold text-[var(--main-5)]">{requestCount}</span>
+                <span className="font-body-regular text-[var(--gray-dark)] ml-1">대</span>
               </div>
+
               <button
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-lg font-semibold ${
-                  count >= totalCount
-                    ? 'border-[var(--gray-light)] text-[var(--gray)] cursor-not-allowed'
-                    : 'border-[var(--main-5)] text-[var(--main-5)] hover:bg-[var(--main-5)] hover:text-white'
-                } transition-colors`}
-                onClick={handleIncrement}
-                disabled={count >= totalCount || isSubmitting}
                 type="button"
+                className={`w-8 h-8 rounded-lg bg-[var(--gray-light)] flex items-center justify-center font-title-semibold ${
+                  requestCount >= totalCount ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                onClick={handleIncrement}
+                disabled={requestCount >= totalCount}
               >
                 +
               </button>
             </div>
-            {count >= totalCount && (
-              <div className="text-center mt-2">
-                <span className="text-xs text-[var(--orange)]">
-                  최대 {totalCount}대까지 신청 가능합니다
-                </span>
-              </div>
-            )}
+
+            {/* 최대 수량 안내 */}
+            <p className="text-center text-[var(--gray-dark)] mt-2">
+              최대 {totalCount}대까지 신청 가능합니다
+            </p>
           </div>
 
           {/* 버튼 영역 */}
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <button
-              className="flex-1 py-3 rounded-lg border border-[var(--gray-light)] text-[var(--gray-dark)] font-body-semibold hover:bg-[var(--gray-light)] transition-colors"
+              type="button"
+              className="flex-1 py-2.5 px-3 rounded-lg border border-[var(--gray)] text-[var(--gray-dark)] font-body-semibold hover:bg-[var(--gray-light)] transition-colors duration-200"
               onClick={handleClose}
               disabled={isSubmitting}
-              type="button"
             >
               취소
             </button>
             <button
-              className={`flex-1 py-3 rounded-lg font-body-semibold transition-colors ${
+              type="button"
+              className={`flex-1 py-2.5 px-3 rounded-lg font-body-semibold transition-colors duration-200 ${
                 isSubmitting
-                  ? 'bg-[var(--gray)] text-white cursor-not-allowed'
-                  : 'bg-[var(--main-5)] text-white hover:bg-[var(--main-6)]'
+                  ? 'bg-[var(--gray)] text-[var(--white)] cursor-not-allowed'
+                  : 'bg-[var(--main-5)] text-[var(--white)] hover:bg-[var(--main-4)]'
               }`}
               onClick={handleConfirm}
               disabled={isSubmitting}
-              type="button"
             >
-              {isSubmitting ? '신청 중...' : '확인'}
+              {isSubmitting ? (
+                <div className="flex items-center justify-center gap-1">
+                  <div className="w-3 h-3 border-2 border-[var(--white)] border-t-transparent rounded-full animate-spin" />
+                  신청 중...
+                </div>
+              ) : (
+                '확인'
+              )}
             </button>
           </div>
         </div>
       </div>
-
-      {/* 로딩 오버레이 */}
-      {isSubmitting && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-lg p-6 flex flex-col items-center gap-4">
-            <div className="w-8 h-8 border-4 border-[var(--main-5)] border-t-transparent rounded-full animate-spin" />
-            <span className="font-body-regular text-[var(--black)]">재입고 알림 신청 중...</span>
-          </div>
-        </div>
-      )}
     </>
   );
 };
