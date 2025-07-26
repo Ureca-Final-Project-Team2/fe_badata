@@ -77,3 +77,47 @@ export const RESERVATION_ERROR_MESSAGES = {
   [RESERVATION_ERROR_CODES.DEVICE_NOT_BELONG_TO_STORE]:
     '요청된 장치가 해당 가맹점에 속하지 않습니다.',
 } as const;
+
+/**
+ * ========================================
+ * 재입고 알림 관련 타입 정의
+ * ========================================
+ */
+
+/**
+ * 재입고 알림 요청 데이터
+ */
+export interface RestockNotificationRequest {
+  storeDeviceId: number;
+  count: number;
+  desiredStartDate: string; // ISO 8601 format
+  desiredEndDate: string; // ISO 8601 format
+}
+
+/**
+ * 재입고 알림 응답 데이터
+ */
+export interface RestockNotificationResponse {
+  code: number;
+  message: string | null;
+  content: number | null;
+}
+
+/**
+ * 재입고 알림 에러 코드
+ */
+export const RESTOCK_ERROR_CODES = {
+  EXCEED_STORE_CAPACITY: 4008,
+  RESERVATION_AVAILABLE: 4006,
+} as const;
+
+/**
+ * 재입고 알림 에러 메시지
+ */
+export const RESTOCK_ERROR_MESSAGES = {
+  [RESTOCK_ERROR_CODES.EXCEED_STORE_CAPACITY]:
+    '재입고 알림 대수는 가맹점이 소유한 기기 이상으로 할 수 없습니다',
+  [RESTOCK_ERROR_CODES.RESERVATION_AVAILABLE]:
+    '예약 가능한 상황일 때는 재입고를 신청할 수 없습니다',
+  DEFAULT: '재입고 알림 신청 중 오류가 발생했습니다',
+} as const;

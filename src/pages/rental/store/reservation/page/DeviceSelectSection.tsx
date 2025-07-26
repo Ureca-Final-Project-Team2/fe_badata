@@ -17,12 +17,14 @@ interface DeviceSelectSectionProps {
   devices: Device[];
   selectedDevices: Record<number, number>;
   onCountChange: (deviceId: number, count: number) => void;
+  dateRange?: { from?: Date | null; to?: Date | null } | null; // 재입고 알림용
 }
 
 const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
   devices,
   selectedDevices,
   onCountChange,
+  dateRange = null,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
@@ -97,6 +99,7 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
               onCountChange={(newCount: number) => onCountChange(device.id, newCount)}
               selected={!!memoizedSelectedDevices[device.id]}
               max={device.remainCount}
+              dateRange={dateRange}
             />
           </div>
         ))}

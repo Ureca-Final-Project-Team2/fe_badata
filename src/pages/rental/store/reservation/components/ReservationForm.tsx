@@ -3,6 +3,10 @@ import React from 'react';
 import CalendarSection from '@/pages/rental/store/reservation/page/CalendarSection';
 import DeviceSelectSection from '@/pages/rental/store/reservation/page/DeviceSelectSection';
 import NoticeSection from '@/pages/rental/store/reservation/page/NoticeSection';
+import {
+  convertFromReducerDateRange,
+  convertToReducerDateRange,
+} from '@/pages/rental/store/reservation/utils/typeConverters';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
 
 interface ReservationFormProps {
@@ -40,7 +44,10 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* 날짜 선택 */}
-      <CalendarSection dateRange={dateRange} onChange={onDateRangeChange} />
+      <CalendarSection
+        dateRange={convertToReducerDateRange(dateRange) as any}
+        onChange={(range: any) => onDateRangeChange(convertFromReducerDateRange(range))}
+      />
 
       {/* 기기 선택 */}
       <div className="relative">
@@ -48,6 +55,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
           devices={devices}
           selectedDevices={selectedDevices}
           onCountChange={onDeviceCountChange}
+          dateRange={dateRange}
         />
         {isLoadingDevices && devices.length === 0 && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-lg">
