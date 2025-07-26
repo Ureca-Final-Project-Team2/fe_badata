@@ -52,7 +52,7 @@ export default function GifticonEditPage({ params }: GifticonEditPageProps) {
 
   return (
     <BaseLayout
-      header={<PageHeader title="쿠폰 게시물 수정" onBack={() => router.back()} />}
+      header={<PageHeader title="게시물 수정" onBack={() => router.back()} />}
       showBottomNav={false}
     >
       <TradeGifticonEditForm postId={postId} />
