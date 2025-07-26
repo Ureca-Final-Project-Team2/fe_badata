@@ -46,7 +46,8 @@ function InfoSection({
           <span className="font-label-semibold">{reviewRating.toFixed(1)}</span>
         </div>
         <span className="font-label-regular text-[var(--black)] pr-4">
-          나와의 거리 <span className="font-label-semibold">{formattedDistance}</span>
+          나와의 거리{' '}
+          <span className="font-label-semibold text-[var(--main-5)]">{formattedDistance}</span>
         </span>
       </div>
 
