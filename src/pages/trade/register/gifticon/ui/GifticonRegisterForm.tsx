@@ -12,7 +12,10 @@ import {
   initialState,
   reducer,
 } from '@/pages/trade/register/gifticon/model/gifticonRegisterReducer';
-import { usePostTradeGifticonMutation } from '@/pages/trade/register/gifticon/model/mutations';
+import {
+  usePostTradeGifticonMutation,
+  useValidateGifticonImageMutation,
+} from '@/pages/trade/register/gifticon/model/mutations';
 import { PATH } from '@/shared/config/path';
 import { toRawPrice } from '@/shared/lib/formatPrice';
 import { makeToast } from '@/shared/lib/makeToast';
@@ -20,12 +23,17 @@ import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
 
-import type { PostTradeGifticonRequest } from '@/pages/trade/register/gifticon/lib/types';
+import type {
+  PostTradeGifticonRequest,
+  ValidationResponse,
+} from '@/pages/trade/register/gifticon/lib/types';
 import type { State } from '@/pages/trade/register/gifticon/model/gifticonRegisterReducer';
+import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 
 export function TradeGifticonRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = usePostTradeGifticonMutation();
+  const { mutate: validateImage, isPending: isValidating } = useValidateGifticonImageMutation();
   const router = useRouter();
 
   useEffect(() => {
@@ -55,16 +63,28 @@ export function TradeGifticonRegisterForm() {
           type: 'SET_IMAGE_FILE',
           payload: { file, preview: reader.result as string },
         });
-        // OCR 결과 예시 반영
-        dispatch({
-          type: 'SET_OCR_RESULT',
-          payload: {
-            title: 'OCR 상품명',
-            partner: 'OCR 제휴사',
-            gifticonNumber: 'OCR123456',
-            deadLine: '2025-12-31',
-            issueDate: '2025-01-01T00:00:00.099',
-            image: reader.result as string,
+
+        // 이미지 유효성 검증 API 호출
+        validateImage(file, {
+          onSuccess: (data: ApiResponse<ValidationResponse>) => {
+            console.log('Validation response:', data);
+
+            makeToast('유효한 기프티콘 이미지입니다.', 'success');
+
+            dispatch({
+              type: 'SET_OCR_RESULT',
+              payload: {
+                title: data.content.couponName,
+                partner: data.content.partner,
+                gifticonNumber: data.content.barcode,
+                deadLine: data.content.expirationDate,
+              },
+            });
+          },
+          onError: (error) => {
+            console.error('이미지 검증 실패:', error);
+            makeToast('조작된 이미지이거나 유효하지 않은 기프티콘입니다.', 'warning');
+            dispatch({ type: 'RESET_IMAGE' });
           },
         });
       };
@@ -80,8 +100,7 @@ export function TradeGifticonRegisterForm() {
       title: state.ocrResult.title,
       partner: state.ocrResult.partner,
       gifticonNumber: state.ocrResult.gifticonNumber,
-      deadLine: state.ocrResult.deadLine,
-      issueDate: state.ocrResult.issueDate,
+      deadLine: state.ocrResult.deadLine.replace(/\./g, '-'), // 2025.09.31 -> 2025-09-31로 변환,
       file: state.imageFile,
       category: state.category,
       price: toRawPrice(state.form.price),
@@ -134,7 +153,13 @@ export function TradeGifticonRegisterForm() {
           accept="image/jpeg"
           onChange={handleImageChange}
           className="absolute inset-0 opacity-0 cursor-pointer"
+          disabled={isValidating}
         />
+        {isValidating && (
+          <div className="absolute inset-0 bg-[var(--black)]/50 flex items-center justify-center">
+            <div className="text-white">이미지 검증 중...</div>
+          </div>
+        )}
       </label>
       {state.imageFile && (
         <p className="text-[16px] text-[var(--gray-mid)] mb-4">
@@ -168,13 +193,6 @@ export function TradeGifticonRegisterForm() {
         variant="ocr"
         value={state.ocrResult.gifticonNumber}
         placeholder="쿠폰 번호"
-      />
-      <InputField
-        label="발급일"
-        readOnly
-        variant="ocr"
-        value={state.ocrResult.issueDate}
-        placeholder="발급일"
       />
       <InputField
         label="유효기간"
