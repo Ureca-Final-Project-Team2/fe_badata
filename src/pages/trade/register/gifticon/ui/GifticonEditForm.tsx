@@ -95,64 +95,71 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
   }
 
   return (
-    <form
-      className="flex flex-col items-center gap-4 pt-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit();
-      }}
-    >
-      {/* 기존 정보 표시 (읽기 전용) */}
-      <div className="w-full max-w-md space-y-4">
-        <InputField label="제목" value={post.title} disabled className="bg-[var(--gray-light)]" />
-        <InputField
-          label="만료일"
-          value={post.deadLine}
-          disabled
-          className="bg-[var(--gray-light)]"
-        />
-        <InputField
-          label="발행일"
-          value={post.issueDate || '정보 없음'}
-          disabled
-          className="bg-[var(--gray-light)]"
-        />
-        <InputField
-          label="파트너"
-          value={post.partner || '정보 없음'}
-          disabled
-          className="bg-[var(--gray-light)]"
-        />
-      </div>
-
-      {/* 수정 가능한 필드들 */}
-      <div className="w-full max-w-md space-y-4">
-        <InputField
-          label="판매 가격"
-          isRequired
-          variant="price"
-          value={state.form.price}
-          onChange={handleFieldChange('price')}
-          placeholder="판매 가격"
-          errorMessage="가격을 입력해주세요."
-          className="bg-[var(--white)] border-[var(--main-3)]"
-        />
-        <TextAreaField
-          value={state.form.comment}
-          onChange={handleFieldChange('comment')}
-          placeholder="설명 (선택)"
-          className="border-[var(--main-3)]"
-        />
-      </div>
-
-      <RegisterButton
-        type="submit"
-        loading={state.isSubmitting}
-        isFormValid={isFormValid}
-        size="lg_thin"
+    <div className="flex flex-col h-full">
+      <form
+        className="flex flex-col items-center gap-4 pt-4 flex-1"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
       >
-        수정하기
-      </RegisterButton>
-    </form>
+        {/* 기존 정보 표시 (읽기 전용) */}
+        <div className="w-full max-w-md space-y-4">
+          <InputField label="제목" value={post.title} disabled className="bg-[var(--gray-light)]" />
+          <InputField
+            label="만료일"
+            value={post.deadLine}
+            disabled
+            className="bg-[var(--gray-light)]"
+          />
+          <InputField
+            label="발행일"
+            value={post.issueDate || '정보 없음'}
+            disabled
+            className="bg-[var(--gray-light)]"
+          />
+          <InputField
+            label="파트너"
+            value={post.partner || '정보 없음'}
+            disabled
+            className="bg-[var(--gray-light)]"
+          />
+        </div>
+
+        {/* 수정 가능한 필드들 */}
+        <div className="w-full max-w-md space-y-4">
+          <InputField
+            label="판매 가격"
+            isRequired
+            variant="price"
+            value={state.form.price}
+            onChange={handleFieldChange('price')}
+            placeholder="판매 가격"
+            errorMessage="가격을 입력해주세요."
+            className="bg-[var(--white)] border-[var(--main-3)]"
+          />
+          <TextAreaField
+            label="설명"
+            value={state.form.comment}
+            onChange={handleFieldChange('comment')}
+            placeholder="설명 (선택)"
+            className="border-[var(--main-3)]"
+          />
+        </div>
+      </form>
+
+      {/* 고정된 버튼 위치 */}
+      <div className="pb-6 pt-4">
+        <RegisterButton
+          type="submit"
+          loading={state.isSubmitting}
+          isFormValid={isFormValid}
+          size="lg_thin"
+          onClick={handleSubmit}
+        >
+          수정하기
+        </RegisterButton>
+      </div>
+    </div>
   );
 }
