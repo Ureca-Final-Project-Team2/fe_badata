@@ -1,7 +1,7 @@
 import type { DateRange } from 'react-day-picker';
 
 export interface State {
-  selectedDevices: Record<number, number>; // deviceId -> count
+  selectedDevices: Record<string, number>; // deviceId -> count
   dateRange: DateRange | undefined;
   agreed: boolean;
   isSubmitting: boolean;
@@ -28,10 +28,11 @@ export function reducer(state: State, action: Action): State {
     case 'SET_DEVICE_COUNT': {
       const { deviceId, count } = action.payload;
       const updated = { ...state.selectedDevices };
+      const deviceKey = deviceId.toString();
       if (count > 0) {
-        updated[deviceId] = count;
+        updated[deviceKey] = count;
       } else {
-        delete updated[deviceId];
+        delete updated[deviceKey];
       }
       return { ...state, selectedDevices: updated };
     }
