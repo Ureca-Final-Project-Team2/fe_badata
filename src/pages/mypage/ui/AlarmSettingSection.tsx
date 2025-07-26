@@ -11,7 +11,7 @@ export const AlarmSettingSection = () => (
     <section className="bg-[var(--main-1)] rounded-xl p-4 shadow-sm">
       <Link
         href="/mypage/alarm-setting"
-        className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-2 rounded-lg transition"
+        className="flex items-center gap-3 cursor-pointer group p-2 rounded-lg transition"
       >
         <Image
           src={ICONS.MYPAGE.NOTIFICATION}
