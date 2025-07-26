@@ -95,7 +95,6 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
           <TradeDetailSellerSection
             sellerId={postUserId}
             sellerName={sellerName}
-            likesCount={post.likesCount}
             isFollowing={isFollowing ?? false}
             onFollowChange={setIsFollowing}
           />
@@ -104,7 +103,13 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
 
       {/* 구매하기 버튼 */}
       <div className="fixed bottom-[84px] left-1/2 -translate-x-1/2 z-20">
-        <BuyButtonWithPayment postId={post.id} title={post.title} price={post.price} />
+        <BuyButtonWithPayment
+          postId={post.id}
+          title={post.title}
+          price={post.price}
+          initialIsLiked={post.isLiked}
+          isSold={post.isSold}
+        />
       </div>
 
       <TradeDetailDrawer
