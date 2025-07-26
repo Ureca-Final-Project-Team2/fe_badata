@@ -92,6 +92,7 @@ export interface StoreDetail {
   isOpening: boolean;
   startTime: string; // "HH:mm:ss" 형식
   endTime: string; // "HH:mm:ss" 형식
+  liked: boolean;
 }
 
 /*
