@@ -9,7 +9,7 @@ export function useLikedStores(cursor?: number, size: number = 10) {
     data: likeStoreItems,
     isLoading,
     isError,
-  } = useQuery<LikeStoreItem[]>({
+  } = useQuery<{ item: LikeStoreItem[]; nextCursor: number; hasNext: boolean }>({
     queryKey: ['likedStores', cursor, size],
     queryFn: () => fetchLikedStores(cursor, size),
     staleTime: 1000 * 60 * 5,

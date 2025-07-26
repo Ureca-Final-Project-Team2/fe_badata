@@ -5,9 +5,9 @@ import type { LikeStoreItem } from '@/pages/mypage/like-store/lib/types';
 export const fetchLikedStores = async (
   cursor?: number,
   size: number = 10,
-): Promise<LikeStoreItem[]> => {
-  const content: { item: LikeStoreItem[] } = await axiosInstance.get('/api/v1/users/likes/stores', {
+): Promise<{ item: LikeStoreItem[]; nextCursor: number; hasNext: boolean }> => {
+  const content: { item: LikeStoreItem[]; nextCursor: number; hasNext: boolean } = await axiosInstance.get('/api/v1/users/likes/stores', {
     params: { cursor, size },
   });
-  return content.item ?? [];
+  return content;
 };

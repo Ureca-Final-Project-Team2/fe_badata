@@ -13,7 +13,7 @@ export default function LikeStorePage() {
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
-  if (!likeStoreItems || likeStoreItems.length === 0) {
+  if (!likeStoreItems || !likeStoreItems.item || likeStoreItems.item.length === 0) {
     return <div className="py-4 text-center text-[var(--gray)]">게시물이 없습니다.</div>;
   }
 
@@ -23,7 +23,7 @@ export default function LikeStorePage() {
       showBottomNav
     >
       <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
-        {likeStoreItems.map((item) => (
+        {likeStoreItems.item.map((item) => (
           <StoreCard
             key={item.storeId}
             id={item.storeId}
@@ -34,15 +34,13 @@ export default function LikeStorePage() {
               longititude: 0, // 타입 요구로 임시값
             }}
             storeDetail={{
+              storeName: item.name,
               storeId: item.storeId,
-              isOpening: true, // 실제 오픈 여부는 별도 로직 필요
               startTime: item.startTime,
               endTime: item.endTime,
               imageUrl: item.storeImage,
               detailAddress: item.detailAddress,
-              phoneNumber: '', // 타입 요구로 임시값
-              distanceFromMe: 0, // 타입 요구로 임시값
-              reviewRating: 0, // 타입 요구로 임시값
+              isOpening: true, // 실제 오픈 여부는 별도 로직 필요
             }}
             deviceCount={item.availableDevice}
             isLiked={true}
