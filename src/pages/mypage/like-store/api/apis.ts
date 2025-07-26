@@ -1,8 +1,13 @@
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-export async function fetchLikedStores(cursor?: number, size: number = 10) {
-  const response = await axiosInstance.get('/api/v1/users/likes/stores', {
+import type { LikeStoreItem } from '@/pages/mypage/like-store/lib/types';
+
+export const fetchLikedStores = async (
+  cursor?: number,
+  size: number = 10,
+): Promise<LikeStoreItem[]> => {
+  const content: { item: LikeStoreItem[] } = await axiosInstance.get('/api/v1/users/likes/stores', {
     params: { cursor, size },
   });
-  return response.data?.content ?? response.data ?? response;
-}
+  return content.item ?? [];
+};

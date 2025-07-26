@@ -1,9 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchLikedStores } from '../api/apis';
+import { fetchLikedStores } from '@/pages/mypage/like-store/api/apis';
+
+import type { LikeStoreItem } from '@/pages/mypage/like-store/lib/types';
 
 export function useLikedStores(cursor?: number, size: number = 10) {
-  return useQuery({
+  const {
+    data: likeStoreItems,
+    isLoading,
+    isError,
+  } = useQuery<LikeStoreItem[]>({
     queryKey: ['likedStores', cursor, size],
     queryFn: () => fetchLikedStores(cursor, size),
     staleTime: 1000 * 60 * 5,
@@ -11,4 +17,6 @@ export function useLikedStores(cursor?: number, size: number = 10) {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
-} 
+
+  return { likeStoreItems, isLoading, isError };
+}

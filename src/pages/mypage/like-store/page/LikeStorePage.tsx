@@ -2,35 +2,28 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useQuery } from '@tanstack/react-query';
-
+import { useLikedStores } from '@/pages/mypage/like-store/model/queries';
 import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
-import { fetchLikedStores } from '../api/apis';
-
-import type { LikeStoreItem, LikeStoreResponse } from '../lib/types';
-
-export function useLikedStores(cursor?: number, size: number = 10) {
-  return useQuery<LikeStoreResponse>({
-    queryKey: ['likedStores', cursor, size],
-    queryFn: () => fetchLikedStores(cursor, size),
-  });
-}
-
 export default function LikeStorePage() {
   const router = useRouter();
-  const { data, isLoading, isError } = useLikedStores();
-  const items = (data?.item ?? []) as LikeStoreItem[];
+  const { likeStoreItems, isLoading, isError } = useLikedStores();
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
+  if (!likeStoreItems || likeStoreItems.length === 0) {
+    return <div className="py-4 text-center text-[var(--gray)]">게시물이 없습니다.</div>;
+  }
 
   return (
-    <BaseLayout header={<PageHeader title="관심 매장" onBack={() => router.back()} />} showBottomNav>
+    <BaseLayout
+      header={<PageHeader title="관심 매장" onBack={() => router.back()} />}
+      showBottomNav
+    >
       <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
-        {items.map((item: import('../lib/types').LikeStoreItem) => (
+        {likeStoreItems.map((item) => (
           <StoreCard
             key={item.storeId}
             id={item.storeId}
@@ -60,4 +53,4 @@ export default function LikeStorePage() {
       </div>
     </BaseLayout>
   );
-} 
+}
