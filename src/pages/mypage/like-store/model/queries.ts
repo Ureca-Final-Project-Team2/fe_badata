@@ -5,11 +5,11 @@ import { fetchLikedStores } from '@/pages/mypage/like-store/api/apis';
 import type { LikeStoreItem } from '@/pages/mypage/like-store/lib/types';
 
 export function useLikedStores(cursor?: number, size: number = 10) {
-  const {
-    data: likeStoreItems,
-    isLoading,
-    isError,
-  } = useQuery<{ item: LikeStoreItem[]; nextCursor: number; hasNext: boolean }>({
+  const { data, isLoading, isError } = useQuery<{
+    item: LikeStoreItem[];
+    nextCursor: number;
+    hasNext: boolean;
+  }>({
     queryKey: ['likedStores', cursor, size],
     queryFn: () => fetchLikedStores(cursor, size),
     staleTime: 1000 * 60 * 5,
@@ -18,5 +18,11 @@ export function useLikedStores(cursor?: number, size: number = 10) {
     refetchOnReconnect: false,
   });
 
-  return { likeStoreItems, isLoading, isError };
+  return {
+    likeStoreItems: data?.item ?? [],
+    nextCursor: data?.nextCursor,
+    hasNext: data?.hasNext,
+    isLoading,
+    isError,
+  };
 }

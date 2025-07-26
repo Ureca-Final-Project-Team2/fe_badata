@@ -13,7 +13,7 @@ export default function LikeStorePage() {
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
-  if (!likeStoreItems || !likeStoreItems.item || likeStoreItems.item.length === 0) {
+  if (!likeStoreItems || likeStoreItems.length === 0) {
     return <div className="py-4 text-center text-[var(--gray)]">게시물이 없습니다.</div>;
   }
 
@@ -23,7 +23,7 @@ export default function LikeStorePage() {
       showBottomNav
     >
       <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
-        {likeStoreItems.item.map((item) => (
+        {likeStoreItems.map((item) => (
           <StoreCard
             key={item.storeId}
             id={item.storeId}
