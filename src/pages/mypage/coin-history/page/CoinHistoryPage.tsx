@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import { useUserCoinQuery } from '@/entities/coin/model/queries';
+import { useUserCoinQuery } from '@/pages/mypage/coin-history/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';

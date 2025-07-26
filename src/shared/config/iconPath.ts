@@ -1,5 +1,6 @@
 // ETC
 import backIcon from '@/shared/icons/back-icon.png';
+import coinStack from '@/shared/icons/coin-stack.png';
 // MYPAGE
 import coin from '@/shared/icons/coin.png';
 import filterIcon from '@/shared/icons/filter-icon.png';
@@ -33,6 +34,7 @@ export const ICONS = {
   },
   MYPAGE: {
     COIN: coin,
+    COIN_STACK: coinStack,
     TRADE_CELL: tradeCell,
     TRADE_BUY: tradeBuy,
     TRADE_LIKE: tradeLike,

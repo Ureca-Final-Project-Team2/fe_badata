@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getUserCoin } from '@/entities/coin/api/apis';
+import { getUserCoin } from '@/pages/mypage/coin-history/api/apis';
 
 import type { UserCoin } from '../lib/types';
 
