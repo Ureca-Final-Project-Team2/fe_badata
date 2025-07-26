@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 
+import { BRAND_MAPPING } from '@/shared/config/brandMapping';
 import { ICONS } from '@/shared/config/iconPath';
 
 interface TradeDetailProductSectionProps {
@@ -25,8 +26,15 @@ export const TradeDetailProductSection = ({
   description,
   capacity,
 }: TradeDetailProductSectionProps) => {
-  const brandKey = brand === 'KT' || brand === 'UPLUS' || brand === 'SKT' ? brand : null;
-  const brandImageSrc = brandKey ? ICONS.TRADE.BRAND_LOGO[brandKey] : null;
+  // 데이터(통신사) 브랜드
+  const isDataBrand = brand === 'KT' || brand === 'UPLUS' || brand === 'SKT';
+
+  // 브랜드 이미지 경로
+  const brandImageSrc = isDataBrand
+    ? ICONS.TRADE.BRAND_LOGO[brand as 'KT' | 'UPLUS' | 'SKT']
+    : brand && BRAND_MAPPING[brand as keyof typeof BRAND_MAPPING]
+      ? ICONS.GIFTICON.BRAND_LOGO[BRAND_MAPPING[brand as keyof typeof BRAND_MAPPING]]
+      : null;
 
   return (
     <>
@@ -34,21 +42,35 @@ export const TradeDetailProductSection = ({
       <div className="mb-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-[var(--gray)] rounded-full">
           {brandImageSrc ? (
-            <div className="w-4 h-4">
+            <div className="h-6 flex items-center justify-center">
               <Image
                 src={brandImageSrc}
                 alt={brand || '브랜드'}
-                width={16}
-                height={16}
-                className="object-contain"
+                width={0}
+                height={24}
+                className="h-6 w-auto object-contain rounded-full"
               />
             </div>
           ) : (
-            <div className="w-4 h-4 flex items-center justify-center">
-              <span className="text-xs font-medium text-[var(--gray-dark)]">?</span>
+            <div className="h-6 flex items-center justify-center">
+              {postType === 'DATA' ? (
+                <div className="h-6 flex items-center justify-center bg-[var(--gray-light)] rounded-full">
+                  <span className="text-xs font-medium text-[var(--gray-dark)]">?</span>
+                </div>
+              ) : (
+                <div className="h-6 flex items-center justify-center">
+                  <Image
+                    src={ICONS.GIFTICON.BRAND_LOGO.gifticon_default}
+                    alt="기프티콘 기본"
+                    width={0}
+                    height={24}
+                    className="h-6 w-auto object-contain rounded-sm"
+                  />
+                </div>
+              )}
             </div>
           )}
-          <span className="font-label-regular text-[var(--black)]">{brand}</span>
+          <span className="font-label-regular text-[var(--black)] flex items-center">{brand}</span>
         </div>
       </div>
 
