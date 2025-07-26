@@ -7,7 +7,7 @@ import { ICONS } from '@/shared/config/iconPath';
 
 export const AlarmSettingSection = () => (
   <>
-    <h2 className="mb-2 font-semibold text-gray-900">설정</h2>
+    <h2 className="mb-2 font-body-semibold">설정</h2>
     <section className="bg-[var(--main-1)] rounded-xl p-4 shadow-sm">
       <Link
         href="/mypage/alarm-setting"
