@@ -14,10 +14,6 @@ export const getTradePostDetail = async (
     const response = await axiosInstance.get<TradeDetailResponse>(
       END_POINTS.TRADES.DETAIL(Number(postId)),
     );
-
-    console.log('API Response:', response);
-    console.log('Response data:', response.data);
-
     const content = response.data || response;
 
     if (!content) {
