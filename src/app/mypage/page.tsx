@@ -39,15 +39,15 @@ export default function MyPage() {
           </div>
           <div className="absolute right-4 bottom-10 flex flex-col items-center">
             <div className="bg-white rounded-full px-3 py-1 shadow-md mb-2 min-w-[48px] text-center z-0">
-              <span className="text-[16px] font-semibold text-[var(--main-5)]">
+              <span className="mb-2 font-body-semibold text-[var(--main-5)]">
                 {coinData?.coin ?? 0}
               </span>
             </div>
             <a href="/mypage/coin-history" className="z-10">
-              <Image 
-                src={ICONS.MYPAGE.COIN_STACK} 
-                alt="코인 이미지" 
-                width={100} 
+              <Image
+                src={ICONS.MYPAGE.COIN_STACK}
+                alt="코인 이미지"
+                width={100}
                 height={100}
                 className="w-[100px] h-[100px] cursor-pointer transition-transform duration-200 hover:scale-110 z-10"
               />
