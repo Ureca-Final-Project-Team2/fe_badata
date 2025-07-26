@@ -63,9 +63,9 @@ const allPosts = [
 ];
 
 const tabList = [
-  { label: '전체', value: '전체' },
-  { label: '데이터', value: '데이터' },
-  { label: '쿠폰', value: '쿠폰' },
+  { id: '전체', label: '전체', value: '전체' },
+  { id: '데이터', label: '데이터', value: '데이터' },
+  { id: '쿠폰', label: '쿠폰', value: '쿠폰' },
 ];
 
 export default function SalesHistoryPage() {
@@ -79,7 +79,10 @@ export default function SalesHistoryPage() {
   );
 
   return (
-    <BaseLayout header={<PageHeader title="판매 내역" onBack={() => router.back()} />} showBottomNav>
+    <BaseLayout
+      header={<PageHeader title="판매 내역" onBack={() => router.back()} />}
+      showBottomNav
+    >
       <div className="w-full max-w-[428px]">
         <div className="flex flex-col items-center px-4 mt-4">
           <MyProfileCard name={profile.name} days={profile.days} avatarSrc={profile.avatarSrc} />
