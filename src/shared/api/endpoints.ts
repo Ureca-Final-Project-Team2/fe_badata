@@ -35,6 +35,10 @@ export const END_POINTS = {
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     DATA_USAGE: '/api/v1/users/data',
+    RENTAL_HISTORY: '/api/v1/users/rentals',
+    LIKE_STORE: '/api/v1/users/likes/stores',
+    RESTOCK_ALARM: '/api/v1/users/restock',
     SOS_HISTORY: '/api/v1/mypage/sos-history',
+    REPORT_LIST: '/api/v1/mypage/report-history',
   },
 } as const;
