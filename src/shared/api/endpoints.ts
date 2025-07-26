@@ -18,6 +18,7 @@ export const END_POINTS = {
     CREATE_PAYMENT: (postId: number) => `/api/v1/trades/create/${postId}`,
     LIKE_POST: (postId: number) => `/api/v1/trades/${postId}/likes`,
     REPORT: (postId: number) => `/api/v1/trades/${postId}/reports`,
+    IMAGE: '/api/v1/trades/posts/image',
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
