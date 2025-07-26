@@ -32,9 +32,10 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
   ({ device, count = 0, onCountChange = () => {}, selected, max = 99 }) => {
     const sz = CARD_SIZE;
     const { deviceName, imageUrl, dataCapacity, price, remainCount } = device;
-    const maxCount = max ?? device.remainCount ?? 99;
-    const canIncrement = count < maxCount;
-    const isSoldOut = (remainCount ?? 0) === 0;
+    const actualRemainCount = remainCount ?? 0;
+    const maxCount = max ?? Math.max(0, actualRemainCount);
+    const canIncrement = count < maxCount && actualRemainCount > 0;
+    const isSoldOut = actualRemainCount <= 0;
     const [notifyActive, setNotifyActive] = useState(false);
 
     const handleNotifyToggle = useCallback(() => {
@@ -125,7 +126,13 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
               <span className="font-label-semibold">{dataCapacity}GB</span>
             </span>
             <span className="font-label-regular text-right text-[var(--main-5)]">
-              남은 공유기 <span className="font-label-semibold">{remainCount}대</span>
+              {actualRemainCount <= 0 ? (
+                <span className="font-label-semibold text-[var(--orange)]">재입고알림</span>
+              ) : (
+                <>
+                  남은 공유기 <span className="font-label-semibold">{actualRemainCount}대</span>
+                </>
+              )}
             </span>
           </div>
           <div className="font-label-semibold text-[var(--black)] mb-1">{deviceName}</div>
@@ -136,10 +143,10 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
             </div>
             <div className="flex items-center gap-2">
               <button
-                className="w-7 h-7 rounded bg-[var(--gray-light)] text-title-semibold flex items-center justify-center"
+                className={`w-7 h-7 rounded bg-[var(--gray-light)] text-title-semibold flex items-center justify-center ${count <= 0 || isSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={handleDecrement}
                 type="button"
-                disabled={count <= 0}
+                disabled={count <= 0 || isSoldOut}
               >
                 –
               </button>
@@ -149,10 +156,10 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
                 {count}
               </span>
               <button
-                className={`w-7 h-7 rounded bg-[var(--gray-light)] text-title-semibold flex items-center justify-center ${!canIncrement ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`w-7 h-7 rounded bg-[var(--gray-light)] text-title-semibold flex items-center justify-center ${!canIncrement || isSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={handleIncrement}
                 type="button"
-                disabled={!canIncrement}
+                disabled={!canIncrement || isSoldOut}
               >
                 +
               </button>

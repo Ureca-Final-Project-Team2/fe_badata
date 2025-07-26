@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 import { CircleCheck } from 'lucide-react';
 
@@ -29,6 +29,12 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
   const startX = useRef(0);
   const scrollLeft = useRef(0);
   const [dragging, setDragging] = React.useState(false);
+
+  // 디바이스 목록 메모이제이션 (깜빡거림 방지)
+  const memoizedDevices = useMemo(() => devices, [devices]);
+
+  // 선택된 디바이스 상태 메모이제이션
+  const memoizedSelectedDevices = useMemo(() => selectedDevices, [selectedDevices]);
 
   // document 이벤트 등록/해제
   useEffect(() => {
@@ -62,29 +68,41 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
 
   return (
     <>
-      <div className="font-body-semibold flex items-center gap-2 mt-6">
+      <div className="font-body-semibold flex items-center gap-2 mt-6 transition-all duration-200">
         <CircleCheck size={28} className="text-[var(--main-5)]" />
         기기를 선택해 주세요
+        {memoizedDevices.length > 0 && (
+          <span className="text-sm text-[var(--gray-dark)] ml-2 transition-opacity duration-300">
+            ({memoizedDevices.length}개 기기)
+          </span>
+        )}
       </div>
       <div
         ref={scrollRef}
-        className="flex flex-row gap-6 overflow-x-auto pb-2 pl-1"
-        style={{ cursor: dragging ? 'grabbing' : 'grab' }}
+        className="flex flex-row gap-6 overflow-x-auto pb-2 pl-1 transition-opacity duration-300 ease-in-out"
+        style={{
+          cursor: dragging ? 'grabbing' : 'grab',
+          opacity: memoizedDevices.length === 0 ? 0.5 : 1,
+        }}
         onMouseDown={handleMouseDown}
       >
-        {devices.map((device) => (
-          <ReservationDeviceCard
+        {memoizedDevices.map((device) => (
+          <div
             key={device.id}
-            device={device}
-            count={selectedDevices[device.id] ?? 0}
-            onCountChange={(newCount: number) => onCountChange(device.id, newCount)}
-            selected={!!selectedDevices[device.id]}
-            max={device.remainCount}
-          />
+            className="flex-shrink-0 transition-all duration-300 ease-in-out transform hover:scale-105"
+          >
+            <ReservationDeviceCard
+              device={device}
+              count={memoizedSelectedDevices[device.id] ?? 0}
+              onCountChange={(newCount: number) => onCountChange(device.id, newCount)}
+              selected={!!memoizedSelectedDevices[device.id]}
+              max={device.remainCount}
+            />
+          </div>
         ))}
       </div>
     </>
   );
 };
 
-export default DeviceSelectSection;
+export default React.memo(DeviceSelectSection);

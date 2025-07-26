@@ -43,20 +43,26 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       <CalendarSection dateRange={dateRange} onChange={onDateRangeChange} />
 
       {/* 기기 선택 */}
-      {isLoadingDevices ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-6 h-6 border-2 border-[var(--main-5)] border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm text-[var(--gray-dark)]">예약 가능한 장비를 조회 중...</span>
-          </div>
-        </div>
-      ) : (
+      <div className="relative">
         <DeviceSelectSection
           devices={devices}
           selectedDevices={selectedDevices}
           onCountChange={onDeviceCountChange}
         />
-      )}
+        {isLoadingDevices && devices.length === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-lg">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-6 h-6 border-2 border-[var(--main-5)] border-t-transparent rounded-full animate-spin" />
+              <span className="text-sm text-[var(--gray-dark)]">예약 가능한 장비를 조회 중...</span>
+            </div>
+          </div>
+        )}
+        {isLoadingDevices && devices.length > 0 && (
+          <div className="absolute top-2 right-2 z-10">
+            <div className="w-4 h-4 border-2 border-[var(--main-5)] border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+      </div>
 
       {/* 안내사항 및 예약하기 버튼 */}
       <div className="mt-6 w-full flex flex-col items-center">
