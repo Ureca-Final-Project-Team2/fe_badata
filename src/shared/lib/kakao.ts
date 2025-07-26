@@ -23,8 +23,8 @@ export interface KakaoShare {
   };
 }
 
-export const initKakaoSdk = () => {
-  if (typeof window === 'undefined') return;
+export const initKakaoSdk = (): boolean => {
+  if (typeof window === 'undefined') return false;
 
   try {
     const kakao = window.Kakao as KakaoShare;
@@ -37,7 +37,7 @@ export const initKakaoSdk = () => {
       const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
       if (!kakaoKey) {
         console.error('NEXT_PUBLIC_KAKAO_JS_KEY가 설정되지 않았습니다.');
-        return;
+        return false;
       }
       kakao.init(kakaoKey);
     }
