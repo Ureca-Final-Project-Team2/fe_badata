@@ -6,7 +6,7 @@ import { ICONS } from '@/shared/config/iconPath';
 export const TradeSection = () => (
   <>
     <h2 className="mb-2 font-body-semibold">나의 거래</h2>
-    <section className="bg-white rounded-xl p-4 shadow-sm">
+    <section className="bg-[var(--main-1)] rounded-xl p-4 shadow-sm">
       <div className="grid grid-cols-3 gap-4 text-center">
         <Link
           href="/mypage/sales-history"

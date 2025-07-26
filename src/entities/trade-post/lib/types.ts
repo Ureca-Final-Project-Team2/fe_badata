@@ -49,7 +49,13 @@ export interface DeletePostResponse {
   message: string;
 }
 
-export interface UpdatePostRequest {
+export interface DataUpdateRequest {
+  title: string;
+  comment: string;
+  price: number;
+}
+
+export interface GifticonUpdateRequest {
   comment: string;
   price: number;
 }

@@ -26,7 +26,6 @@ export default function RootLayout({
       <body className="antialiased">
         <Script src="https://cdn.portone.io/v2/browser-sdk.js" strategy="beforeInteractive" />
         <Script src="https://cdn.iamport.kr/v1/iamport.js" strategy="beforeInteractive" />
-        {/* <Providers>{children}</Providers> */}
         <Providers>
           <Toaster />
           {children}
