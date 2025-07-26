@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { fetchStoreDetail } from '@/pages/rental/map/api/apis';
-import { mockStoreDetail } from '@/pages/rental/map/utils/detaIl';
 import ReservationPage from '@/pages/rental/store/reservation/page/ReservationPage';
 import ReviewPage from '@/pages/rental/store/review/page/ReviewPage';
 import {
@@ -113,7 +112,7 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
 
         {/* 아래 컨텐츠는 패딩 적용 */}
         <div className={STORE_DETAIL_STYLES.PADDING_CONTAINER}>
-          {tab === '예약' && <ReservationPage />}
+          {tab === '예약' && <ReservationPage storeId={storeId} />}
           {tab === '상세정보' && (
             <>
               <InfoSection

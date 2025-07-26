@@ -1,11 +1,12 @@
 import StoreDetailPage from '@/pages/rental/store/store-detail/page/StoreDetailPage';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     storeId: string;
-  };
+  }>;
 }
 
-export default function Page({ params }: PageProps) {
-  return <StoreDetailPage storeId={Number(params.storeId)} />;
+export default async function Page({ params }: PageProps) {
+  const { storeId } = await params;
+  return <StoreDetailPage storeId={Number(storeId)} />;
 }

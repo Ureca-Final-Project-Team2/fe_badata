@@ -15,6 +15,8 @@ export interface StoreDevice {
   deviceName: string;
   dataCapacity: number;
   imageUrl: string;
+  price?: number; // 가격 정보
+  remainCount?: number; // 남은 재고 수량
 }
 
 /*
