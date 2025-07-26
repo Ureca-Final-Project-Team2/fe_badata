@@ -40,7 +40,6 @@ export const initKakaoSdk = () => {
         return;
       }
       kakao.init(kakaoKey);
-      console.log('Kakao SDK 초기화 완료');
     }
     return true;
   } catch (error) {
