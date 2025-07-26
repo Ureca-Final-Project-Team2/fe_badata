@@ -21,7 +21,7 @@ export const useShareHooks = () => {
     return shareDescriptions[randomIndex];
   };
 
-  const share = ({ title, price, imageUrl, url = window.location.href }: ShareParams) => {
+  const share = async ({ title, price, imageUrl, url = window.location.href }: ShareParams) => {
     const kakao = window.Kakao as KakaoShare;
 
     const shareTitle = `${title} - ${price?.toLocaleString()}원`;
@@ -50,7 +50,7 @@ export const useShareHooks = () => {
 
     if (navigator.share) {
       try {
-        navigator.share({
+        await navigator.share({
           title: shareTitle,
           text: shareDesc,
           url,
