@@ -20,13 +20,17 @@ export function usePayment(postId: number, title: string, price: number) {
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
 
-  const handlePayment = async () => {
+  const handlePayment = async (useCoin: number = 0) => {
     setLoading(true);
 
     let merchant_uid = '';
+    let finalAmount = price;
+
     try {
-      const res = await createPayment(postId);
+      // 실제 사용할 코인 금액 전달
+      const res = await createPayment(postId, useCoin);
       console.log('createPayment 응답:', res);
       if (!res || typeof res !== 'object' || !('merchantUid' in res)) {
         alert('결제 고유 ID 응답이 올바르지 않습니다.');
@@ -34,6 +38,8 @@ export function usePayment(postId: number, title: string, price: number) {
         return;
       }
       merchant_uid = res.merchantUid as string;
+      // amount가 있으면 사용하고, 없으면 원래 가격 사용
+      finalAmount = (res as unknown as { amount: number }).amount || price;
     } catch (e) {
       console.error('createPayment 에러:', e);
       alert('결제 고유 ID 발급 실패');
@@ -61,7 +67,7 @@ export function usePayment(postId: number, title: string, price: number) {
         pay_method: 'CARD',
         merchant_uid,
         name: title,
-        amount: price,
+        amount: finalAmount,
         buyer_email: 'gildong@gmail.com',
         buyer_name: '홍길동',
         buyer_tel: '010-4242-4242',
@@ -88,6 +94,17 @@ export function usePayment(postId: number, title: string, price: number) {
   };
 
   const closeDrawer = () => setIsDrawerOpen(false);
+  const openCoinModal = () => setIsCoinModalOpen(true);
+  const closeCoinModal = () => setIsCoinModalOpen(false);
 
-  return { loading, isPaid, handlePayment, isDrawerOpen, closeDrawer };
+  return {
+    loading,
+    isPaid,
+    handlePayment,
+    isDrawerOpen,
+    closeDrawer,
+    isCoinModalOpen,
+    openCoinModal,
+    closeCoinModal,
+  };
 }
