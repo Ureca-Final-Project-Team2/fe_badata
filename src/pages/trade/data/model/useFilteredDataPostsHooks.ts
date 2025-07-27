@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { applyDataFilters, applySorting } from '../lib/utils';
+import { applyDataFilters, applySorting } from '@/pages/trade/data/lib/utils';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
 import type { DataSortOption } from '@/pages/trade/data/lib/constants';

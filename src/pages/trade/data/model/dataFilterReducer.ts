@@ -1,4 +1,4 @@
-import type { MobileCarrier } from '../../register/data/lib/types';
+import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
 
 export type PriceRange =
   | '0_3000'

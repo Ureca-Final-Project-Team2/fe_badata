@@ -5,6 +5,12 @@ import { useReducer, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
+import { DATA_SORT_OPTIONS } from '@/pages/trade/data/lib/constants';
+import {
+  dataFilterReducer,
+  initialDataFilterState,
+} from '@/pages/trade/data/model/dataFilterReducer';
+import { useFilteredDataPostsHooks } from '@/pages/trade/data/model/useFilteredDataPostsHooks';
 import { DataFilterDrawer } from '@/pages/trade/data/ui/DataFilterDrawer';
 import { DataList } from '@/pages/trade/data/ui/DataList';
 import { DataListFilter } from '@/pages/trade/data/ui/DataListFilter';
@@ -16,10 +22,6 @@ import { TradeFlatTab } from '@/widgets/trade/flat-tab/ui/TradeFlatTab';
 import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFloatingButton';
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
-
-import { DATA_SORT_OPTIONS } from '../lib/constants';
-import { dataFilterReducer, initialDataFilterState } from '../model/dataFilterReducer';
-import { useFilteredDataPostsHooks } from '../model/useFilteredDataPostsHooks';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
 import type { DataSortOption } from '@/pages/trade/data/lib/constants';

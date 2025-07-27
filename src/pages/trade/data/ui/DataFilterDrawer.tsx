@@ -1,8 +1,7 @@
+import DataFilterContent from '@/pages/trade/data/ui/DataFilterContent';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 
-import DataFilterContent from './DataFilterContent';
-
-import type { DataFilterAction, DataFilterState } from '../model/dataFilterReducer';
+import type { DataFilterAction, DataFilterState } from '@/pages/trade/data/model/dataFilterReducer';
 
 interface DataFilterDrawerProps {
   isOpen: boolean;

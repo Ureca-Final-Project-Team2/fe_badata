@@ -11,4 +11,8 @@ export const DATA_SORT_OPTIONS = [
   { value: 'popular' as const, label: '인기순' },
 ] as const;
 
+export const CARRIER_OPTIONS = ['UPLUS', 'KT', 'SKT'] as const;
+
+export const CAPACITY_OPTIONS = ['100MB 이하', '100MB~500MB', '500MB~1GB', '1GB~5GB', '5GB 이상'];
+
 export type DataSortOption = (typeof DATA_SORT_OPTIONS)[number]['value'];

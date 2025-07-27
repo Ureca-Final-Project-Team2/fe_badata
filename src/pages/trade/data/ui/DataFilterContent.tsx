@@ -1,15 +1,14 @@
 'use client';
 
 import { OptionButton, SectionField } from '@/pages/rental/map/ui';
+import { CAPACITY_OPTIONS, CARRIER_OPTIONS, PRICE_RANGES } from '@/pages/trade/data/lib/constants';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 
-import { PRICE_RANGES } from '../lib/constants';
-import { type DataFilterState } from '../model/dataFilterReducer';
-
-import type { DataFilterAction, PriceRange } from '../model/dataFilterReducer';
-
-const CARRIER_OPTIONS = ['UPLUS', 'KT', 'SKT'] as const;
-const CAPACITY_OPTIONS = ['100MB 이하', '100MB~500MB', '500MB~1GB', '1GB~5GB', '5GB 이상'];
+import type {
+  DataFilterAction,
+  DataFilterState,
+  PriceRange,
+} from '@/pages/trade/data/model/dataFilterReducer';
 
 const PRICE_OPTIONS = Object.entries(PRICE_RANGES).map(([value, { label }]) => ({
   label,
