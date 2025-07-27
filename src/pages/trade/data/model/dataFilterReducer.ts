@@ -1,6 +1,12 @@
 import type { MobileCarrier } from '../../register/data/lib/types';
 
-export type PriceRange = '0_10000' | '10000_30000' | '30000_50000' | 'OVER_50000' | null;
+export type PriceRange =
+  | '0_3000'
+  | '3000_7000'
+  | '7000_10000'
+  | '10000_15000'
+  | 'OVER_15000'
+  | null;
 
 export interface DataFilterState {
   carriers: MobileCarrier[];
