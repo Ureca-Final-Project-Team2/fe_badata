@@ -54,7 +54,7 @@ export default function LikeTradePostPage() {
               <button
                 onClick={handleLoadMore}
                 disabled={isLoading}
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
+                className="px-6 py-2 bg-[var(--main-5)] text-[var(--white)] rounded-lg disabled:opacity-50"
               >
                 {isLoading ? '로딩중...' : '더보기'}
               </button>
