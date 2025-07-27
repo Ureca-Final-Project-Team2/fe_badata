@@ -38,6 +38,7 @@ export const END_POINTS = {
     DATA_USAGE: '/api/v1/users/data',
     FOLLOWINGS: '/api/v1/users/follows',
     FOLLOWERS: '/api/v1/users/follows',
+    LIKE_TRADE_POST: '/api/v1/users/likes/posts',
     RENTAL_HISTORY: '/api/v1/users/rentals',
     LIKE_STORE: '/api/v1/users/likes/stores',
     RESTOCK_ALARM: '/api/v1/users/restock',

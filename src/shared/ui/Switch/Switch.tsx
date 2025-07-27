@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 
-import { Root as SwitchRoot, Thumb as SwitchThumb } from '@radix-ui/react-switch';
+import { Root as SwitchRoot } from '@radix-ui/react-switch';
 
 import { cn } from '@/shared/lib/cn';
 
@@ -37,7 +37,7 @@ export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwi
         )}
 
         {hasLabels && (
-          <div className="relative z-20 flex w-full h-full text-sm font-regular text-white">
+          <div className="relative z-20 flex w-full h-full font-label-regular text-[var(--white)]">
             <span
               className={cn(
                 'flex-1 flex items-center justify-center transition-opacity',
@@ -56,16 +56,6 @@ export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwi
             </span>
           </div>
         )}
-
-        <SwitchThumb
-          className={cn(
-            'absolute top-[2px] left-[2px] h-[22px] w-[22px] rounded-full bg-[var(--main-1)] shadow transition-all',
-            checked && hasLabels && 'translate-x-[88px]',
-            !checked && hasLabels && 'translate-x-0',
-            checked && !hasLabels && 'translate-x-[24px]',
-            !checked && !hasLabels && 'translate-x-0',
-          )}
-        />
       </SwitchRoot>
     </div>
   );
