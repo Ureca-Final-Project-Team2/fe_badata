@@ -12,22 +12,31 @@ import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
+import { SearchPosHeader } from '@/pages/rental/map/ui/SearchPosHeader';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
 import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
-import type { DateRange } from 'react-day-picker';
 
 const RentalPage = () => {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [selectedStore, dispatchSelectedStore] = useReducer(
     selectedStoreReducer,
     initialSelectedStoreState,
   );
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [filterState] = useState({
+    rentalStartDate: null,
+    rentalEndDate: null,
+    reviewRating: 0,
+    minPrice: null,
+    maxPrice: null,
+    dataCapacity: [],
+    is5G: null,
+    maxSupportConnection: [],
+    isOpeningNow: false,
+  });
 
   // 사용자 위치 가져오기
   useEffect(() => {
@@ -70,38 +79,38 @@ const RentalPage = () => {
       showHeader
       showBottomNav
       header={
-        <div className="max-w-[428px] px-4 pt-4 bg-white/80 z-30 flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center w-full">
-            <div className="w-[90%]">
-              <DatePicker
-                value={dateRange}
-                onChange={setDateRange}
-                placeholder="대여 기간을 선택해주세요"
-              />
-            </div>
+        <div className="max-w-[428px] px-4 pt-4 z-30">
+          <div className="flex flex-row items-center gap-1">
+            <SearchPosHeader search="" setSearch={() => {}} onSubmit={() => {}} />
             <FilterIcon
-              alt=""
-              className="w-8 h-8 ml-4 flex-shrink-0"
+              alt="필터 아이콘"
+              className="w-8 h-8 flex-shrink-0 cursor-pointer"
               onClick={() => setFilterDrawerOpen(true)}
             />
           </div>
         </div>
       }
     >
-      <MapSection
-        onStoreMarkerClick={(
-          devices: StoreDevice[],
-          storeDetail?: StoreDetail,
-          storeId?: number,
-        ) => {
-          dispatchSelectedStore({
-            type: 'SELECT_STORE',
-            devices,
-            storeId: storeId ?? 0,
-            storeDetail,
-          });
-        }}
-      />
+      <div className="w-full h-[50px] flex flex-row items-center px-4 gap-4">
+        <div className="font-label-semibold text-[var(--black)]">기준 위치 </div>
+        <div className="font-label-regular text-[var(--black)]">현재위치</div>
+      </div>
+      <div className="w-full h-[calc(100vh-190px)]">
+        <MapSection
+          onStoreMarkerClick={(
+            devices: StoreDevice[],
+            storeDetail?: StoreDetail,
+            storeId?: number,
+          ) => {
+            dispatchSelectedStore({
+              type: 'SELECT_STORE',
+              devices,
+              storeId: storeId ?? 0,
+              storeDetail,
+            });
+          }}
+        />
+      </div>
       <DrawerSection
         open={true}
         storeList={stores.map((store) => ({
