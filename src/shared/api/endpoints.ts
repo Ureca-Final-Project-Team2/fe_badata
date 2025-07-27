@@ -32,7 +32,14 @@ export const END_POINTS = {
     ALLDEVICE: () => `/api/v1/stores/map`,
     STORELIST: `/api/v1/stores`,
     STOREDETAIL: (storeId: number) => `/api/v1/stores/${storeId}`,
+    LIKESTORE: (storeId: number) => `/api/v1/stores/${storeId}/like`,
   },
+  RENTAL: {
+    AVAILABLE_DEVICE: (storeId: number) => `/api/v1/rentals/${storeId}/devices`, //예약할 기기 조회
+    RESERVATIONS: `/api/v1/rentals/devices`,
+    RESTOCK: `/api/v1/restock`,
+  },
+
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     DATA_USAGE: '/api/v1/users/data',

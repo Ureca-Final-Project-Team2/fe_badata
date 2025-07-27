@@ -18,9 +18,13 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       user: null,
       login: (token, user) => {
+        // localStorage에 accessToken 별도 저장
+        localStorage.setItem('accessToken', token);
         set({ isLoggedIn: true, accessToken: token, user });
       },
       logout: () => {
+        // localStorage에서 accessToken 삭제
+        localStorage.removeItem('accessToken');
         set({ isLoggedIn: false, accessToken: null, user: null });
       },
     }),

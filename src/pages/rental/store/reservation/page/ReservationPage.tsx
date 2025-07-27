@@ -1,109 +1,93 @@
 'use client';
 
-import { useReducer, useState } from 'react';
+import { useState } from 'react';
 
-import { mockReservationDevices } from '@/pages/rental/map/utils/reservationDeviceCard';
-import { initialState, reducer } from '@/pages/rental/store/reservation/model/reservationReducer';
-import CalendarSection from '@/pages/rental/store/reservation/page/CalendarSection';
-import DeviceSelectSection from '@/pages/rental/store/reservation/page/DeviceSelectSection';
-import NoticeSection from '@/pages/rental/store/reservation/page/NoticeSection';
-import ReceiptSection from '@/pages/rental/store/reservation/page/ReceiptSection';
-import { makeToast } from '@/shared/lib/makeToast';
-import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
+import { useReservationDevices } from '@/pages/rental/store/reservation/hooks/useReservationDevicesHooks';
+import { useReservationForm } from '@/pages/rental/store/reservation/hooks/useReservationFormHooks';
+import { useReservationPayment } from '@/pages/rental/store/reservation/hooks/useReservationPaymentHooks';
+import ReservationForm from '@/pages/rental/store/reservation/ui/ReservationForm';
+import ReservationModal from '@/pages/rental/store/reservation/ui/ReservationModal';
+import {
+  calculateRentalDays,
+  convertDevicesForUI,
+  createReceiptDevices,
+  formatDateRange,
+} from '@/pages/rental/store/reservation/utils/dataFormatters';
+import {
+  convertFromReducerDateRange,
+  convertToReducerDateRange,
+} from '@/pages/rental/store/reservation/utils/typeConverters';
 
-const ReservationPage = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+interface ReservationPageProps {
+  storeId: number;
+}
+
+const ReservationPage = ({ storeId }: ReservationPageProps) => {
   const [showReceiptModal, setShowReceiptModal] = useState(false);
 
-  const isDateSelected = !!(state.dateRange && state.dateRange.from && state.dateRange.to);
-  const isDeviceSelected = Object.keys(state.selectedDevices).length > 0;
-  const isFormValid = isDateSelected && isDeviceSelected && state.agreed;
+  // 커스텀 훅들
+  const { state, dispatch, isFormValid } = useReservationForm();
+  const { devices, isLoadingDevices } = useReservationDevices({
+    storeId,
+    dateRange: convertFromReducerDateRange(state.dateRange),
+  });
 
-  const isDateFuture = (() => {
-    if (!state.dateRange || !state.dateRange.from || !state.dateRange.to) return true;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return state.dateRange.from >= today && state.dateRange.to >= today;
-  })();
+  // 결제 처리를 위한 훅 (날짜 범위가 유효할 때만 사용)
+  const paymentConfig =
+    state.dateRange?.from && state.dateRange?.to
+      ? {
+          storeId,
+          selectedDevices: state.selectedDevices,
+          dateRange: { from: state.dateRange.from, to: state.dateRange.to },
+          onSuccess: () => {
+            dispatch({ type: 'RESET' });
+            setShowReceiptModal(false);
+          },
+        }
+      : null;
 
-  const receiptDevices = Object.entries(state.selectedDevices)
-    .map(([deviceId, count]) => {
-      const device = mockReservationDevices.find((d) => d.id === Number(deviceId));
-      if (!device || count === 0) return undefined;
-      return {
-        name: device.deviceName || '',
-        price: device.price ? `${device.price.toLocaleString()}원` : '-',
-        count,
-      };
-    })
-    .filter((d) => !!d);
+  const { isSubmitting, handlePayment } = useReservationPayment(
+    paymentConfig || {
+      storeId,
+      selectedDevices: {},
+      dateRange: { from: new Date(), to: new Date() },
+      onSuccess: () => {},
+    },
+  );
+
+  // 데이터 변환
+  const convertedDevices = convertDevicesForUI(devices);
+  const receiptDevices = createReceiptDevices(state.selectedDevices, devices);
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      {/* 날짜 선택 */}
-      <CalendarSection
-        dateRange={state.dateRange}
-        onChange={(range) => dispatch({ type: 'SET_DATE_RANGE', payload: range })}
-      />
-      {/* 기기 선택 */}
-      <DeviceSelectSection
-        devices={mockReservationDevices}
+    <>
+      <ReservationForm
+        dateRange={convertFromReducerDateRange(state.dateRange)}
+        onDateRangeChange={(range) =>
+          dispatch({ type: 'SET_DATE_RANGE', payload: convertToReducerDateRange(range) })
+        }
+        devices={convertedDevices}
         selectedDevices={state.selectedDevices}
-        onCountChange={(deviceId, count) =>
+        onDeviceCountChange={(deviceId, count) =>
           dispatch({ type: 'SET_DEVICE_COUNT', payload: { deviceId, count } })
         }
+        agreed={state.agreed}
+        onToggleAgreed={() => dispatch({ type: 'SET_AGREED', payload: !state.agreed })}
+        isFormValid={isFormValid}
+        onReservationClick={() => setShowReceiptModal(true)}
+        isLoadingDevices={isLoadingDevices}
       />
-      {/* 안내사항 및 예약하기 버튼 */}
-      <div className="mt-6 w-full flex flex-col items-center">
-        <NoticeSection
-          agreed={state.agreed}
-          onToggleAgreed={() => dispatch({ type: 'SET_AGREED', payload: !state.agreed })}
-        />
-        <RegisterButton
-          className={`w-full ${isFormValid ? 'bg-[var(--main-5)] text-white' : 'bg-[var(--gray)] text-white'}`}
-          size="lg"
-          isFormValid={isFormValid}
-          onClick={(e) => {
-            if (!isFormValid) {
-              e.preventDefault();
-              return;
-            }
-            if (!isDateFuture) {
-              makeToast('날짜를 다시 선택해주세요', 'warning');
-              e.preventDefault();
-              return;
-            }
-            setShowReceiptModal(true);
-          }}
-        >
-          예약하기
-        </RegisterButton>
-      </div>
-      {/* 영수증 모달 */}
-      {showReceiptModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="relative">
-            <ReceiptSection
-              periodDate={
-                state.dateRange
-                  ? `${state.dateRange.from?.toLocaleDateString()} ~ ${state.dateRange.to?.toLocaleDateString()}`
-                  : ''
-              }
-              periodDays={
-                state.dateRange
-                  ? `${Math.ceil(((state.dateRange.to?.getTime() ?? 0) - (state.dateRange.from?.getTime() ?? 0)) / (1000 * 60 * 60 * 24)) + 1}일`
-                  : ''
-              }
-              devices={receiptDevices}
-              onPay={() => {
-                /* 결제 로직 */
-              }}
-              onClose={() => setShowReceiptModal(false)}
-            />
-          </div>
-        </div>
-      )}
-    </div>
+
+      <ReservationModal
+        isOpen={showReceiptModal}
+        onClose={() => setShowReceiptModal(false)}
+        periodDate={formatDateRange(convertFromReducerDateRange(state.dateRange))}
+        periodDays={calculateRentalDays(convertFromReducerDateRange(state.dateRange))}
+        devices={receiptDevices}
+        onPay={paymentConfig ? handlePayment : async () => {}}
+        isSubmitting={isSubmitting}
+      />
+    </>
   );
 };
 
