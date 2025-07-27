@@ -25,7 +25,6 @@ export const END_POINTS = {
     LOGIN: '/api/v1/auth/token/issue',
     REISSUE: '/api/v1/auth/reissue/token',
     FOLLOW: (userId: number) => `/api/v1/users/${userId}/follows`,
-    GET_FOLLOWS: '/api/v1/users/follows',
     SALES: '/api/v1/users/sales',
   },
   STORES: {
@@ -37,6 +36,9 @@ export const END_POINTS = {
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     DATA_USAGE: '/api/v1/users/data',
+    FOLLOWINGS: '/api/v1/users/follows',
+    FOLLOWERS: '/api/v1/users/follows',
+    LIKE_TRADE_POST: '/api/v1/users/likes/posts',
     RENTAL_HISTORY: '/api/v1/users/rentals',
     LIKE_STORE: '/api/v1/users/likes/stores',
     RESTOCK_ALARM: '/api/v1/users/restock',
