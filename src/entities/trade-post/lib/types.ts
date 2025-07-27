@@ -6,7 +6,7 @@ export interface AllPost {
   partner?: string;
   mobileCarrier?: MobileCarrier;
   price: number;
-  capacity: number;
+  capacity?: number;
   createdAt: Date;
   postImage: string;
   postCategory: 'DATA' | 'GIFTICON';
