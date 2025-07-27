@@ -11,7 +11,7 @@ export function useFollowings(cursor?: number, size: number = 10) {
     hasNext: boolean;
   }>({
     queryKey: ['followings', cursor, size],
-    queryFn: () => fetchFollowings(cursor, size),
+    queryFn: () => fetchFollowings(cursor, size).then(response => response.content),
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
