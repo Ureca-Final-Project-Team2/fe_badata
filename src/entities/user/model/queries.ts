@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { userApis } from '../api/apis';
 
-import type { FollowingsContent, SalesContent } from '@/entities/user/lib/types';
+import type { FollowingsContent, PurchaseResponse, SalesContent } from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
 
@@ -99,4 +99,25 @@ export const useUserSoldPostsCountQuery = (userId?: number) => {
     isLoading: !userTradePosts,
     error: null,
   };
+};
+
+// 구매 내역 조회 훅 (무한 스크롤용)
+export const usePurchasesQuery = (
+  postCategory?: string,
+  isSold?: boolean,
+  cursor?: number,
+  size: number = 30,
+) => {
+  return useInfiniteQuery<ApiResponse<PurchaseResponse>>({
+    queryKey: ['user', 'purchases', postCategory, isSold, size],
+    queryFn: ({ pageParam }) =>
+      userApis.getPurchases(postCategory, isSold, pageParam as number | undefined, size),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.content?.hasNext) return undefined;
+      return lastPage.content.nextCursor;
+    },
+    enabled: true,
+    staleTime: 5 * 60 * 1000,
+  });
 };
