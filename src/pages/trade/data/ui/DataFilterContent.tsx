@@ -38,6 +38,7 @@ export default function DataFilterContent({
             type="button"
             className="ml-auto text-2xl text-[var(--gray-dark)]"
             onClick={onClose}
+            aria-label="필터 창 닫기"
           >
             ×
           </button>
