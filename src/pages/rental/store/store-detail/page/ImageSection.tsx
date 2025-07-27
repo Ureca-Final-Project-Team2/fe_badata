@@ -1,10 +1,12 @@
+import React from 'react';
+
 import Image from 'next/image';
 
 interface ImageSectionProps {
   imageUrl: string;
 }
 
-export default function ImageSection({ imageUrl }: ImageSectionProps) {
+function ImageSection({ imageUrl }: ImageSectionProps) {
   return (
     <div className="w-full h-[220px] mb-4 flex items-center justify-center overflow-hidden">
       <Image
@@ -17,3 +19,6 @@ export default function ImageSection({ imageUrl }: ImageSectionProps) {
     </div>
   );
 }
+
+// React.memo로 최적화하여 imageUrl이 변경되지 않으면 리렌더링 방지
+export default React.memo(ImageSection);
