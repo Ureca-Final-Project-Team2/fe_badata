@@ -27,12 +27,13 @@ export const useStoreReview = (
 };
 
 export const useStoreReviewMeta = (storeId: number) => {
-  return useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: reviewQueryKeys.storeMeta(storeId),
     queryFn: () => getStoreReviewMeta(storeId),
     staleTime: 2 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
   });
+  return { data, isLoading };
 };
 
 export const useInfiniteStoreReviews = (
