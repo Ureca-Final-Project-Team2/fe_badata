@@ -2,24 +2,12 @@
 
 import { useEffect, useReducer, useState } from 'react';
 
-declare global {
-  interface Window {
-    kakao: typeof kakao;
-  }
-}
-
 import { CenterScrollSwiper } from '@/entities/scroll';
-import {
-  convertToStoreCardProps,
-  useStoreListWithInfiniteScroll,
-} from '@/pages/rental/map/hooks/useStoreListHooks';
-import { initialRentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 import {
   initialSelectedStoreState,
   selectedStoreReducer,
 } from '@/pages/rental/map/model/selectedStoreReducer';
-import { useFilteredDevices } from '@/pages/rental/map/model/useFilteredDevices';
-import { CurrentLocationButton } from '@/pages/rental/map/ui/CurrentLocationButton';
+import { useFetchStoreListHooks } from '@/pages/rental/map/model/useFetchStoreListHooks';
 import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { ListViewButton } from '@/pages/rental/map/ui/ListViewButton';
@@ -30,10 +18,9 @@ import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
-import type { StoreDevice } from '@/pages/rental/map/lib/types';
-import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
 import type { DateRange } from 'react-day-picker';
+import { CurrentLocationButton } from '../ui/CurrentLocationButton';
 
 const RentalPage = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
@@ -42,144 +29,41 @@ const RentalPage = () => {
     selectedStoreReducer,
     initialSelectedStoreState,
   );
-  const [filterState, setFilterState] = useState<RentalFilterState>(initialRentalFilterState);
-  const [tempFilterState, setTempFilterState] =
-    useState<RentalFilterState>(initialRentalFilterState);
-  const [userLocation, setUserLocation] = useState({
-    lat: 37.55555294967707, // 기본 위치
-    lng: 127.03832055267158,
-  });
-  const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   // 사용자 위치 가져오기
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.log('위치 정보를 가져올 수 없습니다:', error.message);
-          // 기본 위치 사용
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 300000, // 5분
-        },
-      );
-    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+      },
+      () => {
+        // fallback: 서울시청 좌표
+        setUserLocation({ lat: 37.5665, lng: 126.978 });
+      },
+    );
   }, []);
 
-  // 현재 위치로 이동하는 함수
-  const handleCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setUserLocation(newLocation);
-
-          // 카메라를 현재 위치로 이동
-          if (mapInstance) {
-            const newPosition = new window.kakao.maps.LatLng(newLocation.lat, newLocation.lng);
-            mapInstance.setCenter(newPosition);
-          }
-        },
-        (error) => {
-          console.log('위치 정보를 가져올 수 없습니다:', error.message);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 300000,
-        },
-      );
-    }
-  };
-
-  // DragDrawer 상태 추가
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  // 목록보기 버튼 클릭 핸들러
-  const handleListView = () => {
-    setIsDrawerOpen((prev) => !prev); // Drawer 열림/닫힘 토글
-  };
-
-  // 스토어 리스트 무한 스크롤 훅 사용
-  const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error } =
-    useStoreListWithInfiniteScroll({
-      centerLat: userLocation.lat,
-      centerLng: userLocation.lng,
-      sort: ['distance,asc'],
-      enabled: true,
-      useMockData: true, // 서버 연결 문제로 Mock 데이터 사용
-      // 필터링 조건들 추가
-      rentalStartDate: dateRange?.from ? dateRange.from.toISOString() : undefined,
-      rentalEndDate: dateRange?.to ? dateRange.to.toISOString() : undefined,
-      reviewRating: filterState.star > 0 ? filterState.star : undefined,
-      minPrice: filterState.minPrice,
-      maxPrice: filterState.maxPrice,
-      dataCapacity: (() => {
-        if (!filterState.dataAmount) return undefined;
-        switch (filterState.dataAmount) {
-          case '5GB':
-            return [5];
-          case '10GB':
-            return [10];
-          case '20GB':
-            return [20];
-          case '무제한':
-            return [999]; // 무제한은 큰 숫자로 표현
-          default:
-            return undefined;
+  // useFetchStoreListHooks로 스토어 리스트 관리
+  const { stores } = useFetchStoreListHooks(
+    userLocation
+      ? {
+          centerLat: userLocation.lat,
+          centerLng: userLocation.lng,
+          page: 0,
+          size: 10,
+          sort: ['distance,asc'],
         }
-      })(),
-      is5G:
-        filterState.dataType === '5G'
-          ? true
-          : filterState.dataType === '4G/LTE'
-            ? false
-            : undefined,
-      maxSupportConnection: filterState.maxSupportConnection
-        ? [filterState.maxSupportConnection]
-        : undefined,
-    });
-
-  // API 데이터를 StoreCardProps 형태로 변환
-  const storeList = convertToStoreCardProps(stores);
-
-  // 필터링 조건이 바뀔 때마다 현재 선택된 가맹점의 디바이스도 다시 필터링
-  const filteredDevices = useFilteredDevices(selectedStore.selectedDevices, filterState);
-
-  // 필터 상태가 변경될 때 스토어 리스트 다시 불러오기
-  useEffect(() => {
-    // 필터가 변경되면 스토어 리스트를 다시 불러옴
-    // useStoreListWithInfiniteScroll의 queryKey가 변경되면 자동으로 다시 불러옴
-  }, [filterState, dateRange]);
-  useEffect(() => {
-    if (!selectedStore.selectedDevices.length) return;
-    if (filteredDevices.length === 0) {
-      dispatchSelectedStore({
-        type: 'SELECT_STORE',
-        devices: [],
-        storeId: selectedStore.selectedStoreId ?? 0,
-        storeDetail: selectedStore.selectedStoreDetail,
-      });
-    } else if (filteredDevices.length !== selectedStore.selectedDevices.length) {
-      dispatchSelectedStore({
-        type: 'SELECT_STORE',
-        devices: filteredDevices,
-        storeId: selectedStore.selectedStoreId ?? 0,
-        storeDetail: selectedStore.selectedStoreDetail,
-      });
-    }
-  }, [filterState]);
+      : {
+          centerLat: 37.5665,
+          centerLng: 126.978,
+          page: 0,
+          size: 10,
+          sort: ['distance,asc'],
+        },
+    [userLocation],
+  );
 
   return (
     <BaseLayout
@@ -237,14 +121,24 @@ const RentalPage = () => {
         }}
       />
       <DrawerSection
-        storeList={storeList}
-        isLoading={isLoading}
-        isFetchingNextPage={isFetchingNextPage}
-        hasNextPage={hasNextPage}
-        isError={isError}
-        error={error}
-        open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        open={true}
+        storeList={stores.map((store) => ({
+          id: store.id,
+          store,
+          storeDetail: {
+            storeName: store.name,
+            storeId: store.id,
+            imageUrl: '',
+            detailAddress: '',
+            phoneNumber: '',
+            distanceFromMe: 0,
+            reviewRating: 0,
+            isOpening: false,
+            startTime: '',
+            endTime: '',
+          },
+          deviceCount: 0,
+        }))}
       />
       <FilterDrawer
         isOpen={filterDrawerOpen}

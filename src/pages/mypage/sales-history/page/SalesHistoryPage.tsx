@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useSalesQuery } from '@/entities/user/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab';
 import { PageHeader } from '@/shared/ui/Header';
+import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
 import { Switch } from '@/shared/ui/Switch/Switch';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
@@ -20,68 +22,78 @@ const profile = {
   following: 7,
 };
 
-const allPosts = [
-  {
-    id: 1,
-    imageUrl: '/assets/trade-detail.jpg',
-    title: '쇼콜라 바니드라',
-    partner: '제휴처',
-    price: 2050,
-    likeCount: 5,
-    isCompleted: false,
-    isLiked: false,
-    hasDday: true,
-    dday: 5,
-    type: '전체',
-  },
-  {
-    id: 2,
-    imageUrl: '/assets/trade-detail.jpg',
-    title: '쇼콜라 바니드라',
-    partner: '제휴처',
-    price: 2050,
-    likeCount: 5,
-    isCompleted: false,
-    isLiked: false,
-    hasDday: true,
-    dday: 5,
-    type: '데이터',
-  },
-  {
-    id: 3,
-    imageUrl: '/assets/trade-detail.jpg',
-    title: '쇼콜라 바니드라',
-    partner: '제휴처',
-    price: 2050,
-    likeCount: 5,
-    isCompleted: false,
-    isLiked: false,
-    hasDday: true,
-    dday: 5,
-    type: '쿠폰',
-  },
-];
-
 const tabList = [
-  { label: '전체', value: '전체' },
-  { label: '데이터', value: '데이터' },
-  { label: '쿠폰', value: '쿠폰' },
+  { id: '전체', label: '전체', value: '전체' },
+  { id: '데이터', label: '데이터', value: '데이터' },
+  { id: '쿠폰', label: '쿠폰', value: '쿠폰' },
 ];
 
 export default function SalesHistoryPage() {
   const router = useRouter();
-  const [tab, setTab] = useState('전체');
+  const [tab, setTab] = useState<'전체' | '데이터' | '쿠폰'>('전체');
   const [isCompleted, setIsCompleted] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(false);
+  const observerRef = useRef<HTMLDivElement>(null);
+  const loadingStartTime = useRef<number>(0);
 
-  const filteredPosts = allPosts.filter(
-    (item) =>
-      item.hasDday && (tab === '전체' || item.type === tab) && item.isCompleted === isCompleted,
+  const postCategory = tab === '전체' ? undefined : tab === '데이터' ? 'DATA' : 'GIFTICON';
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
+    useSalesQuery(
+      undefined, // userId 없음 (현재 로그인한 사용자)
+      postCategory,
+      isCompleted,
+      undefined,
+      30,
+    );
+
+  // 로딩 시작 시간 기록 및 스켈리톤 표시 로직
+  useEffect(() => {
+    if (isLoading) {
+      loadingStartTime.current = Date.now();
+      setShowSkeleton(true);
+    } else {
+      const loadingDuration = Date.now() - loadingStartTime.current;
+
+      // 로딩 시간이 200ms 이하이면 스켈리톤을 보여주지 않음
+      if (loadingDuration < 200) {
+        setShowSkeleton(false);
+      } else {
+        // 200ms 이상이면 즉시 숨김
+        setShowSkeleton(false);
+      }
+    }
+  }, [isLoading]);
+
+  const handleIntersection = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage],
   );
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleIntersection, {
+      threshold: 0.1,
+    });
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [handleIntersection]);
+
   return (
-    <BaseLayout header={<PageHeader title="판매 내역" onBack={() => router.back()} />} showBottomNav>
+    <BaseLayout
+      header={<PageHeader title="판매 내역" onBack={() => router.back()} />}
+      showBottomNav
+    >
       <div className="w-full max-w-[428px]">
-        <div className="flex flex-col items-center px-4 mt-4">
+        <div className="flex flex-col items-center mt-4">
           <MyProfileCard name={profile.name} days={profile.days} avatarSrc={profile.avatarSrc} />
 
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
@@ -112,7 +124,7 @@ export default function SalesHistoryPage() {
           </div>
         </div>
 
-        <div className="px-4">
+        <div>
           <FlatTab items={tabList} value={tab} onValueChange={setTab} />
         </div>
 
@@ -124,11 +136,72 @@ export default function SalesHistoryPage() {
           />
         </div>
 
-        <div className="px-4 pb-[96px]">
-          <div className="grid grid-cols-2 gap-4">
-            {filteredPosts.map((item) => (
-              <TradePostCard key={item.id} {...item} />
-            ))}
+        <div className="pb-[96px]">
+          {/* 로딩 상태 */}
+          {(isLoading || showSkeleton) && (
+            <div className="px-4">
+              <div className="grid grid-cols-2 gap-4">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <TradePostCardSkeleton key={index} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 에러 상태 */}
+          {isError && (
+            <div className="text-center py-8 text-[var(--red)]">
+              <p>판매 내역을 불러오는데 실패했습니다.</p>
+              <p className="text-sm mt-2">{error?.message}</p>
+            </div>
+          )}
+
+          {/* 데이터가 없는 경우 */}
+          {!isLoading &&
+            !showSkeleton &&
+            !isError &&
+            (!data?.pages ||
+              data.pages.length === 0 ||
+              data.pages.every((page) => page.content?.item.length === 0)) && (
+              <div className="text-center py-8 text-[var(--gray-mid)]">
+                <p>판매 내역이 없습니다.</p>
+              </div>
+            )}
+
+          {/* 데이터 표시 */}
+          {data?.pages.map((page, i) => (
+            <div key={i} className="grid grid-cols-2 gap-4">
+              {page.content?.item.map((item) => (
+                <TradePostCard
+                  key={item.postId}
+                  imageUrl={item.postImage || '/assets/trade-detail.jpg'}
+                  title={item.title}
+                  partner={item.partner || '제휴처'}
+                  price={item.price}
+                  likeCount={item.postLikes}
+                  isCompleted={item.isSold}
+                  onCardClick={() => {
+                    const detailPath =
+                      item.postCategory === 'DATA'
+                        ? `/trade/data/${item.postId}`
+                        : `/trade/gifticon/${item.postId}`;
+                    router.push(detailPath);
+                  }}
+                />
+              ))}
+            </div>
+          ))}
+
+          <div ref={observerRef} className="h-12">
+            {isFetchingNextPage && (
+              <div className="px-4 mt-4">
+                <div className="grid grid-cols-2 gap-4">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <TradePostCardSkeleton key={`next-${index}`} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -12,8 +12,18 @@ const nextConfig: NextConfig = {
       'imgnews.pstatic.net',
       'img.danawa.com',
       'ae-pic-a1.aliexpress-media.com',
+      'search.pstatic.net',
+      'ldb-phinf.pstatic.net',
       'ae01.alicdn.com',
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+      },
+    ];
   },
   webpack: (config) => {
     config.resolve.alias = {

@@ -1,9 +1,8 @@
 import { fetchStoreDetail, fetchStoreDevices } from '@/pages/rental/map/api/apis';
 import { ICONS } from '@/shared/config/iconPath';
 
-import type { Store, StoreDevice } from '@/pages/rental/map/lib/types';
-import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type { Store, StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
+import { RentalFilterState } from '../model/rentalFilterReducer';
 
 // 상수 정의
 const MARKER_SIZE = 36;
@@ -120,7 +119,8 @@ const setupMarkerEventListeners = (
   });
 
   window.kakao.maps.event.addListener(marker, 'click', async () => {
-    console.log(`📦 ${store.name}의 기기 목록:`, safeDevices);
+    console.log('=== 가맹점 마커 클릭 ===');
+    console.log('🏪 가맹점 정보:', store);
 
     let storeDetail: StoreDetail | undefined = undefined;
     try {
@@ -128,7 +128,11 @@ const setupMarkerEventListeners = (
       const lat = center.getLat();
       const lng = center.getLng();
       storeDetail = await fetchStoreDetail(store.id, lat, lng);
-    } catch {}
+      console.log('🔍 상세 정보:', storeDetail);
+    } catch (error) {
+      console.error('상세 정보 조회 실패:', error);
+    }
+
     if (onStoreMarkerClick) onStoreMarkerClick(safeDevices, storeDetail, store.id);
   });
 };

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { userApis } from '../api/apis';
 
@@ -52,7 +52,7 @@ export const useAllFollowingsQuery = () => {
   });
 };
 
-// 판매 내역 조회 훅
+// 판매 내역 조회 훅 (무한 스크롤용)
 export const useSalesQuery = (
   userId?: number,
   postCategory?: string,
@@ -60,10 +60,16 @@ export const useSalesQuery = (
   cursor?: number,
   size: number = 30,
 ) => {
-  return useQuery<ApiResponse<SalesContent>>({
-    queryKey: ['user', 'sales', userId, postCategory, isSold, cursor, size],
-    queryFn: () => userApis.getSales(userId, postCategory, isSold, cursor, size),
-    enabled: !!userId,
+  return useInfiniteQuery<ApiResponse<SalesContent>>({
+    queryKey: ['user', 'sales', userId, postCategory, isSold, size],
+    queryFn: ({ pageParam }) =>
+      userApis.getSales(userId, postCategory, isSold, pageParam as number | undefined, size),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.content?.hasNext) return undefined;
+      return lastPage.content.nextCursor;
+    },
+    enabled: true, // userId가 없어도 현재 로그인한 사용자의 데이터를 가져올 수 있음
     staleTime: 5 * 60 * 1000,
   });
 };

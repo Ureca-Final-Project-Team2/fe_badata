@@ -6,9 +6,8 @@ import { renderStoreMarkers } from '@/pages/rental/map/lib/renderStoreMarkers';
 import { useFetchStoresHooks } from '@/pages/rental/map/model/useFetchStoresHooks';
 import { useKakaoMapHooks } from '@/pages/rental/map/model/useKakaoMapHooks';
 
-import type { StoreDevice } from '@/pages/rental/map/lib/types';
-import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
+import { RentalFilterState } from '../model/rentalFilterReducer';
 
 interface MapSectionProps {
   filterState: RentalFilterState;
