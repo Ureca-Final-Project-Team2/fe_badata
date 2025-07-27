@@ -32,6 +32,8 @@ export const END_POINTS = {
     ALLDEVICE: () => `/api/v1/stores/map`,
     STORELIST: `/api/v1/stores`,
     STOREDETAIL: (storeId: number) => `/api/v1/stores/${storeId}`,
+    REVIEWS: (storeId: number) => `/api/v1/${storeId}/reviews`,
+    REVIEW_META: (storeId: number) => `/api/v1/${storeId}/review-meta`,
   },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
