@@ -11,6 +11,8 @@ interface DrawerSectionProps {
   hasNextPage?: boolean;
   isError?: boolean;
   error?: Error | null;
+  open?: boolean;
+  onClose?: () => void;
 }
 
 export const DrawerSection = ({
@@ -20,6 +22,8 @@ export const DrawerSection = ({
   hasNextPage = false,
   isError = false,
   error = null,
+  open,
+  onClose,
 }: DrawerSectionProps) => {
   return (
     <DragBottomSheet
@@ -29,6 +33,8 @@ export const DrawerSection = ({
       hasNextPage={hasNextPage}
       isError={isError}
       error={error}
+      open={open}
+      onClose={onClose}
     />
   );
 };

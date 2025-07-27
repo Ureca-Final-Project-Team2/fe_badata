@@ -7,6 +7,8 @@ import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
 import type { DragBottomSheetProps } from '@/pages/rental/map/lib/types';
 
 interface ExtendedDragBottomSheetProps extends DragBottomSheetProps {
+  open?: boolean;
+  onClose?: () => void;
   isLoading?: boolean;
   isFetchingNextPage?: boolean;
   hasNextPage?: boolean;
@@ -32,7 +34,7 @@ export const DragBottomSheet = ({
   const middleY = windowHeight > 0 ? windowHeight * 0.5 : 0;
   const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 70% 아래로
 
-  const y = useMotionValue(windowHeight > 0 ? collapsedY : 0);
+  const y = useMotionValue(windowHeight > 0 ? middleY : collapsedY);
   const controls = useAnimation();
 
   useEffect(() => {
@@ -46,9 +48,9 @@ export const DragBottomSheet = ({
   useEffect(() => {
     if (windowHeight === 0) return;
 
-    const targetY = open ? middleY : collapsedY;
+    const targetY = open ? expandedY : collapsedY; // 목록보기 버튼 클릭 시 header까지 올라가도록
     controls.start({ y: targetY });
-  }, [open, controls, windowHeight, middleY, collapsedY]);
+  }, [open, controls, windowHeight, expandedY, collapsedY]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
     console.log('Drag ended at:', info.point.y, 'middleY:', middleY);

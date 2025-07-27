@@ -103,10 +103,12 @@ const RentalPage = () => {
     }
   };
 
+  // DragDrawer 상태 추가
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   // 목록보기 버튼 클릭 핸들러
   const handleListView = () => {
-    console.log('목록보기 버튼 클릭');
-    // 여기에 목록보기 로직 추가 가능
+    setIsDrawerOpen((prev) => !prev); // Drawer 열림/닫힘 토글
   };
 
   // 스토어 리스트 무한 스크롤 훅 사용
@@ -207,7 +209,7 @@ const RentalPage = () => {
         </div>
       }
       fab={
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center justify-between w-full px-4 relative z-50">
           {/* 현재 위치 버튼 */}
           <CurrentLocationButton className="ml-5 cursor-pointer" onClick={handleCurrentLocation} />
 
@@ -241,6 +243,8 @@ const RentalPage = () => {
         hasNextPage={hasNextPage}
         isError={isError}
         error={error}
+        open={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
       />
       <FilterDrawer
         isOpen={filterDrawerOpen}
