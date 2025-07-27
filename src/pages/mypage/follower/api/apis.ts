@@ -1,6 +1,7 @@
-import { FollowResponse } from '@/entities/follow';
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
+
+import type { FollowResponse } from '@/entities/follow';
 
 
 const FOLLOW_TYPES = {
