@@ -144,9 +144,13 @@ export const DragBottomSheet = ({
       {/* Header 부분 */}
       <div className="px-4 pt-4 pb-2">
         <div className="w-12 h-1.5 bg-gray rounded-full mx-auto" />
-        <div className="flex items-center gap-2 cursor-pointer" onClick={handleSortClick}>
-          <ArrowUpDown size={20} className="text-[var(--black)] font-body-semibold" />
-          <div className="font-body-semibold text-[var(--black)]">{getSortLabel(currentSort)}</div>
+        <div className="flex items-center justify-start">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={handleSortClick}>
+            <ArrowUpDown size={20} className="text-[var(--black)] font-body-semibold" />
+            <div className="font-body-semibold text-[var(--black)]">
+              {getSortLabel(currentSort)}
+            </div>
+          </div>
         </div>
       </div>
 
