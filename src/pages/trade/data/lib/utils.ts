@@ -12,7 +12,9 @@ export const isPriceInRange = (price: number, range: PriceRange): boolean => {
 
 export const applyDataFilters = (post: AllPost, filters: DataFilterState): boolean => {
   const carrierMatch =
-    filters.carriers.length === 0 || filters.carriers.includes(post.mobileCarrier!);
+    filters.carriers.length === 0 ||
+    (post.mobileCarrier !== undefined && filters.carriers.includes(post.mobileCarrier));
+
   // const capacityMatch = filters.capacities.length === 0 ||
   //   filters.capacities.includes(String(post.capacity ?? ''));
 
