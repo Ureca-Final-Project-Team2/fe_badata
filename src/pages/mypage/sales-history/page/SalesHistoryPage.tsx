@@ -8,6 +8,7 @@ import { useSalesQuery } from '@/entities/user/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab';
 import { PageHeader } from '@/shared/ui/Header';
+import { TradePostCardSkeleton } from '@/shared/ui/Skeleton';
 import { Switch } from '@/shared/ui/Switch/Switch';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
@@ -31,7 +32,9 @@ export default function SalesHistoryPage() {
   const router = useRouter();
   const [tab, setTab] = useState<'전체' | '데이터' | '쿠폰'>('전체');
   const [isCompleted, setIsCompleted] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(false);
   const observerRef = useRef<HTMLDivElement>(null);
+  const loadingStartTime = useRef<number>(0);
 
   const postCategory = tab === '전체' ? undefined : tab === '데이터' ? 'DATA' : 'GIFTICON';
 
@@ -43,6 +46,24 @@ export default function SalesHistoryPage() {
       undefined,
       30,
     );
+
+  // 로딩 시작 시간 기록 및 스켈리톤 표시 로직
+  useEffect(() => {
+    if (isLoading) {
+      loadingStartTime.current = Date.now();
+      setShowSkeleton(true);
+    } else {
+      const loadingDuration = Date.now() - loadingStartTime.current;
+
+      // 로딩 시간이 200ms 이하이면 스켈리톤을 보여주지 않음
+      if (loadingDuration < 200) {
+        setShowSkeleton(false);
+      } else {
+        // 200ms 이상이면 즉시 숨김
+        setShowSkeleton(false);
+      }
+    }
+  }, [isLoading]);
 
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -117,9 +138,13 @@ export default function SalesHistoryPage() {
 
         <div className="pb-[96px]">
           {/* 로딩 상태 */}
-          {isLoading && (
-            <div className="text-center py-8">
-              <p>판매 내역을 불러오는 중...</p>
+          {(isLoading || showSkeleton) && (
+            <div className="px-4">
+              <div className="grid grid-cols-2 gap-4">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <TradePostCardSkeleton key={index} />
+                ))}
+              </div>
             </div>
           )}
 
@@ -133,6 +158,7 @@ export default function SalesHistoryPage() {
 
           {/* 데이터가 없는 경우 */}
           {!isLoading &&
+            !showSkeleton &&
             !isError &&
             (!data?.pages ||
               data.pages.length === 0 ||
@@ -154,13 +180,28 @@ export default function SalesHistoryPage() {
                   price={item.price}
                   likeCount={item.postLikes}
                   isCompleted={item.isSold}
+                  onCardClick={() => {
+                    const detailPath =
+                      item.postCategory === 'DATA'
+                        ? `/trade/data/${item.postId}`
+                        : `/trade/gifticon/${item.postId}`;
+                    router.push(detailPath);
+                  }}
                 />
               ))}
             </div>
           ))}
 
           <div ref={observerRef} className="h-12">
-            {isFetchingNextPage && <p className="text-center">불러오는 중...</p>}
+            {isFetchingNextPage && (
+              <div className="px-4 mt-4">
+                <div className="grid grid-cols-2 gap-4">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <TradePostCardSkeleton key={`next-${index}`} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
