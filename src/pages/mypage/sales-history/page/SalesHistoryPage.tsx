@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useUserStats } from '@/entities/follow';
 import { useSalesQuery } from '@/entities/user/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab';
@@ -18,8 +19,6 @@ const profile = {
   days: 15,
   avatarSrc: '/assets/profile-default.png',
   tradeCount: 14,
-  follower: 4,
-  following: 7,
 };
 
 const tabList = [
@@ -36,18 +35,28 @@ export default function SalesHistoryPage() {
   const observerRef = useRef<HTMLDivElement>(null);
   const loadingStartTime = useRef<number>(0);
 
+  const { followerCount, followingCount, isLoading: isLoadingStats, invalidateStats } = useUserStats();
+
   const postCategory = tab === '전체' ? undefined : tab === '데이터' ? 'DATA' : 'GIFTICON';
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
     useSalesQuery(
-      undefined, // userId 없음 (현재 로그인한 사용자)
+      undefined,
       postCategory,
       isCompleted,
       undefined,
       30,
     );
 
-  // 로딩 시작 시간 기록 및 스켈리톤 표시 로직
+  useEffect(() => {
+    const handleFocus = () => {
+      invalidateStats();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [invalidateStats]);
+
   useEffect(() => {
     if (isLoading) {
       loadingStartTime.current = Date.now();
@@ -55,11 +64,9 @@ export default function SalesHistoryPage() {
     } else {
       const loadingDuration = Date.now() - loadingStartTime.current;
 
-      // 로딩 시간이 200ms 이하이면 스켈리톤을 보여주지 않음
       if (loadingDuration < 200) {
         setShowSkeleton(false);
       } else {
-        // 200ms 이상이면 즉시 숨김
         setShowSkeleton(false);
       }
     }
@@ -109,7 +116,7 @@ export default function SalesHistoryPage() {
             >
               <span className="font-label-semibold text-[var(--black)]">팔로워</span>
               <span className="font-body-semibold text-[var(--black)] mt-1 group-hover:text-[var(--main-3)]">
-                {profile.follower}
+                {isLoadingStats ? '...' : followerCount}
               </span>
             </div>
             <div
@@ -118,7 +125,7 @@ export default function SalesHistoryPage() {
             >
               <span className="font-label-semibold text-[var(--black)]">팔로잉</span>
               <span className="font-body-semibold text-[var(--black)] mt-1 group-hover:text-[var(--main-3)]">
-                {profile.following}
+                {isLoadingStats ? '...' : followingCount}
               </span>
             </div>
           </div>
