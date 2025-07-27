@@ -66,6 +66,13 @@ const eslintConfig = [
       ],
     },
   },
+  // Storybook 파일들에 대해 perfectionist 규칙 비활성화
+  {
+    files: ['**/*.stories.tsx', '**/*.stories.ts'],
+    rules: {
+      'perfectionist/sort-imports': 'off',
+    },
+  },
 ];
 
 export default eslintConfig;

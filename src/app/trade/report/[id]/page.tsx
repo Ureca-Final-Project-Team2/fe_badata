@@ -1,12 +1,14 @@
 import { ReportPage } from '@/pages/trade/report/page/ReportPage';
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
-export default function ReportPostPage({ params }: Props) {
-  const id = parseInt(params.id);
 
-  return <ReportPage postId={id} />;
+export default async function ReportPostPage({ params }: Props) {
+  const { id } = await params;
+  const postId = parseInt(id);
+
+  return <ReportPage postId={postId} />;
 }

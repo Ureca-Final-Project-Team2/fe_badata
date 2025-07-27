@@ -1,15 +1,20 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
+import type { FollowingsContent, SalesContent } from '@/entities/user/lib/types';
+import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
+import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
+
 export const userApis = {
-  // 팔로우/언팔로우 토글
   postFollowToggle: async (userId: number) => {
     const response = await axiosInstance.post(END_POINTS.USER.FOLLOW(userId));
     return response.data;
   },
 
-  // 팔로잉 목록 조회
-  getFollowings: async (cursor?: number, size: number = 10) => {
+  getFollowings: async (
+    cursor?: number,
+    size: number = 10,
+  ): Promise<ApiResponse<FollowingsContent>> => {
     const params = new URLSearchParams();
     params.append('followType', 'FOLLOWINGS');
     if (cursor !== undefined) params.append('cursor', cursor.toString());
@@ -19,29 +24,31 @@ export const userApis = {
     return response.data;
   },
 
-  // 특정 사용자 팔로우 상태 확인
-  getFollowStatus: async (targetUserId: number) => {
-    let cursor: number | undefined;
-    let isFollowing = false;
+  getSales: async (
+    userId?: number,
+    postCategory?: string,
+    isSold?: boolean,
+    cursor?: number,
+    size: number = 30,
+  ): Promise<ApiResponse<SalesContent>> => {
+    const params = new URLSearchParams();
+    if (postCategory) params.append('postCategory', postCategory);
+    if (isSold !== undefined) params.append('isSold', isSold.toString());
+    if (cursor !== undefined) params.append('cursor', cursor.toString());
+    params.append('size', size.toString());
 
-    do {
-      const data = await userApis.getFollowings(cursor, 100);
-      const items = data.content?.item || [];
+    const url = userId
+      ? `${END_POINTS.USER.SALES}/${userId}?${params}`
+      : `${END_POINTS.USER.SALES}?${params}`;
 
-      if (items.some((user: { userId: number }) => user.userId === targetUserId)) {
-        isFollowing = true;
-        break;
-      }
+    const response = await axiosInstance.get(url);
+    return response.data;
+  },
 
-      cursor = data.content?.lastCursor;
-    } while (cursor);
-
-    return {
-      code: 20000,
-      message: null,
-      content: {
-        following: isFollowing,
-      },
-    };
+  getUserTradePosts: async (userId: number): Promise<UserTradePostsResponse> => {
+    const userTradePosts: UserTradePostsResponse = await axiosInstance.get(
+      END_POINTS.TRADES.USER_POST(userId),
+    );
+    return userTradePosts;
   },
 };

@@ -9,7 +9,7 @@ import { useAuthStore } from '@/entities/auth/model/authStore';
 
 export default function KakaoCallbackClient() {
   const searchParams = useSearchParams();
-  const code = searchParams.get('code');
+  const code = searchParams?.get('code');
   const router = useRouter();
 
   const login = useAuthStore((state) => state.login);

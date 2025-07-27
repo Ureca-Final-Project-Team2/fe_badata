@@ -23,7 +23,7 @@ export const PageHeader = ({
 }: PageHeaderProps) => (
   <header className="relative w-full h-[70px] flex items-center bg-white shadow-sm">
     <button
-      className="absolute left-4 w-[50px] h-[30px] flex items-center justify-center"
+      className="absolute left-4 w-[50px] h-[30px] flex items-center justify-center cursor-pointer"
       onClick={onBack}
       aria-label="뒤로가기"
     >
@@ -36,10 +36,10 @@ export const PageHeader = ({
 
     {variant === 'with-actions' && (
       <div className="absolute right-4 flex gap-2">
-        <button onClick={onShareClick} aria-label="공유하기">
+        <button onClick={onShareClick} aria-label="공유하기" className="cursor-pointer">
           <Share size={24} />
         </button>
-        <button onClick={onMoreClick} aria-label="더보기">
+        <button onClick={onMoreClick} aria-label="더보기" className="cursor-pointer">
           <MoreVertical size={24} />
         </button>
       </div>

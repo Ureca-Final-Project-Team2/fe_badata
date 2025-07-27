@@ -15,7 +15,7 @@ export interface AllPost {
 }
 
 export interface DeadlinePost extends AllPost {
-  deadLine: Date;
+  deadLine: string;
 }
 
 export interface BasePost {
@@ -49,7 +49,13 @@ export interface DeletePostResponse {
   message: string;
 }
 
-export interface UpdatePostRequest {
+export interface DataUpdateRequest {
+  title: string;
+  comment: string;
+  price: number;
+}
+
+export interface GifticonUpdateRequest {
   comment: string;
   price: number;
 }

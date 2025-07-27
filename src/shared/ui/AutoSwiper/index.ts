@@ -1,0 +1,1 @@
+export { AutoSwiper } from './AutoSwiper';

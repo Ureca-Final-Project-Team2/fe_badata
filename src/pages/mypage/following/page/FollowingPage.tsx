@@ -1,41 +1,41 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useRouter } from 'next/navigation';
 
+import { useFollowings } from '@/pages/mypage/following/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { Profile } from '@/shared/ui/Profile';
 
-const initialFollowings = [
-  { id: 1, name: '박아무개', avatar: '/assets/profile-default.png' },
-  { id: 2, name: '박아무개', avatar: '/assets/profile-default.png' },
-  { id: 3, name: '박아무개', avatar: '/assets/profile-default.png' },
-];
-
 export default function FollowingPage() {
-  const [followings, setFollowings] = useState(initialFollowings);
   const router = useRouter();
+  const { followingItems, isLoading, isError } = useFollowings();
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (isError) return <div>에러가 발생했습니다.</div>;
+  if (!followingItems || followingItems.length === 0) {
+    return <div className="py-4 text-center text-[var(--gray)]">팔로잉이 없습니다.</div>;
+  }
 
   const handleRemove = (id: number) => {
-    setFollowings((prev) => prev.filter((user) => user.id !== id));
+    // TODO: 팔로우 취소 API 연동
+    console.log('팔로우 취소:', id);
   };
 
   return (
     <BaseLayout header={<PageHeader title="팔로잉 목록" onBack={() => router.back()} />} showBottomNav>
-      <ul className="px-4 pt-6 pb-[96px] flex flex-col gap-4">
-        {followings.map((user) => (
-          <li key={user.id} className="w-full">
+      <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
+        {followingItems.map((user) => (
+          <div key={user.id} className="w-full max-w-[400px] flex justify-center">
             <Profile
-              name={user.name}
-              avatar={user.avatar}
+              name={user.nickname}
+              avatar={user.profileImageUrl}
               showCloseButton
-              onClose={() => handleRemove(user.id)}
+              onClose={() => handleRemove(user.userId)}
             />
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </BaseLayout>
   );
 } 
