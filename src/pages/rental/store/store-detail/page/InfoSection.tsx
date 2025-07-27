@@ -5,8 +5,8 @@ import Image from 'next/image';
 import { Phone, Share } from 'lucide-react';
 
 import InfoAction from '@/pages/rental/store/store-detail/page/InfoAction';
-import { formatDistanceString } from '@/pages/rental/utils/format/distanceUtils';
 import { ICONS } from '@/shared/config/iconPath';
+import { formatDistanceString } from '@/shared/lib/format/distanceUtils';
 
 interface InfoSectionProps {
   reviewRating: number;
