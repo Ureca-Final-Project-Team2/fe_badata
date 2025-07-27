@@ -35,7 +35,7 @@ export default function FollowListPage({ followType, title, emptyMessage }: Foll
   return (
     <BaseLayout header={<PageHeader title={title} onBack={() => router.back()} />} showBottomNav>
       <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
-        {!followItems || followItems.length === 0 ? (
+        {followItems.length === 0 ? (
           <div className="py-4 text-center text-[var(--gray)]">{emptyMessage}</div>
         ) : (
           followItems.map((user) => (

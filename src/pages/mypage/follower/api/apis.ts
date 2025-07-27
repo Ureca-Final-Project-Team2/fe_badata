@@ -1,8 +1,7 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { FollowResponse } from '@/entities/follow';
-
+import type { DeleteFollowResponse, FollowResponse } from '@/entities/follow';
 
 const FOLLOW_TYPES = {
   FOLLOWERS: 'FOLLOWERS',
@@ -29,7 +28,7 @@ export const fetchFollowers = async (
   }
 };
 
-export const deleteFollower = async (followId: number): Promise<{ code: number; message: string; content: number }> => {
+export const deleteFollower = async (followId: number): Promise<DeleteFollowResponse> => {
   try {
     const response = await axiosInstance.delete(END_POINTS.MYPAGE.DELETE_FOLLOW(followId));
     return response.data;

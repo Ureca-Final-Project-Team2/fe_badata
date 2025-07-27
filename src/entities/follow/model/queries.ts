@@ -11,8 +11,8 @@ const STATS_PAGE_SIZE = 100;
 
 // 캐시 무효화 유틸리티 함수
 const invalidateFollowQueries = (queryClient: QueryClient) => {
-  queryClient.invalidateQueries({ queryKey: ['followers'] });
-  queryClient.invalidateQueries({ queryKey: ['followings'] });
+  queryClient.invalidateQueries({ queryKey: ['followers'], exact: false });
+  queryClient.invalidateQueries({ queryKey: ['followings'], exact: false });
 };
 
 export function useFollows(followType: FollowType, cursor?: number, size: number = DEFAULT_PAGE_SIZE) {
@@ -22,7 +22,7 @@ export function useFollows(followType: FollowType, cursor?: number, size: number
     hasNext: boolean;
   }>({
     queryKey: [followType === FOLLOW_TYPES.FOLLOWERS ? 'followers' : 'followings', cursor, size],
-    queryFn: () => fetchFollows(followType, cursor, size).then(response => response.content),
+    queryFn: () => fetchFollows(followType, cursor, size).then((response) => response.content),
     staleTime: 0,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
