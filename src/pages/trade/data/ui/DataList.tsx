@@ -1,7 +1,4 @@
-import { ListFilter } from 'lucide-react';
-
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
-import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
@@ -9,12 +6,10 @@ import type { AllPost } from '@/entities/trade-post/lib/types';
 interface DataListProps {
   items: AllPost[];
   isLoading: boolean;
-  sortLabel: string;
-  onSortClick: () => void;
   onItemClick?: (item: AllPost) => void;
 }
 
-export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick }: DataListProps) {
+export function DataList({ items, isLoading, onItemClick }: DataListProps) {
   const { toggleLike, isItemLoading } = useTradePostLikeHooks();
 
   if (isLoading) {
@@ -32,15 +27,6 @@ export function DataList({ items, isLoading, sortLabel, onSortClick, onItemClick
 
   return (
     <section className="bg-white">
-      <div className="flex flex-row justify-between py-2">
-        <SortButton label={sortLabel} onClick={onSortClick} />
-
-        <div className="flex flex-row gap-1 items-center font-label-semibold">
-          조건
-          <ListFilter size={14} />
-        </div>
-      </div>
-
       <div className="grid grid-cols-2 gap-4 py-4">
         {items.map((item) => (
           <TradePostCard
