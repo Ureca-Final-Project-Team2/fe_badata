@@ -6,7 +6,25 @@ import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
 
 import type { DragBottomSheetProps } from '@/pages/rental/map/lib/types';
 
-export const DragBottomSheet = ({ open, onClose, children, storeList }: DragBottomSheetProps) => {
+interface ExtendedDragBottomSheetProps extends DragBottomSheetProps {
+  isLoading?: boolean;
+  isFetchingNextPage?: boolean;
+  hasNextPage?: boolean;
+  isError?: boolean;
+  error?: Error | null;
+}
+
+export const DragBottomSheet = ({
+  open,
+  onClose,
+  children,
+  storeList,
+  isLoading = false,
+  isFetchingNextPage = false,
+  hasNextPage = false,
+  isError = false,
+  error = null,
+}: ExtendedDragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
 
   // windowHeight가 설정된 후에 계산하도록 수정
@@ -75,14 +93,35 @@ export const DragBottomSheet = ({ open, onClose, children, storeList }: DragBott
 
       {/* StoreCard 리스트 */}
       <div className="flex-1 mb-35 overflow-y-auto custom-scrollbar">
-        {storeList && storeList.length > 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
+            <div className="text-center text-gray-500">스토어 목록을 불러오는 중...</div>
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
+            <div className="text-center text-red-500">
+              에러가 발생했습니다: {error?.message || '알 수 없는 오류'}
+            </div>
+          </div>
+        ) : storeList && storeList.length > 0 ? (
           <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
             {storeList.map((store, idx) => (
               <StoreCard key={store.id || idx} {...store} />
             ))}
+            {/* 무한 스크롤 로딩 인디케이터 */}
+            {isFetchingNextPage && (
+              <div className="text-center text-gray-500 py-4">더 많은 스토어를 불러오는 중...</div>
+            )}
+            {/* 더 이상 데이터가 없을 때 */}
+            {!hasNextPage && storeList.length > 0 && (
+              <div className="text-center text-gray-400 py-4">모든 스토어를 불러왔습니다.</div>
+            )}
           </div>
         ) : (
-          <div className="flex flex-col gap-3 px-4 pt-3 pb-6">{children}</div>
+          <div className="flex flex-col gap-3 px-4 pt-3 pb-6">
+            <div className="text-center text-gray-500">표시할 스토어가 없습니다.</div>
+            {children}
+          </div>
         )}
       </div>
     </motion.div>

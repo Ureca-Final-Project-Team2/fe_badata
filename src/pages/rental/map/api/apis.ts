@@ -2,7 +2,12 @@ import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 import type { FetchStoreDevicesParams, FetchStoresParams } from '@/entities/store/lib/types';
-import type { Store, StoreDevice } from '@/pages/rental/map/lib/types';
+import type {
+  FetchStoreListParams,
+  Store,
+  StoreDevice,
+  StoreListResponse,
+} from '@/pages/rental/map/lib/types';
 import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
 
 /**
@@ -54,4 +59,39 @@ export const fetchStoreDetail = async (
       centerLng,
     },
   });
+};
+
+/**
+ * 스토어 목록 조회 (필터링 및 페이지네이션 지원)
+ */
+export const fetchStoreList = async (params: FetchStoreListParams): Promise<StoreListResponse> => {
+  try {
+    const response = await axiosInstance.get(END_POINTS.STORES.STORELIST, {
+      params: {
+        centerLat: params.centerLat,
+        centerLng: params.centerLng,
+        isOpeningNow: params.isOpeningNow,
+        rentalStartDate: params.rentalStartDate,
+        rentalEndDate: params.rentalEndDate,
+        reviewRating: params.reviewRating,
+        minPrice: params.minPrice,
+        maxPrice: params.maxPrice,
+        dataCapacity: params.dataCapacity,
+        is5G: params.is5G,
+        maxSupportConnection: params.maxSupportConnection,
+        page: params.page ?? 0,
+        size: params.size ?? 10,
+        sort: params.sort ?? ['distance,asc'],
+      },
+    });
+
+    // axios interceptor가 이미 response.data를 추출했다고 가정
+    return response as unknown as StoreListResponse;
+  } catch (error) {
+    console.error('fetchStoreList API 호출 실패:', error);
+    return {
+      showStoreResponses: [],
+      hasNext: false,
+    };
+  }
 };

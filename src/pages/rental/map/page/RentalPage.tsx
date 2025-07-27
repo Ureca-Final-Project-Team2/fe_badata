@@ -3,6 +3,10 @@
 import { useEffect, useReducer, useState } from 'react';
 
 import { CenterScrollSwiper } from '@/entities/scroll';
+import {
+  convertToStoreCardProps,
+  useStoreListWithInfiniteScroll,
+} from '@/pages/rental/map/hooks/useStoreListHooks';
 import { initialRentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 import {
   initialSelectedStoreState,
@@ -13,7 +17,6 @@ import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
-import { mockStoreList } from '@/pages/rental/map/utils/storeList';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
@@ -34,9 +37,85 @@ const RentalPage = () => {
   const [filterState, setFilterState] = useState<RentalFilterState>(initialRentalFilterState);
   const [tempFilterState, setTempFilterState] =
     useState<RentalFilterState>(initialRentalFilterState);
+  const [userLocation, setUserLocation] = useState({
+    lat: 37.55555294967707, // 기본 위치
+    lng: 127.03832055267158,
+  });
+
+  // 사용자 위치 가져오기
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.log('위치 정보를 가져올 수 없습니다:', error.message);
+          // 기본 위치 사용
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000, // 5분
+        },
+      );
+    }
+  }, []);
+
+  // 스토어 리스트 무한 스크롤 훅 사용
+  const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error } =
+    useStoreListWithInfiniteScroll({
+      centerLat: userLocation.lat,
+      centerLng: userLocation.lng,
+      sort: ['distance,asc'],
+      enabled: true,
+      useMockData: true, // 서버 연결 문제로 Mock 데이터 사용
+      // 필터링 조건들 추가
+      rentalStartDate: dateRange?.from ? dateRange.from.toISOString() : undefined,
+      rentalEndDate: dateRange?.to ? dateRange.to.toISOString() : undefined,
+      reviewRating: filterState.star > 0 ? filterState.star : undefined,
+      minPrice: filterState.minPrice,
+      maxPrice: filterState.maxPrice,
+      dataCapacity: (() => {
+        if (!filterState.dataAmount) return undefined;
+        switch (filterState.dataAmount) {
+          case '5GB':
+            return [5];
+          case '10GB':
+            return [10];
+          case '20GB':
+            return [20];
+          case '무제한':
+            return [999]; // 무제한은 큰 숫자로 표현
+          default:
+            return undefined;
+        }
+      })(),
+      is5G:
+        filterState.dataType === '5G'
+          ? true
+          : filterState.dataType === '4G/LTE'
+            ? false
+            : undefined,
+      maxSupportConnection: filterState.maxSupportConnection
+        ? [filterState.maxSupportConnection]
+        : undefined,
+    });
+
+  // API 데이터를 StoreCardProps 형태로 변환
+  const storeList = convertToStoreCardProps(stores);
 
   // 필터링 조건이 바뀔 때마다 현재 선택된 가맹점의 디바이스도 다시 필터링
   const filteredDevices = useFilteredDevices(selectedStore.selectedDevices, filterState);
+
+  // 필터 상태가 변경될 때 스토어 리스트 다시 불러오기
+  useEffect(() => {
+    // 필터가 변경되면 스토어 리스트를 다시 불러옴
+    // useStoreListWithInfiniteScroll의 queryKey가 변경되면 자동으로 다시 불러옴
+  }, [filterState, dateRange]);
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
     if (filteredDevices.length === 0) {
@@ -99,7 +178,15 @@ const RentalPage = () => {
           });
         }}
       />
-      <DrawerSection open={true} storeList={mockStoreList} />
+      <DrawerSection
+        open={true}
+        storeList={storeList}
+        isLoading={isLoading}
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        isError={isError}
+        error={error}
+      />
       <FilterDrawer
         isOpen={filterDrawerOpen}
         onClose={() => setFilterDrawerOpen(false)}
