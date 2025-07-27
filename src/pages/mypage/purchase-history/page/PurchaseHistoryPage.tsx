@@ -2,35 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 
+import { usePurchasesQuery } from '@/entities/user/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
+import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
-
-const completedPosts = [
-  {
-    id: 1,
-    imageUrl: '/assets/trade-detail.jpg',
-    title: '올리브영 기프티콘',
-    partner: '올리브영',
-    price: 10000,
-    likeCount: 12,
-    isCompleted: true,
-    isLiked: false,
-    hasDday: false,
-  },
-  {
-    id: 2,
-    imageUrl: '/assets/trade-detail.jpg',
-    title: '투썸플레이스 케이크',
-    partner: '투썸플레이스',
-    price: 6500,
-    likeCount: 3,
-    isCompleted: true,
-    isLiked: false,
-    hasDday: false,
-  },
-];
 
 const profile = {
   name: '홍길동',
@@ -43,6 +20,12 @@ const profile = {
 
 export default function PurchaseHistoryPage() {
   const router = useRouter();
+
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    usePurchasesQuery();
+
+  // 모든 아이템을 하나의 배열로 합치기
+  const allItems = data?.pages?.flatMap((page) => page?.content?.item || []) || [];
 
   return (
     <BaseLayout
@@ -82,13 +65,51 @@ export default function PurchaseHistoryPage() {
         </div>
 
         <div className="pb-[96px]">
-          <div className="grid grid-cols-2 gap-4">
-            {completedPosts
-              .filter((item) => !item.hasDday)
-              .map((item) => (
-                <TradePostCard key={item.id} {...item} />
+          {isLoading ? (
+            <div className="grid grid-cols-2 gap-4">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <TradePostCardSkeleton key={index} />
               ))}
-          </div>
+            </div>
+          ) : isError ? (
+            <div className="text-center py-8">
+              <p className="text-[var(--gray-mid)]">구매 내역을 불러오는데 실패했습니다.</p>
+            </div>
+          ) : allItems.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-[var(--gray-mid)]">구매 내역이 없습니다.</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                {allItems.map((item) => (
+                  <TradePostCard
+                    key={item.id}
+                    imageUrl={item.postImage}
+                    title={item.title}
+                    partner={item.partner}
+                    price={item.price}
+                    likeCount={item.postLikes}
+                    isCompleted={item.isSold}
+                    isLiked={false}
+                    hasDday={false}
+                  />
+                ))}
+              </div>
+
+              {hasNextPage && (
+                <div className="text-center py-4">
+                  <button
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="px-4 py-2 bg-[var(--main-3)] text-white rounded-lg disabled:bg-[var(--gray-light)]"
+                  >
+                    {isFetchingNextPage ? '로딩 중...' : '더 보기'}
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </BaseLayout>
