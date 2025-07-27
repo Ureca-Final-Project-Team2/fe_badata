@@ -13,6 +13,7 @@ interface DrawerSectionProps {
   error?: Error | null;
   open?: boolean;
   onClose?: () => void;
+  onLoadMore?: () => void; // 무한 스크롤을 위한 콜백 추가
 }
 
 export const DrawerSection = ({
@@ -24,6 +25,7 @@ export const DrawerSection = ({
   error = null,
   open,
   onClose,
+  onLoadMore,
 }: DrawerSectionProps) => {
   return (
     <DragBottomSheet
@@ -35,6 +37,7 @@ export const DrawerSection = ({
       error={error}
       open={open}
       onClose={onClose}
+      onLoadMore={onLoadMore}
     />
   );
 };

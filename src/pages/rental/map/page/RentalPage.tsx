@@ -133,7 +133,7 @@ const RentalPage = () => {
   };
 
   // 스토어 리스트 무한 스크롤 훅 사용
-  const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error } =
+  const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error, fetchNextPage } =
     useStoreListWithInfiniteScroll({
       centerLat: userLocation.lat,
       centerLng: userLocation.lng,
@@ -271,6 +271,7 @@ const RentalPage = () => {
         error={error}
         open={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
+        onLoadMore={fetchNextPage}
       />
       <FilterDrawer
         isOpen={filterDrawerOpen}

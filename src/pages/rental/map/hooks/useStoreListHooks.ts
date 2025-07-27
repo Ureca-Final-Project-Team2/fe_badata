@@ -1,5 +1,3 @@
-import { useCallback, useEffect } from 'react';
-
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { fetchStoreList } from '@/pages/rental/map/api/apis';
@@ -51,34 +49,6 @@ export const flattenStoreList = (data: unknown): StoreListItem[] => {
     ) ?? []
   );
 };
-
-// 무한 스크롤을 위한 스크롤 감지 훅
-export const useInfiniteScroll = (
-  hasNextPage: boolean | undefined,
-  fetchNextPage: () => void,
-  isFetchingNextPage: boolean,
-) => {
-  const handleScroll = useCallback(() => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 1000 && // 하단 1000px 전에 미리 로드
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [handleScroll]);
-
-  return { handleScroll };
-};
-
 // 스토어 리스트와 무한 스크롤을 함께 사용하는 올인원 훅
 export const useStoreListWithInfiniteScroll = (params: UseStoreListParams) => {
   const {
@@ -92,9 +62,6 @@ export const useStoreListWithInfiniteScroll = (params: UseStoreListParams) => {
     error,
     refetch,
   } = useStoreList(params);
-
-  // 무한 스크롤 설정
-  useInfiniteScroll(hasNextPage, fetchNextPage, isFetchingNextPage);
 
   // 모든 스토어를 하나의 배열로 합침
   const stores = flattenStoreList(data);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 
@@ -14,6 +14,7 @@ interface ExtendedDragBottomSheetProps extends DragBottomSheetProps {
   hasNextPage?: boolean;
   isError?: boolean;
   error?: Error | null;
+  onLoadMore?: () => void; // 무한 스크롤을 위한 콜백 추가
 }
 
 export const DragBottomSheet = ({
@@ -26,8 +27,22 @@ export const DragBottomSheet = ({
   hasNextPage = false,
   isError = false,
   error = null,
+  onLoadMore,
 }: ExtendedDragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // 무한 스크롤 핸들러
+  const handleScroll = useCallback(() => {
+    if (!scrollContainerRef.current || !onLoadMore || isFetchingNextPage || !hasNextPage) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100; // 하단 100px 전에 로드
+
+    if (isNearBottom) {
+      onLoadMore();
+    }
+  }, [onLoadMore, isFetchingNextPage, hasNextPage]);
 
   // windowHeight가 설정된 후에 계산하도록 수정
   const expandedY = windowHeight > 0 ? 60 : 0;
@@ -94,7 +109,11 @@ export const DragBottomSheet = ({
       </div>
 
       {/* StoreCard 리스트 */}
-      <div className="flex-1 mb-35 overflow-y-auto custom-scrollbar">
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 mb-35 overflow-y-auto custom-scrollbar"
+      >
         {isLoading ? (
           <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
             <div className="text-center text-gray-500">스토어 목록을 불러오는 중...</div>
