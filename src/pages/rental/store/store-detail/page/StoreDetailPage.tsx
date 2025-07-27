@@ -44,8 +44,6 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
       setStoreDetail(detail);
     } catch (error) {
       console.error('가맹점 상세 정보 조회 실패:', error);
-      // 에러 시 mock 데이터 사용
-      setStoreDetail(mockStoreDetail);
     } finally {
       setIsLoading(false);
     }
