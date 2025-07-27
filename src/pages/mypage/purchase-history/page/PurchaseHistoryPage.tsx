@@ -1,7 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { useRouter } from 'next/navigation';
 
+import { useUserStats } from '@/entities/follow';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
@@ -37,12 +40,21 @@ const profile = {
   days: 15, 
   avatarSrc: '/assets/profile-default.png',
   tradeCount: 14,
-  follower: 4,
-  following: 7,
 };
 
 export default function PurchaseHistoryPage() {
   const router = useRouter();
+  const { followerCount, followingCount, isLoading: isLoadingStats, invalidateStats } = useUserStats();
+
+  // 페이지 포커스 시 통계 새로고침
+  useEffect(() => {
+    const handleFocus = () => {
+      invalidateStats();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [invalidateStats]);
 
   return (
     <BaseLayout header={<PageHeader title="구매 내역" onBack={() => router.back()} />} showBottomNav>
@@ -63,7 +75,7 @@ export default function PurchaseHistoryPage() {
             >
               <span className="font-label-semibold text-[var(--black)]">팔로워</span>
               <span className="font-body-semibold text-[var(--black)] mt-1 group-hover:text-[var(--main-3)]">
-                {profile.follower}
+                {isLoadingStats ? '...' : followerCount}
               </span>
             </div>
             <div
@@ -72,7 +84,7 @@ export default function PurchaseHistoryPage() {
             >
               <span className="font-label-semibold text-[var(--black)]">팔로잉</span>
               <span className="font-body-semibold text-[var(--black)] mt-1 group-hover:text-[var(--main-3)]">
-                {profile.following}
+                {isLoadingStats ? '...' : followingCount}
               </span>
             </div>
           </div>

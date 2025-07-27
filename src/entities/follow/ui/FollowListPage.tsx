@@ -26,6 +26,7 @@ export default function FollowListPage({ followType, title, emptyMessage }: Foll
   const handleRemove = async (id: number) => {
     try {
       await deleteFollowMutation.mutateAsync(id);
+      // 삭제 성공 후 페이지 이동 시 통계가 업데이트되도록 함
     } catch (error) {
       const followTypeText = getFollowTypeText(followType);
       console.error(`${followTypeText} 삭제 실패:`, error);

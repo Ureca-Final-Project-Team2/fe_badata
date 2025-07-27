@@ -13,10 +13,10 @@ export function useFollows(followType: FollowType, cursor?: number, size: number
   }>({
     queryKey: [followType === FOLLOW_TYPES.FOLLOWERS ? 'followers' : 'followings', cursor, size],
     queryFn: () => fetchFollows(followType, cursor, size).then(response => response.content),
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
+    staleTime: 0, // 즉시 stale로 처리하여 캐시 무효화 시 바로 새로고침
+    refetchOnWindowFocus: true, // 페이지 포커스 시 새로고침
+    refetchOnMount: true, // 컴포넌트 마운트 시 새로고침
+    refetchOnReconnect: true, // 네트워크 재연결 시 새로고침
   });
 
   return {
@@ -42,4 +42,25 @@ export function useDeleteFollow() {
       console.error('팔로우 삭제 실패:', error);
     },
   });
+}
+
+// 사용자 통계 정보를 가져오는 쿼리
+export function useUserStats() {
+  const queryClient = useQueryClient();
+  
+  const { followItems: followersItems, isLoading: isLoadingFollowers } = useFollows(FOLLOW_TYPES.FOLLOWERS, undefined, 100);
+  const { followItems: followingsItems, isLoading: isLoadingFollowings } = useFollows(FOLLOW_TYPES.FOLLOWINGS, undefined, 100);
+
+  // 팔로우 삭제 시 통계도 함께 무효화
+  const invalidateStats = () => {
+    queryClient.invalidateQueries({ queryKey: ['followers'] });
+    queryClient.invalidateQueries({ queryKey: ['followings'] });
+  };
+
+  return {
+    followerCount: followersItems.length,
+    followingCount: followingsItems.length,
+    isLoading: isLoadingFollowers || isLoadingFollowings,
+    invalidateStats,
+  };
 } 
