@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
+import { ArrowUpDown } from 'lucide-react';
 
+import { SortDrawer } from '@/pages/rental/map/ui/SortDrawer';
 import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
 
 import type { DragBottomSheetProps } from '@/pages/rental/map/lib/types';
@@ -31,6 +33,8 @@ export const DragBottomSheet = ({
 }: ExtendedDragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isSortDrawerOpen, setIsSortDrawerOpen] = useState(false);
+  const [currentSort, setCurrentSort] = useState('latest');
 
   // 무한 스크롤 핸들러
   const handleScroll = useCallback(() => {
@@ -85,6 +89,27 @@ export const DragBottomSheet = ({
     return null;
   }
 
+  const handleSortClick = () => {
+    console.log('정렬 기준 클릭');
+    setIsSortDrawerOpen(true);
+  };
+
+  const handleSortSelect = (sortType: string) => {
+    setCurrentSort(sortType);
+    console.log('정렬 기준 선택:', sortType);
+  };
+
+  const getSortLabel = (sortType: string) => {
+    switch (sortType) {
+      case 'latest':
+        return '최신순';
+      case 'likes':
+        return '좋아요순';
+      default:
+        return '최신순';
+    }
+  };
+
   // overlay div 제거!
   return (
     <motion.div
@@ -103,8 +128,9 @@ export const DragBottomSheet = ({
       {/* Header 부분 */}
       <div className="px-4 pt-4 pb-2">
         <div className="w-12 h-1.5 bg-gray rounded-full mx-auto" />
-        <div className="font-small-bold text-[var(--gray-dark)]">
-          정렬 기준 (총 {storeList?.length || 0}개 매장)
+        <div className="flex items-center gap-2 cursor-pointer" onClick={handleSortClick}>
+          <ArrowUpDown size={20} className="text-[var(--black)] font-body-semibold" />
+          <div className="font-body-semibold text-[var(--black)]">{getSortLabel(currentSort)}</div>
         </div>
       </div>
 
@@ -131,20 +157,31 @@ export const DragBottomSheet = ({
             ))}
             {/* 무한 스크롤 로딩 인디케이터 */}
             {isFetchingNextPage && (
-              <div className="text-center text-gray-500 py-4">더 많은 스토어를 불러오는 중...</div>
+              <div className="text-center text-[var(--gray-dark)] py-4">
+                더 많은 스토어를 불러오는 중...
+              </div>
             )}
             {/* 더 이상 데이터가 없을 때 */}
             {!hasNextPage && storeList.length > 0 && (
-              <div className="text-center text-gray-400 py-4">모든 스토어를 불러왔습니다.</div>
+              <div className="text-center text-[var(--gray-dark)] py-4">
+                모든 스토어를 불러왔습니다.
+              </div>
             )}
           </div>
         ) : (
           <div className="flex flex-col gap-3 px-4 pt-3 pb-6">
-            <div className="text-center text-gray-500">표시할 스토어가 없습니다.</div>
+            <div className="text-center text-[var(--gray-dark)]">표시할 스토어가 없습니다.</div>
             {children}
           </div>
         )}
       </div>
+
+      <SortDrawer
+        isOpen={isSortDrawerOpen}
+        onClose={() => setIsSortDrawerOpen(false)}
+        onSortSelect={handleSortSelect}
+        currentSort={currentSort}
+      />
     </motion.div>
   );
 };
