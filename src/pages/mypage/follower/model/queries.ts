@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { fetchFollowers } from '@/pages/mypage/follower/api/apis';
+import { deleteFollower, fetchFollowers } from '@/pages/mypage/follower/api/apis';
 
 import type { FollowerItem } from '@/pages/mypage/follower/lib/types';
 
@@ -25,4 +25,19 @@ export function useFollowers(cursor?: number, size: number = 10) {
     isLoading,
     isError,
   };
+}
+
+export function useDeleteFollower() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteFollower,
+    onSuccess: () => {
+      // 팔로워 목록 캐시 무효화하여 다시 불러오기
+      queryClient.invalidateQueries({ queryKey: ['followers'] });
+    },
+    onError: (error) => {
+      console.error('팔로워 삭제 실패:', error);
+    },
+  });
 } 

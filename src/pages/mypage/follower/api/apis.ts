@@ -26,4 +26,14 @@ export const fetchFollowers = async (
     console.error('팔로워 목록 조회 실패:', error);
     throw error;
   }
+};
+
+export const deleteFollower = async (followId: number): Promise<{ code: number; message: string; content: number }> => {
+  try {
+    const response = await axiosInstance.delete(END_POINTS.MYPAGE.DELETE_FOLLOW(followId));
+    return response.data;
+  } catch (error) {
+    console.error('팔로워 삭제 실패:', error);
+    throw error;
+  }
 }; 
