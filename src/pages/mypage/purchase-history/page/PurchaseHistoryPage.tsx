@@ -46,7 +46,6 @@ export default function PurchaseHistoryPage() {
   const router = useRouter();
   const { followerCount, followingCount, isLoading: isLoadingStats, invalidateStats } = useUserStats();
 
-  // 페이지 포커스 시 통계 새로고침
   useEffect(() => {
     const handleFocus = () => {
       invalidateStats();

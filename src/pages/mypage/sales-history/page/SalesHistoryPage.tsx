@@ -41,14 +41,13 @@ export default function SalesHistoryPage() {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
     useSalesQuery(
-      undefined, // userId 없음 (현재 로그인한 사용자)
+      undefined,
       postCategory,
       isCompleted,
       undefined,
       30,
     );
 
-  // 페이지 포커스 시 통계 새로고침
   useEffect(() => {
     const handleFocus = () => {
       invalidateStats();
@@ -58,7 +57,6 @@ export default function SalesHistoryPage() {
     return () => window.removeEventListener('focus', handleFocus);
   }, [invalidateStats]);
 
-  // 로딩 시작 시간 기록 및 스켈리톤 표시 로직
   useEffect(() => {
     if (isLoading) {
       loadingStartTime.current = Date.now();
@@ -66,11 +64,9 @@ export default function SalesHistoryPage() {
     } else {
       const loadingDuration = Date.now() - loadingStartTime.current;
 
-      // 로딩 시간이 200ms 이하이면 스켈리톤을 보여주지 않음
       if (loadingDuration < 200) {
         setShowSkeleton(false);
       } else {
-        // 200ms 이상이면 즉시 숨김
         setShowSkeleton(false);
       }
     }
