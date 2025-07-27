@@ -11,7 +11,7 @@ const FOLLOW_TYPES = {
 export const fetchFollowings = async (
   cursor?: number,
   size: number = 10,
-): Promise<FollowingResponse['content']> => {
+): Promise<FollowingResponse> => {
   try {
     const response = await axiosInstance.get(END_POINTS.MYPAGE.FOLLOWINGS, {
       params: { 
@@ -21,7 +21,7 @@ export const fetchFollowings = async (
       },
     });
     
-    return response.data.content;
+    return response.data;
   } catch (error) {
     console.error('팔로잉 목록 조회 실패:', error);
     throw error;

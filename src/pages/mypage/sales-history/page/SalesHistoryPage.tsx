@@ -8,7 +8,7 @@ import { useSalesQuery } from '@/entities/user/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab';
 import { PageHeader } from '@/shared/ui/Header';
-import { TradePostCardSkeleton } from '@/shared/ui/Skeleton';
+import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
 import { Switch } from '@/shared/ui/Switch/Switch';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
