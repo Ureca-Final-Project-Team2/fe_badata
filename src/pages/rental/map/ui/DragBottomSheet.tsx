@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 import { ArrowUpDown } from 'lucide-react';
 
-import { SortDrawer } from '@/pages/rental/map/ui/SortDrawer';
 import { StoreCard } from '@/pages/rental/map/ui/StoreCard';
 
 import type { DragBottomSheetProps } from '@/pages/rental/map/lib/types';
@@ -17,6 +16,8 @@ interface ExtendedDragBottomSheetProps extends DragBottomSheetProps {
   isError?: boolean;
   error?: Error | null;
   onLoadMore?: () => void; // 무한 스크롤을 위한 콜백 추가
+  onSortClick?: () => void; // 정렬 기준 클릭 핸들러
+  currentSort?: string; // 현재 정렬 기준
 }
 
 export const DragBottomSheet = ({
@@ -30,11 +31,11 @@ export const DragBottomSheet = ({
   isError = false,
   error = null,
   onLoadMore,
+  onSortClick,
+  currentSort = 'distance,asc',
 }: ExtendedDragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [isSortDrawerOpen, setIsSortDrawerOpen] = useState(false);
-  const [currentSort, setCurrentSort] = useState('latest');
 
   // 무한 스크롤 핸들러
   const handleScroll = useCallback(() => {
@@ -49,11 +50,12 @@ export const DragBottomSheet = ({
   }, [onLoadMore, isFetchingNextPage, hasNextPage]);
 
   // windowHeight가 설정된 후에 계산하도록 수정
-  const expandedY = windowHeight > 0 ? 60 : 0;
-  const middleY = windowHeight > 0 ? windowHeight * 0.5 : 0;
-  const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 70% 아래로
+  const expandedY = windowHeight > 0 ? 60 : 0; // header 높이
+  const middleY = windowHeight > 0 ? windowHeight * 0.5 : 0; // 중간 높이
+  const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 접힌 높이 (80% 아래)
 
-  const y = useMotionValue(windowHeight > 0 ? middleY : collapsedY);
+  // 초기 상태는 collapsed로 설정
+  const y = useMotionValue(collapsedY);
   const controls = useAnimation();
 
   useEffect(() => {
@@ -68,7 +70,17 @@ export const DragBottomSheet = ({
     if (windowHeight === 0) return;
 
     const targetY = open ? expandedY : collapsedY; // 목록보기 버튼 클릭 시 header까지 올라가도록
-    controls.start({ y: targetY });
+    console.log('🎯 DragDrawer 상태 변경:', { open, targetY, expandedY, collapsedY, windowHeight });
+
+    // 애니메이션으로 부드럽게 이동
+    controls.start({
+      y: targetY,
+      transition: {
+        type: 'spring',
+        stiffness: 300,
+        damping: 30,
+      },
+    });
   }, [open, controls, windowHeight, expandedY, collapsedY]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
@@ -85,28 +97,31 @@ export const DragBottomSheet = ({
   };
 
   if (windowHeight === 0) {
-    console.log('WindowHeight is 0, not rendering');
-    return null;
+    console.log('WindowHeight is 0, waiting for height...');
+    // windowHeight가 0일 때도 렌더링하되, 높이는 0으로 설정
+    return (
+      <motion.div
+        className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
+        style={{ height: 0 }}
+      />
+    );
   }
 
   const handleSortClick = () => {
     console.log('정렬 기준 클릭');
-    setIsSortDrawerOpen(true);
-  };
-
-  const handleSortSelect = (sortType: string) => {
-    setCurrentSort(sortType);
-    console.log('정렬 기준 선택:', sortType);
+    onSortClick?.();
   };
 
   const getSortLabel = (sortType: string) => {
     switch (sortType) {
-      case 'latest':
-        return '최신순';
-      case 'likes':
+      case 'distance,asc':
+        return '거리순';
+      case 'reviewCount,desc':
+        return '리뷰순';
+      case 'likeCount,desc':
         return '좋아요순';
       default:
-        return '최신순';
+        return '거리순';
     }
   };
 
@@ -122,6 +137,7 @@ export const DragBottomSheet = ({
       style={{
         y,
         height: `calc(${windowHeight}px - ${y.get()}px)`,
+        minHeight: '200px', // 최소 높이 설정
       }}
       className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
     >
@@ -152,6 +168,10 @@ export const DragBottomSheet = ({
           </div>
         ) : storeList && storeList.length > 0 ? (
           <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
+            {(() => {
+              console.log('🎴 StoreCard 렌더링:', { storeListLength: storeList.length, storeList });
+              return null;
+            })()}
             {storeList.map((store, idx) => (
               <StoreCard key={store.id || idx} {...store} />
             ))}
@@ -175,13 +195,6 @@ export const DragBottomSheet = ({
           </div>
         )}
       </div>
-
-      <SortDrawer
-        isOpen={isSortDrawerOpen}
-        onClose={() => setIsSortDrawerOpen(false)}
-        onSortSelect={handleSortSelect}
-        currentSort={currentSort}
-      />
     </motion.div>
   );
 };

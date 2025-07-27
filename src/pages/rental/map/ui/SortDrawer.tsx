@@ -11,8 +11,9 @@ interface SortDrawerProps {
 
 export const SortDrawer = ({ isOpen, onClose, onSortSelect, currentSort }: SortDrawerProps) => {
   const sortOptions = [
-    { id: 'latest', label: '최신순' },
-    { id: 'likes', label: '좋아요순' },
+    { id: 'distance,asc', label: '거리순' },
+    { id: 'reviewCount,desc', label: '리뷰순' },
+    { id: 'likeCount,desc', label: '좋아요순' },
   ];
 
   return (

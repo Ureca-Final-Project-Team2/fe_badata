@@ -25,6 +25,7 @@ import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { ListViewButton } from '@/pages/rental/map/ui/ListViewButton';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
+import { SortDrawer } from '@/pages/rental/map/ui/SortDrawer';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
@@ -104,10 +105,24 @@ const RentalPage = () => {
 
   // DragDrawer 상태 추가
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSortDrawerOpen, setIsSortDrawerOpen] = useState(false);
+  const [currentSort, setCurrentSort] = useState('distance,asc');
 
   // 목록보기 버튼 클릭 핸들러
   const handleListView = () => {
+    console.log('📋 목록보기 버튼 클릭, 현재 상태:', isDrawerOpen);
     setIsDrawerOpen((prev) => !prev); // Drawer 열림/닫힘 토글
+  };
+
+  // 정렬 기준 클릭 핸들러
+  const handleSortClick = () => {
+    setIsSortDrawerOpen(true);
+  };
+
+  // 정렬 기준 선택 핸들러
+  const handleSortSelect = (sortType: string) => {
+    console.log('🔄 정렬 기준 변경:', { from: currentSort, to: sortType });
+    setCurrentSort(sortType);
   };
 
   // 날짜를 한국 시간으로 변환하는 함수
@@ -137,7 +152,7 @@ const RentalPage = () => {
     useStoreListWithInfiniteScroll({
       centerLat: userLocation.lat,
       centerLng: userLocation.lng,
-      sort: ['distance,asc'],
+      sort: [currentSort], // 현재 선택된 정렬 기준 사용
       enabled: userLocation.lat !== 0 && userLocation.lng !== 0, // 위치가 설정된 후에만 API 호출
       // 필터링 조건들 추가 (사용자가 선택한 경우만)
       rentalStartDate: dateRange?.from ? formatDateToKST(dateRange.from) : undefined,
@@ -173,6 +188,12 @@ const RentalPage = () => {
 
   // API 데이터를 StoreCardProps 형태로 변환
   const storeList = convertToStoreCardProps(stores);
+  console.log('🏪 StoreList 변환 결과:', {
+    storesLength: stores.length,
+    storeListLength: storeList.length,
+    isDrawerOpen,
+    isLoading,
+  });
 
   // 필터링 조건이 바뀔 때마다 현재 선택된 가맹점의 디바이스도 다시 필터링
   const filteredDevices = useFilteredDevices(selectedStore.selectedDevices, filterState);
@@ -183,10 +204,11 @@ const RentalPage = () => {
       filterState,
       dateRange,
       userLocation,
+      currentSort,
       hasActiveFilters: hasActiveFilters(),
     });
     // useStoreListWithInfiniteScroll의 queryKey가 변경되면 자동으로 다시 불러옴
-  }, [filterState, dateRange, userLocation]);
+  }, [filterState, dateRange, userLocation, currentSort]);
 
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
@@ -272,6 +294,8 @@ const RentalPage = () => {
         open={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         onLoadMore={fetchNextPage}
+        onSortClick={handleSortClick}
+        currentSort={currentSort}
       />
       <FilterDrawer
         isOpen={filterDrawerOpen}
@@ -288,6 +312,13 @@ const RentalPage = () => {
           }}
         />
       </FilterDrawer>
+
+      <SortDrawer
+        isOpen={isSortDrawerOpen}
+        onClose={() => setIsSortDrawerOpen(false)}
+        onSortSelect={handleSortSelect}
+        currentSort={currentSort}
+      />
 
       {filteredDevices.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
