@@ -15,8 +15,6 @@ export interface StoreDevice {
   leftCount: number;
 }
 export interface DragBottomSheetProps {
-  open: boolean;
-  onClose?: () => void;
   children?: React.ReactNode;
   title?: string;
   storeList?: StoreCardProps[];

@@ -13,8 +13,10 @@ import {
   selectedStoreReducer,
 } from '@/pages/rental/map/model/selectedStoreReducer';
 import { useFilteredDevices } from '@/pages/rental/map/model/useFilteredDevices';
+import { CurrentLocationButton } from '@/pages/rental/map/ui/CurrentLocationButton';
 import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
+import { ListViewButton } from '@/pages/rental/map/ui/ListViewButton';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
@@ -64,6 +66,34 @@ const RentalPage = () => {
       );
     }
   }, []);
+
+  // 현재 위치로 이동하는 함수
+  const handleCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.log('위치 정보를 가져올 수 없습니다:', error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000,
+        },
+      );
+    }
+  };
+
+  // 목록보기 버튼 클릭 핸들러
+  const handleListView = () => {
+    console.log('목록보기 버튼 클릭');
+    // 여기에 목록보기 로직 추가 가능
+  };
 
   // 스토어 리스트 무한 스크롤 훅 사용
   const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error } =
@@ -162,6 +192,15 @@ const RentalPage = () => {
           </div>
         </div>
       }
+      fab={
+        <div className="flex items-center justify-between w-full">
+          {/* 현재 위치 버튼 */}
+          <CurrentLocationButton className="ml-5" onClick={handleCurrentLocation} />
+
+          {/* 목록보기 버튼 */}
+          <ListViewButton onClick={handleListView} />
+        </div>
+      }
     >
       <MapSection
         filterState={filterState}
@@ -179,7 +218,6 @@ const RentalPage = () => {
         }}
       />
       <DrawerSection
-        open={true}
         storeList={storeList}
         isLoading={isLoading}
         isFetchingNextPage={isFetchingNextPage}
@@ -202,6 +240,7 @@ const RentalPage = () => {
           }}
         />
       </FilterDrawer>
+
       {filteredDevices.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
           <CenterScrollSwiper
