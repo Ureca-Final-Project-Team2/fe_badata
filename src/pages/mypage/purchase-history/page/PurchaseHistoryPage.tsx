@@ -34,7 +34,7 @@ const completedPosts = [
 
 const profile = {
   name: '홍길동',
-  days: 15, 
+  days: 15,
   avatarSrc: '/assets/profile-default.png',
   tradeCount: 14,
   follower: 4,
@@ -45,9 +45,12 @@ export default function PurchaseHistoryPage() {
   const router = useRouter();
 
   return (
-    <BaseLayout header={<PageHeader title="구매 내역" onBack={() => router.back()} />} showBottomNav>
+    <BaseLayout
+      header={<PageHeader title="구매 내역" onBack={() => router.back()} />}
+      showBottomNav
+    >
       <div className="w-full max-w-[428px]">
-        <div className="flex flex-col items-center px-4 mt-4">
+        <div className="flex flex-col items-center mt-4">
           <MyProfileCard name={profile.name} days={profile.days} avatarSrc={profile.avatarSrc} />
 
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
@@ -78,7 +81,7 @@ export default function PurchaseHistoryPage() {
           </div>
         </div>
 
-        <div className="px-4 pb-[96px]">
+        <div className="pb-[96px]">
           <div className="grid grid-cols-2 gap-4">
             {completedPosts
               .filter((item) => !item.hasDday)
@@ -90,4 +93,4 @@ export default function PurchaseHistoryPage() {
       </div>
     </BaseLayout>
   );
-} 
+}
