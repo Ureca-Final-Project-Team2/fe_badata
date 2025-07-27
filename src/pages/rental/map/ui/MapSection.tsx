@@ -7,7 +7,7 @@ import { useFetchStoresHooks } from '@/pages/rental/map/model/useFetchStoresHook
 import { useKakaoMapHooks } from '@/pages/rental/map/model/useKakaoMapHooks';
 
 import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
-import { RentalFilterState } from '../model/rentalFilterReducer';
+import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 
 interface MapSectionProps {
   filterState: RentalFilterState;

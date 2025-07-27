@@ -71,10 +71,46 @@ export interface StoreListParams {
 }
 
 /*
+  가맹점 목록 리스트 파라미터
+*/
+export interface FetchStoreListParams {
+  centerLat: number;
+  centerLng: number;
+  isOpeningNow?: boolean;
+  rentalStartDate?: string;
+  rentalEndDate?: string;
+  reviewRating?: number;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  dataCapacity?: number[];
+  is5G?: boolean | null;
+  maxSupportConnection?: number[];
+  page?: number;
+  size?: number;
+  sort: string[];
+}
+
+/*
+  가맹점 목록 아이템
+*/
+export interface StoreListItem {
+  id: number;
+  longititude: number;
+  latitude: number;
+  name: string;
+  openTime: string;
+  closeTime: string;
+  distanceFromMe: number;
+  detailAddress: string;
+  leftDeviceCount: number;
+  opening: boolean;
+}
+
+/*
   가맹점 목록 리스트
 */
 export interface StoreListResponse {
-  showStoreResponses: Store[];
+  showStoreResponses: StoreListItem[];
   hasNext: boolean;
 }
 
@@ -82,17 +118,16 @@ export interface StoreListResponse {
   가맹점 상세 정보
 */
 export interface StoreDetail {
-  name: string;
+  storeName: string;
   storeId: number;
   imageUrl: string;
   detailAddress: string;
-  phoneNumber: string;
-  distanceFromMe: number;
-  reviewRating: number;
+  phoneNumber?: string;
+  distanceFromMe?: number;
+  reviewRating?: number;
   isOpening: boolean;
   startTime: string; // "HH:mm:ss" 형식
   endTime: string; // "HH:mm:ss" 형식
-  liked: boolean;
 }
 
 /*

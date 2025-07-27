@@ -12,66 +12,26 @@ import type {
 
 export interface UseStoreListParams extends Omit<FetchStoreListParams, 'page'> {
   enabled?: boolean;
-  useMockData?: boolean; // Mock 데이터 사용 옵션 추가
 }
-
-// Mock 데이터 생성 함수
-const generateMockStoreList = (page: number): StoreListItem[] => {
-  const stores: StoreListItem[] = [];
-  const startId = page * 10 + 1;
-
-  for (let i = 0; i < 10; i++) {
-    stores.push({
-      id: startId + i,
-      longititude: 127.03832055267158 + (Math.random() - 0.5) * 0.01,
-      latitude: 37.55555294967707 + (Math.random() - 0.5) * 0.01,
-      name: `LG유플러스 테스트점 ${startId + i}`,
-      openTime: '09:00:00',
-      closeTime: '18:00:00',
-      distanceFromMe: Math.floor(Math.random() * 2000) + 100,
-      detailAddress: `서울 강남구 테스트동 ${startId + i}번지`,
-      leftDeviceCount: Math.floor(Math.random() * 20) + 1,
-      opening: Math.random() > 0.3, // 70% 확률로 영업중
-    });
-  }
-
-  return stores;
-};
-
-// Mock API 함수
-const fetchMockStoreList = async (params: FetchStoreListParams) => {
-  // 실제 API와 동일한 응답 구조
-  const page = params.page || 0;
-  const stores = generateMockStoreList(page);
-
-  // 3페이지까지만 데이터가 있다고 가정
-  const hasNext = page < 2;
-
-  return {
-    showStoreResponses: stores,
-    hasNext,
-  };
-};
 
 export const useStoreList = (params: UseStoreListParams) => {
   return useInfiniteQuery({
     queryKey: ['storeList', params],
     queryFn: async ({ pageParam = 0 }) => {
-      // Mock 데이터 사용 옵션이 있으면 Mock 데이터 사용
-      if (params.useMockData) {
-        return await fetchMockStoreList({
-          ...params,
-          page: pageParam,
-          size: 10,
-        });
-      }
+      console.log('🔍 StoreList API 요청:', {
+        ...params,
+        page: pageParam,
+        size: 10,
+      });
 
-      // 실제 API 호출
-      return await fetchStoreList({
+      const response = await fetchStoreList({
         ...params,
         page: pageParam,
         size: 10, // 10개씩 고정
       });
+
+      console.log('📦 StoreList API 응답:', response);
+      return response;
     },
     getNextPageParam: (lastPage, allPages) => {
       // hasNext가 true이면 다음 페이지 번호 반환, false이면 undefined 반환
@@ -164,15 +124,14 @@ export const convertToStoreCardProps = (storeList: StoreListItem[]): StoreCardPr
     },
     storeDetail: {
       storeId: store.id,
-      imageUrl: '', // API에서 제공하지 않는 경우 빈 문자열
+      imageUrl: '', // 실제 API에서는 이미지 URL이 제공되지 않으므로 빈 문자열
       detailAddress: store.detailAddress,
-      phoneNumber: '', // API에서 제공하지 않는 경우 빈 문자열
-      distanceFromMe: store.distanceFromMe,
       reviewRating: 0, // API에서 제공하지 않는 경우 기본값
       isOpening: store.opening,
       startTime: store.openTime,
       endTime: store.closeTime,
       storeName: store.name,
+      distanceFromMe: store.distanceFromMe, // 거리 정보 추가
     },
     deviceCount: store.leftDeviceCount,
     onLikeClick: () => {
