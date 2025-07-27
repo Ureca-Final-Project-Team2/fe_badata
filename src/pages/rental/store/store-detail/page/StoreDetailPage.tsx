@@ -76,7 +76,9 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
 
   // 탭 변경 핸들러 메모이제이션
   const handleTabChange = useCallback((newTab: string) => {
-    setTab(newTab as TabValue);
+    if (STORE_DETAIL_TABS.some((tab) => tab.value === newTab)) {
+      setTab(newTab as TabValue);
+    }
   }, []);
 
   // 헤더 타이틀 메모이제이션
