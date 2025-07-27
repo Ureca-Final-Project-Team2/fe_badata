@@ -1,9 +1,15 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { FetchStoreDevicesParams, FetchStoresParams } from '@/entities/store/lib/types';
-import type { Store, StoreDevice } from '@/pages/rental/map/lib/types';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type {
+  FetchStoreDevicesParams,
+  FetchStoresParams,
+  Store,
+  StoreDetail,
+  StoreDevice,
+  StoreListParams,
+  StoreListResponse,
+} from '@/pages/rental/map/lib/types';
 
 /**
  * 전체 가맹점 위치 목록 조회 (조건 필터 포함)
@@ -54,4 +60,19 @@ export const fetchStoreDetail = async (
       centerLng,
     },
   });
+};
+
+/**
+ * 가맹점 리스트(무한 스크롤) 조회
+ */
+export const fetchStoreList = async (params: StoreListParams): Promise<StoreListResponse> => {
+  try {
+    const response: StoreListResponse = await axiosInstance.get(END_POINTS.STORES.STORELIST, {
+      params,
+    });
+    return response;
+  } catch (error) {
+    console.error('fetchStoreList API 호출 실패:', error);
+    return { showStoreResponses: [], hasNext: false };
+  }
 };
