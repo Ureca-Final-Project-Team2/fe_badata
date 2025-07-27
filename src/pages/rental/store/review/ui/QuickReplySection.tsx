@@ -1,4 +1,4 @@
-import type { QuickReplyCount } from '../lib/types';
+import type { QuickReplyCount } from '@/pages/rental/store/review/lib/types';
 
 interface QuickReplySectionProps {
   quickReplies: QuickReplyCount[];

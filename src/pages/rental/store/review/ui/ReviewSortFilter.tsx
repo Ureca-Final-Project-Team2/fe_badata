@@ -1,6 +1,6 @@
 import { FilterDrawer, FilterOption } from '@/shared/ui/FilterDrawer';
 
-import type { ReviewSortType } from '../lib/types';
+import type { ReviewSortType } from '@/pages/rental/store/review/lib/types';
 
 interface ReviewSortFilterProps {
   isOpen: boolean;

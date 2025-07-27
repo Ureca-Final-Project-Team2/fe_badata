@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
+import { ReviewSortFilter } from '@/pages/rental/store/review/ui/ReviewSortFilter';
 import { SortButton } from '@/shared/ui/SortButton';
 
-import { ReviewSortFilter } from './ReviewSortFilter';
-
-import type { ReviewSortType } from '../lib/types';
+import type { ReviewSortType } from '@/pages/rental/store/review/lib/types';
 
 interface ReviewHeaderSectionProps {
   reviewCount: number;

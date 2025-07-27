@@ -6,7 +6,7 @@ import type {
   ReviewSortType,
   ReviewsQueryParams,
   ReviewsResponse,
-} from '../lib/types';
+} from '@/pages/rental/store/review/lib/types';
 
 export const getSortParam = (sortType: ReviewSortType): string => {
   switch (sortType) {
