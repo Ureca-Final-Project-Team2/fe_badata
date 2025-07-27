@@ -11,7 +11,7 @@ export const isPriceInRange = (price: number, range: PriceRange): boolean => {
 };
 
 export const getCapacityLabel = (capacity?: number): string | null => {
-  if (capacity === undefined || capacity === null) return null;
+  if (capacity === undefined) return null;
   if (capacity <= 100) return '100MB 이하';
   if (capacity <= 500) return '100MB~500MB';
   if (capacity <= 1024) return '500MB~1GB';
