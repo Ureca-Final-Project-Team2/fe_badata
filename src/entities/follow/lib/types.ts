@@ -26,4 +26,11 @@ export const FOLLOW_TYPES = {
   FOLLOWINGS: 'FOLLOWINGS'
 } as const;
 
-export type FollowType = typeof FOLLOW_TYPES[keyof typeof FOLLOW_TYPES]; 
+export type FollowType = typeof FOLLOW_TYPES[keyof typeof FOLLOW_TYPES];
+
+// 유틸리티 타입
+export type FollowTypeText = '팔로워' | '팔로잉';
+
+export const getFollowTypeText = (followType: FollowType): FollowTypeText => {
+  return followType === FOLLOW_TYPES.FOLLOWERS ? '팔로워' : '팔로잉';
+}; 

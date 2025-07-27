@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { deleteFollow, fetchFollows } from '@/entities/follow/api/apis';
-import { FOLLOW_TYPES } from '@/entities/follow/lib/types';
+import { deleteFollow, fetchFollows } from '../api/apis';
+import { FOLLOW_TYPES } from '../lib/types';
 
-import type { FollowItem, FollowType } from '@/entities/follow/lib/types';
+import type { FollowItem, FollowType } from '../lib/types';
 
 export function useFollows(followType: FollowType, cursor?: number, size: number = 10) {
   const { data, isLoading, isError } = useQuery<{

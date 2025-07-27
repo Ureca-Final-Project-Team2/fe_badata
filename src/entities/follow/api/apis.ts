@@ -1,3 +1,4 @@
+import { getFollowTypeText } from '@/entities/follow/lib/types';
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
@@ -19,7 +20,8 @@ export const fetchFollows = async (
     
     return response.data;
   } catch (error) {
-    console.error(`${followType === 'FOLLOWERS' ? '팔로워' : '팔로잉'} 목록 조회 실패:`, error);
+    const followTypeText = getFollowTypeText(followType);
+    console.error(`${followTypeText} 목록 조회 실패:`, error);
     throw error;
   }
 };

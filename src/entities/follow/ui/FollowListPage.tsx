@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { FOLLOW_TYPES, useDeleteFollow, useFollows } from '@/entities/follow';
+import { getFollowTypeText, useDeleteFollow, useFollows } from '@/entities/follow';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { Profile } from '@/shared/ui/Profile';
@@ -27,7 +27,8 @@ export default function FollowListPage({ followType, title, emptyMessage }: Foll
     try {
       await deleteFollowMutation.mutateAsync(id);
     } catch (error) {
-      console.error(`${followType === FOLLOW_TYPES.FOLLOWERS ? '팔로워' : '팔로잉'} 삭제 실패:`, error);
+      const followTypeText = getFollowTypeText(followType);
+      console.error(`${followTypeText} 삭제 실패:`, error);
     }
   };
 
