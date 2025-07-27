@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { fetchFollowings } from '@/pages/mypage/following/api/apis';
+import { deleteFollowing, fetchFollowings } from '@/pages/mypage/following/api/apis';
 
 import type { FollowingItem } from '@/pages/mypage/following/lib/types';
 
@@ -25,4 +25,18 @@ export function useFollowings(cursor?: number, size: number = 10) {
     isLoading,
     isError,
   };
+}
+
+export function useDeleteFollowing() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteFollowing,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['followings'] });
+    },
+    onError: (error) => {
+      console.error('팔로잉 삭제 실패:', error);
+    },
+  });
 } 
