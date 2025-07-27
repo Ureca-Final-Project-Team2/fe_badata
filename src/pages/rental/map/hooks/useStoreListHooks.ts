@@ -124,7 +124,7 @@ export const convertToStoreCardProps = (storeList: StoreListItem[]): StoreCardPr
     },
     storeDetail: {
       storeId: store.id,
-      imageUrl: '', // 실제 API에서는 이미지 URL이 제공되지 않으므로 빈 문자열
+      imageUrl: store.storeImageUrl,
       detailAddress: store.detailAddress,
       reviewRating: 0, // API에서 제공하지 않는 경우 기본값
       isOpening: store.opening,

@@ -103,6 +103,7 @@ export interface StoreListItem {
   distanceFromMe: number;
   detailAddress: string;
   leftDeviceCount: number;
+  storeImageUrl: string;
   opening: boolean;
 }
 
