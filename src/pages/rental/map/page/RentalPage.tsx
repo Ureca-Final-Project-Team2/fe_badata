@@ -2,6 +2,12 @@
 
 import { useEffect, useReducer, useState } from 'react';
 
+declare global {
+  interface Window {
+    kakao: typeof kakao;
+  }
+}
+
 import { CenterScrollSwiper } from '@/entities/scroll';
 import {
   convertToStoreCardProps,
@@ -43,6 +49,7 @@ const RentalPage = () => {
     lat: 37.55555294967707, // 기본 위치
     lng: 127.03832055267158,
   });
+  const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
 
   // 사용자 위치 가져오기
   useEffect(() => {
@@ -72,10 +79,17 @@ const RentalPage = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation({
+          const newLocation = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
+          };
+          setUserLocation(newLocation);
+
+          // 카메라를 현재 위치로 이동
+          if (mapInstance) {
+            const newPosition = new window.kakao.maps.LatLng(newLocation.lat, newLocation.lng);
+            mapInstance.setCenter(newPosition);
+          }
         },
         (error) => {
           console.log('위치 정보를 가져올 수 없습니다:', error.message);
@@ -195,7 +209,7 @@ const RentalPage = () => {
       fab={
         <div className="flex items-center justify-between w-full">
           {/* 현재 위치 버튼 */}
-          <CurrentLocationButton className="ml-5" onClick={handleCurrentLocation} />
+          <CurrentLocationButton className="ml-5 cursor-pointer" onClick={handleCurrentLocation} />
 
           {/* 목록보기 버튼 */}
           <ListViewButton onClick={handleListView} />
@@ -215,6 +229,9 @@ const RentalPage = () => {
             storeId: storeId ?? 0,
             storeDetail,
           });
+        }}
+        onMapReady={(map) => {
+          setMapInstance(map);
         }}
       />
       <DrawerSection

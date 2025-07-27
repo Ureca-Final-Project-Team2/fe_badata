@@ -17,9 +17,10 @@ interface MapSectionProps {
     storeDetail?: StoreDetail,
     storeId?: number,
   ) => void;
+  onMapReady?: (map: kakao.maps.Map) => void;
 }
 
-export const MapSection = ({ filterState, onStoreMarkerClick }: MapSectionProps) => {
+export const MapSection = ({ filterState, onStoreMarkerClick, onMapReady }: MapSectionProps) => {
   const { mapRef, map } = useKakaoMapHooks();
   const storesResult = useFetchStoresHooks(map, filterState);
   const stores = storesResult.stores;
@@ -29,6 +30,12 @@ export const MapSection = ({ filterState, onStoreMarkerClick }: MapSectionProps)
     // stores, filterState가 바뀔 때마다 마커를 다시 렌더링
     renderStoreMarkers(map, stores, filterState, onStoreMarkerClick);
   }, [map, stores, filterState, onStoreMarkerClick]);
+
+  useEffect(() => {
+    if (map && onMapReady) {
+      onMapReady(map);
+    }
+  }, [map, onMapReady]);
 
   return <div ref={mapRef} className="w-full h-full" />;
 };
