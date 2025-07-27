@@ -79,6 +79,8 @@ export default function DataPage() {
       <DataFilterDrawer
         isOpen={isFilterDrawerOpen}
         onClose={() => setIsFilterDrawerOpen(false)}
+        filterState={filterState}
+        dispatch={dispatchFilter}
         onSubmit={handleFilterSubmit}
       />
     </>

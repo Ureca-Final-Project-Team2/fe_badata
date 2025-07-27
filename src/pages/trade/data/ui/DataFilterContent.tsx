@@ -1,18 +1,12 @@
 'use client';
 
-import { useReducer } from 'react';
-
 import { OptionButton, SectionField } from '@/pages/rental/map/ui';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 
 import { PRICE_RANGES } from '../lib/constants';
-import {
-  dataFilterReducer,
-  initialDataFilterState,
-  type DataFilterState,
-} from '../model/dataFilterReducer';
+import { type DataFilterState } from '../model/dataFilterReducer';
 
-import type { PriceRange } from '../model/dataFilterReducer';
+import type { DataFilterAction, PriceRange } from '../model/dataFilterReducer';
 
 const CARRIER_OPTIONS = ['UPLUS', 'KT', 'SKT'] as const;
 const CAPACITY_OPTIONS = ['100MB 이하', '100MB~500MB', '500MB~1GB', '1GB~5GB', '5GB 이상'];
@@ -23,13 +17,18 @@ const PRICE_OPTIONS = Object.entries(PRICE_RANGES).map(([value, { label }]) => (
 }));
 
 interface DataFilterContentProps {
+  state: DataFilterState;
+  dispatch: React.Dispatch<DataFilterAction>;
   onClose?: () => void;
   onSubmit?: (filters: DataFilterState) => void;
 }
 
-export default function DataFilterContent({ onClose, onSubmit }: DataFilterContentProps) {
-  const [state, dispatch] = useReducer(dataFilterReducer, initialDataFilterState);
-
+export default function DataFilterContent({
+  state,
+  dispatch,
+  onClose,
+  onSubmit,
+}: DataFilterContentProps) {
   return (
     <form className="flex flex-col rounded-lg p-4">
       <div className="flex flex-col gap-5 border-b border-[var(--gray)] pb-6">

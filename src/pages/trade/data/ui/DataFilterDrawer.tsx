@@ -2,18 +2,31 @@ import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 
 import DataFilterContent from './DataFilterContent';
 
-import type { DataFilterState } from '../model/dataFilterReducer';
+import type { DataFilterAction, DataFilterState } from '../model/dataFilterReducer';
 
 interface DataFilterDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  filterState: DataFilterState;
+  dispatch: React.Dispatch<DataFilterAction>;
   onSubmit: (filters: DataFilterState) => void;
 }
 
-export function DataFilterDrawer({ isOpen, onClose, onSubmit }: DataFilterDrawerProps) {
+export function DataFilterDrawer({
+  isOpen,
+  onClose,
+  filterState,
+  dispatch,
+  onSubmit,
+}: DataFilterDrawerProps) {
   return (
     <FilterDrawer isOpen={isOpen} onClose={onClose}>
-      <DataFilterContent onClose={onClose} onSubmit={onSubmit} />
+      <DataFilterContent
+        state={filterState}
+        dispatch={dispatch}
+        onClose={onClose}
+        onSubmit={onSubmit}
+      />
     </FilterDrawer>
   );
 }
