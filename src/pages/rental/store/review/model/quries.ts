@@ -9,6 +9,8 @@ export const reviewQueryKeys = {
   store: (storeId: number) => [...reviewQueryKeys.all, 'store', storeId] as const,
   storeReviews: (storeId: number, sortType: ReviewSortType) =>
     [...reviewQueryKeys.store(storeId), 'list', sortType] as const,
+  storeReviewPage: (storeId: number, sortType: ReviewSortType, page: number, size: number) =>
+    [...reviewQueryKeys.storeReviews(storeId, sortType), 'page', page, size] as const,
   storeMeta: (storeId: number) => [...reviewQueryKeys.store(storeId), 'meta'] as const,
 };
 
@@ -19,7 +21,7 @@ export const useStoreReview = (
   sortType: ReviewSortType,
 ) => {
   return useQuery({
-    queryKey: [...reviewQueryKeys.storeReviews(storeId, sortType), page, size],
+    queryKey: reviewQueryKeys.storeReviewPage(storeId, sortType, page, size),
     queryFn: () => getStoreReviewsWithSort(storeId, page, size, sortType),
     staleTime: 2 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
