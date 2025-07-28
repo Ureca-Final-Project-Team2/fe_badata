@@ -14,6 +14,10 @@ import AddressHistoryList from '@/pages/rental/search/ui/AddressHistoryList';
 import CurrentLocationButton from '@/pages/rental/search/ui/CurrentLocationButton';
 import SearchInputField from '@/pages/rental/search/ui/SearchInputField';
 import SearchResults from '@/pages/rental/search/ui/SearchResults';
+import {
+  getAddressHistoryQueryKey,
+  getAddressHistorySortBy,
+} from '@/pages/rental/search/utils/sortUtils';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
 
@@ -25,12 +29,19 @@ const SearchPosPage = () => {
   const deleteAddressMutation = useDeleteAddressHistory();
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // 클라이언트 사이드에서만 정렬 기준 가져오기
+  const [sortBy, setSortBy] = React.useState('lastUsed,desc');
+
+  React.useEffect(() => {
+    setSortBy(getAddressHistorySortBy());
+  }, []);
+
   const {
     data: addressHistoryInfinite,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetAddressHistoryInfinite(5, 'lastUsed,desc');
+  } = useGetAddressHistoryInfinite(5, sortBy);
 
   // 키워드 검색 훅
   const {
@@ -59,7 +70,7 @@ const SearchPosPage = () => {
       setKeyword(item.address_name);
 
       // 낙관적 업데이트: 클릭한 주소를 맨 위로 이동
-      const currentData = queryClient.getQueryData(['addressHistory', 5, 'lastUsed,desc']);
+      const currentData = queryClient.getQueryData(getAddressHistoryQueryKey());
 
       if (currentData && typeof currentData === 'object' && 'pages' in currentData) {
         const oldData = currentData as {
@@ -105,7 +116,7 @@ const SearchPosPage = () => {
         });
 
         // 낙관적 업데이트 적용
-        queryClient.setQueryData(['addressHistory', 5, 'lastUsed,desc'], {
+        queryClient.setQueryData(getAddressHistoryQueryKey(), {
           ...oldData,
           pages: updatedPages,
         });
@@ -116,7 +127,7 @@ const SearchPosPage = () => {
       } catch (error) {
         console.error('주소 사용 시간 업데이트 실패:', error);
         // 에러 시 캐시 무효화하여 서버 데이터로 복원
-        queryClient.invalidateQueries({ queryKey: ['addressHistory', 5, 'lastUsed,desc'] });
+        queryClient.invalidateQueries({ queryKey: getAddressHistoryQueryKey() });
       }
     },
     [setKeyword, queryClient],

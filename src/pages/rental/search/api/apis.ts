@@ -118,7 +118,8 @@ export const getAddressHistoryList = async (
     };
   }
 
-  // 로그인된 사용자는 서버 API 사용
+  // 로그인된 사용자는 서버 API 사용 (생성일 기준 정렬)
+  sort = 'createdAt,desc';
   const response: AddressHistoryListResponse = await axiosInstance.get(
     `${END_POINTS.POSITION.POSITION}?page=${page}&size=${size}&sort=${sort}`,
   );

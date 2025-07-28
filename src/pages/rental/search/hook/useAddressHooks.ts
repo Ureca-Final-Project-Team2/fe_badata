@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createAddressHistory, type AddressHistoryResponse } from '@/pages/rental/search/api/apis';
+import { getAddressHistoryQueryKey } from '@/pages/rental/search/utils/sortUtils';
 
 import type { PlaceSearchResult } from '@/pages/rental/search/utils/address/searchPlaces';
 
@@ -25,11 +26,11 @@ export const useCreateAddressHistory = () => {
     },
     onMutate: async (place) => {
       // 낙관적 업데이트를 위한 이전 데이터 백업
-      await queryClient.cancelQueries({ queryKey: ['addressHistory', 5, 'lastUsed,desc'] });
-      const previousData = queryClient.getQueryData(['addressHistory', 5, 'lastUsed,desc']);
+      await queryClient.cancelQueries({ queryKey: getAddressHistoryQueryKey() });
+      const previousData = queryClient.getQueryData(getAddressHistoryQueryKey());
 
       // 낙관적으로 새 주소를 맨 위에 추가
-      queryClient.setQueryData(['addressHistory', 5, 'lastUsed,desc'], (old: unknown) => {
+      queryClient.setQueryData(getAddressHistoryQueryKey(), (old: unknown) => {
         if (!old || typeof old !== 'object' || !('pages' in old)) return old;
 
         const oldData = old as {
@@ -98,19 +99,19 @@ export const useCreateAddressHistory = () => {
       console.log('주소 이력 생성 성공:', data);
 
       // 성공 시 캐시 무효화하여 서버 데이터로 동기화
-      queryClient.invalidateQueries({ queryKey: ['addressHistory', 5, 'lastUsed,desc'] });
+      queryClient.invalidateQueries({ queryKey: getAddressHistoryQueryKey() });
     },
     onError: (error, place, context) => {
       console.error('주소 이력 생성 실패:', error);
 
       // 에러 시 이전 데이터로 롤백
       if (context && typeof context === 'object' && 'previousData' in context) {
-        queryClient.setQueryData(['addressHistory', 5, 'lastUsed,desc'], context.previousData);
+        queryClient.setQueryData(getAddressHistoryQueryKey(), context.previousData);
       }
     },
     onSettled: () => {
       // 완료 후 캐시 무효화하여 최신 데이터 확보
-      queryClient.invalidateQueries({ queryKey: ['addressHistory', 5, 'lastUsed,desc'] });
+      queryClient.invalidateQueries({ queryKey: getAddressHistoryQueryKey() });
     },
   });
 };
