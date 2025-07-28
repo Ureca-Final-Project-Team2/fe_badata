@@ -94,7 +94,13 @@ export function usePayment(
       return;
     }
 
-    window.IMP.init('imp84603310');
+    const impCode = process.env.NEXT_PUBLIC_IAMPORT_IMP_CODE;
+    if (!impCode) {
+      makeToast('결제 설정 오류: IMP 코드가 설정되지 않았습니다.', 'warning');
+      setLoading(false);
+      return;
+    }
+    window.IMP.init(impCode);
     window.IMP.request_pay(
       {
         channelKey,
