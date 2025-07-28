@@ -11,6 +11,7 @@ export interface ReservationDevice {
 }
 
 export interface ReservationDetails {
+  storeId: number;
   storeName: string;
   showReservedDeviceResponses: ReservationDevice[];
   countOfVisit: number;
