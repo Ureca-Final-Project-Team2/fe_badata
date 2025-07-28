@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 
-import { MapPin, Target } from 'lucide-react';
+import { MapPin, Target, X } from 'lucide-react';
 
 import { useCreateAddressHistory } from '@/pages/rental/search/hook/useAddressHooks';
+import { useDeleteAddressHistory } from '@/pages/rental/search/hook/useDeleteAddressHooks';
 import { useGetAddressHistory } from '@/pages/rental/search/hook/useGetAddressHistoryHooks';
 import AddressInfoSection from '@/pages/rental/search/page/AddressInfoSection';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
@@ -14,6 +15,7 @@ import { InputField } from '@/shared/ui/InputField';
 const SearchPosPage = () => {
   const [search, setSearch] = useState('');
   const createAddressMutation = useCreateAddressHistory();
+  const deleteAddressMutation = useDeleteAddressHistory();
   const { data: addressHistory } = useGetAddressHistory(0, 10, 'createdAt,desc');
 
   const handleSubmit = (value: string) => {
@@ -26,6 +28,11 @@ const SearchPosPage = () => {
   const handleCurrentLocation = () => {
     console.log('현재 위치로 찾기');
     // TODO: 현재 위치 기반 검색 로직 구현
+  };
+
+  const handleDeleteAddress = (addressId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // 클릭 이벤트 전파 방지
+    deleteAddressMutation.mutate(addressId);
   };
 
   return (
@@ -86,9 +93,15 @@ const SearchPosPage = () => {
                     onClick={() => setSearch(item.detailAddress)}
                   >
                     <div className="flex items-center justify-between">
-                      <p className="text-[var(--gray-dark)] font-small-regular text-sm">
+                      <p className="text-[var(--gray-dark)] font-small-regular">
                         {item.detailAddress}
                       </p>
+                      <button
+                        onClick={(e) => handleDeleteAddress(item.addressId, e)}
+                        className="p-1 hover:bg-[var(--gray-light)] rounded transition-colors"
+                      >
+                        <X className="w-3 h-3 text-[var(--gray)]" />
+                      </button>
                     </div>
                   </div>
                 ))}

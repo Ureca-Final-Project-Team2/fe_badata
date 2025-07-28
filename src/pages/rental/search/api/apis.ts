@@ -8,7 +8,7 @@ export interface CreateAddressHistoryRequest {
   longititude: number;
 }
 
-// 주소 이력 생성 응답 타입
+// 주소 이력 생성, 삭제제 응답 타입
 export interface AddressHistoryResponse {
   code: number;
   message: string;
@@ -49,6 +49,14 @@ export const getAddressHistoryList = async (
 ): Promise<AddressHistoryListResponse> => {
   const response: AddressHistoryListResponse = await axiosInstance.get(
     `${END_POINTS.POSITION.POSITION}?page=${page}&size=${size}&sort=${sort}`,
+  );
+  return response;
+};
+
+// 주소 이력 삭제 API
+export const deleteAddressHistory = async (addressId: number): Promise<AddressHistoryResponse> => {
+  const response: AddressHistoryResponse = await axiosInstance.delete(
+    `${END_POINTS.POSITION.DELETE_POSITION(addressId)}`,
   );
   return response;
 };

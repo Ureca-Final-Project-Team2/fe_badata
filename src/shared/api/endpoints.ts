@@ -41,6 +41,7 @@ export const END_POINTS = {
   },
   POSITION: {
     POSITION: '/api/v1/addresses', // 주소 이력 생성, 조회
+    DELETE_POSITION: (addressId: number) => `/api/v1/addresses/${addressId}`, // 주소 이력 삭제
   },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
