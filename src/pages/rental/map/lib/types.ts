@@ -45,7 +45,7 @@ export interface StoreCardProps {
 }
 
 /*
-  가맹점 목록 리스트 파라미터
+  평점 컴포넌트 프로퍼티
 */
 export interface ScoreProps {
   value?: number;
@@ -54,27 +54,7 @@ export interface ScoreProps {
 }
 
 /*
-  가맹점 목록 리스트 파라미터
-*/
-export interface StoreListParams {
-  centerLat: number;
-  centerLng: number;
-  isOpeningNow?: boolean;
-  rentalStartDate?: string;
-  rentalEndDate?: string;
-  reviewRating?: number;
-  minPrice?: number | null;
-  maxPrice?: number | null;
-  dataCapacity?: number[];
-  is5G?: boolean | null;
-  maxSupportConnection?: number[];
-  page: number;
-  size: number;
-  sort: string[];
-}
-
-/*
-  가맹점 목록 리스트 파라미터
+  가맹점 목록 조회 파라미터 (무한 스크롤)
 */
 export interface FetchStoreListParams {
   centerLat: number;
@@ -88,10 +68,13 @@ export interface FetchStoreListParams {
   dataCapacity?: number[];
   is5G?: boolean | null;
   maxSupportConnection?: number[];
-  page?: number;
-  size?: number;
+  page?: number; // 무한 스크롤용 페이지 번호
+  size?: number; // 무한 스크롤용 페이지 크기
   sort: string[];
 }
+
+// StoreListParams는 FetchStoreListParams와 동일하므로 별칭으로 정의
+export type StoreListParams = FetchStoreListParams;
 
 /*
   가맹점 목록 아이템
