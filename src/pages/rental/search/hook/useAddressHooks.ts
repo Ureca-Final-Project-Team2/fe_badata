@@ -10,43 +10,6 @@ export const useCreateAddressHistory = () => {
 
   return useMutation<AddressHistoryResponse, Error, PlaceSearchResult>({
     mutationFn: async (place: PlaceSearchResult) => {
-      // 현재 주소 이력 데이터 확인
-      const currentData = queryClient.getQueryData(['addressHistory', 5, 'lastUsed,desc']);
-
-      // 가장 최근 주소와 중복 확인
-      if (currentData) {
-        type AddressHistoryPage = {
-          content: {
-            getAddressResponses: {
-              address_name: string;
-              place_name: string;
-            }[];
-          };
-        };
-        type AddressHistoryInfiniteData = {
-          pages: AddressHistoryPage[];
-        };
-
-        const allPages = (currentData as AddressHistoryInfiniteData).pages;
-        if (allPages.length > 0 && allPages[0]?.content?.getAddressResponses?.length > 0) {
-          const mostRecentItem = allPages[0].content.getAddressResponses[0];
-
-          // place_name과 address_name을 모두 비교하여 정확한 중복 체크
-          if (
-            mostRecentItem.place_name === place.place_name &&
-            mostRecentItem.address_name === place.address_name
-          ) {
-            console.log('가장 최근 주소와 동일합니다. 추가하지 않습니다:', place.place_name);
-            // 중복인 경우 성공 응답을 반환하되 실제로는 추가하지 않음
-            return {
-              code: 20000,
-              message: '이미 존재하는 주소입니다.',
-              content: 0,
-            };
-          }
-        }
-      }
-
       // 주소 이력 생성 API 호출 (선택한 장소의 전체 정보 사용)
       const requestData = {
         address_name: place.address_name,
