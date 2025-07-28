@@ -39,7 +39,9 @@ export const END_POINTS = {
     RESERVATIONS: `/api/v1/rentals/devices`,
     RESTOCK: `/api/v1/restock`,
   },
-
+  POSITION: {
+    POSITION: '/api/v1/addresses', // 주소 이력 생성
+  },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     DATA_USAGE: '/api/v1/users/data',
