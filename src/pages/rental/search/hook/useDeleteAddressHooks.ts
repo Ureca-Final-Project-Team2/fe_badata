@@ -10,8 +10,8 @@ export const useDeleteAddressHistory = () => {
     mutationFn: deleteAddressHistory,
     onSuccess: (data) => {
       console.log('주소 이력 삭제 성공:', data);
-      // 주소 이력 목록을 다시 불러옴
-      queryClient.invalidateQueries({ queryKey: ['addressHistory'] });
+      // 무한스크롤 쿼리 새로고침
+      queryClient.invalidateQueries({ queryKey: ['addressHistoryInfinite'] });
     },
     onError: (error) => {
       console.error('주소 이력 삭제 실패:', error);
