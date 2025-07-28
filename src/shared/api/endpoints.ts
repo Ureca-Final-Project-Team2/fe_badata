@@ -38,6 +38,8 @@ export const END_POINTS = {
     AVAILABLE_DEVICE: (storeId: number) => `/api/v1/rentals/${storeId}/devices`, //예약할 기기 조회
     RESERVATIONS: `/api/v1/rentals/devices`,
     RESTOCK: `/api/v1/restock`,
+    REVIEWS: (storeId: number) => `/api/v1/${storeId}/reviews`,
+    REVIEW_META: (storeId: number) => `/api/v1/${storeId}/review-meta`,
   },
 
   MYPAGE: {
