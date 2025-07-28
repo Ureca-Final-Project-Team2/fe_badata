@@ -9,11 +9,16 @@ export const getUserCoin = async (): Promise<UserCoin> => {
 };
 
 export const getUserCoinHistory = async (params?: CoinHistoryParams): Promise<CoinHistoryResponse> => {
-  const queryParams = new URLSearchParams();
-  if (params?.cursor) queryParams.append('cursor', params.cursor.toString());
-  if (params?.size) queryParams.append('size', params.size.toString());
-  
-  const url = `${END_POINTS.MYPAGE.COIN_HISTORY}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-  const data: CoinHistoryResponse = await axiosInstance.get(url);
-  return data;
+  try {
+    const data: CoinHistoryResponse = await axiosInstance.get(END_POINTS.MYPAGE.COIN_HISTORY, {
+      params: {
+        ...(params?.cursor && { cursor: params.cursor }),
+        ...(params?.size && { size: params.size }),
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch coin history:', error);
+    throw error;
+  }
 };

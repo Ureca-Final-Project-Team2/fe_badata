@@ -7,9 +7,14 @@ export const getSosHistory = async (
   cursor?: number,
   size = 10,
 ): Promise<SosHistoryResponse['content'] | null> => {
-  const content = await axiosInstance.get<SosHistoryResponse['content']>(
-    END_POINTS.MYPAGE.SOS_HISTORY,
-    { params: { cursor, size } },
-  );
-  return content ?? null;
+    try {
+    const response: SosHistoryResponse = await axiosInstance.get(
+      END_POINTS.MYPAGE.SOS_HISTORY,
+      { params: { cursor, size } },
+    );
+    return response.content ?? null;
+  } catch (error) {
+    console.error('Failed to fetch SOS history:', error);
+    throw error;
+  }
 };
