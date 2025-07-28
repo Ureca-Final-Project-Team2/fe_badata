@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { fetchStoreList } from '@/pages/rental/map/api/apis';
+import { normalizeApiParams } from '@/pages/rental/map/utils/paramNormalizer';
 
 import type { StoreListParams, StoreListResponse } from '@/pages/rental/map/lib/types';
 
@@ -16,26 +17,9 @@ export const useFetchStoreListHooks = (initialParams: StoreListParams, deps: unk
     setIsLoading(true);
     try {
       // 백엔드 요청 형식에 맞게 파라미터 변환
-      const mergedParams: Record<string, unknown> = {};
-      Object.entries(params).forEach(([key, value]) => {
-        if (value === undefined) return; // undefined만 제외
+      const normalizedParams = normalizeApiParams(params);
 
-        if (value === null) {
-          mergedParams[key] = ''; // null은 빈 문자열로
-        } else if (Array.isArray(value)) {
-          if (value.length === 0) {
-            mergedParams[key] = ''; // 빈 배열은 빈 문자열로
-          } else if (key === 'sort') {
-            mergedParams[key] = value.join(','); // sort 배열은 쉼표로 구분
-          } else {
-            mergedParams[key] = value; // 다른 배열은 그대로
-          }
-        } else {
-          mergedParams[key] = value; // 일반 값은 그대로
-        }
-      });
-
-      const res = await fetchStoreList(mergedParams as unknown as StoreListParams);
+      const res = await fetchStoreList(normalizedParams);
       setStores(res.showStoreResponses || []);
       setHasNext(res.hasNext);
     } catch (e) {

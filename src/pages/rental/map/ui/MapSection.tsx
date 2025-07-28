@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 
+import { useFetchStoresHooks } from '@/pages/rental/map/hooks/useFetchStoresHooks';
+import { useKakaoMapHooks } from '@/pages/rental/map/hooks/useKakaoMapHooks';
 import { renderStoreMarkers } from '@/pages/rental/map/lib/renderStoreMarkers';
-import { useFetchStoresHooks } from '@/pages/rental/map/model/useFetchStoresHooks';
-import { useKakaoMapHooks } from '@/pages/rental/map/model/useKakaoMapHooks';
 
 import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
 import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
