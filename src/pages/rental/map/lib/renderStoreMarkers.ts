@@ -2,7 +2,7 @@ import { fetchStoreDetail, fetchStoreDevices } from '@/pages/rental/map/api/apis
 import { ICONS } from '@/shared/config/iconPath';
 
 import type { Store, StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
-import { RentalFilterState } from '../model/rentalFilterReducer';
+import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 
 // 상수 정의
 const MARKER_SIZE = 36;
@@ -155,7 +155,9 @@ const createStoreMarker = async (
     // 디바이스 데이터 조회 (필터 파라미터 전달)
     const deviceParams = {
       ...filterParams,
-      maxSupportConnection: filterParams.maxSupportConnection ?? undefined,
+      maxSupportConnection: filterParams.maxSupportConnection
+        ? [filterParams.maxSupportConnection]
+        : undefined,
     };
     const devices = await fetchStoreDevices(store.id, deviceParams);
     const safeDevices = Array.isArray(devices) ? devices : [];
@@ -181,8 +183,9 @@ const createStoreMarker = async (
     const overlay = createDeviceCountOverlay(position, totalLeftCount);
     overlay.setMap(map);
 
-    // 생성된 마커와 오버레이를 배열에 추가 (나중에 제거하기 위해)
-    currentMarkers.push(marker, overlay);
+    // 생성된 마커와 오버레이를 맵에 추가
+    addMarkerToMap(map, marker);
+    addMarkerToMap(map, overlay);
 
     // 인포윈도우 생성
     const infowindow = createInfoWindow(store.name);
@@ -221,19 +224,33 @@ const processBatch = async (
   }
 };
 
-// 기존 마커들을 저장할 배열
-let currentMarkers: (kakao.maps.Marker | kakao.maps.CustomOverlay)[] = [];
+// 맵 인스턴스별로 마커를 관리하는 WeakMap
+const markersMap = new WeakMap<
+  kakao.maps.Map,
+  Array<kakao.maps.Marker | kakao.maps.CustomOverlay>
+>();
 
-// 기존 마커들을 모두 제거하는 함수
-const clearAllMarkers = (): void => {
-  currentMarkers.forEach((marker) => {
+// 특정 맵의 기존 마커들을 모두 제거하는 함수
+const clearAllMarkers = (map: kakao.maps.Map): void => {
+  const markers = markersMap.get(map) || [];
+  markers.forEach((marker) => {
     if (marker instanceof window.kakao.maps.Marker) {
       marker.setMap(null);
     } else if (marker instanceof window.kakao.maps.CustomOverlay) {
       marker.setMap(null);
     }
   });
-  currentMarkers = [];
+  markersMap.set(map, []);
+};
+
+// 특정 맵에 마커를 추가하는 함수
+const addMarkerToMap = (
+  map: kakao.maps.Map,
+  marker: kakao.maps.Marker | kakao.maps.CustomOverlay,
+): void => {
+  const markers = markersMap.get(map) || [];
+  markers.push(marker);
+  markersMap.set(map, markers);
 };
 
 export const renderStoreMarkers = async (
@@ -252,7 +269,7 @@ export const renderStoreMarkers = async (
 
   try {
     // 기존 마커들을 모두 제거
-    clearAllMarkers();
+    clearAllMarkers(map);
 
     // 매장이 있을 때만 마커 렌더링 (현재 위치 마커는 useKakaoMapHooks에서 한 번만 생성)
     if (stores && stores.length > 0) {
