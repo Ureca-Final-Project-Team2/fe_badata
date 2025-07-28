@@ -21,11 +21,9 @@ export const useReservationDevices = ({
   storeId,
   dateRange,
 }: UseReservationDevicesProps): UseReservationDevicesReturn => {
-  const [devices, setDevices] = useState<RentalDevice[]>([]);
   const [isLoadingDevices, setIsLoadingDevices] = useState(false);
 
   // 이전 devices를 유지하여 부드러운 전환 (깜빡거림 방지)
-  const [prevDevices, setPrevDevices] = useState<RentalDevice[]>([]);
   const [displayDevices, setDisplayDevices] = useState<RentalDevice[]>([]);
 
   // 초기 로딩 완료 플래그
@@ -51,11 +49,11 @@ export const useReservationDevices = ({
             : undefined;
 
         const deviceList = await fetchRentalDevices(storeId, params);
-        setDevices(deviceList);
+        setDisplayDevices(deviceList);
       } catch (error) {
         console.error('예약 가능한 장비 목록 조회 실패:', error);
         makeToast('장비 목록을 불러오는데 실패했습니다.', 'warning');
-        setDevices([]);
+        setDisplayDevices([]);
       } finally {
         setIsLoadingDevices(false);
       }
@@ -92,16 +90,12 @@ export const useReservationDevices = ({
         // 로딩 타임아웃 클리어
         clearTimeout(loadingTimeout);
 
-        // 부드러운 전환을 위해 이전 데이터 저장 및 새 데이터 설정
-        setDevices((currentDevices) => {
-          setPrevDevices(currentDevices);
-          setDisplayDevices(deviceList); // 즉시 업데이트
-          return deviceList;
-        });
+        // 부드러운 전환을 위해 새 데이터 설정
+        setDisplayDevices(deviceList); // 즉시 업데이트
       } catch (error) {
         console.error('예약 가능한 장비 목록 조회 실패:', error);
         makeToast('장비 목록을 불러오는데 실패했습니다.', 'warning');
-        setDevices([]);
+        setDisplayDevices([]);
         // 에러 시에는 현재 displayDevices 유지 (깜빡거림 방지)
       } finally {
         setIsLoadingDevices(false);
@@ -134,7 +128,7 @@ export const useReservationDevices = ({
       // 날짜가 초기화된 경우: 모든 장비 조회
       fetchDevicesSafely();
     }
-  }, [fetchDevicesSafely, dateRange?.from, dateRange?.to]);
+  }, [fetchDevicesSafely, dateRange]);
 
   return {
     devices: displayDevices, // 부드러운 전환을 위한 displayDevices 반환

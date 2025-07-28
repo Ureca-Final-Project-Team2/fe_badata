@@ -267,6 +267,8 @@ body {
     font-size: var(--font-small-size);
     font-weight: var(--font-light);
   }
+
+
 }
 
 @keyframes slideUpDrawer {

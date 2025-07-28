@@ -4,8 +4,8 @@ import CalendarSection from '@/pages/rental/store/reservation/page/CalendarSecti
 import DeviceSelectSection from '@/pages/rental/store/reservation/page/DeviceSelectSection';
 import NoticeSection from '@/pages/rental/store/reservation/page/NoticeSection';
 import {
-  convertFromReducerDateRange,
-  convertToReducerDateRange,
+    convertFromReducerDateRange,
+    convertToReducerDateRange,
 } from '@/pages/rental/store/reservation/utils/typeConverters';
 import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
 
@@ -45,8 +45,8 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     <div className="flex flex-col gap-4 w-full">
       {/* 날짜 선택 */}
       <CalendarSection
-        dateRange={convertToReducerDateRange(dateRange) as any}
-        onChange={(range: any) => onDateRangeChange(convertFromReducerDateRange(range))}
+        dateRange={convertToReducerDateRange(dateRange)}
+        onChange={(range) => onDateRangeChange(convertFromReducerDateRange(range))}
       />
 
       {/* 기기 선택 */}
