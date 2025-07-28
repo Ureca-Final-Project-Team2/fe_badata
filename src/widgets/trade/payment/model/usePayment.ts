@@ -1,8 +1,14 @@
 import { useState } from 'react';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
+import { makeToast } from '@/shared/lib/makeToast';
 import { createPayment, verifyPayment } from '@/widgets/trade/payment/api/apis';
 
-import type { IamportRequestPayParams, IamportResponse } from '@/widgets/trade/payment/lib/types';
+import type {
+  CreatePaymentResponse,
+  IamportRequestPayParams,
+  IamportResponse,
+} from '@/widgets/trade/payment/lib/types';
 
 declare global {
   interface Window {
@@ -21,8 +27,15 @@ export function usePayment(postId: number, title: string, price: number) {
   const [isPaid, setIsPaid] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
+  const { user, isLoggedIn } = useAuthStore();
 
   const handlePayment = async (useCoin: number = 0) => {
+    // 로그인 상태 확인
+    if (!isLoggedIn || !user) {
+      makeToast('로그인이 필요합니다.', 'warning');
+      return;
+    }
+
     setLoading(true);
 
     let merchant_uid = '';
@@ -31,31 +44,46 @@ export function usePayment(postId: number, title: string, price: number) {
     try {
       // 실제 사용할 코인 금액 전달
       const res = await createPayment(postId, useCoin);
-      console.log('createPayment 응답:', res);
-      if (!res || typeof res !== 'object' || !('merchantUid' in res)) {
-        alert('결제 고유 ID 응답이 올바르지 않습니다.');
+
+      // 응답 데이터 추출
+      const responseData = res?.data || res;
+
+      if (!responseData || typeof responseData !== 'object' || !('merchantUid' in responseData)) {
+        makeToast('결제 고유 ID 응답이 올바르지 않습니다.', 'warning');
         setLoading(false);
         return;
       }
-      merchant_uid = res.merchantUid as string;
-      // amount가 있으면 사용하고, 없으면 원래 가격 사용
-      finalAmount = (res as unknown as { amount: number }).amount || price;
+
+      const createPaymentData = responseData as CreatePaymentResponse;
+      merchant_uid = createPaymentData.merchantUid;
+      finalAmount = createPaymentData.amount || price;
     } catch (e) {
       console.error('createPayment 에러:', e);
-      alert('결제 고유 ID 발급 실패');
+
+      // 에러 타입에 따른 구체적인 메시지 표시
+      if (e && typeof e === 'object' && 'response' in e) {
+        const axiosError = e as { response?: { data?: { message?: string } } };
+        const errorMessage = axiosError.response?.data?.message;
+        makeToast(errorMessage || '결제 고유 ID 발급 실패', 'warning');
+      } else if (e instanceof Error) {
+        makeToast(e.message, 'warning');
+      } else {
+        makeToast('결제 고유 ID 발급 실패', 'warning');
+      }
+
       setLoading(false);
       return;
     }
 
     if (!window.IMP) {
-      alert('포트원 SDK 로드 실패');
+      makeToast('포트원 SDK 로드 실패', 'warning');
       setLoading(false);
       return;
     }
 
     const channelKey = process.env.NEXT_PUBLIC_IAMPORT_CHANNEL_KEY;
     if (!channelKey) {
-      alert('결제 설정 오류: 채널 키가 설정되지 않았습니다.');
+      makeToast('결제 설정 오류: 채널 키가 설정되지 않았습니다.', 'warning');
       setLoading(false);
       return;
     }
@@ -76,16 +104,31 @@ export function usePayment(postId: number, title: string, price: number) {
       },
       async (rsp: IamportResponse) => {
         if (rsp.code != null) {
-          alert(`결제 실패: ${rsp.message}`);
+          makeToast(`결제 실패: ${rsp.message}`, 'warning');
         } else {
-          alert('결제 성공! 검증 요청을 보냅니다.');
+          makeToast('결제 성공! 검증 요청을 보냅니다.', 'success');
           try {
-            const verifyRes = await verifyPayment(rsp.imp_uid!, postId);
-            console.log('verifyPayment 응답:', verifyRes);
+            const impUid = rsp.imp_uid || rsp.impUid;
+            if (!impUid) {
+              makeToast('결제 고유 ID를 받지 못했습니다.', 'warning');
+              return;
+            }
+
+            await verifyPayment(impUid, postId);
             setIsPaid(true);
             setIsDrawerOpen(true);
-          } catch {
-            alert('결제 검증 실패');
+          } catch (e) {
+            console.error('verifyPayment 에러:', e);
+
+            if (e && typeof e === 'object' && 'response' in e) {
+              const axiosError = e as { response?: { data?: { message?: string } } };
+              const errorMessage = axiosError.response?.data?.message;
+              makeToast(errorMessage || '결제 검증 실패', 'warning');
+            } else if (e instanceof Error) {
+              makeToast(e.message, 'warning');
+            } else {
+              makeToast('결제 검증 실패', 'warning');
+            }
           }
         }
         setLoading(false);
