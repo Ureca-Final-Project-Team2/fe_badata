@@ -21,7 +21,7 @@ export const getSortParam = (sortType: ReviewSortType): string => {
 export const getStoreReviews = async (params: ReviewsQueryParams): Promise<ReviewsResponse> => {
   const { storeId, page, size, sort } = params;
 
-  const response: ReviewsResponse = await axiosInstance.get(END_POINTS.STORES.REVIEWS(storeId), {
+  const response: ReviewsResponse = await axiosInstance.get(END_POINTS.RENTAL.REVIEWS(storeId), {
     params: {
       page,
       size,
@@ -34,7 +34,7 @@ export const getStoreReviews = async (params: ReviewsQueryParams): Promise<Revie
 
 export const getStoreReviewMeta = async (storeId: number): Promise<ReviewMetaResponse> => {
   const response: ReviewMetaResponse = await axiosInstance.get(
-    END_POINTS.STORES.REVIEW_META(storeId),
+    END_POINTS.RENTAL.REVIEW_META(storeId),
   );
 
   return response;
