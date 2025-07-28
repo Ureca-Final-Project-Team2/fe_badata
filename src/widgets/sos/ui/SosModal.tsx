@@ -1,6 +1,7 @@
 'use client';
 
 import { useCreateSosRequest } from '@/widgets/sos/model/mutations';
+import { useSosWebSocket } from '@/widgets/sos/model/useSosWebSocket';
 
 interface SosModalProps {
   isOpen: boolean;
@@ -10,11 +11,18 @@ interface SosModalProps {
 
 export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
   const { mutate: createSosRequest, isPending } = useCreateSosRequest();
+  const { sendSosRequest } = useSosWebSocket();
 
   const handleConfirm = () => {
     createSosRequest(undefined, {
       onSuccess: (data) => {
         console.log('SOS 요청이 성공적으로 생성되었습니다:', data);
+        
+        // WebSocket을 통해 다른 사용자들에게 실시간 알림 전송
+        if (data.content?.sosId) {
+          sendSosRequest(data.content.sosId);
+        }
+        
         onConfirm?.();
         onClose();
       },

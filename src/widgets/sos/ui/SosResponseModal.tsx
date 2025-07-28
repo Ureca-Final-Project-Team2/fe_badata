@@ -1,6 +1,7 @@
 'use client';
 
 import { useRespondToSosRequest } from '@/widgets/sos/model/mutations';
+import { useSosWebSocket } from '@/widgets/sos/model/useSosWebSocket';
 
 interface SosResponseModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface SosResponseModalProps {
 
 export function SosResponseModal({ isOpen, onClose, sosId, requesterName }: SosResponseModalProps) {
   const { mutate: respondToSosRequest, isPending } = useRespondToSosRequest();
+  const { sendSosResponse } = useSosWebSocket();
 
   const handleRespond = (isSuccess: boolean) => {
     respondToSosRequest(
@@ -18,6 +20,10 @@ export function SosResponseModal({ isOpen, onClose, sosId, requesterName }: SosR
       {
         onSuccess: (data) => {
           console.log('SOS 응답이 성공적으로 처리되었습니다:', data);
+          
+          // WebSocket을 통해 응답 알림 전송
+          sendSosResponse(sosId, isSuccess);
+          
           onClose();
           // 성공/실패에 따른 추가 처리 (토스트 메시지 등)
           if (isSuccess) {
