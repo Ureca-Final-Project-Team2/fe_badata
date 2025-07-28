@@ -7,6 +7,7 @@ import type {
   StoreCardProps,
   StoreListItem,
 } from '@/pages/rental/map/lib/types';
+import type { InfiniteData } from '@tanstack/react-query';
 
 export interface UseStoreListParams extends Omit<FetchStoreListParams, 'page'> {
   enabled?: boolean;
@@ -42,12 +43,11 @@ export const useStoreList = (params: UseStoreListParams) => {
 };
 
 // 모든 페이지의 스토어들을 하나의 배열로 합치는 헬퍼 함수
-export const flattenStoreList = (data: unknown): StoreListItem[] => {
-  return (
-    (data as { pages?: { showStoreResponses: StoreListItem[] }[] })?.pages?.flatMap(
-      (page) => page.showStoreResponses,
-    ) ?? []
-  );
+export const flattenStoreList = (
+  data: InfiniteData<{ showStoreResponses: StoreListItem[]; hasNext: boolean }> | undefined,
+): StoreListItem[] => {
+  if (!data?.pages) return [];
+  return data.pages.flatMap((page) => page.showStoreResponses);
 };
 // 스토어 리스트와 무한 스크롤을 함께 사용하는 올인원 훅
 export const useStoreListWithInfiniteScroll = (params: UseStoreListParams) => {
