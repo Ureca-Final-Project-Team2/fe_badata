@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ReviewSortFilter } from '@/pages/rental/store/review/ui/ReviewSortFilter';
+import { ReviewSortDrawer } from '@/pages/rental/store/review/ui/ReviewSortDrawer';
 import { SortButton } from '@/shared/ui/SortButton';
 
 import type { ReviewSortType } from '@/pages/rental/store/review/lib/types';
@@ -35,7 +35,7 @@ export default function ReviewHeaderSection({
 
         <SortButton label={currentSortLabel} onClick={() => setIsDrawerOpen(true)} />
       </div>
-      <ReviewSortFilter
+      <ReviewSortDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         sortOption={currentSort}

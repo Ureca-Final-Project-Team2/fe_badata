@@ -2,19 +2,19 @@ import { FilterDrawer, FilterOption } from '@/shared/ui/FilterDrawer';
 
 import type { ReviewSortType } from '@/pages/rental/store/review/lib/types';
 
-interface ReviewSortFilterProps {
+interface ReviewSortDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   sortOption: ReviewSortType;
   onSortChange: (sort: ReviewSortType) => void;
 }
 
-export function ReviewSortFilter({
+export function ReviewSortDrawer({
   isOpen,
   onClose,
   sortOption,
   onSortChange,
-}: ReviewSortFilterProps) {
+}: ReviewSortDrawerProps) {
   const handleSelect = (value: ReviewSortType) => {
     onSortChange(value);
     onClose();
