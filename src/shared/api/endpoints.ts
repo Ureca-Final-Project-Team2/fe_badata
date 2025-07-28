@@ -11,6 +11,7 @@ export const END_POINTS = {
     UPDATE_GIFTICON: (postId: number) => `/api/v1/trades/posts/gifticon/${postId}`,
     DEADLINE: '/api/v1/trades/posts/deadline',
     SEARCH: (keyword: string) => `/api/v1/trades/posts?query=${keyword}`,
+    SEARCH_TRENDS: '/api/v1/trades/search/trending',
     REGISTER_DATA: '/api/v1/trades/posts/data',
     REGISTER_GIFTICON: '/api/v1/trades/posts/gifticon',
     USER_POST: (userId: number) => `/api/v1/trades/posts/${userId}`,
