@@ -41,6 +41,7 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
       setIsLoading(true);
       const userLocation = await getUserLocation();
       const detail = await fetchStoreDetail(storeId, userLocation.lat, userLocation.lng);
+      console.log('🔍 StoreDetail API 응답:', detail);
       setStoreDetail(detail);
     } catch (error) {
       console.error('가맹점 상세 정보 조회 실패:', error);
@@ -64,7 +65,7 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
     setLiked,
   } = useStoreLikeHooks({
     storeId,
-    initialLiked: false,
+    initialLiked: storeDetail?.liked ?? false,
   });
 
   // 서버에서 받은 찜 상태를 반영
@@ -116,9 +117,9 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
           {tab === '상세정보' && (
             <>
               <InfoSection
-                reviewRating={storeDetail.reviewRating}
-                distanceFromMe={storeDetail.distanceFromMe}
-                phoneNumber={storeDetail.phoneNumber}
+                reviewRating={storeDetail.reviewRating ?? 0}
+                distanceFromMe={storeDetail.distanceFromMe ?? 0}
+                phoneNumber={storeDetail.phoneNumber ?? ''}
                 liked={liked}
                 isLikeLoading={isLikeLoading}
                 onLikeToggle={toggleLike}

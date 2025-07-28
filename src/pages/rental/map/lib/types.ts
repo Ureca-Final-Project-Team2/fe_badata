@@ -114,6 +114,13 @@ export interface StoreListItem {
   가맹점 목록 리스트
 */
 export interface StoreListResponse {
+  leftDeviceCount: number;
+  closeTime: string;
+  detailAddress: string;
+  latitude: number;
+  name: string;
+  longititude: number;
+  id: number;
   showStoreResponses: StoreListItem[];
   hasNext: boolean;
 }
@@ -122,7 +129,7 @@ export interface StoreListResponse {
   가맹점 상세 정보
 */
 export interface StoreDetail {
-  storeName: string;
+  name: string;
   storeId: number;
   imageUrl: string;
   detailAddress: string;
@@ -132,6 +139,7 @@ export interface StoreDetail {
   isOpening: boolean;
   startTime: string; // "HH:mm:ss" 형식
   endTime: string; // "HH:mm:ss" 형식
+  liked?: boolean;
 }
 
 /*
