@@ -54,7 +54,6 @@ export const userApis = {
 
   getCoin: async (): Promise<ApiResponse<CoinResponse>> => {
     const response = await axiosInstance.get(END_POINTS.USER.COIN);
-    console.log('Raw Coin API Response:', response);
     return response.data;
   },
 };
