@@ -23,20 +23,23 @@ export const getPaginatedStoreReviews = async (
 ): Promise<ReviewsResponse> => {
   const { storeId, page, size, sort } = params;
 
-  const response: ReviewsResponse = await axiosInstance.get(END_POINTS.RENTAL.REVIEWS(storeId), {
-    params: {
-      page,
-      size,
-      sort,
+  const response: ReviewsResponse = await axiosInstance.get(
+    END_POINTS.STORES.STORE_REVIEWS(storeId),
+    {
+      params: {
+        page,
+        size,
+        sort,
+      },
     },
-  });
+  );
 
   return response;
 };
 
 export const getStoreReviewMeta = async (storeId: number): Promise<ReviewMetaResponse> => {
   const response: ReviewMetaResponse = await axiosInstance.get(
-    END_POINTS.RENTAL.REVIEW_META(storeId),
+    END_POINTS.STORES.REVIEW_META(storeId),
   );
 
   return response;
