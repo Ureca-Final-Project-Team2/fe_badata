@@ -9,16 +9,45 @@ import { PageHeader } from '@/shared/ui/Header';
 
 import { CoinBalanceSection } from '../ui/CoinBalanceSection';
 import { CoinHistoryList } from '../ui/CoinHistoryList';
-import { CoinInfoDrawer } from '../ui/CoinInfoDrawer';
+import { CoinInfoModal } from '../ui/CoinInfoModal';
 import { CoinUsageSection } from '../ui/CoinUsageSection';
 
 export default function CoinHistoryPage() {
   const { data, isLoading, isError } = useUserCoinQuery();
   const { data: historyData, isLoading: historyLoading } = useUserCoinHistoryQuery({ size: COIN_HISTORY_DEFAULT_SIZE });
-  const [isInfoDrawerOpen, setIsInfoDrawerOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
-  if (isLoading) return <p>로딩 중...</p>;
-  if (isError || !data) return <p>코인 정보를 불러오지 못했습니다.</p>;
+  if (isLoading) {
+    return (
+      <BaseLayout
+        header={<PageHeader title="코인 내역" onBack={() => history.back()} />}
+        showBottomNav
+      >
+        <div className="p-5 space-y-6">
+          <div className="bg-[var(--white)] rounded-xl p-8 text-center">
+            <p className="font-label-regular text-[var(--gray-dark)]">로딩 중...</p>
+          </div>
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <BaseLayout
+        header={<PageHeader title="코인 내역" onBack={() => history.back()} />}
+        showBottomNav
+      >
+        <div className="p-5 space-y-6">
+          <div className="bg-[var(--white)] rounded-xl p-8 text-center">
+            <p className="font-label-regular text-[var(--gray-dark)]">
+              코인 정보를 불러오지 못했습니다.
+            </p>
+          </div>
+        </div>
+      </BaseLayout>
+    );
+  }
 
   return (
     <BaseLayout
@@ -28,7 +57,7 @@ export default function CoinHistoryPage() {
       <div className="p-5 space-y-6">
         <CoinBalanceSection coinAmount={data.coin} />
 
-        <CoinUsageSection onInfoClick={() => setIsInfoDrawerOpen(true)} />
+        <CoinUsageSection onInfoClick={() => setIsInfoModalOpen(true)} />
 
         <div className="space-y-3">
           <h2 className="font-body-semibold">BADATA 코인 내역</h2>
@@ -36,7 +65,7 @@ export default function CoinHistoryPage() {
         </div>
       </div>
 
-      <CoinInfoDrawer isOpen={isInfoDrawerOpen} onClose={() => setIsInfoDrawerOpen(false)} />
+      <CoinInfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
     </BaseLayout>
   );
 }

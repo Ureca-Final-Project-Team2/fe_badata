@@ -8,7 +8,7 @@ interface CoinHistoryItemProps {
 
 export function CoinHistoryItem({ item }: CoinHistoryItemProps) {
   return (
-    <div className="bg-[var(--white)] rounded-xl p-4 border border-[var(--gray-light)]">
+    <div className="bg-[var(--white)] rounded-xl p-4 border-2 border-[var(--gray-light)]">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">
           <span className="text-lg">{getSourceIcon(item.coinSource)}</span>
