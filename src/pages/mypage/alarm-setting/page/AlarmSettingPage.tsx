@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { Switch } from '@/components/ui/switch';
 import { useAuthStore } from '@/entities/auth/model/authStore';
+import { NOTIFICATION_SETTINGS_DEFAULT } from '@/pages/mypage/alarm-setting/lib/constants';
 import { useNotificationSettingQuery, useUpdateNotificationSettingMutation } from '@/pages/mypage/alarm-setting/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -15,22 +16,31 @@ export default function AlarmSettingPage() {
   const { isLoggedIn, accessToken } = useAuthStore();
   const { data: notificationSetting, isLoading, error } = useNotificationSettingQuery();
   const updateNotificationMutation = useUpdateNotificationSettingMutation();
+  const [isAuthInitialized, setIsAuthInitialized] = useState(false);
 
-  const [state, setState] = useState({
-    news: true,
-    match: true,
-    price: true,
-    random: false,
-  });
+  const [state, setState] = useState(NOTIFICATION_SETTINGS_DEFAULT);
 
-  // 로그인 상태 확인
+  // 로그인 상태 초기화 확인
   useEffect(() => {
-    if (!isLoggedIn || !accessToken) {
+    // localStorage에서 토큰 확인
+    const storedToken = localStorage.getItem('accessToken');
+    const isAuthenticated = isLoggedIn && accessToken;
+    const hasStoredToken = !!storedToken;
+    
+    // 인증 상태가 초기화되었는지 확인
+    if (isAuthenticated || (!isLoggedIn && !hasStoredToken)) {
+      setIsAuthInitialized(true);
+    }
+  }, [isLoggedIn, accessToken]);
+
+  // 로그인 상태 확인 (초기화 후에만)
+  useEffect(() => {
+    if (isAuthInitialized && (!isLoggedIn || !accessToken)) {
       console.log('로그인되지 않음, 로그인 페이지로 리다이렉트');
       router.replace('/auth/kakao/callback');
       return;
     }
-  }, [isLoggedIn, accessToken, router]);
+  }, [isAuthInitialized, isLoggedIn, accessToken, router]);
 
   useEffect(() => {
     if (notificationSetting?.content?.isNotificationEnabled !== undefined) {
@@ -48,6 +58,17 @@ export default function AlarmSettingPage() {
     }
     setState((prev) => ({ ...prev, [key]: val }));
   };
+
+  // 인증 상태가 초기화되지 않은 경우 로딩 표시
+  if (!isAuthInitialized) {
+    return (
+      <BaseLayout header={<PageHeader title="알림 설정" onBack={() => router.back()} />} showBottomNav>
+        <div className="w-full max-w-[428px] flex flex-col justify-center items-center flex-1">
+          <div className="text-center">로그인 확인 중...</div>
+        </div>
+      </BaseLayout>
+    );
+  }
 
   // 로그인되지 않은 경우 로딩 표시
   if (!isLoggedIn || !accessToken) {
