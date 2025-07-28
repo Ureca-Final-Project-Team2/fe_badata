@@ -15,13 +15,16 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
       // authStore에서 토큰을 가져오기
       const token = useAuthStore.getState().accessToken;
       
-      console.log('API 요청 토큰 확인:', { 
-        url: config.url, 
-        token: token ? '토큰 있음' : '토큰 없음',
-        tokenLength: token?.length,
-        tokenStart: token?.substring(0, 20) + '...',
-        tokenEnd: token?.substring(token.length - 20)
-      });
+      // 개발 환경에서만 토큰 확인 로그 출력 (선택적)
+      if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DEBUG_TOKENS === 'true') {
+        console.log('API 요청 토큰 확인:', { 
+          url: config.url, 
+          token: token ? '토큰 있음' : '토큰 없음',
+          tokenLength: token?.length,
+          tokenStart: token?.substring(0, 20) + '...',
+          tokenEnd: token?.substring(token.length - 20)
+        });
+      }
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
