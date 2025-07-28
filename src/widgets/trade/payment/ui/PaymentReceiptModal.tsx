@@ -28,6 +28,10 @@ const PaymentReceiptModal: React.FC<PaymentReceiptModalProps> = ({
 
   const handleClose = () => {
     onClose();
+  };
+
+  const handleNavigateToTrade = () => {
+    onClose();
     router.push('/trade');
   };
 
@@ -36,11 +40,11 @@ const PaymentReceiptModal: React.FC<PaymentReceiptModalProps> = ({
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="bg-white rounded-t-2xl shadow-lg w-[320px] mx-auto p-6 relative flex flex-col items-center">
-        {/* X 버튼: 카드 상단 우측 */}
+        {/* X 버튼: 카드 상단 우측 - 모달만 닫기 */}
         <button
           className="absolute top-3 right-5 text-[var(--gray-dark)] hover:text-[var(--black)] font-title-semibold"
           onClick={handleClose}
-          aria-label="Close"
+          aria-label="Close modal"
         >
           ×
         </button>
@@ -124,13 +128,16 @@ const PaymentReceiptModal: React.FC<PaymentReceiptModalProps> = ({
         ))}
       </svg>
 
-      {/* 닫기 버튼: 영수증 밖 하단 */}
-      <button
-        className="mt-4 w-[180px] py-3 rounded-xl font-title-semibold shadow-md transition bg-[var(--main-5)] text-white hover:bg-[var(--main-4)]"
-        onClick={handleClose}
-      >
-        닫기
-      </button>
+      {/* 버튼 그룹: 영수증 밖 하단 */}
+      <div className="mt-4 flex gap-3">
+        {/* 거래 페이지로 이동 버튼 */}
+        <button
+          className="w-[180px] py-3 rounded-xl font-title-semibold shadow-md transition bg-[var(--main-5)] text-white hover:bg-[var(--main-4)]"
+          onClick={handleNavigateToTrade}
+        >
+          홈으로 이동
+        </button>
+      </div>
     </div>
   );
 };

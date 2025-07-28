@@ -126,7 +126,6 @@ export function usePayment(
         if (rsp.code != null) {
           makeToast(`결제 실패: ${rsp.message}`, 'warning');
         } else {
-          makeToast('결제 성공! 검증 요청을 보냅니다.', 'success');
           try {
             const impUid = rsp.imp_uid || rsp.impUid;
             if (!impUid) {
