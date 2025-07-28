@@ -22,10 +22,14 @@ declare global {
   }
 }
 
-export function usePayment(postId: number, title: string, price: number) {
+export function usePayment(
+  postId: number,
+  title: string,
+  price: number,
+  onPaymentSuccess?: (usedCoin: number) => void,
+) {
   const [loading, setLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
   const [usedCoin, setUsedCoin] = useState(0);
   const { user, isLoggedIn } = useAuthStore();
@@ -118,7 +122,7 @@ export function usePayment(postId: number, title: string, price: number) {
 
             await verifyPayment(impUid, postId);
             setIsPaid(true);
-            setIsDrawerOpen(true);
+            onPaymentSuccess?.(useCoin);
           } catch (e) {
             console.error('verifyPayment 에러:', e);
 
@@ -138,7 +142,6 @@ export function usePayment(postId: number, title: string, price: number) {
     );
   };
 
-  const closeDrawer = () => setIsDrawerOpen(false);
   const openCoinModal = () => setIsCoinModalOpen(true);
   const closeCoinModal = () => setIsCoinModalOpen(false);
 
@@ -146,8 +149,6 @@ export function usePayment(postId: number, title: string, price: number) {
     loading,
     isPaid,
     handlePayment,
-    isDrawerOpen,
-    closeDrawer,
     isCoinModalOpen,
     openCoinModal,
     closeCoinModal,

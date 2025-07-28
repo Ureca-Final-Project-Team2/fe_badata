@@ -5,7 +5,6 @@ import { useCoinQuery } from '@/entities/user/model/queries';
 import { BuyButton } from '@/shared/ui/BuyButton/BuyButton';
 import { CoinPaymentModal } from '@/shared/ui/CoinPaymentModal';
 import { usePayment } from '@/widgets/trade/payment/model/usePayment';
-import PaymentStatusDrawer from '@/widgets/trade/payment/ui/PaymentStatusDrawer';
 
 interface BuyButtonWithPaymentProps {
   postId: number;
@@ -14,6 +13,7 @@ interface BuyButtonWithPaymentProps {
   children?: React.ReactNode;
   initialIsLiked?: boolean;
   isSold?: boolean; // 거래 완료 상태
+  onPaymentSuccess?: (usedCoin: number) => void;
 }
 
 export default function BuyButtonWithPayment({
@@ -23,16 +23,13 @@ export default function BuyButtonWithPayment({
   children = '구매하기',
   initialIsLiked = false,
   isSold = false,
+  onPaymentSuccess,
 }: BuyButtonWithPaymentProps) {
   const [currentIsLiked, setCurrentIsLiked] = useState(initialIsLiked);
-  const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
 
   const { data: coinData } = useCoinQuery();
-  const { loading, isPaid, handlePayment, isDrawerOpen, closeDrawer, usedCoin } = usePayment(
-    postId,
-    title,
-    price,
-  );
+  const { loading, isPaid, handlePayment, isCoinModalOpen, openCoinModal, closeCoinModal } =
+    usePayment(postId, title, price, onPaymentSuccess);
 
   const { toggleLikeById, getCachedLikeState, isItemLoading } = useTradePostLikeHooks();
 
@@ -50,14 +47,14 @@ export default function BuyButtonWithPayment({
   };
 
   const handleBuyClick = () => {
-    setIsCoinModalOpen(true);
+    openCoinModal();
   };
 
   const handleCoinPayment = (useCoin: boolean, coinAmount: number) => {
     // 실제 결제 진행 (useCoin이 true일 때만 coinAmount 전달)
     const actualUsedCoin = useCoin ? coinAmount : 0;
     handlePayment(actualUsedCoin);
-    setIsCoinModalOpen(false);
+    closeCoinModal();
   };
 
   return (
@@ -74,17 +71,10 @@ export default function BuyButtonWithPayment({
 
       <CoinPaymentModal
         isOpen={isCoinModalOpen}
-        onClose={() => setIsCoinModalOpen(false)}
+        onClose={closeCoinModal}
         originalPrice={price}
         availableCoin={coinData?.content?.coin || 0}
         onConfirm={handleCoinPayment}
-      />
-
-      <PaymentStatusDrawer
-        open={isDrawerOpen}
-        onClose={closeDrawer}
-        usedCoin={usedCoin}
-        availableCoin={coinData?.content?.coin || 0}
       />
     </>
   );
