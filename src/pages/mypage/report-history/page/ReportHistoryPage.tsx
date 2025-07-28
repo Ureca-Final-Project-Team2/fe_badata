@@ -4,14 +4,13 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useReportHistoryListQuery } from '@/pages/mypage/report-history/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { SectionDivider } from '@/shared/ui/SectionDivider';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
-import { useReportHistoryListQuery } from '../model/queries';
-
-import type { ReportHistoryItem, ReportHistoryResponse } from '../lib/types';
+import type { ReportHistoryItem, ReportHistoryResponse } from '@/pages/mypage/report-history/lib/types';
 
 interface TimelineItemProps {
   label: string;

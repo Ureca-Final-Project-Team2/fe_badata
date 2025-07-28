@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getUserCoin, getUserCoinHistory } from '@/pages/mypage/coin-history/api/apis';
 
-import type { CoinHistoryParams, UserCoin } from '../lib/types';
+import type { CoinHistoryParams, UserCoin } from '@/pages/mypage/coin-history/lib/types';
 
 export const useUserCoinQuery = () => {
   return useQuery<UserCoin>({

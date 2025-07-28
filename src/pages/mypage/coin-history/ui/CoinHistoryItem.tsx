@@ -10,15 +10,15 @@ interface CoinHistoryItemProps {
 export function CoinHistoryItem({ item, calculatedBalance }: CoinHistoryItemProps) {
   const isPositive = isPositiveTransaction(item.coinSource);
   const displayAmount = isPositive ? Math.abs(item.usedCoin) : -Math.abs(item.usedCoin);
-  const amountColor = isPositive ? 'text-[var(--green)]' : 'text-[var(--red)]';
+  const amountColor = isPositive ? 'text-[var(--main-5)]' : 'text-[var(--red)]';
   const amountPrefix = isPositive ? '+' : '';
 
   return (
-    <div className="bg-[var(--white)] rounded-xl p-4 border-2 border-[var(--gray-light)]">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-3">
-          <span className="text-lg">{getSourceIcon(item.coinSource)}</span>
-          <span className="font-label-medium text-[var(--black)]">
+      <div className="bg-[var(--white)] rounded-xl p-4 border-2 border-[var(--gray-light)]">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">{getSourceIcon(item.coinSource)}</span>
+            <span className="font-label-medium text-[var(--black)]">
             {getSourceText(item.coinSource)}
           </span>
         </div>
@@ -30,7 +30,7 @@ export function CoinHistoryItem({ item, calculatedBalance }: CoinHistoryItemProp
         <span className="font-small-regular text-[var(--gray-dark)]">
           {formatDate(item.createdAt)}
         </span>
-        <span className="font-small-medium text-[var(--gray-dark)]">
+        <span className="font-small-regular text-[var(--gray-dark)]">
           전체 {calculatedBalance} 코인
         </span>
       </div>

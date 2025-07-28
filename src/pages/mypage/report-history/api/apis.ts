@@ -1,7 +1,7 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { ReportHistoryResponse } from '../lib/types';
+import type { ReportHistoryResponse } from '@/pages/mypage/report-history/lib/types';
 
 export const getReportHistoryList = async (
   reportStatus: string,

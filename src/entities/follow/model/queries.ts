@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 
-import { deleteFollow, fetchFollows } from '../api/apis';
-import { FOLLOW_TYPES } from '../lib/types';
+import { deleteFollow, fetchFollows } from '@/entities/follow/api/apis';
+import { FOLLOW_TYPES } from '@/entities/follow/lib/types';
 
-import type { FollowItem, FollowType } from '../lib/types';
+import type { FollowItem, FollowType } from '@/entities/follow/lib/types';
 
 // 상수 정의
 const DEFAULT_PAGE_SIZE = 10;

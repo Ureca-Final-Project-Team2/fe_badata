@@ -1,7 +1,7 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { RestockAlarmItem } from '../lib/types';
+import type { RestockAlarmItem } from '@/pages/mypage/restock-alarm/lib/types';
 
 export const getRestockAlarmList = async (
   cursor?: number,
