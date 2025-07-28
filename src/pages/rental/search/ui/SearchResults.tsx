@@ -1,0 +1,75 @@
+import { MapPin, Phone } from 'lucide-react';
+
+import type { PlaceSearchResult } from '@/pages/rental/search/utils/address/searchPlaces';
+
+interface SearchResultsProps {
+  results: PlaceSearchResult[];
+  isLoading: boolean;
+  onSelectPlace: (place: PlaceSearchResult) => void;
+}
+
+const SearchResults = ({ results, isLoading, onSelectPlace }: SearchResultsProps) => {
+  if (isLoading) {
+    return (
+      <div className="space-y-2">
+        <div className="text-center py-4">
+          <p className="text-[var(--gray-dark)]">검색 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (results.length === 0) {
+    return (
+      <div className="space-y-2">
+        <div className="text-center py-4">
+          <p className="text-[var(--gray-dark)]">검색 결과가 없습니다.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {results.map((place) => (
+        <div
+          key={place.id}
+          className="p-3 border-b border-[var(--gray-light)] cursor-pointer hover:bg-[var(--gray-light)] transition-colors"
+          onClick={() => onSelectPlace(place)}
+        >
+          <div className="flex items-start gap-3">
+            <MapPin className="w-4 h-4 text-[var(--gray-dark)] mt-0.5 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              {/* 장소명 */}
+              <h3 className="text-[var(--black)] font-small-semibold mb-1 truncate">
+                {place.place_name}
+              </h3>
+
+              {/* 도로명 주소 */}
+              {place.road_address_name && (
+                <p className="text-[var(--gray-dark)] font-small-regular mb-1">
+                  {place.road_address_name}
+                </p>
+              )}
+
+              {/* 지번 주소 */}
+              <p className="text-[var(--gray-dark)] font-small-regular mb-1">
+                지번 {place.address_name}
+              </p>
+
+              {/* 전화번호 */}
+              {place.phone && (
+                <div className="flex items-center gap-1">
+                  <Phone className="w-3 h-3 text-[var(--main-5)]" />
+                  <span className="text-[var(--main-5)] font-small-semibold">{place.phone}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default SearchResults;
