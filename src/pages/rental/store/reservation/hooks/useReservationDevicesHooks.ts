@@ -87,8 +87,6 @@ export const useReservationDevices = ({
           }
         }, 150); // 150ms 후에만 로딩 표시
 
-        console.log('🔄 예약 장비 조회 시작:', { storeId, params, requestKey });
-
         const deviceList = await fetchRentalDevices(storeId, params);
 
         // 로딩 타임아웃 클리어
