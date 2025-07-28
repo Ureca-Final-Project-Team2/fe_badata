@@ -28,10 +28,28 @@ export function CoinHistoryList({ historyData, isLoading }: CoinHistoryListProps
     );
   }
 
+  // 현재 잔액에서 역순으로 계산하여 각 시점의 잔액 구하기
+  const itemsWithCalculatedBalance = historyData.item.map((item, index) => {
+    // 현재 잔액에서 시작 (가장 최근 내역의 totalCoin)
+    let balance = historyData.item[0].totalCoin;
+    
+    // 현재 내역부터 역순으로 계산
+    for (let i = 0; i <= index; i++) {
+      const currentItem = historyData.item[i];
+      // 현재 내역의 usedCoin을 빼서 이전 시점의 잔액 계산
+      balance -= currentItem.usedCoin;
+    }
+    
+    return {
+      ...item,
+      calculatedBalance: balance
+    };
+  });
+
   return (
     <div className="space-y-3">
-      {historyData.item.map((item) => (
-        <CoinHistoryItem key={item.id} item={item} />
+      {itemsWithCalculatedBalance.map((item) => (
+        <CoinHistoryItem key={item.id} item={item} calculatedBalance={item.calculatedBalance} />
       ))}
     </div>
   );

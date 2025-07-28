@@ -11,4 +11,8 @@ export const getSourceText = (source: string) => {
 
 export const getSourceIcon = (source: string) => {
   return COIN_SOURCE_CONFIG[source as keyof typeof COIN_SOURCE_CONFIG]?.icon || '💰';
+};
+
+export const isPositiveTransaction = (source: string) => {
+  return COIN_SOURCE_CONFIG[source as keyof typeof COIN_SOURCE_CONFIG]?.isPositive || false;
 }; 
