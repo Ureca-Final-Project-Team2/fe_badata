@@ -52,6 +52,15 @@ export function CoinPaymentModal({
       return;
     }
 
+    // 가격보다 많은 코인을 사용하려는 경우 알림
+    if (amount > originalPrice) {
+      makeToast(
+        `상품 가격(${formatPrice(originalPrice.toString())}원)을 초과하여 입력할 수 없습니다.`,
+        'warning',
+      );
+      return;
+    }
+
     setCoinAmount(amount);
   };
 
@@ -107,12 +116,13 @@ export function CoinPaymentModal({
                   placeholder="0"
                   className="flex-1 px-3 py-2 border border-[var(--gray-light)] rounded-lg text-sm focus:outline-none focus:border-[var(--main-3)]"
                   min="0"
-                  max={availableCoin}
+                  max={Math.min(availableCoin, originalPrice)}
                 />
                 <span className="text-sm text-[var(--gray-mid)]">원</span>
               </div>
               <div className="font-small-regular text-[var(--gray-mid)]">
-                최대 {formatPrice(availableCoin.toString())}원까지 사용 가능
+                최대 {formatPrice(Math.min(availableCoin, originalPrice).toString())}원까지 사용
+                가능
               </div>
             </div>
           )}
