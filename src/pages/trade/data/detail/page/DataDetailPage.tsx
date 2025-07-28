@@ -7,7 +7,9 @@ import Image from 'next/image';
 import { useShareHooks } from '@/shared/model/useShareHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
+import { usePaymentReceipt } from '@/widgets/trade/payment/model/usePaymentReceipt';
 import BuyButtonWithPayment from '@/widgets/trade/payment/ui/BuyButtonWithPayment';
+import { PaymentReceiptWrapper } from '@/widgets/trade/payment/ui/PaymentReceiptWrapper';
 import { TradeDetailDrawer } from '@/widgets/trade/post-detail/ui/TradeDetailDrawer';
 import { TradeDetailProductSection } from '@/widgets/trade/post-detail/ui/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@/widgets/trade/post-detail/ui/TradeDetailSellerSection';
@@ -27,6 +29,8 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const { isFollowing, setIsFollowing } = useFollowState(postUserId);
   const { share } = useShareHooks();
+  const { isPaymentModalOpen, usedCoin, coinData, handlePaymentSuccess, closeModal } =
+    usePaymentReceipt();
 
   const handleShare = () => {
     share({
@@ -109,8 +113,19 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
           price={post.price}
           initialIsLiked={post.isLiked}
           isSold={post.isSold}
+          onPaymentSuccess={handlePaymentSuccess}
         />
       </div>
+
+      {/* 결제 완료 모달 */}
+      <PaymentReceiptWrapper
+        isOpen={isPaymentModalOpen}
+        onClose={closeModal}
+        title={post.title}
+        price={post.price}
+        usedCoin={usedCoin}
+        availableCoin={coinData?.content?.coin || 0}
+      />
 
       <TradeDetailDrawer
         isOpen={isMoreOpen}

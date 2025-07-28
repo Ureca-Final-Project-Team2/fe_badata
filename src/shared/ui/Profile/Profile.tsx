@@ -1,6 +1,8 @@
 import type { HTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 
+import Image from 'next/image';
+
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/shared/lib/cn';
@@ -61,6 +63,7 @@ type ProfileProps = HTMLAttributes<HTMLDivElement> &
     isFollowing?: boolean;
     onFollowClick?: () => void;
     avatarSize?: Size;
+    bottomContent?: React.ReactNode;
   };
 
 type AvatarProps = {
@@ -69,9 +72,23 @@ type AvatarProps = {
   size?: Size;
 };
 
-function Avatar({ name, avatar, size }: AvatarProps) {
+function Avatar({ name, avatar, size = 'md' }: AvatarProps) {
+  const dimensionMap: Record<NonNullable<Size>, number> = {
+    sm: 56,
+    md: 70,
+    lg: 80,
+  };
+  const safeSize = size ?? 'md';
+  const dimension = dimensionMap[safeSize];
+
   return avatar ? (
-    <img src={avatar} alt={`${name} avatar`} className={avatarVariants({ size })} />
+    <Image
+      src={avatar}
+      alt={`${name} avatar`}
+      width={dimension}
+      height={dimension}
+      className={cn(avatarVariants({ size }), 'object-cover')}
+    />
   ) : (
     <div className={cn(avatarVariants({ size }), 'flex items-center justify-center')}>
       <span className="text-[var(--gray-dark)] font-semibold text-xl">
@@ -121,6 +138,7 @@ export const Profile = forwardRef<HTMLDivElement, ProfileProps>(
       isFollowing = false,
       onFollowClick,
       avatarSize,
+      bottomContent,
       ...props
     },
     ref,
@@ -135,6 +153,9 @@ export const Profile = forwardRef<HTMLDivElement, ProfileProps>(
             <div className="mt-2 font-light text-[12.8px] text-[var(--gray-dark)] truncate">
               {subtitle}
             </div>
+          )}
+          {bottomContent && (
+            <div className="mt-2 flex items-center justify-between w-full">{bottomContent}</div>
           )}
         </div>
 
