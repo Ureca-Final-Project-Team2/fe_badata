@@ -2,7 +2,12 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { userApis } from '../api/apis';
 
-import type { FollowingsContent, PurchaseResponse, SalesContent } from '@/entities/user/lib/types';
+import type {
+  CoinResponse,
+  FollowingsContent,
+  PurchaseResponse,
+  SalesContent,
+} from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
 
@@ -119,5 +124,14 @@ export const usePurchasesQuery = (
     },
     enabled: true,
     staleTime: 5 * 60 * 1000,
+  });
+};
+
+// 코인 조회 훅
+export const useCoinQuery = () => {
+  return useQuery<ApiResponse<CoinResponse>>({
+    queryKey: ['user', 'coin'],
+    queryFn: () => userApis.getCoin(),
+    staleTime: 5 * 60 * 1000, // 5분
   });
 };

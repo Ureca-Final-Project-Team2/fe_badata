@@ -38,13 +38,17 @@ export const END_POINTS = {
     AVAILABLE_DEVICE: (storeId: number) => `/api/v1/rentals/${storeId}/devices`, //예약할 기기 조회
     RESERVATIONS: `/api/v1/rentals/devices`,
     RESTOCK: `/api/v1/restock`,
+    REVIEWS: (storeId: number) => `/api/v1/${storeId}/reviews`,
+    REVIEW_META: (storeId: number) => `/api/v1/${storeId}/review-meta`,
   },
 
   MYPAGE: {
     COIN: '/api/v1/users/coin',
+    COIN_HISTORY: '/api/v1/users/coin/history',
     DATA_USAGE: '/api/v1/users/data',
     FOLLOWINGS: '/api/v1/users/follows',
     FOLLOWERS: '/api/v1/users/follows',
+    DELETE_FOLLOW: (followId: number) => `/api/v1/users/follows/${followId}`,
     LIKE_TRADE_POST: '/api/v1/users/likes/posts',
     RENTAL_HISTORY: '/api/v1/users/rentals',
     LIKE_STORE: '/api/v1/users/likes/stores',

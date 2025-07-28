@@ -1,7 +1,8 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { FollowingResponse } from '@/pages/mypage/following/lib/types';
+import type { FollowResponse } from '@/entities/follow';
+
 
 const FOLLOW_TYPES = {
   FOLLOWERS: 'FOLLOWERS',
@@ -11,7 +12,7 @@ const FOLLOW_TYPES = {
 export const fetchFollowings = async (
   cursor?: number,
   size: number = 10,
-): Promise<FollowingResponse> => {
+): Promise<FollowResponse> => {
   try {
     const response = await axiosInstance.get(END_POINTS.MYPAGE.FOLLOWINGS, {
       params: { 
@@ -24,6 +25,16 @@ export const fetchFollowings = async (
     return response.data;
   } catch (error) {
     console.error('팔로잉 목록 조회 실패:', error);
+    throw error;
+  }
+};
+
+export const deleteFollowing = async (followId: number): Promise<{ code: number; message: string; content: number }> => {
+  try {
+    const response = await axiosInstance.delete(END_POINTS.MYPAGE.DELETE_FOLLOW(followId));
+    return response.data;
+  } catch (error) {
+    console.error('팔로잉 삭제 실패:', error);
     throw error;
   }
 }; 

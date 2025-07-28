@@ -1,7 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { useRouter } from 'next/navigation';
 
+import { useUserStats } from '@/entities/follow';
 import { usePurchasesQuery } from '@/entities/user/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -14,12 +17,25 @@ const profile = {
   days: 15,
   avatarSrc: '/assets/profile-default.png',
   tradeCount: 14,
-  follower: 4,
-  following: 7,
 };
 
 export default function PurchaseHistoryPage() {
   const router = useRouter();
+  const {
+    followerCount,
+    followingCount,
+    isLoading: isLoadingStats,
+    invalidateStats,
+  } = useUserStats();
+
+  useEffect(() => {
+    const handleFocus = () => {
+      invalidateStats();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [invalidateStats]);
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     usePurchasesQuery();
@@ -49,7 +65,7 @@ export default function PurchaseHistoryPage() {
             >
               <span className="font-label-semibold text-[var(--black)]">팔로워</span>
               <span className="font-body-semibold text-[var(--black)] mt-1 group-hover:text-[var(--main-3)]">
-                {profile.follower}
+                {isLoadingStats ? '...' : followerCount}
               </span>
             </div>
             <div
@@ -58,7 +74,7 @@ export default function PurchaseHistoryPage() {
             >
               <span className="font-label-semibold text-[var(--black)]">팔로잉</span>
               <span className="font-body-semibold text-[var(--black)] mt-1 group-hover:text-[var(--main-3)]">
-                {profile.following}
+                {isLoadingStats ? '...' : followingCount}
               </span>
             </div>
           </div>

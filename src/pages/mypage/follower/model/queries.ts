@@ -1,28 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-
-import { fetchFollowers } from '@/pages/mypage/follower/api/apis';
-
-import type { FollowerItem } from '@/pages/mypage/follower/lib/types';
+import { useDeleteFollow, useFollows } from '@/entities/follow';
+import { FOLLOW_TYPES } from '@/entities/follow/lib/types';
 
 export function useFollowers(cursor?: number, size: number = 10) {
-  const { data, isLoading, isError } = useQuery<{
-    item: FollowerItem[];
-    nextCursor: number;
-    hasNext: boolean;
-  }>({
-    queryKey: ['followers', cursor, size],
-    queryFn: () => fetchFollowers(cursor, size).then(response => response.content),
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
+  return useFollows(FOLLOW_TYPES.FOLLOWERS, cursor, size);
+}
 
-  return {
-    followerItems: data?.item ?? [],
-    nextCursor: data?.nextCursor,
-    hasNext: data?.hasNext,
-    isLoading,
-    isError,
-  };
+export function useDeleteFollower() {
+  return useDeleteFollow();
 } 

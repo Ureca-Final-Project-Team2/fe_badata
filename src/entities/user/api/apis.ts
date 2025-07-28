@@ -1,7 +1,12 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { FollowingsContent, PurchaseResponse, SalesContent } from '@/entities/user/lib/types';
+import type {
+  CoinResponse,
+  FollowingsContent,
+  PurchaseResponse,
+  SalesContent,
+} from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
 
@@ -65,6 +70,11 @@ export const userApis = {
     params.append('size', size.toString());
 
     const response = await axiosInstance.get(`${END_POINTS.MYPAGE.PURCHASES_HISTORY}?${params}`);
+    return response.data;
+  },
+
+  getCoin: async (): Promise<ApiResponse<CoinResponse>> => {
+    const response = await axiosInstance.get(END_POINTS.MYPAGE.COIN);
     return response.data;
   },
 };

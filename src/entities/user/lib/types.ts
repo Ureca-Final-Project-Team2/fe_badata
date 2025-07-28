@@ -51,3 +51,7 @@ export interface PurchaseResponse {
   nextCursor: number;
   hasNext: boolean;
 }
+
+export interface CoinResponse {
+  coin: number;
+}
