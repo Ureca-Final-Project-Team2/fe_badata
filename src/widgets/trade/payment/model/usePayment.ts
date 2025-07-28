@@ -27,6 +27,7 @@ export function usePayment(postId: number, title: string, price: number) {
   const [isPaid, setIsPaid] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
+  const [usedCoin, setUsedCoin] = useState(0);
   const { user, isLoggedIn } = useAuthStore();
 
   const handlePayment = async (useCoin: number = 0) => {
@@ -36,6 +37,7 @@ export function usePayment(postId: number, title: string, price: number) {
       return;
     }
 
+    setUsedCoin(useCoin);
     setLoading(true);
 
     let merchant_uid = '';
@@ -149,5 +151,6 @@ export function usePayment(postId: number, title: string, price: number) {
     isCoinModalOpen,
     openCoinModal,
     closeCoinModal,
+    usedCoin,
   };
 }

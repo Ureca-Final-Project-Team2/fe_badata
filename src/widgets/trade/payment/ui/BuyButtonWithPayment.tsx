@@ -28,7 +28,7 @@ export default function BuyButtonWithPayment({
   const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
 
   const { data: coinData } = useCoinQuery();
-  const { loading, isPaid, handlePayment, isDrawerOpen, closeDrawer } = usePayment(
+  const { loading, isPaid, handlePayment, isDrawerOpen, closeDrawer, usedCoin } = usePayment(
     postId,
     title,
     price,
@@ -55,7 +55,8 @@ export default function BuyButtonWithPayment({
 
   const handleCoinPayment = (useCoin: boolean, coinAmount: number) => {
     // 실제 결제 진행 (useCoin이 true일 때만 coinAmount 전달)
-    handlePayment(useCoin ? coinAmount : 0);
+    const actualUsedCoin = useCoin ? coinAmount : 0;
+    handlePayment(actualUsedCoin);
     setIsCoinModalOpen(false);
   };
 
@@ -79,7 +80,12 @@ export default function BuyButtonWithPayment({
         onConfirm={handleCoinPayment}
       />
 
-      <PaymentStatusDrawer open={isDrawerOpen} onClose={closeDrawer} />
+      <PaymentStatusDrawer
+        open={isDrawerOpen}
+        onClose={closeDrawer}
+        usedCoin={usedCoin}
+        availableCoin={coinData?.content?.coin || 0}
+      />
     </>
   );
 }
