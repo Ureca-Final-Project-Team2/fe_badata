@@ -2,10 +2,9 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
+import { formatDateToDash } from '@/pages/rental/store/review/lib/utils';
 import { ICONS } from '@/shared/config/iconPath';
 import { Profile } from '@/shared/ui/Profile';
-
-import { formatDateToDash } from '../lib/utils';
 
 import type { ReviewItem as ReviewItemType } from '@/pages/rental/store/review/lib/types.ts';
 
