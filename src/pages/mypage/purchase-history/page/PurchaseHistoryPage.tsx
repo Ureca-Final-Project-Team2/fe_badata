@@ -37,11 +37,22 @@ export default function PurchaseHistoryPage() {
     return () => window.removeEventListener('focus', handleFocus);
   }, [invalidateStats]);
 
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     usePurchasesQuery();
 
   // 모든 아이템을 하나의 배열로 합치기
-  const allItems = data?.pages?.flatMap((page) => page?.content?.item || []) || [];
+  const allItems =
+    data?.pages?.flatMap((page) => {
+      if (!page || !page.content) {
+        return [];
+      }
+
+      if (!Array.isArray(page.content.item)) {
+        return [];
+      }
+
+      return page.content.item;
+    }) || [];
 
   return (
     <BaseLayout
@@ -90,6 +101,11 @@ export default function PurchaseHistoryPage() {
           ) : isError ? (
             <div className="text-center py-8">
               <p className="text-[var(--gray-mid)]">구매 내역을 불러오는데 실패했습니다.</p>
+              {error && (
+                <p className="text-[var(--gray-mid)] font-caption-regular mt-2">
+                  에러: {error.message || '알 수 없는 오류'}
+                </p>
+              )}
             </div>
           ) : allItems.length === 0 ? (
             <div className="text-center py-8">
@@ -118,7 +134,7 @@ export default function PurchaseHistoryPage() {
                   <button
                     onClick={() => fetchNextPage()}
                     disabled={isFetchingNextPage}
-                    className="px-4 py-2 bg-[var(--main-3)] text-white rounded-lg disabled:bg-[var(--gray-light)]"
+                    className="px-4 py-2 bg-[var(--main-3)] text-[var(--white)] rounded-lg disabled:bg-[var(--gray-light)]"
                   >
                     {isFetchingNextPage ? '로딩 중...' : '더 보기'}
                   </button>
