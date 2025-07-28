@@ -33,3 +33,7 @@ export interface UserProfile {
   tradeCount: number;
   isFollowing: boolean;
 }
+
+export interface CoinResponse {
+  coin: number;
+}
