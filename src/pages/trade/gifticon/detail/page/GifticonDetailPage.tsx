@@ -7,9 +7,9 @@ import Image from 'next/image';
 import { useShareHooks } from '@/shared/model/useShareHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
-import { usePaymentSuccessModal } from '@/widgets/trade/payment/model/usePaymentSuccessModal';
+import { usePaymentReceipt } from '@/widgets/trade/payment/model/usePaymentReceipt';
 import BuyButtonWithPayment from '@/widgets/trade/payment/ui/BuyButtonWithPayment';
-import PaymentReceiptModal from '@/widgets/trade/payment/ui/PaymentReceiptModal';
+import { PaymentReceiptWrapper } from '@/widgets/trade/payment/ui/PaymentReceiptWrapper';
 import { TradeDetailDrawer } from '@/widgets/trade/post-detail/ui/TradeDetailDrawer';
 import { TradeDetailProductSection } from '@/widgets/trade/post-detail/ui/TradeDetailProductSection';
 import { TradeDetailSellerSection } from '@/widgets/trade/post-detail/ui/TradeDetailSellerSection';
@@ -30,7 +30,7 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
   const { isFollowing, setIsFollowing } = useFollowState(postUserId);
   const { share } = useShareHooks();
   const { isPaymentModalOpen, usedCoin, coinData, handlePaymentSuccess, closeModal } =
-    usePaymentSuccessModal();
+    usePaymentReceipt();
 
   const handleShare = () => {
     share({
@@ -118,23 +118,14 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
       </div>
 
       {/* 결제 완료 모달 */}
-      {isPaymentModalOpen && (
-        <>
-          {/* 영수증 모달 */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div className="relative">
-              <PaymentReceiptModal
-                isOpen={isPaymentModalOpen}
-                onClose={closeModal}
-                title={post.title}
-                price={post.price}
-                usedCoin={usedCoin}
-                availableCoin={coinData?.content?.coin || 0}
-              />
-            </div>
-          </div>
-        </>
-      )}
+      <PaymentReceiptWrapper
+        isOpen={isPaymentModalOpen}
+        onClose={closeModal}
+        title={post.title}
+        price={post.price}
+        usedCoin={usedCoin}
+        availableCoin={coinData?.content?.coin || 0}
+      />
 
       <TradeDetailDrawer
         isOpen={isMoreOpen}
