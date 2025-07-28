@@ -49,12 +49,15 @@ export function CoinToggle({
         )}
       />
       {/* 코인 아이콘 */}
-      <div className="absolute left-1.5 top-1/2 -translate-y-1/2">
-        <div className="h-3 w-3 rounded-full bg-yellow-400 opacity-60" />
-      </div>
-      <div className="absolute right-1.5 top-1/2 -translate-y-1/2">
-        <div className="h-3 w-3 rounded-full bg-yellow-400 opacity-60" />
-      </div>
+      {checked ? (
+        <div className="absolute right-1.5 top-1/2 -translate-y-1/2">
+          <div className="h-3 w-3 rounded-full bg-yellow-400 opacity-60" />
+        </div>
+      ) : (
+        <div className="absolute left-1.5 top-1/2 -translate-y-1/2">
+          <div className="h-3 w-3 rounded-full bg-yellow-400 opacity-60" />
+        </div>
+      )}
     </button>
   );
 }
