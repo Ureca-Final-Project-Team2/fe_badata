@@ -8,9 +8,10 @@ interface CustomSwitchProps {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   labels?: [string, string];
+  disabled?: boolean;
 }
 
-export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwitchProps) {
+export function Switch({ checked, onCheckedChange, labels, disabled, ...props }: CustomSwitchProps) {
   const hasLabels = Boolean(labels);
 
   if (hasLabels) {
@@ -19,9 +20,11 @@ export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwi
         <RadixSwitch.Root
           checked={checked}
           onCheckedChange={onCheckedChange}
+          disabled={disabled}
           className={cn(
             'relative z-10 w-full h-full rounded-full appearance-none outline-none cursor-pointer transition-colors',
             'bg-[var(--gray)]',
+            disabled && 'opacity-50 cursor-not-allowed',
           )}
           {...props}
         >
@@ -61,9 +64,11 @@ export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwi
       <RadixSwitch.Root
         checked={checked}
         onCheckedChange={onCheckedChange}
+        disabled={disabled}
         className={cn(
           'relative z-10 w-full h-full rounded-full appearance-none outline-none cursor-pointer transition-colors',
           checked ? 'bg-[var(--main-5)]' : 'bg-[var(--gray)]',
+          disabled && 'opacity-50 cursor-not-allowed',
         )}
         {...props}
       >
