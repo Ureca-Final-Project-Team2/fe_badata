@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { fetchStores } from '@/pages/rental/map/api/apis';
+import { mapFilterStateToApiParams } from '@/pages/rental/map/utils/filterParamsMapper';
 
 import type { Store } from '@/pages/rental/map/lib/types';
 import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
@@ -47,54 +48,8 @@ export const useFetchStoresHooks = (
 
         setCurrentBounds(newBounds);
 
-        // 필터 파라미터 가공: API 명세에 맞게 변환 (초기값은 파라미터에 포함하지 않음)
-        const mergedParams: Record<string, unknown> = { ...newBounds };
-        if (filterState) {
-          // 가격
-          if (filterState.minPrice !== undefined && filterState.minPrice !== 0) {
-            mergedParams.minPrice = filterState.minPrice;
-          }
-          if (filterState.maxPrice !== undefined && filterState.maxPrice !== 0) {
-            mergedParams.maxPrice = filterState.maxPrice;
-          }
-          // 별점
-          if (filterState.star && filterState.star > 0) {
-            mergedParams.reviewRating = filterState.star;
-          }
-          // 일일 데이터 제공량 (dataAmount → dataCapacity)
-          if (filterState.dataAmount && filterState.dataAmount !== '무제한') {
-            mergedParams.dataCapacity = parseInt(filterState.dataAmount.replace('GB', ''));
-          } else if (filterState.dataAmount === '무제한') {
-            mergedParams.dataCapacity = 99999; // 백엔드와 협의된 값 사용
-          }
-          // 데이터 타입 (dataType → is5G)
-          if (filterState.dataType === '5G') {
-            mergedParams.is5G = true;
-          } else if (filterState.dataType === '4G/LTE') {
-            mergedParams.is5G = false;
-          }
-          // 최대 접속 가능 기기 수 (number[])
-          if (filterState.maxSupportConnection) {
-            mergedParams.maxSupportConnection = filterState.maxSupportConnection;
-          }
-          // 날짜
-          if (filterState.dateRange?.from) {
-            mergedParams.rentalStartDate =
-              filterState.dateRange.from instanceof Date
-                ? filterState.dateRange.from.toISOString()
-                : filterState.dateRange.from;
-          }
-          if (filterState.dateRange?.to) {
-            mergedParams.rentalEndDate =
-              filterState.dateRange.to instanceof Date
-                ? filterState.dateRange.to.toISOString()
-                : filterState.dateRange.to;
-          }
-          // 오픈 여부
-          if ('isOpeningNow' in filterState && filterState.isOpeningNow !== undefined) {
-            mergedParams.isOpeningNow = filterState.isOpeningNow;
-          }
-        }
+        const mergedParams = mapFilterStateToApiParams(newBounds, filterState);
+
         // 디버깅: 실제 요청 파라미터 확인
         console.log('[fetchStores] mergedParams:', mergedParams);
         const stores = await fetchStores(mergedParams);
