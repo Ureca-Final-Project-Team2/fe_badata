@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useRef } from 'react';
+
 import { MapPin, Phone } from 'lucide-react';
 
 import type { PlaceSearchResult } from '@/pages/rental/search/utils/address/searchPlaces';
@@ -5,11 +7,24 @@ import type { PlaceSearchResult } from '@/pages/rental/search/utils/address/sear
 interface SearchResultsProps {
   results: PlaceSearchResult[];
   isLoading: boolean;
+  isLoadingMore?: boolean;
+  hasNext?: boolean;
   onSelectPlace: (place: PlaceSearchResult) => void;
+  onLoadMore?: () => void;
   keyword: string;
 }
 
-const SearchResults = ({ results, isLoading, onSelectPlace, keyword }: SearchResultsProps) => {
+const SearchResults = ({
+  results,
+  isLoading,
+  isLoadingMore = false,
+  hasNext = false,
+  onSelectPlace,
+  onLoadMore,
+  keyword,
+}: SearchResultsProps) => {
+  const observerRef = useRef<HTMLDivElement>(null);
+
   // 검색어 강조 표시 함수
   const highlightKeyword = (text: string) => {
     if (!keyword.trim()) return text;
@@ -27,6 +42,30 @@ const SearchResults = ({ results, isLoading, onSelectPlace, keyword }: SearchRes
       ),
     );
   };
+
+  // Intersection Observer를 사용한 무한스크롤
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [target] = entries;
+      if (target.isIntersecting && hasNext && !isLoadingMore && onLoadMore) {
+        onLoadMore();
+      }
+    },
+    [hasNext, isLoadingMore, onLoadMore],
+  );
+
+  useEffect(() => {
+    const element = observerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(handleObserver, {
+      threshold: 0.1,
+    });
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [handleObserver]);
 
   if (isLoading) {
     return (
@@ -87,6 +126,17 @@ const SearchResults = ({ results, isLoading, onSelectPlace, keyword }: SearchRes
           </div>
         </div>
       ))}
+
+      {/* 무한스크롤 관찰자 요소 */}
+      {hasNext && (
+        <div ref={observerRef} className="py-4 text-center">
+          {isLoadingMore ? (
+            <p className="text-[var(--gray-dark)]">더 많은 결과를 불러오는 중...</p>
+          ) : (
+            <div className="h-4" /> // 관찰자 역할만 하는 빈 요소
+          )}
+        </div>
+      )}
     </div>
   );
 };

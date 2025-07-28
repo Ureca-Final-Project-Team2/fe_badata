@@ -33,6 +33,9 @@ const SearchPosPage = () => {
     setKeyword,
     searchResults,
     isLoading: isSearchLoading,
+    isLoadingMore,
+    hasNext,
+    loadNextPage,
     handleSearchFocus,
     handleSearchBlur,
   } = useSearchPlaces();
@@ -113,7 +116,10 @@ const SearchPosPage = () => {
             <SearchResults
               results={searchResults}
               isLoading={isSearchLoading}
+              isLoadingMore={isLoadingMore}
+              hasNext={hasNext}
               onSelectPlace={handleSelectPlace}
+              onLoadMore={loadNextPage}
               keyword={keyword.trim()}
             />
           ) : (
