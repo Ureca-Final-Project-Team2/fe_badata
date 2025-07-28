@@ -44,7 +44,7 @@ export function CoinToggle({
     >
       <span
         className={cn(
-          'pointer-events-none block h-4 w-4 transform rounded-full bg-white shadow-lg ring-0 transition-transform',
+          'pointer-events-none block h-4 w-4 transform rounded-full bg-[var(--white)] shadow-lg ring-0 transition-transform',
           checked ? 'translate-x-6' : 'translate-x-1',
         )}
       />

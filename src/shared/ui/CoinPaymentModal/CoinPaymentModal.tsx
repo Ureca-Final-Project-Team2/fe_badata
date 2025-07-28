@@ -92,7 +92,7 @@ export function CoinPaymentModal({
         <div className="bg-[var(--gray-light)] rounded-lg p-4">
           <div className="flex justify-between items-center">
             <span className="text-[var(--black)] font-label-medium">결제 금액</span>
-            <span className="text-lg font-label-semibold text-[var(--black)]">
+            <span className="font-label-semibold text-[var(--black)]">
               {formatPrice(originalPrice.toString())}원
             </span>
           </div>
@@ -191,7 +191,7 @@ export function CoinPaymentModal({
         <button
           onClick={handleConfirm}
           disabled={finalPrice === 0 || isCoinLoading || isCoinError}
-          className="w-full bg-[var(--main-3)] text-white py-4 rounded-lg font-body-semibold disabled:bg-[var(--gray-light)] disabled:text-[var(--gray-mid)]"
+          className="w-full bg-[var(--main-3)] text-[var(--white)] py-4 rounded-lg font-body-semibold disabled:bg-[var(--gray-light)] disabled:text-[var(--gray-mid)]"
         >
           {isCoinLoading
             ? '잔액 확인 중...'
