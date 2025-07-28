@@ -4,10 +4,10 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
-import { useCoinQuery } from '@/entities/user/model/queries';
 import { useShareHooks } from '@/shared/model/useShareHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
+import { usePaymentSuccessModal } from '@/widgets/trade/payment/model/usePaymentSuccessModal';
 import BuyButtonWithPayment from '@/widgets/trade/payment/ui/BuyButtonWithPayment';
 import PaymentReceiptModal from '@/widgets/trade/payment/ui/PaymentReceiptModal';
 import { TradeDetailDrawer } from '@/widgets/trade/post-detail/ui/TradeDetailDrawer';
@@ -27,11 +27,10 @@ interface Props {
 
 export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Props) => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [usedCoin, setUsedCoin] = useState(0);
   const { isFollowing, setIsFollowing } = useFollowState(postUserId);
   const { share } = useShareHooks();
-  const { data: coinData } = useCoinQuery();
+  const { isPaymentModalOpen, usedCoin, coinData, handlePaymentSuccess, closeModal } =
+    usePaymentSuccessModal();
 
   const handleShare = () => {
     share({
@@ -46,11 +45,6 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
 
   const handleMore = () => {
     setIsMoreOpen(true);
-  };
-
-  const handlePaymentSuccess = (usedCoinAmount: number) => {
-    setUsedCoin(usedCoinAmount);
-    setIsPaymentModalOpen(true);
   };
 
   return (
@@ -131,7 +125,7 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
             <div className="relative">
               <PaymentReceiptModal
                 isOpen={isPaymentModalOpen}
-                onClose={() => setIsPaymentModalOpen(false)}
+                onClose={closeModal}
                 title={post.title}
                 price={post.price}
                 usedCoin={usedCoin}
