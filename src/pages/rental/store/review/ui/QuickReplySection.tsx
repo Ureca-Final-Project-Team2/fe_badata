@@ -42,7 +42,7 @@ export default function QuickReplySection({ quickReplies }: QuickReplySectionPro
 
   return (
     <div className="mb-6">
-      <h2 className="font-body-semibold text-[var(--black)] mb-1">이런 점이 특히 좋았어요!</h2>
+      <h2 className="font-body-semibold text-[var(--black)] mt-2 mb-1">이런 점이 특히 좋았어요!</h2>
       <div className="border border-[var(--gray)] px-4 py-2 rounded-lg">
         {totalQuickReplyCount > 0 && (
           <div>
