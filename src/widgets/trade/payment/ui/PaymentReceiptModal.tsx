@@ -132,7 +132,7 @@ const PaymentReceiptModal: React.FC<PaymentReceiptModalProps> = ({
       <div className="mt-4 flex gap-3">
         {/* 거래 페이지로 이동 버튼 */}
         <button
-          className="w-[180px] py-3 rounded-xl font-title-semibold shadow-md transition bg-[var(--main-5)] text-white hover:bg-[var(--main-4)]"
+          className="w-[180px] py-3 rounded-xl font-body-semibold shadow-md transition bg-[var(--main-5)] text-white hover:bg-[var(--main-4)]"
           onClick={handleNavigateToTrade}
         >
           홈으로 이동
