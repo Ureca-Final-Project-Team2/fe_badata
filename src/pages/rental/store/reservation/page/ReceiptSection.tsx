@@ -18,6 +18,7 @@ interface ReceiptSectionProps {
   devices: DeviceItem[];
   onPay?: () => void;
   onClose?: () => void;
+  isSubmitting?: boolean;
 }
 
 const getNumber = (str: string) => {
@@ -36,6 +37,7 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
   devices,
   onPay,
   onClose,
+  isSubmitting = false,
 }) => {
   const total =
     devices
@@ -49,7 +51,7 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
     <div className="flex flex-col items-center justify-center py-10">
       <div className="bg-white rounded-t-2xl shadow-lg w-[320px] mx-auto p-6 relative flex flex-col items-center">
         {/* X 버튼: 카드 상단 우측 */}
-        {onClose && (
+        {onClose && !isSubmitting && (
           <button
             className="absolute top-3 right-5 text-[var(--gray-dark)] hover:text-[var(--black)] font-title-semibold"
             onClick={onClose}
@@ -103,12 +105,24 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
         ))}
       </svg>
       <RegisterButton
-        className="mt-8 w-[180px] h-[54px] rounded-xl bg-[var(--main-5)] text-white font-title-semibold shadow-md hover:bg-[var(--main-4)] transition"
+        className={`mt-8 w-[180px] h-[54px] rounded-xl font-title-semibold shadow-md transition ${
+          isSubmitting
+            ? 'bg-[var(--gray)] text-white cursor-not-allowed'
+            : 'bg-[var(--main-5)] text-white hover:bg-[var(--main-4)]'
+        }`}
         size="lg"
-        isFormValid={true}
-        onClick={onPay}
+        isFormValid={!isSubmitting}
+        onClick={isSubmitting ? undefined : onPay}
+        disabled={isSubmitting}
       >
-        결제
+        {isSubmitting ? (
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            처리 중...
+          </div>
+        ) : (
+          '결제'
+        )}
       </RegisterButton>
     </div>
   );
