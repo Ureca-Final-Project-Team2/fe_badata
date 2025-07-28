@@ -15,6 +15,46 @@ import type {
 } from '@/pages/rental/store/reservation/lib/types';
 
 /**
+ * 재입고 알림 응답 파싱 헬퍼 함수
+ */
+const parseRestockResponse = (
+  response: unknown,
+): { success: boolean; notificationId?: number; error?: string } => {
+  // 숫자가 반환된 경우 (성공)
+  if (typeof response === 'number') {
+    return { success: true, notificationId: response };
+  }
+
+  // 응답 객체가 반환된 경우
+  if (response && typeof response === 'object' && 'code' in response) {
+    const fullResponse = response as RestockNotificationResponse;
+
+    if (fullResponse.code === 20000) {
+      return { success: true, notificationId: fullResponse.content || undefined };
+    }
+
+    const errorMessage = getRestockErrorMessage(fullResponse.code, fullResponse.message);
+    return { success: false, error: errorMessage };
+  }
+
+  return { success: false, error: RESTOCK_ERROR_MESSAGES.DEFAULT };
+};
+
+/**
+ * 재입고 알림 에러 메시지 생성 헬퍼 함수
+ */
+const getRestockErrorMessage = (code: number, message?: string | null): string => {
+  switch (code) {
+    case RESTOCK_ERROR_CODES.EXCEED_STORE_CAPACITY:
+      return RESTOCK_ERROR_MESSAGES[RESTOCK_ERROR_CODES.EXCEED_STORE_CAPACITY];
+    case RESTOCK_ERROR_CODES.RESERVATION_AVAILABLE:
+      return RESTOCK_ERROR_MESSAGES[RESTOCK_ERROR_CODES.RESERVATION_AVAILABLE];
+    default:
+      return message || RESTOCK_ERROR_MESSAGES.DEFAULT;
+  }
+};
+
+/**
  * 특정 가맹점의 예약 가능한 장비 목록 조회
  */
 export const fetchRentalDevices = async (
@@ -80,45 +120,7 @@ export const requestRestockNotification = async (
 
     console.log('📦 재입고 알림 신청 응답:', response);
 
-    // axios interceptor가 성공 시 content만 반환하는 경우 (숫자가 반환됨)
-    if (typeof response === 'number') {
-      return {
-        success: true,
-        notificationId: response,
-      };
-    }
-
-    // 전체 응답 객체가 반환되는 경우
-    if (response && typeof response === 'object' && 'code' in response) {
-      const fullResponse = response as unknown as RestockNotificationResponse;
-
-      // 성공 응답 처리
-      if (fullResponse.code === 20000) {
-        return {
-          success: true,
-          notificationId: fullResponse.content || undefined,
-        };
-      }
-
-      // 에러 응답 처리
-      const errorMessage =
-        fullResponse.code === RESTOCK_ERROR_CODES.EXCEED_STORE_CAPACITY
-          ? RESTOCK_ERROR_MESSAGES[RESTOCK_ERROR_CODES.EXCEED_STORE_CAPACITY]
-          : fullResponse.code === RESTOCK_ERROR_CODES.RESERVATION_AVAILABLE
-            ? RESTOCK_ERROR_MESSAGES[RESTOCK_ERROR_CODES.RESERVATION_AVAILABLE]
-            : fullResponse.message || RESTOCK_ERROR_MESSAGES.DEFAULT;
-
-      return {
-        success: false,
-        error: errorMessage,
-      };
-    }
-
-    // 예상하지 못한 응답 형식
-    return {
-      success: false,
-      error: RESTOCK_ERROR_MESSAGES.DEFAULT,
-    };
+    return parseRestockResponse(response);
   } catch (error: unknown) {
     console.error('재입고 알림 신청 실패:', error);
 
@@ -132,17 +134,7 @@ export const requestRestockNotification = async (
       'data' in error.response
     ) {
       const errorData = (error.response as { data: RestockNotificationResponse }).data;
-      const errorMessage =
-        errorData.code === RESTOCK_ERROR_CODES.EXCEED_STORE_CAPACITY
-          ? RESTOCK_ERROR_MESSAGES[RESTOCK_ERROR_CODES.EXCEED_STORE_CAPACITY]
-          : errorData.code === RESTOCK_ERROR_CODES.RESERVATION_AVAILABLE
-            ? RESTOCK_ERROR_MESSAGES[RESTOCK_ERROR_CODES.RESERVATION_AVAILABLE]
-            : errorData.message || RESTOCK_ERROR_MESSAGES.DEFAULT;
-
-      return {
-        success: false,
-        error: errorMessage,
-      };
+      return parseRestockResponse(errorData);
     }
 
     return {
