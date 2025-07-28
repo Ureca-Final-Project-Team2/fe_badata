@@ -52,7 +52,7 @@ export function TradeSearchPage() {
         onDeleteAll={clear}
         onClickKeyword={handleSearchSubmit}
       />
-      <SearchHotKeywords keywords={hotKeywords} />
+      <SearchHotKeywords keywords={hotKeywords} onKeywordClick={handleSearchSubmit} />
       <SearchResult
         search={debouncedSearch}
         posts={posts as DataPost[] | GifticonPost[]}

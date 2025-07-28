@@ -4,9 +4,14 @@ import { Badge } from '@/shared/ui/Badge';
 
 interface SearchHotKeywordsProps {
   keywords: string[];
+  onKeywordClick?: (keyword: string) => void;
 }
 
-export const SearchHotKeywords = ({ keywords }: SearchHotKeywordsProps) => {
+export const SearchHotKeywords = ({ keywords, onKeywordClick }: SearchHotKeywordsProps) => {
+  const handleKeywordClick = (keyword: string) => {
+    onKeywordClick?.(keyword);
+  };
+
   return (
     <section className="mb-6">
       <div className="flex items-center gap-1 mb-2 text-[1.25rem] font-medium">
@@ -15,7 +20,13 @@ export const SearchHotKeywords = ({ keywords }: SearchHotKeywordsProps) => {
       </div>
       <div className="flex flex-wrap gap-2">
         {keywords.map((keyword, index) => (
-          <Badge key={index} size="xs" color="grayLight">
+          <Badge
+            key={index}
+            size="xs"
+            color="grayLight"
+            onClick={() => handleKeywordClick(keyword)}
+            className="cursor-pointer hover:bg-gray-200 transition-colors"
+          >
             {keyword}
           </Badge>
         ))}
