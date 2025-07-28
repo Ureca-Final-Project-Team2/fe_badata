@@ -1,32 +1,36 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { MapPin, Phone, Target, X } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
+import { updateAddressUsageTime } from '@/pages/rental/search/api/apis';
 import { useCreateAddressHistory } from '@/pages/rental/search/hook/useAddressHooks';
 import { useDeleteAddressHistory } from '@/pages/rental/search/hook/useDeleteAddressHooks';
 import { useGetAddressHistoryInfinite } from '@/pages/rental/search/hook/useGetAddressHistoryInfiniteHooks';
 import { useSearchPlaces } from '@/pages/rental/search/hook/useSearchPlacesHooks';
-import { updateAddressUsageTime } from '@/pages/rental/search/api/apis';
-import AddressInfoSection from '@/pages/rental/search/page/AddressInfoSection';
+import useThrottledScroll from '@/pages/rental/search/hook/useThrottledScrollHooks';
+import AddressHistoryList from '@/pages/rental/search/ui/AddressHistoryList';
+import CurrentLocationButton from '@/pages/rental/search/ui/CurrentLocationButton';
+import SearchInputField from '@/pages/rental/search/ui/SearchInputField';
 import SearchResults from '@/pages/rental/search/ui/SearchResults';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
-import { InputField } from '@/shared/ui/InputField';
 
 import type { PlaceSearchResult } from '@/pages/rental/search/utils/address/searchPlaces';
 
 const SearchPosPage = () => {
+  const queryClient = useQueryClient();
   const createAddressMutation = useCreateAddressHistory();
   const deleteAddressMutation = useDeleteAddressHistory();
   const scrollRef = useRef<HTMLDivElement>(null);
+
   const {
     data: addressHistoryInfinite,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetAddressHistoryInfinite(5, 'createdAt,desc');
+  } = useGetAddressHistoryInfinite(5, 'lastUsed,desc');
 
   // 키워드 검색 훅
   const {
@@ -37,61 +41,144 @@ const SearchPosPage = () => {
     isLoadingMore,
     hasNext,
     loadNextPage,
-    handleSearchFocus,
-    handleSearchBlur,
   } = useSearchPlaces();
 
-  // 스크롤 이벤트 핸들러
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!scrollRef.current) return;
+  // 검색 결과 선택 시 호출되는 함수
+  const handleSelectPlace = useCallback(
+    (place: PlaceSearchResult) => {
+      console.log('선택된 장소:', place);
+      createAddressMutation.mutate(place);
+      setKeyword('');
+    },
+    [createAddressMutation, setKeyword],
+  );
 
-      const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-      const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100; // 100px 전에 로드
+  // 주소 이력 클릭 시 호출되는 함수
+  const handleAddressHistoryClick = useCallback(
+    async (item: { addressId: number; address_name: string }) => {
+      setKeyword(item.address_name);
 
-      if (isNearBottom && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
+      // 낙관적 업데이트: 클릭한 주소를 맨 위로 이동
+      const currentData = queryClient.getQueryData(['addressHistory', 5, 'lastUsed,desc']);
+
+      if (currentData && typeof currentData === 'object' && 'pages' in currentData) {
+        const oldData = currentData as {
+          pages: Array<{
+            content?: {
+              getAddressResponses?: Array<{
+                addressId: number;
+                address_name: string;
+                id: string;
+                phone: string;
+                place_name: string;
+                road_address_name: string;
+                x: number;
+                y: number;
+                lastUsed?: number;
+              }>;
+            };
+          }>;
+        };
+
+        // 클릭한 주소를 찾아서 맨 위로 이동
+        const updatedPages = oldData.pages.map((page) => {
+          if (page?.content?.getAddressResponses) {
+            const responses = [...page.content.getAddressResponses];
+            const clickedIndex = responses.findIndex((resp) => resp.addressId === item.addressId);
+
+            if (clickedIndex !== -1) {
+              // 클릭한 주소를 맨 위로 이동하고 lastUsed 업데이트
+              const clickedItem = { ...responses[clickedIndex], lastUsed: Date.now() };
+              responses.splice(clickedIndex, 1);
+              responses.unshift(clickedItem);
+
+              return {
+                ...page,
+                content: {
+                  ...page.content,
+                  getAddressResponses: responses,
+                },
+              };
+            }
+          }
+          return page;
+        });
+
+        // 낙관적 업데이트 적용
+        queryClient.setQueryData(['addressHistory', 5, 'lastUsed,desc'], {
+          ...oldData,
+          pages: updatedPages,
+        });
       }
-    };
 
-    const scrollElement = scrollRef.current;
-    if (scrollElement) {
-      scrollElement.addEventListener('scroll', handleScroll);
-      return () => scrollElement.removeEventListener('scroll', handleScroll);
+      try {
+        await updateAddressUsageTime(item.addressId);
+      } catch (error) {
+        console.error('주소 사용 시간 업데이트 실패:', error);
+        // 에러 시 캐시 무효화하여 서버 데이터로 복원
+        queryClient.invalidateQueries({ queryKey: ['addressHistory', 5, 'lastUsed,desc'] });
+      }
+    },
+    [setKeyword, queryClient],
+  );
+
+  // 현재 위치 클릭 핸들러
+  const handleCurrentLocation = useCallback(() => {
+    console.log('현재 위치로 찾기');
+    // TODO: 현재 위치 기반 검색 로직 구현
+  }, []);
+
+  // 주소 삭제 핸들러
+  const handleDeleteAddress = useCallback(
+    (addressId: number, e: React.MouseEvent) => {
+      e.stopPropagation();
+      deleteAddressMutation.mutate(addressId);
+    },
+    [deleteAddressMutation],
+  );
+
+  // 키워드 변경 핸들러
+  const handleKeywordChange = useCallback(
+    (value: string) => {
+      setKeyword(value);
+    },
+    [setKeyword],
+  );
+
+  // 스크롤 핸들러
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+    const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+
+    if (isNearBottom && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // 검색 결과 선택 시 호출되는 함수
-  const handleSelectPlace = (place: PlaceSearchResult) => {
-    console.log('선택된 장소:', place);
+  const throttledHandleScroll = useThrottledScroll(handleScroll, 100);
 
-    // 선택된 장소를 주소 이력에 추가 (전체 정보 전달)
-    createAddressMutation.mutate(place);
-
-    // 검색 모드 종료
-    setKeyword('');
-  };
-
-  // 주소 이력 클릭 시 호출되는 함수
-  const handleAddressHistoryClick = async (item: { addressId: number; address_name: string }) => {
-    setKeyword(item.address_name);
-    // 사용 시간 업데이트 (로그인 상태에 따라 서버 또는 로컬 스토리지)
-    try {
-      await updateAddressUsageTime(item.addressId);
-    } catch (error) {
-      console.error('주소 사용 시간 업데이트 실패:', error);
+  // 스크롤 이벤트 리스너
+  useEffect(() => {
+    const scrollElement = scrollRef.current;
+    if (scrollElement) {
+      scrollElement.addEventListener('scroll', throttledHandleScroll);
+      return () => scrollElement.removeEventListener('scroll', throttledHandleScroll);
     }
-  };
+  }, [throttledHandleScroll]);
 
-  const handleCurrentLocation = () => {
-    console.log('현재 위치로 찾기');
-    // TODO: 현재 위치 기반 검색 로직 구현
-  };
-
-  const handleDeleteAddress = (addressId: number, e: React.MouseEvent) => {
-    e.stopPropagation(); // 클릭 이벤트 전파 방지
-    deleteAddressMutation.mutate(addressId);
-  };
+  // 주소 이력 존재 여부
+  const hasAddressHistory = useMemo(() => {
+    return (
+      Array.isArray(addressHistoryInfinite?.pages) &&
+      addressHistoryInfinite.pages.some(
+        (page) =>
+          Array.isArray(page?.content?.getAddressResponses) &&
+          page.content.getAddressResponses.length > 0,
+      )
+    );
+  }, [addressHistoryInfinite?.pages]);
 
   return (
     <BaseLayout
@@ -104,21 +191,7 @@ const SearchPosPage = () => {
       <div className="w-full h-full flex flex-col">
         {/* 고정 영역 - 검색창 */}
         <div className="flex-shrink-0">
-          {/* 검색 입력 필드 - BaseLayout 내부에 고정 */}
-          <div className="fixed max-w-[428px] mx-auto top-[70px] left-0 right-0 z-10 bg-[var(--white)] px-6 py-2 border-b border-[var(--gray-light)]">
-            <InputField
-              variant="address"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              onFocus={handleSearchFocus}
-              onBlur={handleSearchBlur}
-              readOnly={false}
-              icon={<MapPin className="text-[var(--gray-dark)]" />}
-              placeholder="지번, 도로명, 건물명으로 검색"
-              autoFocus={true}
-              className="bg-[var(--gray-light)] text-[var(--gray-dark)] placeholder-[var(--gray-dark)] w-full"
-            />
-          </div>
+          <SearchInputField keyword={keyword} onKeywordChange={handleKeywordChange} />
         </div>
 
         {/* 스크롤 영역 - 목록만 (검색창 아래 여백 추가) */}
@@ -137,90 +210,20 @@ const SearchPosPage = () => {
           ) : (
             // 검색어가 없을 때 - 현재 위치 버튼과 최근 검색 주소 표시
             <>
-              {/* 현재 위치로 찾기 버튼 */}
-              <button
-                onClick={handleCurrentLocation}
-                className="w-full bg-[var(--white)] border border-[var(--gray)] rounded-lg p-2 flex items-center justify-center gap-2 hover:bg-[var(--gray-light)] transition-colors mb-8"
-              >
-                <Target className="w-5 h-5 text-[var(--gray-dark)]" />
-                <span className="text-[var(--gray-dark)] font-label-semibold">
-                  현재 위치로 찾기
-                </span>
-              </button>
+              <CurrentLocationButton onClick={handleCurrentLocation} />
 
               {/* 최근 검색 주소 제목 */}
-              {addressHistoryInfinite?.pages &&
-                addressHistoryInfinite.pages.some(
-                  (page) => page?.content?.getAddressResponses?.length > 0,
-                ) && <h2 className="font-small-medium text-[var(--black)] mb-4">최근 검색 주소</h2>}
+              {hasAddressHistory && (
+                <h2 className="font-small-medium text-[var(--black)] mb-4">최근 검색 주소</h2>
+              )}
 
               {/* 주소 이력 목록 */}
-              {addressHistoryInfinite?.pages &&
-              addressHistoryInfinite.pages.some(
-                (page) => page?.content?.getAddressResponses?.length > 0,
-              ) ? (
-                // 주소 이력이 있는 경우 - 리스트로 표시
-                <div>
-                  <div className="space-y-2">
-                    {addressHistoryInfinite.pages.map((page) =>
-                      page?.content?.getAddressResponses?.map((item) => (
-                        <div
-                          key={item.addressId}
-                          className="p-3 border-b border-[var(--gray-light)] cursor-pointer hover:bg-[var(--gray-light)] transition-colors"
-                          onClick={() => handleAddressHistoryClick(item)}
-                        >
-                          <div className="flex items-start gap-3">
-                            <MapPin className="w-4 h-4 text-[var(--gray-dark)] mt-0.5 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              {/* 장소명 */}
-                              <h3 className="text-[var(--black)] font-small-semibold mb-1 truncate">
-                                {item.place_name}
-                              </h3>
-
-                              {/* 도로명 주소 */}
-                              {item.road_address_name && (
-                                <p className="text-[var(--gray-dark)] font-small-regular mb-1">
-                                  {item.road_address_name}
-                                </p>
-                              )}
-
-                              {/* 지번 주소 */}
-                              <p className="text-[var(--gray-dark)] font-small-regular mb-1">
-                                지번 {item.address_name}
-                              </p>
-
-                              {/* 전화번호 */}
-                              {item.phone && (
-                                <div className="flex items-center gap-1">
-                                  <Phone className="w-3 h-3 text-[var(--main-5)]" />
-                                  <span className="text-[var(--main-5)] font-small-semibold">
-                                    {item.phone}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                            <button
-                              onClick={(e) => handleDeleteAddress(item.addressId, e)}
-                              className="p-1 hover:bg-[var(--gray-light)] rounded transition-colors flex-shrink-0"
-                            >
-                              <X className="w-3 h-3 text-[var(--gray)]" />
-                            </button>
-                          </div>
-                        </div>
-                      )),
-                    )}
-                    {/* 무한스크롤 로딩 표시 */}
-                    {isFetchingNextPage && (
-                      <div className="text-center py-4">
-                        <p className="text-[var(--gray-dark)]">로딩 중...</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                // 주소 이력이 없는 경우 - 검색 예시 표시
-                <AddressInfoSection />
-              )}
+              <AddressHistoryList
+                addressHistoryInfinite={addressHistoryInfinite ?? { pages: [] }}
+                onAddressClick={handleAddressHistoryClick}
+                onDelete={handleDeleteAddress}
+                isFetchingNextPage={isFetchingNextPage}
+              />
             </>
           )}
         </div>

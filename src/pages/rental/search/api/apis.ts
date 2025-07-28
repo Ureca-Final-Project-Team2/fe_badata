@@ -2,6 +2,7 @@ import {
   addLocalAddressHistory,
   deleteLocalAddressHistory,
   getLocalAddressHistoryPaginated,
+  updateAddressUsageTime as updateLocalAddressUsageTime,
 } from '@/pages/rental/search/utils/localStorage/addressHistory';
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
@@ -166,10 +167,7 @@ export const updateAddressUsageTime = async (
   if (!accessToken) {
     console.log('로그인되지 않은 사용자. 로컬 스토리지에서 업데이트합니다.');
     // 로컬 스토리지에서 업데이트
-    const { updateAddressUsageTime: updateLocalUsageTime } = await import(
-      '@/pages/rental/search/utils/localStorage/addressHistory'
-    );
-    updateLocalUsageTime(addressId);
+    updateLocalAddressUsageTime(addressId);
 
     return {
       code: 20000,

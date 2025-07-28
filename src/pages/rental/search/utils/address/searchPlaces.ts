@@ -35,6 +35,9 @@ export const searchPlaces = async (params: SearchPlacesParams): Promise<PlaceSea
     );
 
     if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error('API 호출 제한에 도달했습니다. 잠시 후 다시 시도해주세요.');
+      }
       throw new Error('검색 요청에 실패했습니다.');
     }
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   searchPlaces,
@@ -39,7 +39,7 @@ const useThrottle = <T extends unknown[]>(callback: (...args: T) => void, delay:
   );
 };
 
-// 키워드 검색 훅 (무한스크롤 지원)
+// 키워드 검색 훅
 export const useSearchPlaces = () => {
   const [keyword, setKeyword] = useState('');
   const [searchResults, setSearchResults] = useState<PlaceSearchResult[]>([]);
@@ -81,12 +81,15 @@ export const useSearchPlaces = () => {
           setSearchResults(results);
         }
 
-        // 카카오 API는 최대 45개 결과를 반환하므로, 15개씩 3페이지까지만 가능
         setHasNext(results.length === 15 && pageNum < 3);
       } catch (error) {
         console.error('검색 오류:', error);
         if (!append) {
           setSearchResults([]);
+        }
+        // API 호출 제한 에러인 경우 사용자에게 알림
+        if (error instanceof Error && error.message.includes('API 호출 제한')) {
+          console.warn('API 호출 제한으로 인해 검색이 일시적으로 중단되었습니다.');
         }
       } finally {
         setIsLoading(false);
@@ -118,25 +121,30 @@ export const useSearchPlaces = () => {
     performSearch(keyword.trim(), nextPage, true);
   }, [hasNext, isLoadingMore, isLoading, page, keyword, performSearch]);
 
-  // 검색창 클릭 시 포커스 처리
-  const handleSearchFocus = useCallback(() => {
-    // 검색창 포커스 시 특별한 처리 없음
+  // 키워드 설정 함수
+  const setKeywordOptimized = useCallback((value: string) => {
+    setKeyword(value);
   }, []);
 
-  // 검색창에서 포커스가 벗어날 때 처리
-  const handleSearchBlur = useCallback(() => {
-    // 검색창 블러 시 특별한 처리 없음
-  }, []);
+  // 검색 결과 메모이제이션
+  const memoizedSearchResults = useMemo(() => searchResults, [searchResults]);
+
+  // 로딩 상태 메모이제이션
+  const memoizedIsLoading = useMemo(() => isLoading, [isLoading]);
+
+  // 더 로딩 상태 메모이제이션
+  const memoizedIsLoadingMore = useMemo(() => isLoadingMore, [isLoadingMore]);
+
+  // 다음 페이지 존재 여부 메모이제이션
+  const memoizedHasNext = useMemo(() => hasNext, [hasNext]);
 
   return {
     keyword,
-    setKeyword,
-    searchResults,
-    isLoading,
-    isLoadingMore,
-    hasNext,
+    setKeyword: setKeywordOptimized,
+    searchResults: memoizedSearchResults,
+    isLoading: memoizedIsLoading,
+    isLoadingMore: memoizedIsLoadingMore,
+    hasNext: memoizedHasNext,
     loadNextPage,
-    handleSearchFocus,
-    handleSearchBlur,
   };
 };

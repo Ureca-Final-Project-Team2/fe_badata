@@ -8,7 +8,9 @@ export const useGetAddressHistoryInfinite = (size: number, sort: string = 'lastU
     queryFn: ({ pageParam = 0 }) => getAddressHistoryList(pageParam, size, sort),
     getNextPageParam: (lastPage) => {
       if (!lastPage?.content?.hasNext) return undefined;
-      return lastPage.content.getAddressResponses.length > 0 ? lastPage.content.getAddressResponses.length / size : undefined;
+      return lastPage.content.getAddressResponses.length > 0
+        ? lastPage.content.getAddressResponses.length / size
+        : undefined;
     },
     initialPageParam: 0,
   });
