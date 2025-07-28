@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import {
   useInfiniteStoreReviews,
   useStoreReviewMeta,
-} from '@/pages/rental/store/review/model/quries';
+} from '@/pages/rental/store/review/model/queries';
 import QuickReplySection from '@/pages/rental/store/review/ui/QuickReplySection';
 import ReviewHeaderSection from '@/pages/rental/store/review/ui/ReviewHeaderSection';
 import ReviewItem from '@/pages/rental/store/review/ui/ReviewItem';
@@ -45,7 +45,7 @@ export default function ReviewPage() {
     <>
       <QuickReplySection quickReplies={metaData.showCountPerQuickReplyResponses} />
       <ReviewHeaderSection
-        reviewCount={allReviews.length} // TODO 리뷰 총 개수에 맞게 수정
+        reviewCount={metaData.reviewCount}
         currentSort={selectedSort}
         onSortChange={setSelectedSort}
       />

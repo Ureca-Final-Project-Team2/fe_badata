@@ -61,6 +61,7 @@ type ProfileProps = HTMLAttributes<HTMLDivElement> &
     isFollowing?: boolean;
     onFollowClick?: () => void;
     avatarSize?: Size;
+    bottomContent?: React.ReactNode;
   };
 
 type AvatarProps = {
@@ -121,6 +122,7 @@ export const Profile = forwardRef<HTMLDivElement, ProfileProps>(
       isFollowing = false,
       onFollowClick,
       avatarSize,
+      bottomContent,
       ...props
     },
     ref,
@@ -135,6 +137,9 @@ export const Profile = forwardRef<HTMLDivElement, ProfileProps>(
             <div className="mt-2 font-light text-[12.8px] text-[var(--gray-dark)] truncate">
               {subtitle}
             </div>
+          )}
+          {bottomContent && (
+            <div className="mt-2 flex items-center justify-between w-full">{bottomContent}</div>
           )}
         </div>
 

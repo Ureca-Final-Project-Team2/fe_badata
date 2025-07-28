@@ -1,3 +1,9 @@
+export interface ReviewItemDevice {
+  deviceName: string;
+  dataCapacity: number;
+  count: number;
+}
+
 export interface ReviewItem {
   reviewId: number;
   writerId: number;
@@ -6,9 +12,11 @@ export interface ReviewItem {
   reviewImageUrl: string;
   comment: string;
   createdAt: string;
+  rentalStartDate: string;
   rating: number;
   countOfVisit: number;
   quickReplyNames: string[];
+  reservedDeviceOnReviewResponses: ReviewItemDevice[];
 }
 
 export interface ReviewsResponse {

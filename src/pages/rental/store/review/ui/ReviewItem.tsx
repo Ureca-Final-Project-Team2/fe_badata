@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
-import { StarRating } from '@/pages/rental/store/review/ui/StarRating';
+import { ICONS } from '@/shared/config/iconPath';
 import { Profile } from '@/shared/ui/Profile';
 
 import type { ReviewItem as ReviewItemType } from '@/pages/rental/store/review/lib/types.ts';
@@ -18,6 +18,7 @@ const QuickReplyTag = ({ text }: { text: string }) => {
     </span>
   );
 };
+
 export default function ReviewItem({ review }: ReviewItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const maxLength = 100;
@@ -26,29 +27,52 @@ export default function ReviewItem({ review }: ReviewItemProps) {
   const displayText =
     isExpanded || !shouldShowMore ? review.comment : review.comment.slice(0, maxLength) + '...';
 
+  const formattedDate = new Date(review.rentalStartDate).toISOString().slice(0, 10);
+
   return (
     <div className="border-b border-[var(--gray-light)] pb-6 mb-6 last:border-b-0">
       <Profile
         avatar={review.userImageUrl}
         name={review.name}
-        // TODO 대여 날짜 추가
-        subtitle={`${review.countOfVisit}번째 방문`}
         size="sm"
+        bottomContent={
+          <>
+            <div className="flex items-center gap-1">
+              <Image src={ICONS.ETC.LIKE_ACTIVE} width={18} height={18} alt="별점" />
+              <span className="font-label-medium text-[var(--main-5)]">
+                {review.rating.toFixed(1)}
+              </span>
+            </div>
+            <span className="font-caption-regular text-[var(--gray-dark)]">
+              {formattedDate} · {review.countOfVisit}번째 방문
+            </span>
+          </>
+        }
       />
-      <StarRating rating={review.rating} size={24} />
+
       {review.reviewImageUrl && (
-        <div className="mb-4">
+        <div className="mt-4 mb-2">
           <Image
             src={review.reviewImageUrl}
             alt="리뷰 이미지"
-            width={140}
+            width={200}
             height={140}
-            className="w-[140px] h-[140px] object-cover rounded-lg bg-[var(--gray-light)]"
+            className="w-full h-[140px] object-contain rounded-lg bg-[var(--gray-light)]"
           />
         </div>
       )}
       <div className="flex flex-row gap-4">
-        {/* TODO 대여한 기기 정보 (capacity, name) * count */}
+        {review.reservedDeviceOnReviewResponses.map((device, index) => (
+          <span
+            key={index}
+            className="inline-block my-2 px-3 py-1 bg-[var(--gray-light)] text-[var(--black)] font-small-regular rounded-sm"
+          >
+            <span className="text-[var(--main-5)] font-small-semibold">
+              {device.dataCapacity}GB&nbsp;
+            </span>
+            {device.deviceName}
+          </span>
+        ))}
       </div>
       <div className="mb-4 space-y-2">
         <p className="font-label-regular leading-relaxed whitespace-pre-wrap">{displayText}</p>
