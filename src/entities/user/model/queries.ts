@@ -115,8 +115,20 @@ export const usePurchasesQuery = (
 ) => {
   return useInfiniteQuery<ApiResponse<PurchaseResponse>>({
     queryKey: ['user', 'purchases', postCategory, isSold, size],
-    queryFn: ({ pageParam }) =>
-      userApis.getPurchases(postCategory, isSold, pageParam as number | undefined, size),
+    queryFn: async ({ pageParam }): Promise<ApiResponse<PurchaseResponse>> => {
+      const result = await userApis.getPurchases(
+        postCategory,
+        isSold,
+        pageParam as number | undefined,
+        size,
+      );
+
+      if (result && typeof result === 'object' && 'data' in result) {
+        return result.data as ApiResponse<PurchaseResponse>;
+      }
+
+      return result as ApiResponse<PurchaseResponse>;
+    },
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => {
       if (!lastPage?.content?.hasNext) return undefined;
@@ -124,6 +136,7 @@ export const usePurchasesQuery = (
     },
     enabled: true,
     staleTime: 5 * 60 * 1000,
+    retry: (failureCount) => failureCount < 2, // 최대 2번 재시도
   });
 };
 
