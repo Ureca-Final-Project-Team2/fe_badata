@@ -30,13 +30,18 @@ export const useReservationPayment = ({
     try {
       // 예약 요청 데이터 구성
       const reservationData = {
-        storeId,
         storeDevices: Object.entries(selectedDevices)
           .filter(([, count]) => count > 0)
-          .map(([deviceId, count]) => ({
-            storeDeviceId: Number(deviceId),
-            count,
-          })),
+          .map(([deviceId, count]) => {
+            const id = Number(deviceId);
+            if (isNaN(id)) {
+              throw new Error(`Invalid device ID: ${deviceId}`);
+            }
+            return {
+              storeDeviceId: id,
+              count,
+            };
+          }),
         rentalStartDate: formatDateForReservation(dateRange.from),
         rentalEndDate: formatDateForReservation(dateRange.to),
       };
