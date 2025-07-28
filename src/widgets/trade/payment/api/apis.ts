@@ -11,9 +11,39 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 export async function verifyPayment(impUid: string, postId: number) {
   try {
+    console.log('verifyPayment 요청:', {
+      url: END_POINTS.TRADES.VERIFY_PAYMENT(impUid, postId),
+      impUid,
+      postId,
+    });
+
     const res = await axiosInstance.post(END_POINTS.TRADES.VERIFY_PAYMENT(impUid, postId));
+    console.log('verifyPayment 성공 응답:', res);
     return res;
   } catch (error: unknown) {
+    console.error('verifyPayment 에러 상세:', error);
+
+    // AxiosError인 경우 서버 응답에서 에러 코드 확인
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as {
+        response?: { data?: { code?: number; message?: string }; status?: number };
+      };
+      const errorCode = axiosError.response?.data?.code;
+      const errorMessage = axiosError.response?.data?.message;
+      const status = axiosError.response?.status;
+
+      console.log('서버 에러 상태:', status);
+      console.log('서버 에러 코드:', errorCode);
+      console.log('서버 에러 메시지:', errorMessage);
+
+      // ErrorMessageMap에서 에러 메시지 가져오기
+      const message =
+        ErrorMessageMap[errorCode as keyof typeof ErrorMessageMap] ||
+        errorMessage ||
+        '결제 검증 중 오류가 발생했습니다.';
+      throw new Error(message);
+    }
+
     let message = '결제 검증 중 오류가 발생했습니다.';
     if (error instanceof Error) {
       message = error.message;
@@ -49,7 +79,9 @@ export async function createPayment(postId: number, useCoin: number = 0) {
 
     // AxiosError인 경우 서버 응답에서 에러 코드 확인
     if (error && typeof error === 'object' && 'response' in error) {
-      const axiosError = error as any;
+      const axiosError = error as {
+        response?: { data?: { code?: number; message?: string }; status?: number };
+      };
       const errorCode = axiosError.response?.data?.code;
       const errorMessage = axiosError.response?.data?.message;
 
