@@ -99,7 +99,7 @@ export interface AddressHistoryListResponse {
 // 주소 이력 조회 API (서버 또는 로컬 스토리지)
 export const getAddressHistoryList = async (
   page: number = 0,
-  size: number = 10,
+  size: number = 5,
   sort: string = 'lastUsed,desc', // 기본값을 lastUsed로 변경
 ): Promise<AddressHistoryListResponse> => {
   // 로그인 상태 확인
@@ -108,8 +108,8 @@ export const getAddressHistoryList = async (
   if (!accessToken) {
     console.log('로그인되지 않은 사용자. 로컬 스토리지에서 조회합니다.');
 
-    // 로컬 스토리지에서 조회
-    const localData = getLocalAddressHistoryPaginated(page, size, sort);
+    // 로컬 스토리지에서 조회 (최대 5개)
+    const localData = getLocalAddressHistoryPaginated(page, Math.min(size, 5), sort);
 
     return {
       code: 20000,

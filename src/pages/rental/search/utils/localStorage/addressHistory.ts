@@ -77,8 +77,8 @@ export const addLocalAddressHistory = (
     lastUsed: Date.now(), // 사용 시간 추가
   };
 
-  // 최신 항목을 맨 앞에 추가 (최대 10개 유지)
-  const updatedHistory = [newItem, ...history].slice(0, 10);
+  // 최신 항목을 맨 앞에 추가 (최대 5개 유지)
+  const updatedHistory = [newItem, ...history].slice(0, 5);
 
   saveLocalAddressHistory(updatedHistory);
   return newItem.addressId;
@@ -100,7 +100,7 @@ export const deleteLocalAddressHistory = (addressId: number): number | null => {
 // 무한스크롤을 위한 주소 이력 조회 (최신 사용 순으로 정렬)
 export const getLocalAddressHistoryPaginated = (
   page: number = 0,
-  size: number = 10,
+  size: number = 5,
   sort: string = 'createdAt,desc',
 ): { getAddressResponses: AddressHistoryItem[]; hasNext: boolean } => {
   const history = getLocalAddressHistory();
@@ -176,7 +176,7 @@ export const addSampleLocalAddressHistory = (): void => {
     const existingItem = history.find((item) => item.address_name === address.address_name);
 
     if (!existingItem) {
-      const updatedHistory = [newItem, ...history].slice(0, 10);
+      const updatedHistory = [newItem, ...history].slice(0, 5);
       saveLocalAddressHistory(updatedHistory);
     }
   });
