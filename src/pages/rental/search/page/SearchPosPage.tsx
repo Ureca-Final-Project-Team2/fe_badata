@@ -8,6 +8,7 @@ import { useCreateAddressHistory } from '@/pages/rental/search/hook/useAddressHo
 import { useDeleteAddressHistory } from '@/pages/rental/search/hook/useDeleteAddressHooks';
 import { useGetAddressHistoryInfinite } from '@/pages/rental/search/hook/useGetAddressHistoryInfiniteHooks';
 import { useSearchPlaces } from '@/pages/rental/search/hook/useSearchPlacesHooks';
+import { updateAddressUsageTime } from '@/pages/rental/search/api/apis';
 import AddressInfoSection from '@/pages/rental/search/page/AddressInfoSection';
 import SearchResults from '@/pages/rental/search/ui/SearchResults';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
@@ -69,6 +70,17 @@ const SearchPosPage = () => {
 
     // 검색 모드 종료
     setKeyword('');
+  };
+
+  // 주소 이력 클릭 시 호출되는 함수
+  const handleAddressHistoryClick = async (item: { addressId: number; address_name: string }) => {
+    setKeyword(item.address_name);
+    // 사용 시간 업데이트 (로그인 상태에 따라 서버 또는 로컬 스토리지)
+    try {
+      await updateAddressUsageTime(item.addressId);
+    } catch (error) {
+      console.error('주소 사용 시간 업데이트 실패:', error);
+    }
   };
 
   const handleCurrentLocation = () => {
@@ -155,7 +167,7 @@ const SearchPosPage = () => {
                         <div
                           key={item.addressId}
                           className="p-3 border-b border-[var(--gray-light)] cursor-pointer hover:bg-[var(--gray-light)] transition-colors"
-                          onClick={() => setKeyword(item.address_name)}
+                          onClick={() => handleAddressHistoryClick(item)}
                         >
                           <div className="flex items-start gap-3">
                             <MapPin className="w-4 h-4 text-[var(--gray-dark)] mt-0.5 flex-shrink-0" />

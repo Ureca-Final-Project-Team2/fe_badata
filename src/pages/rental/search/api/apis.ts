@@ -81,6 +81,7 @@ export interface AddressHistoryItem {
   road_address_name: string;
   x: number;
   y: number;
+  lastUsed?: number;
 }
 
 export interface AddressHistoryContent {
@@ -98,7 +99,7 @@ export interface AddressHistoryListResponse {
 export const getAddressHistoryList = async (
   page: number = 0,
   size: number = 10,
-  sort: string = 'createdAt,desc',
+  sort: string = 'lastUsed,desc', // 기본값을 lastUsed로 변경
 ): Promise<AddressHistoryListResponse> => {
   // 로그인 상태 확인
   const accessToken = localStorage.getItem('accessToken');
@@ -151,7 +152,35 @@ export const deleteAddressHistory = async (addressId: number): Promise<AddressHi
 
   // 로그인된 사용자는 서버 API 사용
   const response: AddressHistoryResponse = await axiosInstance.delete(
-    `${END_POINTS.POSITION.DELETE_POSITION(addressId)}`,
+    `${END_POINTS.POSITION.POSITION}/${addressId}`,
+  );
+  return response;
+};
+
+// 주소 사용 시간 업데이트 API (서버용)
+export const updateAddressUsageTime = async (
+  addressId: number,
+): Promise<AddressHistoryResponse> => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (!accessToken) {
+    console.log('로그인되지 않은 사용자. 로컬 스토리지에서 업데이트합니다.');
+    // 로컬 스토리지에서 업데이트
+    const { updateAddressUsageTime: updateLocalUsageTime } = await import(
+      '@/pages/rental/search/utils/localStorage/addressHistory'
+    );
+    updateLocalUsageTime(addressId);
+
+    return {
+      code: 20000,
+      message: '주소 사용 시간이 로컬 스토리지에서 업데이트되었습니다.',
+      content: addressId,
+    };
+  }
+
+  // 로그인된 사용자는 서버 API 사용
+  const response: AddressHistoryResponse = await axiosInstance.patch(
+    `${END_POINTS.POSITION.POSITION}/${addressId}/usage`,
   );
   return response;
 };

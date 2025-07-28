@@ -22,6 +22,18 @@ export const saveLocalAddressHistory = (history: AddressHistoryItem[]): void => 
   }
 };
 
+// 주소 사용 시 최신 시간 업데이트
+export const updateAddressUsageTime = (addressId: number): void => {
+  const history = getLocalAddressHistory();
+  const updatedHistory = history.map((item) => {
+    if (item.addressId === addressId) {
+      return { ...item, lastUsed: Date.now() };
+    }
+    return item;
+  });
+  saveLocalAddressHistory(updatedHistory);
+};
+
 // 새로운 주소 이력 추가
 export const addLocalAddressHistory = (
   address_name: string,
@@ -42,8 +54,10 @@ export const addLocalAddressHistory = (
   // 중복 주소 확인
   const existingItem = history.find((item) => item.address_name === address_name);
   if (existingItem) {
-    console.log('중복 주소입니다. 추가하지 않습니다:', address_name);
-    return null; // 중복인 경우 null 반환
+    console.log('중복 주소입니다. 사용 시간만 업데이트합니다:', address_name);
+    // 중복인 경우 사용 시간만 업데이트
+    updateAddressUsageTime(existingItem.addressId);
+    return existingItem.addressId;
   }
 
   console.log('새로운 주소입니다. 추가합니다:', address_name);
@@ -58,6 +72,7 @@ export const addLocalAddressHistory = (
     road_address_name: road_address_name,
     x: x,
     y: y,
+    lastUsed: Date.now(), // 사용 시간 추가
   };
 
   // 최신 항목을 맨 앞에 추가 (최대 10개 유지)
@@ -80,7 +95,7 @@ export const deleteLocalAddressHistory = (addressId: number): number | null => {
   return addressId;
 };
 
-// 무한스크롤을 위한 주소 이력 조회
+// 무한스크롤을 위한 주소 이력 조회 (최신 사용 순으로 정렬)
 export const getLocalAddressHistoryPaginated = (
   page: number = 0,
   size: number = 10,
@@ -88,12 +103,15 @@ export const getLocalAddressHistoryPaginated = (
 ): { getAddressResponses: AddressHistoryItem[]; hasNext: boolean } => {
   const history = getLocalAddressHistory();
 
-  // 정렬 (localStorage는 생성 시간이 없으므로 addressId로 정렬)
+  // 정렬 (최신 사용 순으로 정렬, 사용 시간이 없으면 생성 시간으로)
   const sortedHistory = [...history].sort((a, b) => {
+    const aTime = a.lastUsed || a.addressId;
+    const bTime = b.lastUsed || b.addressId;
+
     if (sort.includes('desc')) {
-      return b.addressId - a.addressId;
+      return bTime - aTime;
     }
-    return a.addressId - b.addressId;
+    return aTime - bTime;
   });
 
   // 무한스크롤을 위한 페이지네이션
@@ -149,6 +167,7 @@ export const addSampleLocalAddressHistory = (): void => {
       road_address_name: address.road_address_name,
       x: address.x,
       y: address.y,
+      lastUsed: Date.now() - index * 1000, // 각각 다른 사용 시간
     };
 
     const history = getLocalAddressHistory();
