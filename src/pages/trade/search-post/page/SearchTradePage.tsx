@@ -23,9 +23,13 @@ export function TradeSearchPage() {
 
   const { data: posts, isLoading, isError } = useSearchTradePostsQuery(debouncedSearch);
 
-  const { keywords: recentKeywords, add, remove, clear } = useRecentSearchHooks();
-
-  const hotKeywords = ['공유 데이터', '영화관 할인쿠폰', '데이터 1GB', '스타벅스 아메리카노'];
+  const {
+    keywords: recentKeywords,
+    isLoading: isRecentKeywordsLoading,
+    add,
+    remove,
+    clear,
+  } = useRecentSearchHooks();
 
   const handleBack = useCallback(() => router.back(), [router]);
 
@@ -51,8 +55,9 @@ export function TradeSearchPage() {
         onDeleteKeyword={remove}
         onDeleteAll={clear}
         onClickKeyword={handleSearchSubmit}
+        isLoading={isRecentKeywordsLoading}
       />
-      <SearchHotKeywords keywords={hotKeywords} onKeywordClick={handleSearchSubmit} />
+      <SearchHotKeywords onKeywordClick={handleSearchSubmit} />
       <SearchResult
         search={debouncedSearch}
         posts={posts as DataPost[] | GifticonPost[]}
