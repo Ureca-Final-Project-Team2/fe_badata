@@ -17,6 +17,9 @@ export interface StoreDevice {
   imageUrl: string;
   price?: number; // 가격 정보
   remainCount?: number; // 남은 재고 수량
+  dataType?: '5G' | '4G/LTE'; // 데이터 타입
+  maxSupportConnection?: number; // 최대 접속 가능 기기 수
+  reviewRating?: number; // 별점 (0~5)
 }
 
 /*

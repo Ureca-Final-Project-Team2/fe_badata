@@ -13,12 +13,12 @@ import {
   convertToStoreCardProps,
   useStoreListWithInfiniteScroll,
 } from '@/pages/rental/map/hooks/useStoreListHooks';
+import { filterDevices } from '@/pages/rental/map/model/filtereDevices';
 import { initialRentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 import {
   initialSelectedStoreState,
   selectedStoreReducer,
 } from '@/pages/rental/map/model/selectedStoreReducer';
-import { useFilteredDevices } from '@/pages/rental/map/model/useFilteredDevices';
 import { CurrentLocationButton } from '@/pages/rental/map/ui/CurrentLocationButton';
 import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
@@ -196,7 +196,7 @@ const RentalPage = () => {
   });
 
   // 필터링 조건이 바뀔 때마다 현재 선택된 가맹점의 디바이스도 다시 필터링
-  const filteredDevices = useFilteredDevices(selectedStore.selectedDevices, filterState);
+  const filteredDevicesList = filterDevices(selectedStore.selectedDevices, filterState);
 
   // 필터 상태가 변경될 때 스토어 리스트 다시 불러오기
   useEffect(() => {
@@ -212,17 +212,17 @@ const RentalPage = () => {
 
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
-    if (filteredDevices.length === 0) {
+    if (filteredDevicesList.length === 0) {
       dispatchSelectedStore({
         type: 'SELECT_STORE',
         devices: [],
         storeId: selectedStore.selectedStoreId ?? 0,
         storeDetail: selectedStore.selectedStoreDetail,
       });
-    } else if (filteredDevices.length !== selectedStore.selectedDevices.length) {
+    } else if (filteredDevicesList.length !== selectedStore.selectedDevices.length) {
       dispatchSelectedStore({
         type: 'SELECT_STORE',
-        devices: filteredDevices,
+        devices: filteredDevicesList,
         storeId: selectedStore.selectedStoreId ?? 0,
         storeDetail: selectedStore.selectedStoreDetail,
       });
@@ -320,11 +320,11 @@ const RentalPage = () => {
         currentSort={currentSort}
       />
 
-      {filteredDevices.length > 0 && (
+      {filteredDevicesList.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
           <CenterScrollSwiper
-            key={filteredDevices.map((d: StoreDevice) => d.storeDeviceId).join('-')}
-            items={filteredDevices}
+            key={filteredDevicesList.map((d: StoreDevice) => d.storeDeviceId).join('-')}
+            items={filteredDevicesList}
           >
             {(device: StoreDevice) => <DeviceCard device={device} />}
           </CenterScrollSwiper>
