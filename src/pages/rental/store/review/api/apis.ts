@@ -18,7 +18,9 @@ export const getSortParam = (sortType: ReviewSortType): string => {
   return SORT_PARAM_MAP[sortType] ?? 'createdAt,desc';
 };
 
-export const getStoreReviews = async (params: ReviewsQueryParams): Promise<ReviewsResponse> => {
+export const getPaginatedStoreReviews = async (
+  params: ReviewsQueryParams,
+): Promise<ReviewsResponse> => {
   const { storeId, page, size, sort } = params;
 
   const response: ReviewsResponse = await axiosInstance.get(END_POINTS.RENTAL.REVIEWS(storeId), {
@@ -46,5 +48,5 @@ export const getStoreReviewsWithSort = async (
   size: number,
   sortType: ReviewSortType,
 ): Promise<ReviewsResponse> => {
-  return getStoreReviews({ storeId, page, size, sort: getSortParam(sortType) });
+  return getPaginatedStoreReviews({ storeId, page, size, sort: getSortParam(sortType) });
 };

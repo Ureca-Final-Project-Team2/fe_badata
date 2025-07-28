@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { ICONS } from '@/shared/config/iconPath';
 import { Profile } from '@/shared/ui/Profile';
 
+import { formatDateToDash } from '../lib/utils';
+
 import type { ReviewItem as ReviewItemType } from '@/pages/rental/store/review/lib/types.ts';
 
 interface ReviewItemProps {
@@ -27,7 +29,7 @@ export default function ReviewItem({ review }: ReviewItemProps) {
   const displayText =
     isExpanded || !shouldShowMore ? review.comment : review.comment.slice(0, maxLength) + '...';
 
-  const formattedDate = new Date(review.rentalStartDate).toISOString().slice(0, 10);
+  const formattedDate = formatDateToDash(review.rentalStartDate);
 
   return (
     <div className="border-b border-[var(--gray-light)] pb-6 mb-6 last:border-b-0">
