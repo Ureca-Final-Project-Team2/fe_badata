@@ -1,13 +1,13 @@
 'use client';
 
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import { CenterScrollSwiper } from '@/entities/scroll';
-import { mockStoreList } from '@/pages/rental/map/__mocks__/storeList.mock';
 import {
   initialSelectedStoreState,
   selectedStoreReducer,
 } from '@/pages/rental/map/model/selectedStoreReducer';
+import { useFetchStoreListHooks } from '@/pages/rental/map/model/useFetchStoreListHooks';
 import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
@@ -17,8 +17,7 @@ import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
-import type { StoreDevice } from '@/pages/rental/map/lib/types';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
 import type { DateRange } from 'react-day-picker';
 
 const RentalPage = () => {
@@ -27,6 +26,41 @@ const RentalPage = () => {
   const [selectedStore, dispatchSelectedStore] = useReducer(
     selectedStoreReducer,
     initialSelectedStoreState,
+  );
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // 사용자 위치 가져오기
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+      },
+      () => {
+        // fallback: 서울시청 좌표
+        setUserLocation({ lat: 37.5665, lng: 126.978 });
+      },
+    );
+  }, []);
+
+  // useFetchStoreListHooks로 스토어 리스트 관리
+  const { stores } = useFetchStoreListHooks(
+    userLocation
+      ? {
+          centerLat: userLocation.lat,
+          centerLng: userLocation.lng,
+          page: 0,
+          size: 10,
+          sort: ['distance,asc'],
+        }
+      : {
+          centerLat: 37.5665,
+          centerLng: 126.978,
+          page: 0,
+          size: 10,
+          sort: ['distance,asc'],
+        },
+    [userLocation],
   );
 
   return (
@@ -68,7 +102,26 @@ const RentalPage = () => {
           });
         }}
       />
-      <DrawerSection open={false} storeList={mockStoreList} />
+      <DrawerSection
+        open={true}
+        storeList={stores.map((store) => ({
+          id: store.id,
+          store,
+          storeDetail: {
+            storeName: store.name,
+            storeId: store.id,
+            imageUrl: '',
+            detailAddress: '',
+            phoneNumber: '',
+            distanceFromMe: 0,
+            reviewRating: 0,
+            isOpening: false,
+            startTime: '',
+            endTime: '',
+          },
+          deviceCount: 0,
+        }))}
+      />
       <FilterDrawer
         isOpen={filterDrawerOpen}
         onClose={() => setFilterDrawerOpen(false)}

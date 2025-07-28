@@ -26,6 +26,12 @@ export default function RootLayout({
       <body className="antialiased">
         <Script src="https://cdn.portone.io/v2/browser-sdk.js" strategy="beforeInteractive" />
         <Script src="https://cdn.iamport.kr/v1/iamport.js" strategy="beforeInteractive" />
+        <Script
+          src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
+          integrity="sha384-dok87au0gKqJdxs7msEdBPNnKSRT+/mhTVzq+qOhcL464zXwvcrpjeWvyj1kCdq6"
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
+        />
         <Providers>
           <Toaster />
           {children}
