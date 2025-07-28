@@ -53,7 +53,7 @@ export const userApis = {
   },
 
   getCoin: async (): Promise<ApiResponse<CoinResponse>> => {
-    const response = await axiosInstance.get(END_POINTS.USER.COIN);
+    const response = await axiosInstance.get(END_POINTS.MYPAGE.COIN);
     return response.data;
   },
 };
