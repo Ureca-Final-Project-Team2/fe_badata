@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import type { QuickReplyCount } from '@/pages/rental/store/review/lib/types';
 
 interface QuickReplySectionProps {
@@ -33,7 +35,9 @@ const QuickReplyProgressBar = ({
 export default function QuickReplySection({ quickReplies }: QuickReplySectionProps) {
   const totalQuickReplyCount = quickReplies.reduce((acc, cur) => acc + cur.count, 0);
 
-  const top3QuickReplies = quickReplies.sort((a, b) => b.count - a.count).slice(0, 3);
+  const top3QuickReplies = useMemo(() => {
+    return [...quickReplies].sort((a, b) => b.count - a.count).slice(0, 3);
+  }, [quickReplies]);
 
   const quickRepliesWithPercentage = top3QuickReplies.map((item) => ({
     ...item,
