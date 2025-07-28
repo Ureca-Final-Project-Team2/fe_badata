@@ -6,9 +6,28 @@ interface SearchResultsProps {
   results: PlaceSearchResult[];
   isLoading: boolean;
   onSelectPlace: (place: PlaceSearchResult) => void;
+  keyword: string;
 }
 
-const SearchResults = ({ results, isLoading, onSelectPlace }: SearchResultsProps) => {
+const SearchResults = ({ results, isLoading, onSelectPlace, keyword }: SearchResultsProps) => {
+  // 검색어 강조 표시 함수
+  const highlightKeyword = (text: string) => {
+    if (!keyword.trim()) return text;
+
+    const regex = new RegExp(`(${keyword})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
+      regex.test(part) ? (
+        <span key={index} className="text-[var(--main-5)] font-semibold">
+          {part}
+        </span>
+      ) : (
+        part
+      ),
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-2">
@@ -42,19 +61,19 @@ const SearchResults = ({ results, isLoading, onSelectPlace }: SearchResultsProps
             <div className="flex-1 min-w-0">
               {/* 장소명 */}
               <h3 className="text-[var(--black)] font-small-semibold mb-1 truncate">
-                {place.place_name}
+                {highlightKeyword(place.place_name)}
               </h3>
 
               {/* 도로명 주소 */}
               {place.road_address_name && (
                 <p className="text-[var(--gray-dark)] font-small-regular mb-1">
-                  {place.road_address_name}
+                  {highlightKeyword(place.road_address_name)}
                 </p>
               )}
 
               {/* 지번 주소 */}
               <p className="text-[var(--gray-dark)] font-small-regular mb-1">
-                지번 {place.address_name}
+                지번 {highlightKeyword(place.address_name)}
               </p>
 
               {/* 전화번호 */}
