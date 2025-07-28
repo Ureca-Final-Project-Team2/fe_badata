@@ -8,16 +8,14 @@ import type {
   ReviewsResponse,
 } from '@/pages/rental/store/review/lib/types';
 
+const SORT_PARAM_MAP: Record<ReviewSortType, string> = {
+  latest: 'createdAt,desc',
+  rating_high: 'reviewRating,desc',
+  rating_low: 'reviewRating,asc',
+};
+
 export const getSortParam = (sortType: ReviewSortType): string => {
-  switch (sortType) {
-    case 'rating_high':
-      return 'reviewRating,desc';
-    case 'rating_low':
-      return 'reviewRating,asc';
-    case 'latest':
-    default:
-      return 'createdAt,desc';
-  }
+  return SORT_PARAM_MAP[sortType] ?? 'createdAt,desc';
 };
 
 export const getStoreReviews = async (params: ReviewsQueryParams): Promise<ReviewsResponse> => {
