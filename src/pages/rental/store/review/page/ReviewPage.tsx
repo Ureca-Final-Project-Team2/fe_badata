@@ -32,6 +32,12 @@ export default function ReviewPage() {
     return reviewsData?.pages.flatMap((page) => page.showReviewResponses) ?? [];
   }, [reviewsData]);
 
+  if (isNaN(storeId)) {
+    return (
+      <div className="p-4 text-center text-[var(--gray-mid)]">유효하지 않은 가맹점 ID입니다.</div>
+    );
+  }
+
   if (metaLoading || reviewsLoading) {
     return <div className="p-4 text-center">리뷰를 불러오는 중...</div>;
   }
