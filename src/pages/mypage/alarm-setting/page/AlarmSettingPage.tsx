@@ -6,10 +6,9 @@ import { useRouter } from 'next/navigation';
 
 import { Switch } from '@/components/ui/switch';
 import { useAuthStore } from '@/entities/auth/model/authStore';
+import { useNotificationSettingQuery, useUpdateNotificationSettingMutation } from '@/pages/mypage/alarm-setting/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
-
-import { useNotificationSettingQuery, useUpdateNotificationSettingMutation } from '../model/queries';
 
 export default function AlarmSettingPage() {
   const router = useRouter();
@@ -34,10 +33,10 @@ export default function AlarmSettingPage() {
   }, [isLoggedIn, accessToken, router]);
 
   useEffect(() => {
-    if (notificationSetting?.isNotificationEnabled !== undefined) {
+    if (notificationSetting?.content?.isNotificationEnabled !== undefined) {
       setState(prev => ({
         ...prev,
-        news: notificationSetting.isNotificationEnabled,
+        news: notificationSetting.content.isNotificationEnabled,
       }));
     }
   }, [notificationSetting]);
