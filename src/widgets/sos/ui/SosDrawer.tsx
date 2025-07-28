@@ -1,11 +1,9 @@
 import { useState } from 'react';
 
-import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { Drawer } from '@/shared/ui/Drawer';
-
-import { useSosDrawer } from '../model/useSosDrawer';
-
-import { SosModal } from './SosModal';
+import { DataUsageWidgetContainer } from '@/widgets/data-usage/ui/DataUsageWidgetContainer';
+import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
+import { SosModal } from '@/widgets/sos/ui/SosModal';
 
 export function SosDrawer() {
   const { isDrawerOpen, closeDrawer } = useSosDrawer();
@@ -31,17 +29,7 @@ export function SosDrawer() {
           <div className="w-full mt-6">
             <h2 className="font-body-semibold text-black mb-2">나의 데이터 서랍</h2>
 
-            <DataUsageCard
-              phoneMasked="010-1**4-5**8"
-              planName="5G 청춘 요금제"
-              billMonth="5월 청구요금"
-              billStatus="납부 완료"
-              billAmount="150,340원"
-              remainingLabel="남은 데이터"
-              totalAmount="5GB"
-              totalValue={5}
-              remainingValue={2.5}
-            />
+            <DataUsageWidgetContainer />
           </div>
         </div>
 
