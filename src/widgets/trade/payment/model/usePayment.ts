@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { AxiosError } from 'axios';
+
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { makeToast } from '@/shared/lib/makeToast';
 import { createPayment, verifyPayment } from '@/widgets/trade/payment/api/apis';
@@ -34,6 +36,24 @@ export function usePayment(
   const [usedCoin, setUsedCoin] = useState(0);
   const { user, isLoggedIn } = useAuthStore();
 
+  /**
+   * 공통 에러 처리 함수
+   * @param error 발생한 에러 객체
+   * @param defaultMessage 기본 에러 메시지
+   */
+  const handleError = (error: unknown, defaultMessage: string) => {
+    console.error('Payment error:', error);
+
+    if (error instanceof AxiosError) {
+      const errorMessage = error.response?.data?.message;
+      makeToast(errorMessage || defaultMessage, 'warning');
+    } else if (error instanceof Error) {
+      makeToast(error.message, 'warning');
+    } else {
+      makeToast(defaultMessage, 'warning');
+    }
+  };
+
   const handlePayment = async (useCoin: number = 0) => {
     // 로그인 상태 확인
     if (!isLoggedIn || !user) {
@@ -64,19 +84,7 @@ export function usePayment(
       merchant_uid = createPaymentData.merchantUid;
       finalAmount = createPaymentData.amount || price;
     } catch (e) {
-      console.error('createPayment 에러:', e);
-
-      // 에러 타입에 따른 구체적인 메시지 표시
-      if (e && typeof e === 'object' && 'response' in e) {
-        const axiosError = e as { response?: { data?: { message?: string } } };
-        const errorMessage = axiosError.response?.data?.message;
-        makeToast(errorMessage || '결제 고유 ID 발급 실패', 'warning');
-      } else if (e instanceof Error) {
-        makeToast(e.message, 'warning');
-      } else {
-        makeToast('결제 고유 ID 발급 실패', 'warning');
-      }
-
+      handleError(e, '결제 고유 ID 발급 실패');
       setLoading(false);
       return;
     }
@@ -130,17 +138,7 @@ export function usePayment(
             setIsPaid(true);
             onPaymentSuccess?.(useCoin);
           } catch (e) {
-            console.error('verifyPayment 에러:', e);
-
-            if (e && typeof e === 'object' && 'response' in e) {
-              const axiosError = e as { response?: { data?: { message?: string } } };
-              const errorMessage = axiosError.response?.data?.message;
-              makeToast(errorMessage || '결제 검증 실패', 'warning');
-            } else if (e instanceof Error) {
-              makeToast(e.message, 'warning');
-            } else {
-              makeToast('결제 검증 실패', 'warning');
-            }
+            handleError(e, '결제 검증 실패');
           }
         }
         setLoading(false);
