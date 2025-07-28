@@ -28,7 +28,8 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
         response.config.url?.includes(END_POINTS.USER.LOGIN) ||
         response.config.url?.includes('/follows') ||
         response.config.url?.includes(END_POINTS.TRADES.IMAGE) ||
-        response.config.url?.includes(END_POINTS.USER.SALES)
+        response.config.url?.includes(END_POINTS.USER.SALES) ||
+        response.config.url?.includes(END_POINTS.POSITION.POSITION) // 주소 이력 API도 전체 응답 반환
       ) {
         return response;
       }

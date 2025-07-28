@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import { MapPin, Target, X } from 'lucide-react';
+import { MapPin, Phone, Target, X } from 'lucide-react';
 
 import { useCreateAddressHistory } from '@/pages/rental/search/hook/useAddressHooks';
 import { useDeleteAddressHistory } from '@/pages/rental/search/hook/useDeleteAddressHooks';
@@ -25,7 +25,7 @@ const SearchPosPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetAddressHistoryInfinite(10, 'createdAt,desc');
+  } = useGetAddressHistoryInfinite(5, 'createdAt,desc');
 
   // 키워드 검색 훅
   const {
@@ -61,8 +61,8 @@ const SearchPosPage = () => {
   const handleSelectPlace = (place: PlaceSearchResult) => {
     console.log('선택된 장소:', place);
 
-    // 선택된 장소를 주소 이력에 추가
-    createAddressMutation.mutate(place.place_name);
+    // 선택된 장소를 주소 이력에 추가 (전체 정보 전달)
+    createAddressMutation.mutate(place);
 
     // 검색 모드 종료
     setKeyword('');
@@ -114,6 +114,7 @@ const SearchPosPage = () => {
               results={searchResults}
               isLoading={isSearchLoading}
               onSelectPlace={handleSelectPlace}
+              keyword={keyword.trim()}
             />
           ) : (
             // 검색어가 없을 때 - 현재 위치 버튼과 최근 검색 주소 표시
@@ -132,29 +133,57 @@ const SearchPosPage = () => {
               {/* 최근 검색 주소 제목 */}
               {addressHistoryInfinite?.pages &&
                 addressHistoryInfinite.pages.some(
-                  (page) => page.getAddressResponses.length > 0,
+                  (page) => page?.content?.getAddressResponses?.length > 0,
                 ) && <h2 className="font-small-medium text-[var(--black)] mb-4">최근 검색 주소</h2>}
 
               {/* 주소 이력 목록 */}
               {addressHistoryInfinite?.pages &&
-              addressHistoryInfinite.pages.some((page) => page.getAddressResponses.length > 0) ? (
+              addressHistoryInfinite.pages.some(
+                (page) => page?.content?.getAddressResponses?.length > 0,
+              ) ? (
                 // 주소 이력이 있는 경우 - 리스트로 표시
                 <div>
                   <div className="space-y-2">
                     {addressHistoryInfinite.pages.map((page) =>
-                      page.getAddressResponses.map((item) => (
+                      page?.content?.getAddressResponses?.map((item) => (
                         <div
                           key={item.addressId}
-                          className="p-2 border-b border-[var(--gray-light)] cursor-pointer transition-colors"
-                          onClick={() => setKeyword(item.detailAddress)}
+                          className="p-3 border-b border-[var(--gray-light)] cursor-pointer hover:bg-[var(--gray-light)] transition-colors"
+                          onClick={() => setKeyword(item.address_name)}
                         >
-                          <div className="flex items-center justify-between">
-                            <p className="text-[var(--gray-dark)] font-small-regular">
-                              {item.detailAddress}
-                            </p>
+                          <div className="flex items-start gap-3">
+                            <MapPin className="w-4 h-4 text-[var(--gray-dark)] mt-0.5 flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              {/* 장소명 */}
+                              <h3 className="text-[var(--black)] font-small-semibold mb-1 truncate">
+                                {item.place_name}
+                              </h3>
+
+                              {/* 도로명 주소 */}
+                              {item.road_address_name && (
+                                <p className="text-[var(--gray-dark)] font-small-regular mb-1">
+                                  {item.road_address_name}
+                                </p>
+                              )}
+
+                              {/* 지번 주소 */}
+                              <p className="text-[var(--gray-dark)] font-small-regular mb-1">
+                                지번 {item.address_name}
+                              </p>
+
+                              {/* 전화번호 */}
+                              {item.phone && (
+                                <div className="flex items-center gap-1">
+                                  <Phone className="w-3 h-3 text-[var(--main-5)]" />
+                                  <span className="text-[var(--main-5)] font-small-semibold">
+                                    {item.phone}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
                             <button
                               onClick={(e) => handleDeleteAddress(item.addressId, e)}
-                              className="p-1 hover:bg-[var(--gray-light)] rounded transition-colors"
+                              className="p-1 hover:bg-[var(--gray-light)] rounded transition-colors flex-shrink-0"
                             >
                               <X className="w-3 h-3 text-[var(--gray)]" />
                             </button>

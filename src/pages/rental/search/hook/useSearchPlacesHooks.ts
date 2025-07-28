@@ -44,12 +44,13 @@ export const useSearchPlaces = () => {
   const [searchResults, setSearchResults] = useState<PlaceSearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 디바운스된 키워드 (500ms)
-  const debouncedKeyword = useDebounce(keyword, 500);
+  // 디바운스된 키워드 (500ms) - 공백 제거
+  const debouncedKeyword = useDebounce(keyword.trim(), 500);
 
   // 검색 실행 함수
   const performSearch = useCallback(async (searchKeyword: string) => {
-    if (!searchKeyword.trim()) {
+    const trimmedKeyword = searchKeyword.trim();
+    if (!trimmedKeyword) {
       setSearchResults([]);
       return;
     }
@@ -57,7 +58,7 @@ export const useSearchPlaces = () => {
     setIsLoading(true);
 
     try {
-      const results = await searchPlaces(searchKeyword);
+      const results = await searchPlaces(trimmedKeyword);
       setSearchResults(results);
     } catch (error) {
       console.error('검색 오류:', error);
@@ -72,7 +73,8 @@ export const useSearchPlaces = () => {
 
   // 디바운스된 키워드가 변경될 때 검색 실행
   useEffect(() => {
-    if (debouncedKeyword !== keyword) {
+    const trimmedKeyword = keyword.trim();
+    if (debouncedKeyword !== trimmedKeyword && debouncedKeyword) {
       throttledSearch(debouncedKeyword);
     }
   }, [debouncedKeyword, keyword, throttledSearch]);

@@ -14,7 +14,8 @@ export const useGetAddressHistoryInfinite = (
     queryKey: ['addressHistoryInfinite', size, sort],
     queryFn: ({ pageParam = 0 }) => getAddressHistoryList(pageParam as number, size, sort),
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
-      if (!lastPage.hasNext) return undefined;
+      // 안전한 접근을 위한 null/undefined 체크
+      if (!lastPage?.content?.hasNext) return undefined;
       return typeof lastPageParam === 'number' ? lastPageParam + 1 : 1;
     },
     initialPageParam: 0,
