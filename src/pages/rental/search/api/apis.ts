@@ -29,9 +29,6 @@ export interface AddressHistoryResponse {
 export const createAddressHistory = async (
   data: CreateAddressHistoryRequest,
 ): Promise<AddressHistoryResponse> => {
-  console.log('API 요청 데이터:', data);
-  console.log('API 엔드포인트:', END_POINTS.POSITION.POSITION);
-
   // 로그인 상태 확인 (accessToken이 없으면 로컬 스토리지 사용)
   const accessToken = localStorage.getItem('accessToken');
 
@@ -119,11 +116,12 @@ export const getAddressHistoryList = async (
   }
 
   // 로그인된 사용자는 서버 API 사용 (생성일 기준 정렬)
-  sort = 'createdAt,desc';
-  const response: AddressHistoryListResponse = await axiosInstance.get(
-    `${END_POINTS.POSITION.POSITION}?page=${page}&size=${size}&sort=${sort}`,
+  const serverSort = 'createdAt,desc';
+
+  const response = await axiosInstance.get(
+    `${END_POINTS.POSITION.POSITION}?page=${page}&size=${size}&sort=${serverSort}`,
   );
-  return response;
+  return response.data as AddressHistoryListResponse;
 };
 
 // 주소 이력 삭제 API (서버 또는 로컬 스토리지)
@@ -166,7 +164,6 @@ export const updateAddressUsageTime = async (
   const accessToken = localStorage.getItem('accessToken');
 
   if (!accessToken) {
-    console.log('로그인되지 않은 사용자. 로컬 스토리지에서 업데이트합니다.');
     // 로컬 스토리지에서 업데이트
     updateLocalAddressUsageTime(addressId);
 

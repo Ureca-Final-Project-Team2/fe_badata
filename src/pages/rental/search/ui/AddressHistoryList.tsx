@@ -29,13 +29,13 @@ const AddressHistoryList = React.memo(
     isFetchingNextPage: boolean;
   }) => {
     const hasAddressHistory = useMemo(() => {
-      return (
+      const result =
         addressHistoryInfinite?.pages &&
         addressHistoryInfinite.pages.some(
           (page) =>
             page?.content?.getAddressResponses && page.content.getAddressResponses.length > 0,
-        )
-      );
+        );
+      return result;
     }, [addressHistoryInfinite?.pages]);
 
     if (!hasAddressHistory) {
