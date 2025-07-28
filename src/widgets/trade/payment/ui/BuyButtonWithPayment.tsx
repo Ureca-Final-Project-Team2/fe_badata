@@ -27,7 +27,12 @@ export default function BuyButtonWithPayment({
 }: BuyButtonWithPaymentProps) {
   const [currentIsLiked, setCurrentIsLiked] = useState(initialIsLiked);
 
-  const { data: coinData } = useCoinQuery();
+  const {
+    data: coinData,
+    isLoading: isCoinLoading,
+    isError: isCoinError,
+    refetch: refetchCoin,
+  } = useCoinQuery();
   const { loading, isPaid, handlePayment, isCoinModalOpen, openCoinModal, closeCoinModal } =
     usePayment(postId, title, price, onPaymentSuccess);
 
@@ -47,6 +52,10 @@ export default function BuyButtonWithPayment({
   };
 
   const handleBuyClick = () => {
+    // 코인 데이터 에러 시 재시도
+    if (isCoinError) {
+      refetchCoin();
+    }
     openCoinModal();
   };
 
@@ -75,6 +84,9 @@ export default function BuyButtonWithPayment({
         originalPrice={price}
         availableCoin={coinData?.content?.coin || 0}
         onConfirm={handleCoinPayment}
+        isCoinLoading={isCoinLoading}
+        isCoinError={isCoinError}
+        onRetry={refetchCoin}
       />
     </>
   );
