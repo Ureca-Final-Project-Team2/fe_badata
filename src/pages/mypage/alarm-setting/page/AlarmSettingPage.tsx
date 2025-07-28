@@ -6,9 +6,6 @@ import { useRouter } from 'next/navigation';
 
 import { Switch } from '@/components/ui/switch';
 import { useAuthStore } from '@/entities/auth/model/authStore';
-import { useUserDataUsageQuery } from '@/entities/data/model/queries';
-import { END_POINTS } from '@/shared/api/endpoints';
-import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
@@ -16,27 +13,9 @@ import { useNotificationSettingQuery, useUpdateNotificationSettingMutation } fro
 
 export default function AlarmSettingPage() {
   const router = useRouter();
-  const { isLoggedIn, accessToken, login } = useAuthStore();
+  const { isLoggedIn, accessToken } = useAuthStore();
   const { data: notificationSetting, isLoading, error } = useNotificationSettingQuery();
-  const { data: dataUsage } = useUserDataUsageQuery(); // 다른 API 테스트
   const updateNotificationMutation = useUpdateNotificationSettingMutation();
-  
-  // 토큰 재발급 시도
-  const tryReissueToken = async () => {
-    try {
-      console.log('토큰 재발급 시도...');
-      const response = await axiosInstance.get(END_POINTS.USER.REISSUE);
-      console.log('토큰 재발급 응답:', response);
-      
-      if (response.headers['accesstoken']) {
-        const newToken = response.headers['accesstoken'];
-        login(newToken, useAuthStore.getState().user!);
-        console.log('토큰 재발급 성공');
-      }
-    } catch (error) {
-      console.error('토큰 재발급 실패:', error);
-    }
-  };
 
   const [state, setState] = useState({
     news: true,
@@ -47,21 +26,18 @@ export default function AlarmSettingPage() {
 
   // 로그인 상태 확인
   useEffect(() => {
-    console.log('현재 로그인 상태:', { isLoggedIn, accessToken });
-    console.log('데이터 사용량 API 응답:', dataUsage); // 다른 API 테스트
-    
     if (!isLoggedIn || !accessToken) {
       console.log('로그인되지 않음, 로그인 페이지로 리다이렉트');
       router.replace('/auth/kakao/callback');
       return;
     }
-  }, [isLoggedIn, accessToken, router, dataUsage]);
+  }, [isLoggedIn, accessToken, router]);
 
   useEffect(() => {
-    if (notificationSetting?.content) {
+    if (notificationSetting?.isNotificationEnabled !== undefined) {
       setState(prev => ({
         ...prev,
-        news: notificationSetting.content.isNotificationEnabled,
+        news: notificationSetting.isNotificationEnabled,
       }));
     }
   }, [notificationSetting]);
@@ -100,12 +76,9 @@ export default function AlarmSettingPage() {
       <BaseLayout header={<PageHeader title="알림 설정" onBack={() => router.back()} />} showBottomNav>
         <div className="w-full max-w-[428px] flex flex-col justify-center items-center flex-1">
           <div className="text-center text-red-500 mb-4">알림 설정을 불러오는데 실패했습니다.</div>
-          <button 
-            onClick={tryReissueToken}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            토큰 재발급 시도
-          </button>
+          <div className="text-center text-gray-500 mb-4 text-sm">
+            오류: {error.message}
+          </div>
         </div>
       </BaseLayout>
     );
