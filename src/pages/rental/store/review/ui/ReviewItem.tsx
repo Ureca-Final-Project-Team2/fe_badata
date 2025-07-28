@@ -31,7 +31,8 @@ export default function ReviewItem({ review }: ReviewItemProps) {
       <Profile
         avatar={review.userImageUrl}
         name={review.name}
-        subtitle={`거래 내역 ${review.countOfVisit}`}
+        // TODO 대여 날짜 추가
+        subtitle={`${review.countOfVisit}번째 방문`}
         size="sm"
       />
       <StarRating rating={review.rating} size={24} />
@@ -46,6 +47,9 @@ export default function ReviewItem({ review }: ReviewItemProps) {
           />
         </div>
       )}
+      <div className="flex flex-row gap-4">
+        {/* TODO 대여한 기기 정보 (capacity, name) * count */}
+      </div>
       <div className="mb-4 space-y-2">
         <p className="font-label-regular leading-relaxed whitespace-pre-wrap">{displayText}</p>
         {shouldShowMore && (
@@ -64,10 +68,6 @@ export default function ReviewItem({ review }: ReviewItemProps) {
             ))}
           </div>
         )}
-
-        <p className="font-small-regular text-[var(--gray-dark)] text-right">
-          {review.countOfVisit}번째 방문
-        </p>
       </div>
     </div>
   );

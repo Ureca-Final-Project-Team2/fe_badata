@@ -2,11 +2,13 @@
 
 import { useMemo, useState } from 'react';
 
+import {
+  useInfiniteStoreReviews,
+  useStoreReviewMeta,
+} from '@/pages/rental/store/review/model/quries';
 import QuickReplySection from '@/pages/rental/store/review/ui/QuickReplySection';
 import ReviewHeaderSection from '@/pages/rental/store/review/ui/ReviewHeaderSection';
 import ReviewItem from '@/pages/rental/store/review/ui/ReviewItem';
-
-import { useInfiniteStoreReviews, useStoreReviewMeta } from '../model/quries';
 
 import type { ReviewSortType } from '@/pages/rental/store/review/lib/types';
 
@@ -43,7 +45,7 @@ export default function ReviewPage() {
     <>
       <QuickReplySection quickReplies={metaData.showCountPerQuickReplyResponses} />
       <ReviewHeaderSection
-        reviewCount={metaData.reviewCount}
+        reviewCount={allReviews.length} // TODO 리뷰 총 개수에 맞게 수정
         currentSort={selectedSort}
         onSortChange={setSelectedSort}
       />
