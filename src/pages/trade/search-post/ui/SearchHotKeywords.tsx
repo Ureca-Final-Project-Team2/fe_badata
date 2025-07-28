@@ -36,12 +36,32 @@ export const SearchHotKeywords = ({ onKeywordClick }: SearchHotKeywordsProps) =>
 
   // 에러 상태 처리
   if (error) {
-    return null; // 에러 시 컴포넌트를 숨김
+    return (
+      <section className="mb-6">
+        <div className="flex items-center gap-1 mb-2 font-body-medium">
+          <Flame className="w-5 h-5 text-orange-500" />
+          <span className="text-[var(--black)] font-body-semibold">실시간 hot 검색어</span>
+        </div>
+        <div className="font-caption-regular text-[var(--gray-dark)] text-center py-2">
+          인기 검색어를 불러오는 중 문제가 발생했습니다.
+        </div>
+      </section>
+    );
   }
 
   // 데이터가 없을 때 처리
   if (!searchTrends || searchTrends.length === 0) {
-    return null;
+    return (
+      <section className="mb-6">
+        <div className="flex items-center gap-1 mb-2 font-body-medium">
+          <Flame className="w-5 h-5 text-orange-500" />
+          <span className="text-[var(--black)] font-body-semibold">실시간 hot 검색어</span>
+        </div>
+        <div className="font-caption-regular text-[var(--gray-dark)] text-center py-2">
+          현재 인기 검색어가 없습니다.
+        </div>
+      </section>
+    );
   }
 
   return (
