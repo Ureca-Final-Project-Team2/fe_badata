@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { formatPrice } from '@/shared/lib/formatPrice';
+import { makeToast } from '@/shared/lib/makeToast';
 import { CoinToggle } from '@/shared/ui/CoinToggle';
 import { Modal } from '@/shared/ui/Modal';
 
@@ -43,9 +44,15 @@ export function CoinPaymentModal({
   }, [useCoin]);
 
   const handleCoinAmountChange = (value: string) => {
-    const amount = parseInt(value) || 0;
-    const maxAmount = Math.min(amount, availableCoin);
-    setCoinAmount(maxAmount);
+    const amount = parseInt(value, 10) || 0;
+
+    // 보유 코인을 초과하는 경우 알림
+    if (amount > availableCoin) {
+      makeToast(`보유 코인을 초과하여 입력할 수 없습니다.`, 'warning');
+      return;
+    }
+
+    setCoinAmount(amount);
   };
 
   const handleConfirm = () => {
