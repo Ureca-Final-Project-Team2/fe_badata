@@ -61,6 +61,24 @@ export function usePayment(
       return;
     }
 
+    // 최소 결제 금액 검증
+    const MIN_PAYMENT = 100;
+    const finalPrice = price - useCoin;
+    if (finalPrice < MIN_PAYMENT) {
+      makeToast(`최소 결제 금액은 ${MIN_PAYMENT.toLocaleString()}원입니다.`, 'warning');
+      return;
+    }
+
+    // 최대 코인 사용량 검증 (거래당 최대 10,000 코인)
+    const MAX_COIN_PER_TX = 10000;
+    if (useCoin > MAX_COIN_PER_TX) {
+      makeToast(
+        `거래당 최대 ${MAX_COIN_PER_TX.toLocaleString()}원까지 코인을 사용할 수 있습니다.`,
+        'warning',
+      );
+      return;
+    }
+
     setUsedCoin(useCoin);
     setLoading(true);
 
