@@ -17,7 +17,10 @@ export const useCreateAddressHistory = () => {
       if (currentData) {
         type AddressHistoryPage = {
           content: {
-            getAddressResponses: { address_name: string }[];
+            getAddressResponses: {
+              address_name: string;
+              place_name: string;
+            }[];
           };
         };
         type AddressHistoryInfiniteData = {
@@ -26,10 +29,14 @@ export const useCreateAddressHistory = () => {
 
         const allPages = (currentData as AddressHistoryInfiniteData).pages;
         if (allPages.length > 0 && allPages[0]?.content?.getAddressResponses?.length > 0) {
-          const mostRecentAddressName = allPages[0].content.getAddressResponses[0].address_name;
+          const mostRecentItem = allPages[0].content.getAddressResponses[0];
 
-          if (mostRecentAddressName === place.address_name) {
-            console.log('가장 최근 주소와 동일합니다. 추가하지 않습니다:', place.address_name);
+          // place_name과 address_name을 모두 비교하여 정확한 중복 체크
+          if (
+            mostRecentItem.place_name === place.place_name &&
+            mostRecentItem.address_name === place.address_name
+          ) {
+            console.log('가장 최근 주소와 동일합니다. 추가하지 않습니다:', place.place_name);
             // 중복인 경우 성공 응답을 반환하되 실제로는 추가하지 않음
             return {
               code: 20000,
@@ -95,9 +102,10 @@ export const useCreateAddressHistory = () => {
         // 첫 번째 페이지에 새 주소 추가
         const updatedPages = [...oldData.pages];
         if (updatedPages.length > 0 && updatedPages[0]?.content?.getAddressResponses) {
-          // 중복 체크
+          // 중복 체크 - place_name과 address_name을 모두 비교
           const existingIndex = updatedPages[0].content.getAddressResponses.findIndex(
-            (item) => item.address_name === place.address_name,
+            (item) =>
+              item.place_name === place.place_name && item.address_name === place.address_name,
           );
 
           if (existingIndex === -1) {

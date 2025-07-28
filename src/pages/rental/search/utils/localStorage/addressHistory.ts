@@ -51,10 +51,12 @@ export const addLocalAddressHistory = (
   );
   console.log('추가하려는 주소:', address_name);
 
-  // 중복 주소 확인
-  const existingItem = history.find((item) => item.address_name === address_name);
+  // 중복 주소 확인 - place_name과 address_name을 모두 비교
+  const existingItem = history.find(
+    (item) => item.place_name === place_name && item.address_name === address_name,
+  );
   if (existingItem) {
-    console.log('중복 주소입니다. 사용 시간만 업데이트합니다:', address_name);
+    console.log('중복 주소입니다. 사용 시간만 업데이트합니다:', place_name);
     // 중복인 경우 사용 시간만 업데이트
     updateAddressUsageTime(existingItem.addressId);
     return existingItem.addressId;
