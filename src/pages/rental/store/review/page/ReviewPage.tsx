@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from 'react';
 
+import { useParams } from 'next/navigation';
+
 import {
   useInfiniteStoreReviews,
   useStoreReviewMeta,
@@ -13,7 +15,8 @@ import ReviewItem from '@/pages/rental/store/review/ui/ReviewItem';
 import type { ReviewSortType } from '@/pages/rental/store/review/lib/types';
 
 export default function ReviewPage() {
-  const storeId = 3073;
+  const params = useParams();
+  const storeId = Number(params?.storeId);
   const [selectedSort, setSelectedSort] = useState<ReviewSortType>('latest');
 
   const { data: metaData, isLoading: metaLoading } = useStoreReviewMeta(storeId);
