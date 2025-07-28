@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { MapPin, Target } from 'lucide-react';
 
 import { useCreateAddressHistory } from '@/pages/rental/search/hook/useAddressHooks';
+import { useGetAddressHistory } from '@/pages/rental/search/hook/useGetAddressHistoryHooks';
 import AddressInfoSection from '@/pages/rental/search/page/AddressInfoSection';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
@@ -13,6 +14,7 @@ import { InputField } from '@/shared/ui/InputField';
 const SearchPosPage = () => {
   const [search, setSearch] = useState('');
   const createAddressMutation = useCreateAddressHistory();
+  const { data: addressHistory } = useGetAddressHistory(0, 10, 'createdAt,desc');
 
   const handleSubmit = (value: string) => {
     console.log('검색어 제출:', value);
@@ -70,9 +72,32 @@ const SearchPosPage = () => {
           <span className="text-[var(--gray-dark)] font-label-semibold">현재 위치로 찾기</span>
         </button>
 
-        {/* 검색 예시 섹션 */}
+        {/* 주소 이력 또는 검색 예시 섹션 */}
         <div className="mt-8">
-          <AddressInfoSection />
+          {addressHistory?.getAddressResponses && addressHistory.getAddressResponses.length > 0 ? (
+            // 주소 이력이 있는 경우 - 리스트로 표시
+            <div>
+              <h2 className="font-small-medium text-[var(--black)] mb-4">최근 검색 주소</h2>
+              <div className="space-y-2">
+                {addressHistory.getAddressResponses.map((item) => (
+                  <div
+                    key={item.addressId}
+                    className="p-2 border-b border-[var(--gray-light)] cursor-pointer transition-colors"
+                    onClick={() => setSearch(item.detailAddress)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="text-[var(--gray-dark)] font-small-regular text-sm">
+                        {item.detailAddress}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            // 주소 이력이 없는 경우 - 검색 예시 표시
+            <AddressInfoSection />
+          )}
         </div>
       </div>
     </BaseLayout>

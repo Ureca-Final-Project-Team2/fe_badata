@@ -40,7 +40,7 @@ export const END_POINTS = {
     RESTOCK: `/api/v1/restock`,
   },
   POSITION: {
-    POSITION: '/api/v1/addresses', // 주소 이력 생성
+    POSITION: '/api/v1/addresses', // 주소 이력 생성, 조회
   },
   MYPAGE: {
     COIN: '/api/v1/users/coin',

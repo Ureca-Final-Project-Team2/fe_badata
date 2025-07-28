@@ -25,3 +25,30 @@ export const createAddressHistory = async (
   );
   return response;
 };
+
+// 주소 이력 조회 응답 타입
+export interface AddressHistoryItem {
+  addressId: number;
+  detailAddress: string;
+  longititude: number;
+  latitude: number;
+}
+
+export interface AddressHistoryListResponse {
+  code: number;
+  message: string | null;
+  getAddressResponses: AddressHistoryItem[];
+  hasNext: boolean;
+}
+
+// 주소 이력 조회 API
+export const getAddressHistoryList = async (
+  page: number = 0,
+  size: number = 10,
+  sort: string = 'createdAt,desc',
+): Promise<AddressHistoryListResponse> => {
+  const response: AddressHistoryListResponse = await axiosInstance.get(
+    `${END_POINTS.POSITION.POSITION}?page=${page}&size=${size}&sort=${sort}`,
+  );
+  return response;
+};
