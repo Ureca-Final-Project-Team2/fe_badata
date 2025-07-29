@@ -5,7 +5,7 @@ import type { DeleteFollowResponse, FollowResponse } from '@/entities/follow';
 
 const FOLLOW_TYPES = {
   FOLLOWERS: 'FOLLOWERS',
-  FOLLOWINGS: 'FOLLOWINGS'
+  FOLLOWINGS: 'FOLLOWINGS',
 } as const;
 
 export const fetchFollowers = async (
@@ -14,13 +14,13 @@ export const fetchFollowers = async (
 ): Promise<FollowResponse> => {
   try {
     const response = await axiosInstance.get(END_POINTS.MYPAGE.FOLLOWERS, {
-      params: { 
+      params: {
         followType: FOLLOW_TYPES.FOLLOWERS,
-        cursor, 
-        size 
+        cursor,
+        size,
       },
     });
-    
+
     return response.data;
   } catch (error) {
     console.error('팔로워 목록 조회 실패:', error);
@@ -36,4 +36,4 @@ export const deleteFollower = async (followId: number): Promise<DeleteFollowResp
     console.error('팔로워 삭제 실패:', error);
     throw error;
   }
-}; 
+};

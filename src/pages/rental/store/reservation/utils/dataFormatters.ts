@@ -25,12 +25,12 @@ export const convertDevicesForUI = (devices: RentalDevice[]) => {
  * 영수증에 표시할 장비 목록 생성
  */
 export const createReceiptDevices = (
-  selectedDevices: Record<string, number>,
+  selectedDevices: Record<number, number>,
   devices: RentalDevice[],
 ) => {
   return Object.entries(selectedDevices)
     .map(([deviceId, count]) => {
-      const device = devices.find((d) => d.storeDeviceId === Number(deviceId));
+      const device = devices.find((d) => d.storeDeviceId === +deviceId);
       if (!device || count === 0) return undefined;
       return {
         name: device.deviceName || '',
@@ -38,7 +38,7 @@ export const createReceiptDevices = (
         count,
       };
     })
-    .filter((d) => !!d);
+    .filter((d): d is NonNullable<typeof d> => !!d);
 };
 
 /**

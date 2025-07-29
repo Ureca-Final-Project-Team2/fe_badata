@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import Image from 'next/image';
 
-import { useScore } from '@/pages/rental/map/model/useScoreHooks';
+import { useScore } from '@/pages/rental/map/hooks/useScoreHooks';
 import styles from '@/pages/rental/map/style/Score.module.css';
 import { ICONS } from '@/shared/config/iconPath';
 

@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       'ae-pic-a1.aliexpress-media.com',
       'search.pstatic.net',
       'ldb-phinf.pstatic.net',
+      'ae01.alicdn.com',
     ],
   },
   async rewrites() {
