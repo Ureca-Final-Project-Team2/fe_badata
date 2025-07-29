@@ -4,6 +4,7 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 import type {
   AllPost,
   DataUpdateRequest,
+  DeletePostResponse,
   GifticonUpdateRequest,
   LikeContent,
   ReportRequest,
@@ -18,9 +19,9 @@ export const getTradePosts = async (): Promise<AllPost[]> => {
 };
 
 // 게시물 삭제
-export const deleteTradePost = async (postId: number) => {
+export const deleteTradePost = async (postId: number): Promise<DeletePostResponse> => {
   const response = await axiosInstance.delete(END_POINTS.TRADES.DELETE(postId));
-  return response;
+  return response.data;
 };
 
 // 데이터 게시물 수정
