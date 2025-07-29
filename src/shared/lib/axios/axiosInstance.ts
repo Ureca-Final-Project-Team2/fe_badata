@@ -10,4 +10,5 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+
 applyInterceptors(axiosInstance);
