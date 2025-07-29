@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   searchPlaces,
@@ -127,25 +127,13 @@ export const useSearchPlaces = () => {
     setKeyword(value);
   }, []);
 
-  // 검색 결과 메모이제이션
-  const memoizedSearchResults = useMemo(() => searchResults, [searchResults]);
-
-  // 로딩 상태 메모이제이션
-  const memoizedIsLoading = useMemo(() => isLoading, [isLoading]);
-
-  // 더 로딩 상태 메모이제이션
-  const memoizedIsLoadingMore = useMemo(() => isLoadingMore, [isLoadingMore]);
-
-  // 다음 페이지 존재 여부 메모이제이션
-  const memoizedHasNext = useMemo(() => hasNext, [hasNext]);
-
   return {
     keyword,
     setKeyword: setKeywordOptimized,
-    searchResults: memoizedSearchResults,
-    isLoading: memoizedIsLoading,
-    isLoadingMore: memoizedIsLoadingMore,
-    hasNext: memoizedHasNext,
+    searchResults,
+    isLoading,
+    isLoadingMore,
+    hasNext,
     loadNextPage,
   };
 };
