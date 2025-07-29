@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getSosHistory } from '../api/apis';
+import { getSosHistory } from '@/pages/mypage/sos-history/api/apis';
 
 export const useSosHistoryListQuery = (
   cursor?: number,

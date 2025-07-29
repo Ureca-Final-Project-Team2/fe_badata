@@ -2,12 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 
+import { useSosHistoryListQuery } from '@/pages/mypage/sos-history/model/queries';
+import { SosHistoryList } from '@/pages/mypage/sos-history/ui/SosHistoryList';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { PageHeader } from '@/shared/ui/Header';
-
-import { useSosHistoryListQuery } from '../model/queries';
-import { SosHistoryList } from '../ui/SosHistoryList';
 
 export default function SosHistoryPage() {
   const router = useRouter();
