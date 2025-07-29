@@ -37,15 +37,15 @@ export const DataUsageWidget = forwardRef<HTMLDivElement, DataUsageWidgetProps>(
           {/* 사용자 정보 */}
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-black font-semibold text-[16px] leading-tight">{nickname}</p>
-              <p className="text-[12px] text-[var(--gray-mid)] mt-[2px]">{planName}</p>
+              <p className="font-body-semibold text-[var(--black)]">{nickname}</p>
+              <p className="font-caption-regular text-[var(--gray-mid)] mt-[2px]">{planName}</p>
             </div>
           </div>
 
           {/* 데이터 사용량 */}
           <div>
-            <p className="text-[12px] text-black mb-[2px]">남은 데이터</p>
-            <p className="text-[11px] text-[var(--main-5)] mb-[4px]">{formattedUsage}</p>
+            <p className="font-body-regular text-[var(--black)] mb-[2px]">남은 데이터</p>
+            <p className="font-small-semibold text-[var(--main-5)] mb-[4px]">{formattedUsage}</p>
             <div className="w-full h-[6px] rounded-full bg-[var(--gray-light)]">
               <div
                 className="h-full rounded-full bg-[var(--main-5)] transition-all"
