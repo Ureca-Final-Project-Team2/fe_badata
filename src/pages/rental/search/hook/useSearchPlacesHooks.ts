@@ -104,13 +104,14 @@ export const useSearchPlaces = () => {
 
   // 디바운스된 키워드가 변경될 때 검색 실행
   useEffect(() => {
-    const trimmedKeyword = keyword.trim();
-    if (debouncedKeyword !== trimmedKeyword && debouncedKeyword) {
+    if (debouncedKeyword) {
       setPage(1);
       setHasNext(true);
       throttledSearch(debouncedKeyword, 1, false);
+    } else {
+      setSearchResults([]);
     }
-  }, [debouncedKeyword, keyword, throttledSearch]);
+  }, [debouncedKeyword, throttledSearch]);
 
   // 다음 페이지 로드 함수
   const loadNextPage = useCallback(() => {
