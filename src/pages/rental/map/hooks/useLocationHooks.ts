@@ -21,12 +21,13 @@ export function useLocation(): UseLocationReturn {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isDev = process.env.NODE_ENV === 'development';
   // 좌표를 주소로 변환하는 함수 (Kakao REST API 사용)
   const getAddressFromCoords = useCallback(async (lat: number, lng: number) => {
     try {
       const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_REST_API_KEY;
       if (!KAKAO_REST_API_KEY) {
-        console.warn('Kakao REST API 키가 설정되지 않았습니다.');
+        if (isDev) console.warn('Kakao REST API 키가 설정되지 않았습니다.');
         setUserAddress('현재위치');
         return;
       }
@@ -52,15 +53,15 @@ export function useLocation(): UseLocationReturn {
           const finalAddress = roadAddress || bunjiAddress || '현재위치';
           setUserAddress(finalAddress);
         } else {
-          console.log('주소 정보가 없습니다.');
+          if (isDev) console.log('주소 정보가 없습니다.');
           setUserAddress('현재위치');
         }
       } else {
-        console.error('REST API 요청 실패:', response.status, response.statusText);
+        if (isDev) console.error('REST API 요청 실패:', response.status, response.statusText);
         setUserAddress('현재위치');
       }
     } catch (error) {
-      console.error('주소 변환 실패:', error);
+      if (isDev) console.error('주소 변환 실패:', error);
       setUserAddress('현재위치');
     }
   }, []);

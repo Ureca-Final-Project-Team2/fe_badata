@@ -45,24 +45,16 @@ export const addLocalAddressHistory = (
   y: number,
 ): number | null => {
   const history = getLocalAddressHistory();
-  console.log(
-    'localStorage 현재 주소들:',
-    history.map((item) => item.address_name),
-  );
-  console.log('추가하려는 주소:', address_name);
 
   // 중복 주소 확인 - place_name과 address_name을 모두 비교
   const existingItem = history.find(
     (item) => item.place_name === place_name && item.address_name === address_name,
   );
   if (existingItem) {
-    console.log('중복 주소입니다. 사용 시간만 업데이트합니다:', place_name);
     // 중복인 경우 사용 시간만 업데이트
     updateAddressUsageTime(existingItem.addressId);
     return existingItem.addressId;
   }
-
-  console.log('새로운 주소입니다. 추가합니다:', address_name);
 
   // 새로운 주소 이력 생성
   const newItem: AddressHistoryItem = {
