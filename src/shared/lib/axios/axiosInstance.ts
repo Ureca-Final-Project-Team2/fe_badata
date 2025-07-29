@@ -1,15 +1,17 @@
 import axios from 'axios';
 
-import { BASE_URL, NETWORK_TIMEOUT } from '@/shared/api/endpoints';
+import { NETWORK_TIMEOUT } from '@/shared/api/endpoints';
 
 import { applyInterceptors } from './axiosInterceptor';
 
-// 개발환경에서는 Next.js 프록시를 사용하여 CORS 문제 해결
+// 개발환경에서도 실제 API 서버 사용
 const getBaseURL = () => {
-  if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:3000'; // Next.js 프록시를 통해 요청
+  // 환경변수가 있으면 사용, 없으면 기본값 사용
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
   }
-  return BASE_URL; // 프로덕션에서는 실제 API URL 사용
+  // 기본값으로 실제 API 서버 URL 사용
+  return 'http://13.124.160.115:8080';
 };
 
 export const axiosInstance = axios.create({
