@@ -48,6 +48,7 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
 export default function ReportHistoryPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useReportHistoryListQuery('QUESTION');
+  console.log('data', data);  
   const items: ReportHistoryItem[] = (data as ReportHistoryResponse)?.content?.item ?? [];
   const [selectedIdx, setSelectedIdx] = useState(0); // 가장 최근 신고가 기본 선택
 
