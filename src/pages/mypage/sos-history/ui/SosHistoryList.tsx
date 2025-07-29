@@ -25,8 +25,8 @@ export const SosHistoryList = ({ name, date, amount, status }: SosHistoryListPro
         <button
           className={`w-[86px] py-1 rounded-full text-center font-title-regular text-[16px] ${
             isDone
-              ? 'bg-[var(--main-5)] text-[var(--white)]'
-              : 'bg-[var(--white)] border border-[var(--main-5)] text-[var(--main-5)]'
+              ? 'bg-[var(--white)] border border-[var(--main-5)] text-[var(--main-5)]'
+              : 'bg-[var(--main-5)] text-[var(--white)]'
           }`}
           type="button"
         >
