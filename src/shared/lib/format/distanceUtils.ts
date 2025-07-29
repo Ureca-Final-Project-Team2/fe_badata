@@ -42,20 +42,3 @@ export const formatDistance = (distanceInMeters: number): FormattedDistance => {
 export const formatDistanceString = (distanceInMeters: number): string => {
   return formatDistance(distanceInMeters).fullText;
 };
-
-/**
- * 거리에 따른 색상 클래스를 반환 (가까우면 녹색, 멀면 회색)
- * @param distanceInMeters 미터 단위의 거리
- * @returns CSS 클래스명
- */
-export const getDistanceColorClass = (distanceInMeters: number): string => {
-  if (distanceInMeters <= 100) {
-    return 'text-green-600'; // 매우 가까움 (100m 이하)
-  } else if (distanceInMeters <= 500) {
-    return 'text-[var(--main-5)]'; // 가까움 (500m 이하)
-  } else if (distanceInMeters <= 1000) {
-    return 'text-yellow-600'; // 보통 (1km 이하)
-  } else {
-    return 'text-[var(--gray-dark)]'; // 멀음 (1km 초과)
-  }
-};

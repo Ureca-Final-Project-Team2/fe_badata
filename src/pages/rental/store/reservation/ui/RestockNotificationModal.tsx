@@ -48,6 +48,9 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
       <div
         className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center"
         onClick={handleClose}
+        role="modal"
+        aria-modal="true"
+        aria-labelledby="restock-notification-modal-title"
       >
         {/* 모달 컨테이너 */}
         <div
@@ -56,7 +59,9 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
         >
           {/* 제목 */}
           <div className="text-center mb-4">
-            <h2 className="font-title-semibold text-[var(--black)] mb-1">재입고 알림 신청</h2>
+            <h2 id="restock-modal-title" className="font-title-semibold text-[var(--black)] mb-1">
+              재입고 알림 신청
+            </h2>
             <p className="font-body-regular text-[var(--gray-dark)]">{deviceName}</p>
           </div>
 

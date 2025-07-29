@@ -8,5 +8,10 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { storeId } = await params;
-  return <StoreDetailPage storeId={Number(storeId)} />;
+
+  const numericStoreId = Number(storeId);
+  if (isNaN(numericStoreId) || numericStoreId <= 0) {
+    throw new Error('Invalid store ID');
+  }
+  return <StoreDetailPage storeId={numericStoreId} />;
 }
