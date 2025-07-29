@@ -1,4 +1,4 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 export const NETWORK_TIMEOUT = 5000;
 export const SUCCESS_CODE = 20000;
 
@@ -34,15 +34,22 @@ export const END_POINTS = {
     STORELIST: `/api/v1/stores`,
     STOREDETAIL: (storeId: number) => `/api/v1/stores/${storeId}`,
     LIKESTORE: (storeId: number) => `/api/v1/stores/${storeId}/like`,
+    REVIEW: `/api/v1/reviews`,
+    STORE_REVIEWS: (storeId: number) => `/api/v1/${storeId}/reviews`,
+    REVIEW_META: (storeId: number) => `/api/v1/${storeId}/review-meta`,
+    REVIEW_QUICK_REPLIES: `/api/v1/review-quick-replies`,
   },
   RENTAL: {
     AVAILABLE_DEVICE: (storeId: number) => `/api/v1/rentals/${storeId}/devices`, //예약할 기기 조회
     RESERVATIONS: `/api/v1/rentals/devices`,
     RESTOCK: `/api/v1/restock`,
-    REVIEWS: (storeId: number) => `/api/v1/${storeId}/reviews`,
-    REVIEW_META: (storeId: number) => `/api/v1/${storeId}/review-meta`,
+    RESERVATION_DETAILS: (reservationId: number) =>
+      `/api/v1/rentals/reservations/${reservationId}/devices`,
   },
-
+  POSITION: {
+    POSITION: '/api/v1/addresses', // 주소 이력 생성, 조회
+    DELETE_POSITION: (addressId: number) => `/api/v1/addresses/${addressId}`, // 주소 이력 삭제
+  },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     COIN_HISTORY: '/api/v1/users/coin/history',
@@ -54,7 +61,10 @@ export const END_POINTS = {
     RENTAL_HISTORY: '/api/v1/users/rentals',
     LIKE_STORE: '/api/v1/users/likes/stores',
     RESTOCK_ALARM: '/api/v1/users/restock',
-    SOS_HISTORY: '/api/v1/mypage/sos-history',
-    REPORT_LIST: '/api/v1/mypage/report-history',
+    SOS_HISTORY: '/api/v1/users/sos',
+    REPORT_LIST: '/api/v1/users/reports',
+    PURCHASES_HISTORY: '/api/v1/users/purchases',
+    SALES_HISTORY: '/api/v1/users/sales',,
+    NOTIFICATION: '/api/v1/users/notification',
   },
 } as const;

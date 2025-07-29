@@ -34,6 +34,24 @@ export interface UserProfile {
   isFollowing: boolean;
 }
 
+export interface PurchaseItem {
+  id: number;
+  postId: number;
+  postCategory: 'DATA' | 'GIFTICON';
+  partner: string;
+  title: string;
+  price: number;
+  postLikes: number;
+  postImage: string;
+  isSold: boolean;
+}
+
+export interface PurchaseResponse {
+  item: PurchaseItem[];
+  nextCursor: number;
+  hasNext: boolean;
+}
+
 export interface CoinResponse {
   coin: number;
 }

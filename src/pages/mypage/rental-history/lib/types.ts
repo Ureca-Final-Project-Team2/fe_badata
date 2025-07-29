@@ -3,7 +3,7 @@ export interface RentalHistoryItem {
   storeName: string;
   rentalStartDate: string;
   price: number;
-  reservationStatus: 'PENDING' | 'COMPLETED';
+  reservationStatus: 'PENDING' | 'COMPLETE';
 }
 
 export interface RentalHistoryResponse {

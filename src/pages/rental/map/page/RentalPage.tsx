@@ -2,42 +2,31 @@
 
 import { useEffect, useReducer, useState } from 'react';
 
-declare global {
-  interface Window {
-    kakao: typeof kakao;
-  }
-}
-
 import { CenterScrollSwiper } from '@/entities/scroll';
-import {
-  convertToStoreCardProps,
-  useStoreListWithInfiniteScroll,
-} from '@/pages/rental/map/hooks/useStoreListHooks';
-import { filterDevices } from '@/pages/rental/map/model/filtereDevices';
-import { initialRentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 import {
   initialSelectedStoreState,
   selectedStoreReducer,
 } from '@/pages/rental/map/model/selectedStoreReducer';
-import { CurrentLocationButton } from '@/pages/rental/map/ui/CurrentLocationButton';
 import DeviceCard from '@/pages/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/pages/rental/map/ui/DrawerSection';
-import { ListViewButton } from '@/pages/rental/map/ui/ListViewButton';
+import { LocationDisplay } from '@/pages/rental/map/ui/LocationDisplay';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
-import { SortDrawer } from '@/pages/rental/map/ui/SortDrawer';
 import { formatDateToLocalDateTime } from '@/shared/lib/formatDate';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
 import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
-import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
-import type { DateRange } from 'react-day-picker';
+import {
+  useStoreListWithInfiniteScroll,
+  convertToStoreCardProps,
+} from '../hooks/useStoreListHooks';
+import { filterDevices } from '../model/filtereDevices';
+import { RentalFilterState, initialRentalFilterState } from '../model/rentalFilterReducer';
+import { SearchPosHeader } from '../ui/SearchPosHeader';
 
 const RentalPage = () => {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [selectedStore, dispatchSelectedStore] = useReducer(
     selectedStoreReducer,
@@ -199,97 +188,75 @@ const RentalPage = () => {
       showHeader
       showBottomNav
       header={
-        <div className="max-w-[428px] px-4 pt-4 bg-white/80 z-30 flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center w-full">
-            <div className="w-[90%]">
-              <DatePicker
-                value={dateRange}
-                onChange={setDateRange}
-                placeholder="대여 기간을 선택해주세요"
-              />
-            </div>
+        <div className="max-w-[428px] px-4 pt-4 z-30">
+          <div className="flex flex-row items-center gap-1">
+            <SearchPosHeader search="" setSearch={() => {}} onSubmit={() => {}} />
             <FilterIcon
-              alt=""
-              className="w-8 h-8 ml-4 flex-shrink-0"
-              onClick={() => {
-                setTempFilterState(filterState); // Drawer 열 때 tempFilterState를 filterState로 초기화
-                setFilterDrawerOpen(true);
-              }}
+              alt="필터 아이콘"
+              className="w-8 h-8 flex-shrink-0 cursor-pointer"
+              onClick={() => setFilterDrawerOpen(true)}
             />
           </div>
         </div>
       }
-      fab={
-        <div className="flex items-center justify-between w-full px-4 relative z-50">
-          {/* 현재 위치 버튼 */}
-          <CurrentLocationButton className="ml-5 cursor-pointer" onClick={handleCurrentLocation} />
-
-          {/* 목록보기 버튼 */}
-          <ListViewButton onClick={handleListView} />
-        </div>
-      }
     >
-      <MapSection
-        filterState={filterState}
-        onStoreMarkerClick={(
-          devices: StoreDevice[],
-          storeDetail?: StoreDetail,
-          storeId?: number,
-        ) => {
-          dispatchSelectedStore({
-            type: 'SELECT_STORE',
-            devices,
-            storeId: storeId ?? 0,
-            storeDetail,
-          });
-        }}
-        onMapReady={(map) => {
-          setMapInstance(map);
-        }}
+      <LocationDisplay
+        userAddress={userAddress}
+        isLoading={locationLoading}
+        error={locationError}
       />
+
+      <div className="w-full h-[calc(100vh-190px)]">
+        <MapSection
+          onStoreMarkerClick={(
+            devices: StoreDevice[],
+            storeDetail?: StoreDetail,
+            storeId?: number,
+          ) => {
+            dispatchSelectedStore({
+              type: 'SELECT_STORE',
+              devices,
+              storeId: storeId ?? 0,
+              storeDetail,
+            });
+          }}
+        />
+      </div>
       <DrawerSection
-        storeList={storeList}
-        isLoading={isLoading}
-        isFetchingNextPage={isFetchingNextPage}
-        hasNextPage={hasNextPage}
-        isError={isError}
-        error={error}
-        open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        onLoadMore={fetchNextPage}
-        onSortClick={handleSortClick}
-        currentSort={currentSort}
+        open={true}
+        storeList={stores.map((store) => ({
+          id: store.id,
+          store,
+          storeDetail: {
+            name: store.name,
+            liked: false,
+            storeId: store.id,
+            imageUrl: '',
+            detailAddress: '',
+            phoneNumber: '',
+            distanceFromMe: 0,
+            reviewRating: 0,
+            isOpening: false,
+            startTime: '',
+            endTime: '',
+          },
+          deviceCount: 0,
+        }))}
       />
       <FilterDrawer
         isOpen={filterDrawerOpen}
         onClose={() => setFilterDrawerOpen(false)}
         className="bg-[var(--main-2)]"
       >
-        <RentalFilterContent
-          onClose={() => setFilterDrawerOpen(false)}
-          filterState={tempFilterState}
-          setFilterState={setTempFilterState}
-          onSubmit={(filters) => {
-            setFilterState(filters); // 결과보기 클릭 시에만 실제 filterState 반영
-            setFilterDrawerOpen(false);
-          }}
-        />
+        <RentalFilterContent onClose={() => setFilterDrawerOpen(false)} />
       </FilterDrawer>
-
-      <SortDrawer
-        isOpen={isSortDrawerOpen}
-        onClose={() => setIsSortDrawerOpen(false)}
-        onSortSelect={handleSortSelect}
-        currentSort={currentSort}
-      />
-
-      {filteredDevicesList.length > 0 && (
+      {selectedStore.selectedDevices.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
           <CenterScrollSwiper
-            key={filteredDevicesList.map((d: StoreDevice) => d.storeDeviceId).join('-')}
-            items={filteredDevicesList}
+            key={selectedStore.selectedDevices.map((d) => d.storeDeviceId).join('-')}
+            items={selectedStore.selectedDevices}
           >
-            {(device: StoreDevice) => <DeviceCard device={device} />}
+            {(device) => <DeviceCard device={device} />}
           </CenterScrollSwiper>
         </div>
       )}

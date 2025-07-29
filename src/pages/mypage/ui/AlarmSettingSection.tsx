@@ -20,7 +20,9 @@ export const AlarmSettingSection = () => (
           height={20}
           className="object-contain"
         />
-        <span className="font-medium text-sm group-hover:text-[var(--main-3)]">알림 설정</span>
+        <span className="font-label-regular text-sm group-hover:text-[var(--main-3)]">
+          알림 설정
+        </span>
       </Link>
     </section>
   </>

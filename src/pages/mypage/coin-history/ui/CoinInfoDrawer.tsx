@@ -1,5 +1,3 @@
-
-
 import { Drawer } from '@/shared/ui/Drawer';
 
 interface CoinInfoDrawerProps {

@@ -12,25 +12,25 @@ import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 export const applyInterceptors = (instance: AxiosInstance): void => {
   instance.interceptors.request.use((config) => {
     if (typeof window !== 'undefined') {
-      // authStore에서 토큰을 가져오기
       const token = useAuthStore.getState().accessToken;
-
+      
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
     return config;
   });
+  
   instance.interceptors.response.use(
     <T>(response: AxiosResponse<ApiResponse<T>>): T | AxiosResponse<ApiResponse<T>> => {
-      // 카카오 로그인 API와 팔로우 API, 이미지 검증 API, sales API는 응답 전체를 반환
-      // 카카오 로그인 API와 팔로우 API, 이미지 검증 API, sales API, coin API는 응답 전체를 반환
       if (
         response.config.url?.includes(END_POINTS.USER.LOGIN) ||
         response.config.url?.includes('/follows') ||
         response.config.url?.includes(END_POINTS.TRADES.IMAGE) ||
         response.config.url?.includes(END_POINTS.USER.SALES) ||
-        response.config.url?.includes(END_POINTS.MYPAGE.COIN)
+        response.config.url?.includes(END_POINTS.MYPAGE.COIN) ||
+        response.config.url?.includes(END_POINTS.MYPAGE.PURCHASES_HISTORY)
+        response.config.url?.includes(END_POINTS.POSITION.POSITION)
       ) {
         return response;
       }

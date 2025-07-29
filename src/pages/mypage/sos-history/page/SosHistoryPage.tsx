@@ -2,21 +2,43 @@
 
 import { useRouter } from 'next/navigation';
 
+import { useSosHistoryListQuery } from '@/pages/mypage/sos-history/model/queries';
+import { SosHistoryList } from '@/pages/mypage/sos-history/ui/SosHistoryList';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { PageHeader } from '@/shared/ui/Header';
 
-import { useSosHistoryListQuery } from '../model/queries';
-import { SosHistoryList } from '../ui/SosHistoryList';
-
 export default function SosHistoryPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useSosHistoryListQuery();
-  if (isLoading) return <div>불러오는 중...</div>;
-  if (isError) return <div>에러 발생</div>;
-  if (!data) return <div>데이터 없음</div>;
 
-  const items = data.item ?? [];
+  if (isLoading) {
+    return (
+      <BaseLayout
+        header={<PageHeader title="SOS 요청 내역" onBack={() => router.back()} />}
+        showBottomNav
+      >
+        <div className="w-full max-w-[428px] flex flex-col justify-center items-center flex-1">
+          <div className="text-center">불러오는 중...</div>
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  if (isError) {
+    return (
+      <BaseLayout
+        header={<PageHeader title="SOS 요청 내역" onBack={() => router.back()} />}
+        showBottomNav
+      >
+        <div className="w-full max-w-[428px] flex flex-col justify-center items-center flex-1">
+          <div className="text-center text-red-500">에러 발생</div>
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  const items = data?.item ?? [];
 
   return (
     <BaseLayout
@@ -46,7 +68,7 @@ export default function SosHistoryPage() {
                   key={item.sosId}
                   name={item.responderId ? `박OO` : '미정'}
                   date={item.createdAt.slice(0, 10)}
-                  amount={'100MB'}
+                  amount={item.dataAmount}
                   status={item.isSuccess ? '요청 완료' : '요청 중'}
                 />
               ))
