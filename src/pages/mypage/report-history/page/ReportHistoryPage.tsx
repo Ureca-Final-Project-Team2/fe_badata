@@ -10,7 +10,7 @@ import { PageHeader } from '@/shared/ui/Header';
 import { SectionDivider } from '@/shared/ui/SectionDivider';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
-import type { ReportHistoryItem, ReportHistoryResponse } from '@/pages/mypage/report-history/lib/types';
+import type { ReportHistoryItem } from '@/pages/mypage/report-history/lib/types';
 
 interface TimelineItemProps {
   label: string;
@@ -48,7 +48,7 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
 export default function ReportHistoryPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useReportHistoryListQuery('QUESTION');
-  const items: ReportHistoryItem[] = (data as ReportHistoryResponse)?.content?.item ?? [];
+  const items: ReportHistoryItem[] = data?.item ?? [];
   const [selectedIdx, setSelectedIdx] = useState(0); // 가장 최근 신고가 기본 선택
 
   // 가장 최근 신고가 앞에 오도록 정렬 (createdAt 내림차순)

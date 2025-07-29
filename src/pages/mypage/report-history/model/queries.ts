@@ -9,7 +9,7 @@ export const useReportHistoryListQuery = (
   cursor?: number,
   size = 10
 ) =>
-  useQuery<ReportHistoryResponse['content'] | null>({
+  useQuery<ReportHistoryResponse['content']>({
     queryKey: ['reportHistoryList', reportStatus, cursor, size],
     queryFn: () => getReportHistoryList(reportStatus, cursor, size),
   });

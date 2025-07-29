@@ -7,10 +7,11 @@ export const getReportHistoryList = async (
   reportStatus: string,
   cursor?: number,
   size = 10,
-): Promise<ReportHistoryResponse | null> => {
-  const response: ReportHistoryResponse = await axiosInstance.get(END_POINTS.MYPAGE.REPORT_LIST, {
-    params: { reportStatus, cursor, size },
-  });
-  return response;
+): Promise<ReportHistoryResponse['content']> => {
+  const response = await axiosInstance.get<ReportHistoryResponse>(
+    END_POINTS.MYPAGE.REPORT_LIST,
+    { params: { reportStatus, cursor, size } },
+  );
+  return response as unknown as ReportHistoryResponse['content'];
 };
 
