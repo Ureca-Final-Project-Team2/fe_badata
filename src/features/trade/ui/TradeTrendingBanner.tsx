@@ -3,32 +3,32 @@ import { useRouter } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
-import { useTradeDeadlineQuery } from '@/features/trade/model/queries';
+import { useTradeTrendingQuery } from '@/features/trade/model/queries';
 import BannerItem from '@/features/trade/ui/BannerItem';
 import { PATH } from '@/shared/config/path';
 import { AutoSwiper } from '@/shared/ui/AutoSwiper';
 
-export function TradeDeadlineBanner() {
+export function TradeTrendingBanner() {
   const router = useRouter();
-  const { deadlinePosts, isLoading } = useTradeDeadlineQuery();
+  const { trendingPosts, isLoading } = useTradeTrendingQuery();
   const { toggleLike, isItemLoading } = useTradePostLikeHooks();
 
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--gray)]">로딩 중...</div>;
   }
-  if (!deadlinePosts || deadlinePosts.length === 0) {
+  if (!trendingPosts || trendingPosts.length === 0) {
     return <div className="py-4 text-center text-[var(--gray)]">게시물이 없습니다.</div>;
   }
 
   const handleLikeToggle = (postId: number) => {
-    const item = deadlinePosts.find((post) => post.id === postId);
+    const item = trendingPosts.find((post) => post.id === postId);
     if (item) {
       toggleLike(item);
     }
   };
 
   const handleCardClick = (postId: number) => {
-    const item = deadlinePosts.find((post) => post.id === postId);
+    const item = trendingPosts.find((post) => post.id === postId);
     if (!item) return;
 
     const path =
@@ -41,16 +41,16 @@ export function TradeDeadlineBanner() {
   return (
     <section className="bg-white mb-6">
       <div className="flex items-center justify-between pb-2 px-1">
-        <h2 className="font-body-semibold">마감임박 데려가세요! ⏰</h2>
+        <h2 className="font-body-semibold">실시간 핫한 게시물 🔥</h2>
         <ChevronRight
           className="text-[var(--gray-dark)] cursor-pointer"
           size={20}
-          onClick={() => router.push(PATH.TRADE.DEADLINE)}
+          onClick={() => router.push(PATH.TRADE.TRENDING)}
         />
       </div>
 
       <AutoSwiper
-        items={deadlinePosts.slice(0, 10)}
+        items={trendingPosts.slice(0, 10)}
         getKey={(item) => item.id}
         autoPlayDelay={2000}
         slidesPerView={1}

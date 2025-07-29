@@ -7,12 +7,15 @@ import { TradeFlatTab } from '@/widgets/trade/flat-tab/ui/TradeFlatTab';
 import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFloatingButton';
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 
+import { TradeTrendingBanner } from '../ui/TradeTrendingBanner';
+
 export default function TradePage() {
   return (
     <BaseLayout header={<Header />} showBottomNav fab={<TradeFloatingButton />} paddingX>
       <TradeFlatTab />
       <TradeSearchInput />
       <TradeDeadlineBanner />
+      <TradeTrendingBanner />
     </BaseLayout>
   );
 }
