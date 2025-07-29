@@ -30,6 +30,7 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
         response.config.url?.includes('/follows') ||
         response.config.url?.includes(END_POINTS.TRADES.IMAGE) ||
         response.config.url?.includes(END_POINTS.USER.SALES) ||
+        response.config.url?.includes(END_POINTS.POSITION.POSITION) ||
         response.config.url?.includes(END_POINTS.MYPAGE.COIN)
       ) {
         return response;
