@@ -9,7 +9,14 @@ export const useFetchStoreListHooks = (initialParams: StoreListParams, deps: unk
   const [stores, setStores] = useState<StoreListResponse['showStoreResponses']>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(true);
-  const [page, setPage] = useState(initialParams.page ?? 0);
+  const [page, setPage] = useState(() => initialParams.page ?? 0);
+
+  // initialParams.page 변경 시 동기화
+  useEffect(() => {
+    if (initialParams.page !== undefined) {
+      setPage(initialParams.page);
+    }
+  }, [initialParams.page]);
 
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
