@@ -14,6 +14,7 @@ import AddressHistoryList from '@/pages/rental/search/ui/AddressHistoryList';
 import CurrentLocationButton from '@/pages/rental/search/ui/CurrentLocationButton';
 import SearchInputField from '@/pages/rental/search/ui/SearchInputField';
 import SearchResults from '@/pages/rental/search/ui/SearchResults';
+import { isLoggedIn } from '@/pages/rental/search/utils/auth/isLoggedIn';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
 
@@ -26,13 +27,12 @@ const SearchPosPage = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // 로그인 상태에 따라 정렬 결정
-  const [accessToken, setAccessToken] = React.useState<string | null>(null);
-  const sort = accessToken ? 'createdAt,desc' : 'lastUsed,desc';
+  const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
+  const sort = isAuthenticated ? 'createdAt,desc' : 'lastUsed,desc';
 
   // 로그인 상태 감지
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    setAccessToken(token);
+    setIsAuthenticated(isLoggedIn());
   }, []);
 
   const {
@@ -57,10 +57,6 @@ const SearchPosPage = () => {
   // 검색 결과 선택 시 호출되는 함수
   const handleSelectPlace = useCallback(
     (place: PlaceSearchResult) => {
-      console.log('선택된 장소:', place);
-      console.log('현재 로그인 상태:', !!accessToken);
-      console.log('현재 정렬 방식:', sort);
-
       createAddressMutation.mutate(place, {
         onSuccess: () => {
           console.log('주소 이력 생성 성공 후 refetch 호출');
@@ -75,7 +71,7 @@ const SearchPosPage = () => {
       });
       setKeyword('');
     },
-    [createAddressMutation, setKeyword, refetch, accessToken, sort, queryClient],
+    [createAddressMutation, setKeyword, refetch, sort, queryClient],
   );
 
   // 주소 이력 클릭 시 호출되는 함수
