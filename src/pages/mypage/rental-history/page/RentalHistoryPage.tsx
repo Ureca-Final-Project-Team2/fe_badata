@@ -56,7 +56,7 @@ export default function RentalHistoryPage() {
                       onClick={() => handleReviewClick(item.id)}
                       className="flex items-center gap-1 text-[var(--main-5)] font-title-regular cursor-pointer"
                     >
-                      <Pencil />
+                      <Pencil size={16} />
                       &nbsp;리뷰쓰기
                     </button>
                   )}
