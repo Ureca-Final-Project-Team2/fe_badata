@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import {
   formatDate,
   getSourceIcon,
@@ -17,12 +19,35 @@ export function CoinHistoryItem({ item, calculatedBalance }: CoinHistoryItemProp
   const displayAmount = isPositive ? Math.abs(item.usedCoin) : -Math.abs(item.usedCoin);
   const amountColor = isPositive ? 'text-[var(--main-5)]' : 'text-[var(--red)]';
   const amountPrefix = isPositive ? '+' : '';
+  const icon = getSourceIcon(item.coinSource);
+  const isImageIcon = typeof icon === 'object' && icon !== null;
+  const isImagePath = typeof icon === 'string' && icon.includes('.png');
 
   return (
     <div className="bg-[var(--white)] rounded-xl p-4 border-2 border-[var(--gray-light)]">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">
-          <span className="text-xl">{getSourceIcon(item.coinSource)}</span>
+          {isImageIcon ? (
+            <Image
+              src={icon}
+              alt="아이콘"
+              width={24}
+              height={24}
+              className="object-contain"
+              unoptimized
+            />
+          ) : isImagePath ? (
+            <Image
+              src={icon}
+              alt="아이콘"
+              width={24}
+              height={24}
+              className="object-contain"
+              unoptimized
+            />
+          ) : (
+            <span className="text-xl">{icon}</span>
+          )}
           <span className="font-label-medium text-[var(--black)]">
             {getSourceText(item.coinSource)}
           </span>
