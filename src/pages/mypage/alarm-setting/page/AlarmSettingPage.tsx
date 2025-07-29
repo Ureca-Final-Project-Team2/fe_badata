@@ -20,8 +20,9 @@ export default function AlarmSettingPage() {
 
   // 로그인 상태 확인
   useEffect(() => {
-    if (!isLoggedIn || !accessToken) {
+    if (isLoggedIn === false || (isLoggedIn && !accessToken)) {
       router.replace('/auth/kakao/callback');
+      return;
     }
   }, [isLoggedIn, accessToken, router]);
 
@@ -37,7 +38,12 @@ export default function AlarmSettingPage() {
 
   const toggleSwitch = (key: keyof typeof state, val: boolean) => {
     if (key === 'news') {
-      updateNotificationMutation.mutate({ isEnabled: val });
+      updateNotificationMutation.mutate({ isEnabled: val }, {
+        onError: () => {
+          // 실패 시 이전 상태로 롤백
+          setState(prev => ({ ...prev, [key]: !val }));
+        }
+      });
     }
     setState((prev) => ({ ...prev, [key]: val }));
   };

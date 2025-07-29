@@ -17,7 +17,7 @@ export const useNotificationSettingQuery = () => {
     enabled: typeof window !== 'undefined',
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: 'always',
     refetchOnReconnect: false,
   });
 };
