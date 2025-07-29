@@ -115,20 +115,8 @@ export const usePurchasesQuery = (
 ) => {
   return useInfiniteQuery<ApiResponse<PurchaseResponse>>({
     queryKey: ['user', 'purchases', postCategory, isSold, size],
-    queryFn: async ({ pageParam }): Promise<ApiResponse<PurchaseResponse>> => {
-      const result = await userApis.getPurchases(
-        postCategory,
-        isSold,
-        pageParam as number | undefined,
-        size,
-      );
-
-      if (result && typeof result === 'object' && 'data' in result) {
-        return result.data as ApiResponse<PurchaseResponse>;
-      }
-
-      return result as ApiResponse<PurchaseResponse>;
-    },
+    queryFn: ({ pageParam }) =>
+      userApis.getPurchases(postCategory, isSold, pageParam as number | undefined, size),
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => {
       if (!lastPage?.content?.hasNext) return undefined;
