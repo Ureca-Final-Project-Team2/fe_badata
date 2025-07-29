@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { isPositiveTransaction } from '@/features/mypage/coin-history/lib/utils';
+import { calculateBalanceHistory } from '@/features/mypage/coin-history/lib/utils';
 import { useUserCoinHistoryInfiniteQuery, useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
 import { CoinHistoryItem } from '@/features/mypage/coin-history/ui/CoinHistoryItem';
 
@@ -15,7 +15,7 @@ export function CoinHistoryInfiniteList() {
     isFetchingNextPage,
   } = useUserCoinHistoryInfiniteQuery();
 
-  const observerRef = useRef<IntersectionObserver>();
+  const observerRef = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {
       if (isLoading) return;
@@ -70,42 +70,8 @@ export function CoinHistoryInfiniteList() {
     );
   }
 
-  // 현재 사용자의 코인 잔액을 기준으로 각 시점의 잔액 계산
-  const itemsWithCalculatedBalance = allItems.map((item, index) => {
-    // 현재 사용자의 코인 잔액에서 시작
-    let balance = userCoinData?.coin || 0;
-
-    // 현재 내역부터 역순으로 계산하여 각 시점의 잔액 구하기
-    for (let i = 0; i <= index; i++) {
-      const currentItem = allItems[i];
-      const isPositive = isPositiveTransaction(currentItem.coinSource);
-      
-      if (isPositive) {
-        // 획득한 코인은 현재 잔액에서 빼서 이전 시점의 잔액 계산
-        balance -= Math.abs(currentItem.usedCoin);
-      } else {
-        // 사용한 코인은 현재 잔액에 더해서 이전 시점의 잔액 계산
-        balance += Math.abs(currentItem.usedCoin);
-      }
-    }
-
-    // 각 거래 후의 잔액을 계산
-    const isPositive = isPositiveTransaction(item.coinSource);
-    let finalBalance = balance;
-    
-    if (isPositive) {
-      // 획득한 거래의 경우, 해당 거래 후의 잔액 = 이전 잔액 + 획득 코인
-      finalBalance = balance + Math.abs(item.usedCoin);
-    } else {
-      // 사용한 거래의 경우, 해당 거래 후의 잔액 = 이전 잔액 - 사용 코인
-      finalBalance = balance - Math.abs(item.usedCoin);
-    }
-
-    return {
-      ...item,
-      calculatedBalance: Math.max(0, finalBalance),
-    };
-  });
+  // 유틸리티 함수를 사용하여 잔액 계산
+  const itemsWithCalculatedBalance = calculateBalanceHistory(allItems, userCoinData?.coin || 0);
 
   return (
     <div className="space-y-3">
