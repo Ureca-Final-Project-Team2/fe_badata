@@ -97,6 +97,7 @@ export interface StoreListItem {
   가맹점 목록 리스트
 */
 export interface StoreListResponse {
+  stores: never[];
   leftDeviceCount: number;
   closeTime: string;
   detailAddress: string;
