@@ -12,12 +12,34 @@ import { SosHistoryList } from '../ui/SosHistoryList';
 export default function SosHistoryPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useSosHistoryListQuery();
-  
-  if (isLoading) return <div>불러오는 중...</div>;
-  if (isError) return <div>에러 발생</div>;
-  if (!data || !data.item) return <div>데이터 없음</div>;
 
-  const items = data.item;
+  if (isLoading) {
+    return (
+      <BaseLayout
+        header={<PageHeader title="SOS 요청 내역" onBack={() => router.back()} />}
+        showBottomNav
+      >
+        <div className="w-full max-w-[428px] flex flex-col justify-center items-center flex-1">
+          <div className="text-center">불러오는 중...</div>
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  if (isError) {
+    return (
+      <BaseLayout
+        header={<PageHeader title="SOS 요청 내역" onBack={() => router.back()} />}
+        showBottomNav
+      >
+        <div className="w-full max-w-[428px] flex flex-col justify-center items-center flex-1">
+          <div className="text-center text-red-500">에러 발생</div>
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  const items = data?.item ?? [];
 
   return (
     <BaseLayout
