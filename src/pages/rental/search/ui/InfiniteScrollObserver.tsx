@@ -18,7 +18,11 @@ const InfiniteScrollObserver = React.memo(
       (entries: IntersectionObserverEntry[]) => {
         const [target] = entries;
         if (target.isIntersecting && hasNext && !isLoadingMore && onLoadMore) {
-          onLoadMore();
+          try {
+            onLoadMore();
+          } catch (error) {
+            console.error('Failed to load more items:', error);
+          }
         }
       },
       [hasNext, isLoadingMore, onLoadMore],
