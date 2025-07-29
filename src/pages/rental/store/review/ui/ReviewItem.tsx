@@ -76,7 +76,9 @@ export default function ReviewItem({ review }: ReviewItemProps) {
         ))}
       </div>
       <div className="mb-4 space-y-2">
-        <p className="font-label-regular leading-relaxed whitespace-pre-wrap">{displayText}</p>
+        <p className="font-label-regular leading-relaxed whitespace-pre-wrap break-all">
+          {displayText}
+        </p>
         {shouldShowMore && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
