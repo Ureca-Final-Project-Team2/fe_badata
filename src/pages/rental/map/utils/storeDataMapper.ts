@@ -20,7 +20,7 @@ export const transformStoreResponseToStoreCard = (
       detailAddress: storeResponse.detailAddress,
       reviewRating: 0,
       endTime: storeResponse.closeTime,
-      storeName: storeResponse.name,
+      name: storeResponse.name,
       isOpening: false,
       startTime: '',
     },

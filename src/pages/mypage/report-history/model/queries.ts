@@ -4,11 +4,7 @@ import { getReportHistoryList } from '@/pages/mypage/report-history/api/apis';
 
 import type { ReportHistoryItem } from '@/pages/mypage/report-history/lib/types';
 
-export const useReportHistoryListQuery = (
-  reportStatus: string,
-  cursor?: number,
-  size = 10
-) =>
+export const useReportHistoryListQuery = (reportStatus: string, cursor?: number, size = 10) =>
   useQuery<{
     item: ReportHistoryItem[];
     nextCursor: number;

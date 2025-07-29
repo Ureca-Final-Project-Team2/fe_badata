@@ -66,13 +66,8 @@ export const fetchStoreDetail = async (
  * 가맹점 리스트(무한 스크롤) 조회
  */
 export const fetchStoreList = async (params: StoreListParams): Promise<StoreListResponse> => {
-  try {
-    const response: StoreListResponse = await axiosInstance.get(END_POINTS.STORES.STORELIST, {
-      params,
-    });
-    return response;
-  } catch (error) {
-    console.error('fetchStoreList API 호출 실패:', error);
-    return { showStoreResponses: [], hasNext: false };
-  }
+  const response: StoreListResponse = await axiosInstance.get(END_POINTS.STORES.STORELIST, {
+    params,
+  });
+  return response;
 };
