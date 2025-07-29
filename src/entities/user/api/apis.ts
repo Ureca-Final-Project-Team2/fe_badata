@@ -6,11 +6,17 @@ import type {
   FollowingsContent,
   PurchaseResponse,
   SalesContent,
+  UserInfoResponse,
 } from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
 
 export const userApis = {
+  getUserInfo: async (): Promise<UserInfoResponse> => {
+    const response: UserInfoResponse = await axiosInstance.get(END_POINTS.USER.INFO);
+    return response;
+  },
+
   postFollowToggle: async (userId: number) => {
     const response = await axiosInstance.post(END_POINTS.USER.FOLLOW(userId));
     return response.data;

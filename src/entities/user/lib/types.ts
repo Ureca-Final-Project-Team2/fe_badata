@@ -27,11 +27,15 @@ export interface SalesContent {
 }
 
 export interface UserProfile {
-  id: number;
+  userId: number;
   name: string;
-  avatarSrc?: string;
-  tradeCount: number;
-  isFollowing: boolean;
+  profileImage?: string;
+}
+
+export interface UserInfoResponse {
+  profileImage: string;
+  nickName: string;
+  days: number;
 }
 
 export interface PurchaseItem {

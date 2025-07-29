@@ -7,6 +7,7 @@ import type {
   FollowingsContent,
   PurchaseResponse,
   SalesContent,
+  UserInfoResponse,
 } from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
@@ -134,5 +135,15 @@ export const useCoinQuery = () => {
     queryKey: ['user', 'coin'],
     queryFn: () => userApis.getCoin(),
     staleTime: 5 * 60 * 1000, // 5분
+  });
+};
+
+// 사용자 정보 조회 훅
+export const useUserInfoQuery = () => {
+  return useQuery<UserInfoResponse>({
+    queryKey: ['user', 'info'],
+    queryFn: userApis.getUserInfo,
+    staleTime: 5 * 60 * 1000, // 5분
+    retry: 1,
   });
 };
