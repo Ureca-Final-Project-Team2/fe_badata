@@ -24,7 +24,7 @@ export const reviewFormReducer = (
         ...state,
         rating: action.payload,
       };
-    case 'TOGGLE_QUICK_REPLY':
+    case 'TOGGLE_QUICK_REPLY': {
       const quickReplyId = action.payload;
       const isSelected = state.selectedQuickReplies.includes(quickReplyId);
       return {
@@ -33,6 +33,7 @@ export const reviewFormReducer = (
           ? state.selectedQuickReplies.filter((id) => id !== quickReplyId)
           : [...state.selectedQuickReplies, quickReplyId],
       };
+    }
     case 'SET_COMMENT':
       return {
         ...state,
