@@ -1,6 +1,6 @@
 'use client';
 
-import { useExpireDateHooks } from '@/pages/trade/model/useExpireDateHooks';
+import { useExpireDateHooks } from '@/features/trade/model/useExpireDateHooks';
 import { ImageBox } from '@/shared/ui/ImageBox';
 import { LikeButton } from '@/shared/ui/LikeButton';
 

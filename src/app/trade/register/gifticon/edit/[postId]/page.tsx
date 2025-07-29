@@ -1,4 +1,4 @@
-import GifticonEditPage from '@/pages/trade/register/gifticon/page/GifticonEditPage';
+import GifticonEditPage from '@/features/trade/register/gifticon/page/GifticonEditPage';
 
 interface GifticonEditPageProps {
   params: Promise<{

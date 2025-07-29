@@ -1,4 +1,4 @@
-import SosHistoryPage from "@/pages/mypage/sos-history/page/SosHistoryPage";
+import SosHistoryPage from '@/features/mypage/sos-history/page/SosHistoryPage';
 
 export const dynamic = 'force-dynamic';
 
