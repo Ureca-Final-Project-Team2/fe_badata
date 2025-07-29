@@ -103,7 +103,8 @@ const RentalPage = () => {
           id: store.id,
           store,
           storeDetail: {
-            storeName: store.name,
+            name: store.name,
+            liked: false,
             storeId: store.id,
             imageUrl: '',
             detailAddress: '',
