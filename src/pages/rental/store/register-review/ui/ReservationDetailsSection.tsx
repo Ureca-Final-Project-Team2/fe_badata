@@ -1,7 +1,3 @@
-import { useState } from 'react';
-
-import { X } from 'lucide-react';
-
 import type { ReservationDetails } from '@/pages/rental/store/register-review/lib/types';
 
 interface ReservationDetailsSectionProps {
@@ -10,7 +6,6 @@ interface ReservationDetailsSectionProps {
 export default function ReservationDetailsSection({
   reservationDetails,
 }: ReservationDetailsSectionProps) {
-  const [isOpen, setIsOpen] = useState(true);
   const totalPrice = reservationDetails.showReservedDeviceResponses.reduce(
     (sum, device) => sum + device.price * device.count,
     0,
@@ -18,25 +13,20 @@ export default function ReservationDetailsSection({
 
   return (
     <div className="bg-white rounded-2xl mb-6">
-      {isOpen && (
-        <div className="flex items-start justify-between mb-4 p-4">
-          <div className="flex items-center gap-3">
-            {/* TODO 스토어 사진 추가 */}
-            <div className="w-12 h-12 bg-[var(--gray)] rounded-lg"></div>
-            <div>
-              <h3 className="font-label-semibold">{reservationDetails.storeName}</h3>
-              <p className="font-caption-regular">
-                {reservationDetails.countOfVisit}번째 방문이네요!
-              </p>
-            </div>
+      <div className="flex items-start justify-between mb-4 pt-6">
+        <div className="flex items-center gap-3">
+          {/* TODO 스토어 사진 추가 */}
+          <div className="w-12 h-12 bg-[var(--gray)] rounded-lg"></div>
+          <div>
+            <h3 className="font-label-semibold">{reservationDetails.storeName}</h3>
+            <p className="font-caption-regular">
+              {reservationDetails.countOfVisit}번째 방문이네요!
+            </p>
           </div>
-          <button className="p-2 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
-            <X />
-          </button>
         </div>
-      )}
+      </div>
 
-      <div className={`bg-[var(--main-1)] px-4 py-2 rounded-2xl ${isOpen ? 'mt-2' : 'mt-6'}`}>
+      <div className="bg-[var(--main-1)] px-4 py-2 rounded-2xl">
         {reservationDetails.showReservedDeviceResponses.map((device, index) => (
           <div key={index} className="flex items-center justify-between p-3">
             <div>
