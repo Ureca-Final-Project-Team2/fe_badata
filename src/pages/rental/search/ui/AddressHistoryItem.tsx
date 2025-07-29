@@ -25,6 +25,7 @@ const AddressHistoryItem = React.memo(
 
     const handleDelete = useCallback(
       (e: React.MouseEvent) => {
+        e.preventDefault();
         onDelete(item.addressId, e);
       },
       [item.addressId, onDelete],
