@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   searchPlaces,
@@ -25,17 +25,17 @@ const useDebounce = (value: string, delay: number) => {
 
 // 스로틀링 훅
 const useThrottle = <T extends unknown[]>(callback: (...args: T) => void, delay: number) => {
-  const [lastRun, setLastRun] = useState(0);
+  const lastRunRef = useRef(0);
 
   return useCallback(
     (...args: T) => {
       const now = Date.now();
-      if (now - lastRun >= delay) {
-        setLastRun(now);
+      if (now - lastRunRef.current >= delay) {
+        lastRunRef.current = now;
         callback(...args);
       }
     },
-    [callback, delay, lastRun],
+    [callback, delay],
   );
 };
 
