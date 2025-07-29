@@ -1,3 +1,4 @@
-export * from './api/apis';
-export * from './lib/types';
-export * from './model/queries';
+export * from '@/entities/user/api/apis';
+export * from '@/entities/user/lib/types';
+export * from '@/entities/user/model/queries';
+

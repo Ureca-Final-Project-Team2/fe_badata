@@ -2,6 +2,7 @@ export interface SosHistoryItem {
   sosId: number;
   responderId: number | null;
   createdAt: string;
+  dataAmount: string;
   isSuccess: boolean;
 }
 

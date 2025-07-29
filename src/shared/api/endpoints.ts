@@ -34,13 +34,17 @@ export const END_POINTS = {
     STORELIST: `/api/v1/stores`,
     STOREDETAIL: (storeId: number) => `/api/v1/stores/${storeId}`,
     LIKESTORE: (storeId: number) => `/api/v1/stores/${storeId}/like`,
+    REVIEW: `/api/v1/reviews`,
+    STORE_REVIEWS: (storeId: number) => `/api/v1/${storeId}/reviews`,
+    REVIEW_META: (storeId: number) => `/api/v1/${storeId}/review-meta`,
+    REVIEW_QUICK_REPLIES: `/api/v1/review-quick-replies`,
   },
   RENTAL: {
     AVAILABLE_DEVICE: (storeId: number) => `/api/v1/rentals/${storeId}/devices`, //예약할 기기 조회
     RESERVATIONS: `/api/v1/rentals/devices`,
     RESTOCK: `/api/v1/restock`,
-    REVIEWS: (storeId: number) => `/api/v1/${storeId}/reviews`,
-    REVIEW_META: (storeId: number) => `/api/v1/${storeId}/review-meta`,
+    RESERVATION_DETAILS: (reservationId: number) =>
+      `/api/v1/rentals/reservations/${reservationId}/devices`,
   },
   POSITION: {
     POSITION: '/api/v1/addresses', // 주소 이력 생성, 조회
@@ -60,6 +64,8 @@ export const END_POINTS = {
     RESTOCK_ALARM: '/api/v1/users/restock',
     SOS_HISTORY: '/api/v1/users/sos',
     REPORT_LIST: '/api/v1/users/reports',
+    PURCHASES_HISTORY: '/api/v1/users/purchases',
+    SALES_HISTORY: '/api/v1/users/sales',,
     NOTIFICATION: '/api/v1/users/notification',
   },
 } as const;

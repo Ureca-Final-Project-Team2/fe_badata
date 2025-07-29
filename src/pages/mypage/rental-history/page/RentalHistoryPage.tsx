@@ -4,8 +4,10 @@ import { useRouter } from 'next/navigation';
 
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale/ko';
+import { Pencil } from 'lucide-react';
 
 import { useRentalHistoryQuery } from '@/pages/mypage/rental-history/model/queries';
+import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
@@ -19,6 +21,10 @@ export default function RentalHistoryPage() {
   if (!data || !Array.isArray(data.item)) return <div>대여 내역을 불러올 수 없습니다.</div>;
 
   const rentalHistoryData = data.item;
+
+  const handleReviewClick = (reservationId: number) => {
+    router.push(`${PATH.RENTAL.REGISTER_REVIEW}?reservationId=${reservationId}`);
+  };
 
   return (
     <BaseLayout
@@ -35,7 +41,7 @@ export default function RentalHistoryPage() {
           const day = format(dateObj, 'eee', { locale: ko });
           const status = item.reservationStatus === 'PENDING' ? '예약 중' : '반납 완료';
           const price = item.price.toLocaleString('ko-KR') + '원';
-          const isReview = item.reservationStatus === 'COMPLETED';
+          const isReview = item.reservationStatus === 'COMPLETE';
           return (
             <div key={item.id} className={`relative mb-8${idx === 0 ? ' mt-4' : ''}`}>
               <div className="absolute -top-6 left-2 flex items-center gap-2">
@@ -46,8 +52,12 @@ export default function RentalHistoryPage() {
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-body-xs-medium">{item.storeName}</span>
                   {isReview && (
-                    <button className="flex items-center gap-1 text-[var(--main-5)] font-title-regular">
-                      <span role="img" aria-label="연필">✏️</span> 리뷰쓰기
+                    <button
+                      onClick={() => handleReviewClick(item.id)}
+                      className="flex items-center gap-1 text-[var(--main-5)] font-title-regular cursor-pointer"
+                    >
+                      <Pencil size={16} />
+                      &nbsp;리뷰쓰기
                     </button>
                   )}
                 </div>
@@ -68,4 +78,4 @@ export default function RentalHistoryPage() {
       </div>
     </BaseLayout>
   );
-} 
+}

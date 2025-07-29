@@ -1,4 +1,4 @@
-import { COIN_SOURCE_CONFIG } from './constants';
+import { COIN_SOURCE_CONFIG } from '@/pages/mypage/coin-history/lib/constants';
 
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
