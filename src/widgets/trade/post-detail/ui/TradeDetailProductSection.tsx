@@ -61,7 +61,7 @@ export const TradeDetailProductSection = ({
       <div className="flex justify-between items-center mb-2">
         <span className="font-label-medium text-black">가격</span>
         <span className="font-label-semibold text-[var(--main-5)]">
-          {price?.toLocaleString()}원
+          {price?.toLocaleString()} 원
         </span>
       </div>
 
@@ -77,7 +77,7 @@ export const TradeDetailProductSection = ({
       {postType === 'DATA' && capacity !== undefined && (
         <div className="flex justify-between items-center mb-2">
           <span className="font-label-medium text-black">데이터 용량</span>
-          <span className="font-label-semibold text-[var(--gray-dark)]">{capacity}GB</span>
+          <span className="font-label-semibold text-[var(--gray-dark)]">{capacity} MB</span>
         </div>
       )}
 

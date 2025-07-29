@@ -10,4 +10,4 @@ export default function FollowingPage() {
       emptyMessage="팔로잉이 없습니다."
     />
   );
-} 
+}

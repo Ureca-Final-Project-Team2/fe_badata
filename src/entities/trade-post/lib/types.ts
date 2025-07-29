@@ -102,3 +102,7 @@ export interface ReportRequest {
 export interface ReportResponse {
   reportId: number;
 }
+
+export interface SearchTrendsContent {
+  trendingTopics: string[];
+}

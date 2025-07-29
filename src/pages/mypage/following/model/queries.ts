@@ -7,4 +7,4 @@ export function useFollowings(cursor?: number, size: number = 10) {
 
 export function useDeleteFollowing() {
   return useDeleteFollow();
-} 
+}

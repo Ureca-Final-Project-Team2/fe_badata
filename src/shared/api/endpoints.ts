@@ -1,4 +1,4 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 export const NETWORK_TIMEOUT = 5000;
 export const SUCCESS_CODE = 20000;
 
@@ -11,6 +11,7 @@ export const END_POINTS = {
     UPDATE_GIFTICON: (postId: number) => `/api/v1/trades/posts/gifticon/${postId}`,
     DEADLINE: '/api/v1/trades/posts/deadline',
     SEARCH: (keyword: string) => `/api/v1/trades/posts?query=${keyword}`,
+    SEARCH_TRENDS: '/api/v1/trades/search/trending',
     REGISTER_DATA: '/api/v1/trades/posts/data',
     REGISTER_GIFTICON: '/api/v1/trades/posts/gifticon',
     USER_POST: (userId: number) => `/api/v1/trades/posts/${userId}`,
@@ -41,7 +42,10 @@ export const END_POINTS = {
     REVIEWS: (storeId: number) => `/api/v1/${storeId}/reviews`,
     REVIEW_META: (storeId: number) => `/api/v1/${storeId}/review-meta`,
   },
-
+  POSITION: {
+    POSITION: '/api/v1/addresses', // 주소 이력 생성, 조회
+    DELETE_POSITION: (addressId: number) => `/api/v1/addresses/${addressId}`, // 주소 이력 삭제
+  },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     COIN_HISTORY: '/api/v1/users/coin/history',
@@ -53,8 +57,9 @@ export const END_POINTS = {
     RENTAL_HISTORY: '/api/v1/users/rentals',
     LIKE_STORE: '/api/v1/users/likes/stores',
     RESTOCK_ALARM: '/api/v1/users/restock',
-    SOS_HISTORY: '/api/v1/users/sos',
-    REPORT_LIST: '/api/v1/users/reports',
-    NOTIFICATION: '/api/v1/users/notification',
+    SOS_HISTORY: '/api/v1/mypage/sos-history',
+    REPORT_LIST: '/api/v1/mypage/report-history',
+    PURCHASES_HISTORY: '/api/v1/users/purchases',
+    SALES_HISTORY: '/api/v1/users/sales',
   },
 } as const;
