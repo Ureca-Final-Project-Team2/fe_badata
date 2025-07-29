@@ -66,7 +66,7 @@ export const addLocalAddressHistory = (
     road_address_name: road_address_name,
     x: x,
     y: y,
-    lastUsed: Date.now(), // 사용 시간 추가
+    lastUsed: Date.now() + Math.random() * 1000000, // 사용 시간 추가
   };
 
   // 최신 항목을 맨 앞에 추가 (최대 5개 유지)
@@ -117,59 +117,4 @@ export const getLocalAddressHistoryPaginated = (
     getAddressResponses: paginatedHistory,
     hasNext: endIndex < sortedHistory.length,
   };
-};
-
-// 테스트용 샘플 데이터 추가
-export const addSampleLocalAddressHistory = (): void => {
-  const sampleAddresses = [
-    {
-      address_name: '서울 강남구 삼성동 131',
-      id: '26967382',
-      phone: '02-568-1291',
-      place_name: '서울선릉과정릉',
-      road_address_name: '서울 강남구 선릉로100길 1',
-      x: 127.04892851392,
-      y: 37.5091105328378,
-    },
-    {
-      address_name: '서울 강남구 테헤란로 123',
-      id: '12345678',
-      phone: '02-123-4567',
-      place_name: '강남역',
-      road_address_name: '서울 강남구 테헤란로 123',
-      x: 127.028,
-      y: 37.498,
-    },
-    {
-      address_name: '서울 강남구 역삼동 123-45',
-      id: '87654321',
-      phone: '02-987-6543',
-      place_name: '역삼역',
-      road_address_name: '서울 강남구 역삼동 123-45',
-      x: 127.036,
-      y: 37.5,
-    },
-  ];
-
-  sampleAddresses.forEach((address, index) => {
-    const newItem: AddressHistoryItem = {
-      addressId: Date.now() + index, // 고유 ID 생성
-      address_name: address.address_name,
-      id: address.id,
-      phone: address.phone,
-      place_name: address.place_name,
-      road_address_name: address.road_address_name,
-      x: address.x,
-      y: address.y,
-      lastUsed: Date.now() - index * 1000, // 각각 다른 사용 시간
-    };
-
-    const history = getLocalAddressHistory();
-    const existingItem = history.find((item) => item.address_name === address.address_name);
-
-    if (!existingItem) {
-      const updatedHistory = [newItem, ...history].slice(0, 5);
-      saveLocalAddressHistory(updatedHistory);
-    }
-  });
 };

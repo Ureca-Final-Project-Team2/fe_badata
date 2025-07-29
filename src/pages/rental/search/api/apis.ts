@@ -7,6 +7,8 @@ import {
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
+import { isLoggedIn } from '../utils/auth/isLoggedIn';
+
 // 주소 이력 생성 요청 타입
 export interface CreateAddressHistoryRequest {
   address_name: string;
@@ -30,9 +32,8 @@ export const createAddressHistory = async (
   data: CreateAddressHistoryRequest,
 ): Promise<AddressHistoryResponse> => {
   // 로그인 상태 확인 (accessToken이 없으면 로컬 스토리지 사용)
-  const accessToken = localStorage.getItem('accessToken');
 
-  if (!accessToken) {
+  if (!isLoggedIn()) {
     console.log('로그인되지 않은 사용자. 로컬 스토리지에 저장합니다.');
 
     // 로컬 스토리지에 저장
