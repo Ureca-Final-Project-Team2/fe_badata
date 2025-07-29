@@ -34,7 +34,7 @@ export default function LikeStorePage() {
               longititude: 0, // 타입 요구로 임시값
             }}
             storeDetail={{
-              storeName: item.name,
+              name: item.name,
               storeId: item.storeId,
               startTime: item.startTime,
               endTime: item.endTime,

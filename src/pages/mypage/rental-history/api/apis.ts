@@ -1,7 +1,7 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { RentalHistoryItem } from '../lib/types';
+import type { RentalHistoryItem } from '@/pages/mypage/rental-history/lib/types';
 
 export const getRentalHistory = async (cursor?: number, size: number = 10): Promise<{ item: RentalHistoryItem[]; nextCursor: number; hasNext: boolean }> => {
   const content: { item: RentalHistoryItem[]; nextCursor: number; hasNext: boolean } = await axiosInstance.get(

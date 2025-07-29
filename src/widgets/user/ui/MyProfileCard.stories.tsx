@@ -1,4 +1,4 @@
-import MyProfileCard from './MyProfileCard';
+import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 

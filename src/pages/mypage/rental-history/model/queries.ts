@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getRentalHistory } from '../api/apis';
+import { getRentalHistory } from '@/pages/mypage/rental-history/api/apis';
 
-import type { RentalHistoryItem } from '../lib/types';
+import type { RentalHistoryItem } from '@/pages/mypage/rental-history/lib/types';
 
 export const useRentalHistoryQuery = (cursor?: number, size: number = 10) => {
   return useQuery<{ item: RentalHistoryItem[]; nextCursor: number; hasNext: boolean }>({

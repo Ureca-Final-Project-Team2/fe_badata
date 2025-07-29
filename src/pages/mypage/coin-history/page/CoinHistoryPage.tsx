@@ -4,13 +4,12 @@ import { useState } from 'react';
 
 import { COIN_HISTORY_DEFAULT_SIZE } from '@/pages/mypage/coin-history/lib/constants';
 import { useUserCoinHistoryQuery, useUserCoinQuery } from '@/pages/mypage/coin-history/model/queries';
+import { CoinBalanceSection } from '@/pages/mypage/coin-history/ui/CoinBalanceSection';
+import { CoinHistoryList } from '@/pages/mypage/coin-history/ui/CoinHistoryList';
+import { CoinInfoModal } from '@/pages/mypage/coin-history/ui/CoinInfoModal';
+import { CoinUsageSection } from '@/pages/mypage/coin-history/ui/CoinUsageSection';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
-
-import { CoinBalanceSection } from '../ui/CoinBalanceSection';
-import { CoinHistoryList } from '../ui/CoinHistoryList';
-import { CoinInfoModal } from '../ui/CoinInfoModal';
-import { CoinUsageSection } from '../ui/CoinUsageSection';
 
 export default function CoinHistoryPage() {
   const { data, isLoading, isError } = useUserCoinQuery();

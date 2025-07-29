@@ -107,7 +107,6 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
         {tab === '상세정보' && (
           <div className="w-full">
             <ImageSection imageUrl={storeDetail.imageUrl} />
-            <ImageSection imageUrl={storeDetail.imageUrl} />
           </div>
         )}
 

@@ -6,7 +6,7 @@ import { normalizeApiParams } from '@/pages/rental/map/utils/paramNormalizer';
 import type { StoreListParams, StoreListResponse } from '@/pages/rental/map/lib/types';
 
 export const useFetchStoreListHooks = (initialParams: StoreListParams, deps: unknown[] = []) => {
-  const [stores, setStores] = useState<StoreListResponse['showStoreResponses']>([]);
+  const [stores, setStores] = useState<StoreListResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(true);
   const [page, setPage] = useState(() => initialParams.page ?? 0);
@@ -27,8 +27,8 @@ export const useFetchStoreListHooks = (initialParams: StoreListParams, deps: unk
       const normalizedParams = normalizeApiParams(params);
 
       const res = await fetchStoreList(normalizedParams);
-      setStores(res.showStoreResponses || []);
-      setHasNext(res.hasNext);
+      setStores(res.stores ?? []);
+      setHasNext(res.hasNext ?? false);
     } catch (e) {
       setStores([]);
       setHasNext(false);
