@@ -4,6 +4,20 @@ import { createAddressHistory, type AddressHistoryResponse } from '@/pages/renta
 
 import type { PlaceSearchResult } from '@/pages/rental/search/utils/address/searchPlaces';
 
+// 상수 추출
+const DEFAULT_PAGE_SIZE = 5;
+const LOGGED_IN_SORT = 'createdAt,desc';
+const LOGGED_OUT_SORT = 'lastUsed,desc';
+
+// 정렬 기준 결정 함수 추출
+const getSortKey = () => {
+  const accessToken = localStorage.getItem('accessToken');
+  return accessToken ? LOGGED_IN_SORT : LOGGED_OUT_SORT;
+};
+
+// 쿼리 키 생성 함수 추출
+const getQueryKey = () => ['addressHistory', DEFAULT_PAGE_SIZE, getSortKey()];
+
 // 주소 이력 생성 hook
 export const useCreateAddressHistory = () => {
   const queryClient = useQueryClient();
@@ -24,10 +38,7 @@ export const useCreateAddressHistory = () => {
       return createAddressHistory(requestData);
     },
     onMutate: async (place) => {
-      // 로그인 상태에 따라 쿼리 키 결정
-      const accessToken = localStorage.getItem('accessToken');
-      const sort = accessToken ? 'createdAt,desc' : 'lastUsed,desc';
-      const queryKey = ['addressHistory', 5, sort];
+      const queryKey = getQueryKey();
 
       await queryClient.cancelQueries({ queryKey });
       const previousData = queryClient.getQueryData(queryKey);
@@ -101,9 +112,7 @@ export const useCreateAddressHistory = () => {
     onSuccess: (data) => {
       console.log('주소 이력 생성 성공:', data);
       // 성공 시 캐시 무효화하여 서버 데이터로 다시 조회
-      const accessToken = localStorage.getItem('accessToken');
-      const sort = accessToken ? 'createdAt,desc' : 'lastUsed,desc';
-      const queryKey = ['addressHistory', 5, sort];
+      const queryKey = getQueryKey();
       queryClient.invalidateQueries({ queryKey });
     },
     onError: (error, place, context) => {
@@ -111,9 +120,7 @@ export const useCreateAddressHistory = () => {
 
       // 에러 시 이전 데이터로 롤백
       if (context && typeof context === 'object' && 'previousData' in context) {
-        const accessToken = localStorage.getItem('accessToken');
-        const sort = accessToken ? 'createdAt,desc' : 'lastUsed,desc';
-        const queryKey = ['addressHistory', 5, sort];
+        const queryKey = getQueryKey();
         queryClient.setQueryData(queryKey, context.previousData);
       }
     },
