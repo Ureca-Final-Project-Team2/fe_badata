@@ -6,7 +6,12 @@ import { useRouter } from 'next/navigation';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserStats } from '@/entities/follow';
-import { usePurchasesQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
+import {
+  usePurchasesQuery,
+  useUserInfoQuery,
+  useUserSoldPostsCountQuery,
+} from '@/entities/user/model/queries';
+import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
@@ -24,6 +29,7 @@ export default function PurchaseHistoryPage() {
   } = useUserStats();
 
   const { data: soldPostsCount } = useUserSoldPostsCountQuery(profile?.userId);
+  const { data: userInfo } = useUserInfoQuery();
 
   useEffect(() => {
     const handleFocus = () => {
@@ -59,9 +65,9 @@ export default function PurchaseHistoryPage() {
       <div className="w-full max-w-[428px]">
         <div className="flex flex-col items-center mt-4">
           <MyProfileCard
-            name={profile?.name ?? '사용자'}
-            days={0}
-            avatarSrc={profile?.profile_image_url}
+            name={userInfo?.nickName ?? '사용자'}
+            days={userInfo?.days ?? 0}
+            avatarSrc={userInfo?.profileImage ?? ICONS.ETC.SHELL.src.toString()}
           />
 
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
