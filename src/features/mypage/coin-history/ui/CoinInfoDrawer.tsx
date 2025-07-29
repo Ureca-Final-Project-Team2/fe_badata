@@ -11,7 +11,7 @@ export function CoinInfoDrawer({ isOpen, onClose }: CoinInfoDrawerProps) {
       <div className="bg-[var(--gray-light)] rounded-t-3xl p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-6 h-6 bg-[var(--main-5)] rounded-full flex items-center justify-center">
-            <span className="text-[var(--white)] text-sm font-bold">i</span>
+            <span className="text-[var(--white)] font-small-semibold">i</span>
           </div>
           <h2 className="font-label-semibold text-[var(--black)]">BADATA 코인 이용안내</h2>
         </div>

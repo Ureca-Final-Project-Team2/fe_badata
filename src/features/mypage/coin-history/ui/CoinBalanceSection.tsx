@@ -8,17 +8,17 @@ interface CoinBalanceSectionProps {
 
 export function CoinBalanceSection({ coinAmount }: CoinBalanceSectionProps) {
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-2">
       <Image
         src={ICONS.MYPAGE.COIN}
         alt="코인 이미지"
-        width={100}
-        height={100}
+        width={150}
+        height={150}
         className="rounded-full object-contain"
         unoptimized
       />
 
-      <p className="font-small-medium text-[var(--gray-dark)]">나의 현재 코인</p>
+      <p className="font-caption-large text-[var(--gray-dark)]">나의 현재 코인</p>
       <p className="font-body-semibold">+{coinAmount}코인</p>
     </div>
   );
