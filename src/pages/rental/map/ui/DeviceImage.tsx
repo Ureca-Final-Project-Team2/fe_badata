@@ -1,18 +1,23 @@
+import Image from 'next/image';
+
 interface DeviceImageProps {
   url: string;
-  alt: string;
+  alt?: string;
   className?: string;
 }
 
-const DeviceImage = ({ url, alt, className }: DeviceImageProps) => (
-  <img
-    src={
-      url ||
-      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80'
-    }
-    alt={alt}
-    className={className}
-  />
-);
-
-export default DeviceImage;
+export default function DeviceImage({ url, alt = 'device', className }: DeviceImageProps) {
+  return (
+    <div className={`relative w-full h-full ${className ?? ''}`}>
+      <Image
+        src={url}
+        alt={alt}
+        fill
+        className="object-cover m-0 p-0 block"
+        draggable={false}
+        sizes="100vw"
+        priority
+      />
+    </div>
+  );
+}

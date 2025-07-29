@@ -1,10 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { fetchStores } from '@/pages/rental/map/api/apis';
+import { mapFilterStateToApiParams } from '@/pages/rental/map/utils/filterParamsMapper';
 
 import type { Store } from '@/pages/rental/map/lib/types';
+import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 
-export const useFetchStoresHooks = (map: kakao.maps.Map | null) => {
+export const useFetchStoresHooks = (
+  map: kakao.maps.Map | null,
+  filterState?: RentalFilterState,
+) => {
   const [stores, setStores] = useState<Store[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentBounds, setCurrentBounds] = useState({
@@ -43,20 +48,17 @@ export const useFetchStoresHooks = (map: kakao.maps.Map | null) => {
 
         setCurrentBounds(newBounds);
 
-        const stores = await fetchStores(newBounds);
-        setStores(stores);
+        const mergedParams = mapFilterStateToApiParams(newBounds, filterState);
 
-        console.log('현재 카메라 영역의 스토어 조회:', {
-          bounds: newBounds,
-          storeCount: stores.length,
-        });
+        const stores = await fetchStores(mergedParams);
+        setStores(stores);
       } catch (e) {
         console.error('가맹점 불러오기 실패:', e);
       } finally {
         setIsLoading(false);
       }
     }, 300);
-  }, [map]);
+  }, [map, filterState]);
 
   // 초기 로드 및 지도 bounds 변경 감지
   useEffect(() => {

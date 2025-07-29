@@ -10,4 +10,4 @@ export default function FollowerPage() {
       emptyMessage="팔로워가 없습니다."
     />
   );
-} 
+}
