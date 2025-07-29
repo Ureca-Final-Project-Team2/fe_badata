@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import {
-  getQuickReplies,
-  getReservationDetails,
-} from '@/pages/rental/store/register-review/api/apis';
+import { getQuickReplies, getReservationDetails } from '@/entities/review/api/apis';
 
 export const registerReviewQueryKeys = {
   all: ['registerReview'] as const,

@@ -26,8 +26,16 @@ export interface PostReviewRequest {
   file?: File | undefined;
 }
 
-export interface PostReviewResponse {
+// Post/Delete/Put ReviewResponse는 content: number만 받아오므로 타입 통합
+export interface ReviewResponse {
   content: number;
+}
+
+export interface PutReviewRequest {
+  quickReplyIds: number[];
+  comment: string;
+  rating: number;
+  file?: File | undefined;
 }
 
 export interface ReviewFormState {

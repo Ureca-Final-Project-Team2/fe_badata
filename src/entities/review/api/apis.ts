@@ -3,9 +3,11 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 import type {
   PostReviewRequest,
+  PutReviewRequest,
   QuickReply,
   ReservationDetails,
-} from '@/pages/rental/store/register-review/lib/types';
+  ReviewResponse,
+} from '@/entities/review/lib/types';
 
 // 퀵 리플라이 목록 조회
 export const getQuickReplies = async (): Promise<QuickReply[]> => {
@@ -24,7 +26,7 @@ export const getReservationDetails = async (reservationId: number): Promise<Rese
 export const postReview = async (
   reservationId: number,
   reviewData: Omit<PostReviewRequest, 'reservationId'>,
-): Promise<{ content: number }> => {
+): Promise<ReviewResponse> => {
   const formData = new FormData();
 
   formData.append('reservationId', reservationId.toString());
@@ -39,9 +41,39 @@ export const postReview = async (
     formData.append('file', reviewData.file);
   }
 
-  const response: { content: number } = await axiosInstance.post(
-    END_POINTS.STORES.REVIEW,
+  const response: ReviewResponse = await axiosInstance.post(END_POINTS.STORES.REVIEW, formData);
+
+  return response;
+};
+
+export const putReview = async (
+  reviewId: number,
+  reviewData: PutReviewRequest,
+): Promise<ReviewResponse> => {
+  const formData = new FormData();
+
+  formData.append('comment', reviewData.comment);
+  formData.append('rating', reviewData.rating.toString());
+
+  reviewData.quickReplyIds.forEach((id) => {
+    formData.append('quickReplyIds', id.toString());
+  });
+
+  if (reviewData.file && reviewData.file instanceof File) {
+    formData.append('file', reviewData.file);
+  }
+
+  const response: ReviewResponse = await axiosInstance.patch(
+    END_POINTS.STORES.UPDATE_REVIEW(reviewId),
     formData,
+  );
+
+  return response;
+};
+
+export const deleteReview = async (reviewId: number): Promise<ReviewResponse> => {
+  const response: ReviewResponse = await axiosInstance.delete(
+    END_POINTS.STORES.UPDATE_REVIEW(reviewId),
   );
 
   return response;

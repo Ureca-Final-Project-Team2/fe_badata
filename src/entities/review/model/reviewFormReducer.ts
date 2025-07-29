@@ -1,4 +1,4 @@
-import type { ReviewFormState } from '@/pages/rental/store/register-review/lib/types';
+import type { ReviewFormState } from '@/entities/review/lib/types';
 
 type ReviewFormAction =
   | { type: 'SET_RATING'; payload: number }
