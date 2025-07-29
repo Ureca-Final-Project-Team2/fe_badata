@@ -2,6 +2,20 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteAddressHistory, type AddressHistoryResponse } from '@/pages/rental/search/api/apis';
 
+// 상수 추출
+const DEFAULT_PAGE_SIZE = 5;
+const LOGGED_IN_SORT = 'createdAt,desc';
+const LOGGED_OUT_SORT = 'lastUsed,desc';
+
+// 정렬 기준 결정 함수 추출
+const getSortKey = () => {
+  const accessToken = localStorage.getItem('accessToken');
+  return accessToken ? LOGGED_IN_SORT : LOGGED_OUT_SORT;
+};
+
+// 쿼리 키 생성 함수 추출
+const getQueryKey = () => ['addressHistory', DEFAULT_PAGE_SIZE, getSortKey()];
+
 // 주소 이력 삭제 hook
 export const useDeleteAddressHistory = () => {
   const queryClient = useQueryClient();
@@ -9,10 +23,7 @@ export const useDeleteAddressHistory = () => {
   return useMutation<AddressHistoryResponse, Error, number>({
     mutationFn: deleteAddressHistory,
     onMutate: async (addressId) => {
-      // 로그인 상태에 따라 쿼리 키 결정
-      const accessToken = localStorage.getItem('accessToken');
-      const sort = accessToken ? 'createdAt,desc' : 'lastUsed,desc';
-      const queryKey = ['addressHistory', 5, sort];
+      const queryKey = getQueryKey();
 
       await queryClient.cancelQueries({ queryKey });
       const previousData = queryClient.getQueryData(queryKey);
@@ -66,9 +77,7 @@ export const useDeleteAddressHistory = () => {
     onSuccess: (data) => {
       console.log('주소 이력 삭제 성공:', data);
       // 성공 시 서버 데이터로 다시 조회
-      const accessToken = localStorage.getItem('accessToken');
-      const sort = accessToken ? 'createdAt,desc' : 'lastUsed,desc';
-      const queryKey = ['addressHistory', 5, sort];
+      const queryKey = getQueryKey();
       queryClient.invalidateQueries({ queryKey });
     },
     onError: (error, addressId, context) => {
@@ -76,9 +85,7 @@ export const useDeleteAddressHistory = () => {
 
       // 에러 시 이전 데이터로 롤백
       if (context && typeof context === 'object' && 'previousData' in context) {
-        const accessToken = localStorage.getItem('accessToken');
-        const sort = accessToken ? 'createdAt,desc' : 'lastUsed,desc';
-        const queryKey = ['addressHistory', 5, sort];
+        const queryKey = getQueryKey();
         queryClient.setQueryData(queryKey, context.previousData);
       }
     },
