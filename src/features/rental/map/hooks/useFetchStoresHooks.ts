@@ -20,33 +20,46 @@ export const useFetchStoresHooks = (
   });
 
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const lastBoundsRef = useRef(currentBounds);
+  const lastFilterStateRef = useRef(filterState);
 
-  // 지도 bounds 업데이트 함수 (디바운싱 적용)
+  // 지도 bounds 업데이트 함수
   const updateStoresByBounds = useCallback(async () => {
     if (!map) return;
+
+    const bounds = map.getBounds();
+    const swLatLng = bounds.getSouthWest();
+    const neLatLng = bounds.getNorthEast();
+
+    const newBounds = {
+      swLat: swLatLng.getLat(),
+      swLng: swLatLng.getLng(),
+      neLat: neLatLng.getLat(),
+      neLng: neLatLng.getLng(),
+    };
+
+    // bounds나 filterState가 실제로 변경되었는지 확인
+    const boundsChanged = JSON.stringify(newBounds) !== JSON.stringify(lastBoundsRef.current);
+    const filterChanged =
+      JSON.stringify(filterState) !== JSON.stringify(lastFilterStateRef.current);
+
+    if (!boundsChanged && !filterChanged) {
+      return; // 변경사항이 없으면 API 호출하지 않음
+    }
 
     // 이전 타이머가 있다면 취소
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
 
-    // 300ms 디바운싱
+    // 500ms 디바운싱
     debounceRef.current = setTimeout(async () => {
       try {
         setIsLoading(true);
 
-        const bounds = map.getBounds();
-        const swLatLng = bounds.getSouthWest();
-        const neLatLng = bounds.getNorthEast();
-
-        const newBounds = {
-          swLat: swLatLng.getLat(),
-          swLng: swLatLng.getLng(),
-          neLat: neLatLng.getLat(),
-          neLng: neLatLng.getLng(),
-        };
-
         setCurrentBounds(newBounds);
+        lastBoundsRef.current = newBounds;
+        lastFilterStateRef.current = filterState;
 
         const mergedParams = mapFilterStateToApiParams(newBounds, filterState);
 
@@ -57,7 +70,7 @@ export const useFetchStoresHooks = (
       } finally {
         setIsLoading(false);
       }
-    }, 300);
+    }, 500);
   }, [map, filterState]);
 
   // 초기 로드 및 지도 bounds 변경 감지
@@ -84,6 +97,13 @@ export const useFetchStoresHooks = (
       window.kakao.maps.event.removeListener(map, 'zoom_changed', boundsChangedListener);
     };
   }, [map, updateStoresByBounds]);
+
+  // filterState 변경 시 즉시 업데이트
+  useEffect(() => {
+    if (map && filterState) {
+      updateStoresByBounds();
+    }
+  }, [filterState, map, updateStoresByBounds]);
 
   return {
     stores,
