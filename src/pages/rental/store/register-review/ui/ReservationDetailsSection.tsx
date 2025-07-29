@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import type { ReservationDetails } from '@/pages/rental/store/register-review/lib/types';
 
 interface ReservationDetailsSectionProps {
@@ -15,8 +17,14 @@ export default function ReservationDetailsSection({
     <div className="bg-white rounded-2xl mb-6">
       <div className="flex items-start justify-between mb-4 pt-6">
         <div className="flex items-center gap-3">
-          {/* TODO 스토어 사진 추가 */}
-          <div className="w-12 h-12 bg-[var(--gray)] rounded-lg"></div>
+          <div className="w-12 h-12 bg-[var(--gray)] rounded-lg relative overflow-hidden">
+            <Image
+              src={reservationDetails.storeImageUrl}
+              fill
+              className="object-cover"
+              alt="가맹점이미지"
+            />
+          </div>
           <div>
             <h3 className="font-label-semibold">{reservationDetails.storeName}</h3>
             <p className="font-caption-regular">
