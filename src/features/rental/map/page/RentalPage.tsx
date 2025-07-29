@@ -233,12 +233,12 @@ export default function RentalPage() {
         </div>
       }
       fab={
-        <div className="flex items-center justify-between w-full px-4 relative z-50">
+        <div className="flex items-center justify-between w-full px-4 relative z-50 gap-4">
           {/* 현재 위치 버튼 */}
-          <CurrentLocationButton className="ml-5 cursor-pointer" onClick={handleCurrentLocation} />
+          <CurrentLocationButton className="cursor-pointer" onClick={handleCurrentLocation} />
 
           {/* 목록보기 버튼 */}
-          <ListViewButton onClick={handleListView} />
+          <ListViewButton className="cursor-pointer" onClick={handleListView} />
         </div>
       }
     >
