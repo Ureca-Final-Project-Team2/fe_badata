@@ -78,19 +78,26 @@ export const testApiConnection = async () => {
     
     // 다른 마이페이지 API들 테스트
     const testApis = [
-      { name: '알림 설정', url: END_POINTS.MYPAGE.NOTIFICATION },
-      { name: '신고 내역', url: END_POINTS.MYPAGE.REPORT_LIST },
-      { name: '코인 정보', url: END_POINTS.MYPAGE.COIN },
-      { name: '데이터 사용량', url: END_POINTS.MYPAGE.DATA_USAGE },
-      { name: 'SOS 내역', url: END_POINTS.MYPAGE.SOS_HISTORY },
+      { name: '알림 설정', url: END_POINTS.MYPAGE.NOTIFICATION, method: 'POST', params: { isEnabled: true } },
+      { name: '신고 내역', url: END_POINTS.MYPAGE.REPORT_LIST, method: 'GET' },
+      { name: '코인 정보', url: END_POINTS.MYPAGE.COIN, method: 'GET' },
+      { name: '데이터 사용량', url: END_POINTS.MYPAGE.DATA_USAGE, method: 'GET' },
+      { name: 'SOS 내역', url: END_POINTS.MYPAGE.SOS_HISTORY, method: 'GET' },
     ];
     
     const results = [];
     
     for (const api of testApis) {
       try {
-        console.log(`🔍 ${api.name} API 테스트:`, api.url);
-        const response = await axiosInstance.get(api.url);
+        console.log(`🔍 ${api.name} API 테스트:`, api.url, api.params);
+        
+        let response;
+        if (api.method === 'POST') {
+          response = await axiosInstance.post(api.url, null, api.params ? { params: api.params } : undefined);
+        } else {
+          response = await axiosInstance.get(api.url, api.params ? { params: api.params } : undefined);
+        }
+        
         console.log(`✅ ${api.name} API 성공:`, response.status);
         results.push({ name: api.name, status: 'success', statusCode: response.status });
       } catch (error) {
@@ -107,7 +114,8 @@ export const testApiConnection = async () => {
     console.log('🔧 Axios 설정:', {
       baseURL: axiosInstance.defaults.baseURL,
       timeout: axiosInstance.defaults.timeout,
-      withCredentials: axiosInstance.defaults.withCredentials
+      withCredentials: axiosInstance.defaults.withCredentials,
+      fullUrl: `${axiosInstance.defaults.baseURL}${END_POINTS.MYPAGE.NOTIFICATION}`
     });
     
     return {
@@ -138,7 +146,7 @@ export const testApiConnection = async () => {
 export const getNotificationSetting = async (): Promise<{ isNotificationEnabled: boolean }> => {
   try {
     const url = END_POINTS.MYPAGE.NOTIFICATION;
-    logApiRequest('GET', url);
+    logApiRequest('POST', url);
     
     // 토큰 상태 사전 확인
     const token = localStorage.getItem('accessToken');
@@ -156,8 +164,10 @@ export const getNotificationSetting = async (): Promise<{ isNotificationEnabled:
     
     console.log('🔍 알림 설정 조회 API 호출:', url);
     
-    // like-store 방식으로 수정: 직접 응답 반환
-    const response = await axiosInstance.get(url);
+    // POST 메서드로 변경 (Swagger와 동일)
+    const response = await axiosInstance.post(url, null, {
+      params: { isEnabled: true }
+    });
     console.log('✅ 알림 설정 조회 성공:', response);
     return response as unknown as { isNotificationEnabled: boolean };
   } catch (error) {
