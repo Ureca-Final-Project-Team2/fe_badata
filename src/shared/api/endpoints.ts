@@ -57,9 +57,8 @@ export const END_POINTS = {
     RENTAL_HISTORY: '/api/v1/users/rentals',
     LIKE_STORE: '/api/v1/users/likes/stores',
     RESTOCK_ALARM: '/api/v1/users/restock',
-    SOS_HISTORY: '/api/v1/mypage/sos-history',
-    REPORT_LIST: '/api/v1/mypage/report-history',
-    PURCHASES_HISTORY: '/api/v1/users/purchases',
-    SALES_HISTORY: '/api/v1/users/sales',
+    SOS_HISTORY: '/api/v1/users/sos',
+    REPORT_LIST: '/api/v1/users/reports',
+    NOTIFICATION: '/api/v1/users/notification',
   },
 } as const;
