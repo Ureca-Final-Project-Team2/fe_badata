@@ -2,7 +2,7 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { DataUsageResponse } from '../types';
+import type { DataUsageResponse } from '@/widgets/data-usage/types';
 
 export const getDataUsage = async (): Promise<DataUsageResponse> => {
   try {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import { getDataUsage } from '../api/apis';
-import { DataUsageWidget } from '../DataUsageWidget';
+import { getDataUsage } from '@/widgets/data-usage/api/apis';
+import { DataUsageWidget } from '@/widgets/data-usage/DataUsageWidget';
 
-import type { DataUsageResponse } from '../types';
+import type { DataUsageResponse } from '@/widgets/data-usage/types';
 
 export const DataUsageWidgetContainer: React.FC = () => {
   const [data, setData] = useState<DataUsageResponse | null>(null);
