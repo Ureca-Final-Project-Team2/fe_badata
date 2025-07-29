@@ -1,4 +1,4 @@
-import { CoinHistoryItem } from './CoinHistoryItem';
+import { CoinHistoryItem } from '@/pages/mypage/coin-history/ui/CoinHistoryItem';
 
 import type { CoinHistoryResponse } from '@/pages/mypage/coin-history/lib/types';
 
