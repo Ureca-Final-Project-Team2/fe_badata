@@ -10,7 +10,7 @@ import type {
 export const getUserCoin = async (): Promise<UserCoin> => {
   try {
     const response = await axiosInstance.get(END_POINTS.MYPAGE.COIN);
-    return response.data;
+    return response.data.content;
   } catch (error) {
     console.error('Failed to fetch user coin:', error);
     throw error;
