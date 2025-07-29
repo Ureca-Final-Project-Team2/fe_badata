@@ -9,28 +9,27 @@ const widgetVariants = cva(
 );
 
 export interface DataUsageWidgetProps extends React.HTMLAttributes<HTMLDivElement> {
-  userName: string;
+  nickname: string;
   planName: string;
-  remainingData: number;
-  totalData: number;
-  unit?: string;
+  totalDataAmount: number;
+  dataAmount: number;
 }
 
 export const DataUsageWidget = forwardRef<HTMLDivElement, DataUsageWidgetProps>(
   (
     {
       className,
-      userName,
+      nickname,
       planName,
-      remainingData,
-      totalData,
-      unit = 'GB',
+      totalDataAmount,
+      dataAmount,
       ...props
     },
     ref,
   ) => {
-    const percentage = Math.min(Math.round((remainingData / totalData) * 100), 100);
-    const formattedUsage = `${remainingData}${unit} / ${totalData}${unit}`;
+    const remainingData = totalDataAmount - dataAmount;
+    const percentage = Math.min(Math.round((remainingData / totalDataAmount) * 100), 100);
+    const formattedUsage = `${remainingData}GB / ${totalDataAmount}GB`;
 
     return (
       <div className={cn(widgetVariants(), className)} ref={ref} {...props}>
@@ -38,7 +37,7 @@ export const DataUsageWidget = forwardRef<HTMLDivElement, DataUsageWidgetProps>(
           {/* 사용자 정보 */}
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-black font-semibold text-[16px] leading-tight">{userName}</p>
+              <p className="text-black font-semibold text-[16px] leading-tight">{nickname}</p>
               <p className="text-[12px] text-[var(--gray-mid)] mt-[2px]">{planName}</p>
             </div>
           </div>

@@ -6,6 +6,11 @@ import { useDataUsageQuery } from '../model/queries';
 export const DataUsageWidgetContainer: React.FC = () => {
   const { data, isLoading, error } = useDataUsageQuery();
 
+  // 디버깅을 위한 로그
+  console.log('DataUsageWidgetContainer - isLoading:', isLoading);
+  console.log('DataUsageWidgetContainer - error:', error);
+  console.log('DataUsageWidgetContainer - data:', data);
+
   if (isLoading) {
     return (
       <div className="w-full rounded-[16px] bg-white p-4 shadow-sm border border-[var(--gray-light)]">
@@ -20,6 +25,7 @@ export const DataUsageWidgetContainer: React.FC = () => {
   }
 
   if (error || !data) {
+    console.log('DataUsageWidgetContainer - Error or no data:', { error, data });
     return (
       <div className="w-full rounded-[16px] bg-white p-4 shadow-sm border border-[var(--gray-light)]">
         <div className="text-center text-gray-500">
@@ -29,15 +35,17 @@ export const DataUsageWidgetContainer: React.FC = () => {
     );
   }
 
-  const { userName, planName, remainingData, totalData, unit } = data.content;
+  const { nickname, planName, totalDataAmount, dataAmount } = data.content;
+  
+  // 디버깅을 위한 로그
+  console.log('DataUsageWidgetContainer - Extracted data:', { nickname, planName, totalDataAmount, dataAmount });
 
   return (
     <DataUsageWidget
-      userName={userName}
+      nickname={nickname}
       planName={planName}
-      remainingData={remainingData}
-      totalData={totalData}
-      unit={unit}
+      totalDataAmount={totalDataAmount}
+      dataAmount={dataAmount}
     />
   );
 }; 

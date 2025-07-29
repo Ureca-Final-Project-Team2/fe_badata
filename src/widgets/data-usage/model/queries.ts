@@ -9,6 +9,5 @@ export const useDataUsageQuery = () => {
   return useQuery<DataUsageResponse>({
     queryKey: ['data-usage'],
     queryFn: getDataUsage,
-    enabled: typeof window !== 'undefined',
   });
 }; 
