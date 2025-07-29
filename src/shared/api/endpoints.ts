@@ -59,5 +59,7 @@ export const END_POINTS = {
     RESTOCK_ALARM: '/api/v1/users/restock',
     SOS_HISTORY: '/api/v1/mypage/sos-history',
     REPORT_LIST: '/api/v1/mypage/report-history',
+    PURCHASES_HISTORY: '/api/v1/users/purchases',
+    SALES_HISTORY: '/api/v1/users/sales',
   },
 } as const;
