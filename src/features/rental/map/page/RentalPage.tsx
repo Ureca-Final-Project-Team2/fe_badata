@@ -222,8 +222,10 @@ export default function RentalPage() {
       showBottomNav
       header={
         <div className="max-w-[428px] px-4 pt-4 z-30">
-          <div className="flex flex-row items-center gap-1">
-            <SearchPosHeader search="" setSearch={() => {}} onSubmit={() => {}} />
+          <div className="flex flex-row items-center gap-4">
+            <div className="flex-1 min-w-0 max-w-[calc(100%-40px)]">
+              <SearchPosHeader search="" setSearch={() => {}} onSubmit={() => {}} />
+            </div>
             <FilterIcon
               alt="필터 아이콘"
               className="w-8 h-8 flex-shrink-0 cursor-pointer"
