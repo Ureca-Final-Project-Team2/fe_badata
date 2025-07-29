@@ -64,7 +64,7 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
     setLiked,
   } = useStoreLikeHooks({
     storeId,
-    initialLiked: false,
+    initialLiked: storeDetail?.liked ?? false,
   });
 
   // 서버에서 받은 찜 상태를 반영
@@ -107,6 +107,7 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
         {tab === '상세정보' && (
           <div className="w-full">
             <ImageSection imageUrl={storeDetail.imageUrl} />
+            <ImageSection imageUrl={storeDetail.imageUrl} />
           </div>
         )}
 
@@ -116,9 +117,9 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
           {tab === '상세정보' && (
             <>
               <InfoSection
-                reviewRating={storeDetail.reviewRating}
-                distanceFromMe={storeDetail.distanceFromMe}
-                phoneNumber={storeDetail.phoneNumber}
+                reviewRating={storeDetail.reviewRating ?? 0}
+                distanceFromMe={storeDetail.distanceFromMe ?? 0}
+                phoneNumber={storeDetail.phoneNumber ?? ''}
                 liked={liked}
                 isLikeLoading={isLikeLoading}
                 onLikeToggle={toggleLike}
