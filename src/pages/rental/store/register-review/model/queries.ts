@@ -26,8 +26,8 @@ export const useQuickReplies = () => {
 
 export const useReservationDetails = (reservationId: number | null) => {
   return useQuery({
-    queryKey: registerReviewQueryKeys.reservationDetails(reservationId!),
-    queryFn: () => getReservationDetails(reservationId!),
+    queryKey: reservationId ? registerReviewQueryKeys.reservationDetails(reservationId) : [],
+    queryFn: () => getReservationDetails(reservationId as number),
     enabled: reservationId !== null && reservationId > 0,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
