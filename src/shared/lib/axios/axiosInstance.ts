@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { NETWORK_TIMEOUT } from '@/shared/api/endpoints';
+import { BASE_URL, NETWORK_TIMEOUT } from '@/shared/api/endpoints';
 
 import { applyInterceptors } from './axiosInterceptor';
 
