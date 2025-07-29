@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 
 import { useSosNotificationStore } from '@/widgets/sos/model/sosNotificationStore';
 import { useSosWebSocket } from '@/widgets/sos/model/useSosWebSocket';
-
-import { SosResponseModal } from './SosResponseModal';
+import { SosResponseModal } from '@/widgets/sos/ui/SosResponseModal';
 
 export function SosNotificationHandler() {
   const { currentSosRequest, isResponseModalOpen, setCurrentSosRequest, openResponseModal, closeResponseModal, clearSosRequest } = useSosNotificationStore();
