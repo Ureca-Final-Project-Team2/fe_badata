@@ -1,11 +1,11 @@
-import { useEffect, useReducer } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import { useEffect } from 'react';
 
 import {
-  initialRentalFilterState,
   RENTAL_DATA_AMOUNTS,
   RENTAL_DATA_TYPES,
-  RENTAL_DEVICE_COUNTS,
-  rentalFilterReducer,
+  RENTAL_MAX_SUPPORT_CONNECTIONS,
+  initialRentalFilterState,
 } from '@/pages/rental/map/model/rentalFilterReducer';
 import { Score } from '@/pages/rental/map/ui';
 import { OptionButton } from '@/pages/rental/map/ui/OptionButton';
@@ -14,42 +14,44 @@ import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 import { Slider } from '@/shared/ui/Slider';
 
+import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
+
 const dataAmountOptions = RENTAL_DATA_AMOUNTS;
 const dataTypeOptions = RENTAL_DATA_TYPES;
-const deviceCountOptions = RENTAL_DEVICE_COUNTS;
+const maxSupportConnectionOptions = RENTAL_MAX_SUPPORT_CONNECTIONS;
 const LOCAL_STORAGE_KEY = 'rentalFilterState';
 
 interface RentalFilterContentProps {
   onClose?: () => void;
+  filterState: RentalFilterState;
+  setFilterState: Dispatch<SetStateAction<RentalFilterState>>;
+  onSubmit: (s: RentalFilterState) => void;
 }
 
-export default function RentalFilterContent({ onClose }: RentalFilterContentProps) {
-  // localStorage에서 초기값 불러오기
-  const getInitialState = () => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
-      } catch (error) {
-        console.warn('Failed to load saved filter state:', error);
-        localStorage.removeItem(LOCAL_STORAGE_KEY);
-      }
-    }
-    return initialRentalFilterState;
-  };
-  const [state, dispatch] = useReducer(rentalFilterReducer, undefined, getInitialState);
-
+export default function RentalFilterContent({
+  onClose,
+  filterState,
+  setFilterState,
+  onSubmit,
+}: RentalFilterContentProps) {
   // 상태가 바뀔 때마다 localStorage에 저장
   useEffect(() => {
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(filterState));
     } catch (error) {
       console.warn('Failed to save filter state:', error);
     }
-  }, [state]);
+  }, [filterState]);
 
   return (
-    <form className="flex flex-col rounded-lg p-4 ">
+    <form
+      className="flex flex-col rounded-lg p-4 "
+      onSubmit={(e) => {
+        e.preventDefault();
+        console.log('결과보기 클릭 - 선택된 필터값:', filterState);
+        onSubmit(filterState);
+      }}
+    >
       <div className="flex flex-col gap-5 border-b border-[var(--gray)] pb-6">
         {/* 헤더 */}
         <div className="flex items-center gap-2 border-b border-[var(--gray)] pb-2 mb-2">
@@ -66,23 +68,42 @@ export default function RentalFilterContent({ onClose }: RentalFilterContentProp
         </div>
         <SectionField title="대여 기간">
           <DatePicker
-            value={state.dateRange}
-            onChange={(range) => dispatch({ type: 'SET_DATE_RANGE', payload: range })}
+            value={filterState.dateRange}
+            onChange={(range) => setFilterState({ ...filterState, dateRange: range })}
             placeholder="대여 기간을 선택해주세요"
           />
         </SectionField>
         <SectionField title="별점">
-          <Score value={state.star} onChange={(n) => dispatch({ type: 'SET_STAR', payload: n })} />
+          <Score
+            value={filterState.star}
+            onChange={(n) => setFilterState({ ...filterState, star: n })}
+          />
         </SectionField>
-        <Slider />
+        <Slider
+          min={0}
+          max={50000}
+          value={filterState.maxPrice ?? 50000}
+          onValueChange={(max: number) =>
+            setFilterState({
+              ...filterState,
+              maxPrice: max,
+              minPrice: filterState.minPrice ?? 0,
+            })
+          }
+        />
 
         <SectionField title="일일 데이터 제공량">
           <div className="flex gap-2">
             {dataAmountOptions.map((opt) => (
               <OptionButton
                 key={opt}
-                selected={state.dataAmount === opt}
-                onClick={() => dispatch({ type: 'SET_DATA_AMOUNT', payload: opt })}
+                selected={filterState.dataAmount === opt}
+                onClick={() =>
+                  setFilterState({
+                    ...filterState,
+                    dataAmount: filterState.dataAmount === opt ? undefined : opt,
+                  })
+                }
               >
                 {opt}
               </OptionButton>
@@ -94,8 +115,13 @@ export default function RentalFilterContent({ onClose }: RentalFilterContentProp
             {dataTypeOptions.map((opt) => (
               <OptionButton
                 key={opt}
-                selected={state.dataType === opt}
-                onClick={() => dispatch({ type: 'SET_DATA_TYPE', payload: opt })}
+                selected={filterState.dataType === opt}
+                onClick={() =>
+                  setFilterState({
+                    ...filterState,
+                    dataType: filterState.dataType === opt ? undefined : opt,
+                  })
+                }
               >
                 {opt}
               </OptionButton>
@@ -104,13 +130,19 @@ export default function RentalFilterContent({ onClose }: RentalFilterContentProp
         </SectionField>
         <SectionField title="최대 접속 가능 기기 수">
           <div className="flex gap-2">
-            {deviceCountOptions.map((opt) => (
+            {maxSupportConnectionOptions.map((opt) => (
               <OptionButton
                 key={opt}
-                selected={state.deviceCount === opt}
-                onClick={() => dispatch({ type: 'SET_DEVICE_COUNT', payload: opt })}
+                selected={filterState.maxSupportConnection === opt}
+                onClick={() =>
+                  setFilterState({
+                    ...filterState,
+                    maxSupportConnection:
+                      filterState.maxSupportConnection === opt ? undefined : opt,
+                  })
+                }
               >
-                {opt}
+                {opt}대
               </OptionButton>
             ))}
           </div>
@@ -124,7 +156,7 @@ export default function RentalFilterContent({ onClose }: RentalFilterContentProp
           size="sm"
           isFormValid={true}
           className="flex-1"
-          onClick={() => dispatch({ type: 'RESET' })}
+          onClick={() => setFilterState(initialRentalFilterState)}
         >
           초기화
         </RegisterButton>

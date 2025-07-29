@@ -35,18 +35,17 @@ export default function SalesHistoryPage() {
   const observerRef = useRef<HTMLDivElement>(null);
   const loadingStartTime = useRef<number>(0);
 
-  const { followerCount, followingCount, isLoading: isLoadingStats, invalidateStats } = useUserStats();
+  const {
+    followerCount,
+    followingCount,
+    isLoading: isLoadingStats,
+    invalidateStats,
+  } = useUserStats();
 
   const postCategory = tab === '전체' ? undefined : tab === '데이터' ? 'DATA' : 'GIFTICON';
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
-    useSalesQuery(
-      undefined,
-      postCategory,
-      isCompleted,
-      undefined,
-      30,
-    );
+    useSalesQuery(undefined, postCategory, isCompleted, undefined, 30);
 
   useEffect(() => {
     const handleFocus = () => {

@@ -2,6 +2,7 @@ import { fetchStoreDetail, fetchStoreDevices } from '@/pages/rental/map/api/apis
 import { ICONS } from '@/shared/config/iconPath';
 
 import type { Store, StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
+import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 
 // 상수 정의
 const MARKER_SIZE = 36;
@@ -21,7 +22,7 @@ const OVERLAY_STYLES = `
   line-height: ${MARKER_SIZE}px;
 `;
 
-// 사용자 현재 위치 마커 생성 함수
+// 사용자 현재 위치 마커 생성 함수 (현재는 useKakaoMapHooks에서 관리하므로 사용하지 않음)
 export const showCurrentLocation = (map: kakao.maps.Map): void => {
   if (!map || !window.kakao) return;
 
@@ -118,20 +119,15 @@ const setupMarkerEventListeners = (
   });
 
   window.kakao.maps.event.addListener(marker, 'click', async () => {
-    console.log('=== 가맹점 마커 클릭 ===');
-    console.log('🏪 가맹점 정보:', store);
-
     let storeDetail: StoreDetail | undefined = undefined;
     try {
       const center = map.getCenter();
       const lat = center.getLat();
       const lng = center.getLng();
       storeDetail = await fetchStoreDetail(store.id, lat, lng);
-      console.log('🔍 상세 정보:', storeDetail);
     } catch (error) {
       console.error('상세 정보 조회 실패:', error);
     }
-
     if (onStoreMarkerClick) onStoreMarkerClick(safeDevices, storeDetail, store.id);
   });
 };
@@ -140,6 +136,7 @@ const setupMarkerEventListeners = (
 const createStoreMarker = async (
   store: Store,
   map: kakao.maps.Map,
+  filterParams: RentalFilterState,
   onStoreMarkerClick?: (
     devices: StoreDevice[],
     storeDetail?: StoreDetail,
@@ -150,9 +147,24 @@ const createStoreMarker = async (
     // 오타 수정!
     const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
 
-    // 디바이스 데이터 조회
-    const devices = await fetchStoreDevices(store.id, {});
+    // 디바이스 데이터 조회 (필터 파라미터 전달)
+    const deviceParams = {
+      ...filterParams,
+      maxSupportConnection: filterParams.maxSupportConnection
+        ? [filterParams.maxSupportConnection]
+        : undefined,
+    };
+    const devices = await fetchStoreDevices(store.id, deviceParams);
     const safeDevices = Array.isArray(devices) ? devices : [];
+
+    // leftCount 총합 계산
+    const totalLeftCount = safeDevices.reduce((sum, device) => sum + (device.leftCount ?? 0), 0);
+
+    // 디바이스가 0개면 마커 생성하지 않음, 1개 이상이면 항상 마커 생성
+    if (safeDevices.length === 0 || totalLeftCount === 0) {
+      // 마커가 이미 생성되어 있다면 제거(중복 방지, 필요시 구현)
+      return;
+    }
 
     // 마커 생성
     const markerImage = createMarkerImage();
@@ -162,9 +174,13 @@ const createStoreMarker = async (
       image: markerImage,
     });
 
-    // 디바이스 개수 오버레이 생성
-    const overlay = createDeviceCountOverlay(position, safeDevices.length);
+    // 디바이스 개수 오버레이 생성 (leftCount 총합 사용)
+    const overlay = createDeviceCountOverlay(position, totalLeftCount);
     overlay.setMap(map);
+
+    // 생성된 마커와 오버레이를 맵에 추가
+    addMarkerToMap(map, marker);
+    addMarkerToMap(map, overlay);
 
     // 인포윈도우 생성
     const infowindow = createInfoWindow(store.name);
@@ -180,6 +196,7 @@ const createStoreMarker = async (
 const processBatch = async (
   stores: Store[],
   map: kakao.maps.Map,
+  filterParams: RentalFilterState,
   batchSize: number = 5,
   onStoreMarkerClick?: (
     devices: StoreDevice[],
@@ -191,7 +208,9 @@ const processBatch = async (
     const batch = stores.slice(i, i + batchSize);
 
     // 배치 내에서는 병렬 처리, 배치 간에는 순차 처리
-    await Promise.all(batch.map((store) => createStoreMarker(store, map, onStoreMarkerClick)));
+    await Promise.all(
+      batch.map((store) => createStoreMarker(store, map, filterParams, onStoreMarkerClick)),
+    );
 
     // 배치 간 약간의 지연을 두어 브라우저 리소스 회복 시간 제공
     if (i + batchSize < stores.length) {
@@ -200,31 +219,57 @@ const processBatch = async (
   }
 };
 
+// 맵 인스턴스별로 마커를 관리하는 WeakMap
+const markersMap = new WeakMap<
+  kakao.maps.Map,
+  Array<kakao.maps.Marker | kakao.maps.CustomOverlay>
+>();
+
+// 특정 맵의 기존 마커들을 모두 제거하는 함수
+const clearAllMarkers = (map: kakao.maps.Map): void => {
+  const markers = markersMap.get(map) || [];
+  markers.forEach((marker) => {
+    if (marker instanceof window.kakao.maps.Marker) {
+      marker.setMap(null);
+    } else if (marker instanceof window.kakao.maps.CustomOverlay) {
+      marker.setMap(null);
+    }
+  });
+  markersMap.set(map, []);
+};
+
+// 특정 맵에 마커를 추가하는 함수
+const addMarkerToMap = (
+  map: kakao.maps.Map,
+  marker: kakao.maps.Marker | kakao.maps.CustomOverlay,
+): void => {
+  const markers = markersMap.get(map) || [];
+  markers.push(marker);
+  markersMap.set(map, markers);
+};
+
 export const renderStoreMarkers = async (
   map: kakao.maps.Map,
   stores: Store[],
+  filterParams: RentalFilterState,
   onStoreMarkerClick?: (
     devices: StoreDevice[],
     storeDetail?: StoreDetail,
     storeId?: number,
   ) => void,
 ): Promise<void> => {
-  if (!map || !window.kakao || !stores || stores.length === 0) {
-    console.log('마커 렌더링 조건 불충족:', {
-      map: !!map,
-      kakao: !!window.kakao,
-      stores: !!stores,
-      storesCount: stores?.length || 0,
-    });
+  if (!map || !window.kakao) {
     return;
   }
 
   try {
-    // 현재 위치 마커 표시
-    showCurrentLocation(map);
+    // 기존 마커들을 모두 제거
+    clearAllMarkers(map);
 
-    // 배치 처리로 변경하여 브라우저 리소스 부족 방지
-    await processBatch(stores, map, 5, onStoreMarkerClick); // 한 번에 5개씩 처리
+    // 매장이 있을 때만 마커 렌더링 (현재 위치 마커는 useKakaoMapHooks에서 한 번만 생성)
+    if (stores && stores.length > 0) {
+      await processBatch(stores, map, filterParams, 5, onStoreMarkerClick);
+    }
   } catch (error) {
     console.error('마커 렌더링 중 오류 발생:', error);
   }

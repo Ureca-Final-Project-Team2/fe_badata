@@ -45,14 +45,17 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     <div className="flex flex-col gap-4 w-full">
       {/* 날짜 선택 */}
       <CalendarSection
-        dateRange={convertToReducerDateRange(dateRange) as any}
-        onChange={(range: any) => onDateRangeChange(convertFromReducerDateRange(range))}
+        dateRange={convertToReducerDateRange(dateRange)}
+        onChange={(range) => onDateRangeChange(convertFromReducerDateRange(range))}
       />
 
       {/* 기기 선택 */}
       <div className="relative">
         <DeviceSelectSection
-          devices={devices}
+          devices={devices.map((device) => ({
+            ...device,
+            totalCount: device.remainCount, // or set to a correct value if available
+          }))}
           selectedDevices={selectedDevices}
           onCountChange={onDeviceCountChange}
           dateRange={dateRange}
