@@ -25,6 +25,7 @@ export const END_POINTS = {
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
     REISSUE: '/api/v1/auth/reissue/token',
+    INFO: '/api/v1/users/info',
     FOLLOW: (userId: number) => `/api/v1/users/${userId}/follows`,
     SALES: '/api/v1/users/sales',
   },
