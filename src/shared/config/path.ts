@@ -14,6 +14,9 @@ export const PATH = {
     DEADLINE: '/trade/deadline',
     DEADLINE_DATA: '/trade/deadline/data',
     DEADLINE_GIFTICON: '/trade/deadline/gifticon',
+    TRENDING: '/trade/trending',
+    TRENDING_DATA: '/trade/trending/data',
+    TRENDING_GIFTICON: '/trade/trending/gifticon',
   },
   RENTAL: {
     STORE_DETAIL: '/rental/:storeId',
