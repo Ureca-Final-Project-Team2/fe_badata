@@ -31,6 +31,7 @@
   --font-title-size: 25px;
   --font-body-size: 20px;
   --font-label-size: 16px;
+  --font-caption-size: 14px;
   --font-small-size: 12.8px;
 
   /* 폰트 두께 */
@@ -232,7 +233,7 @@ body {
   }
   .font-body-regular {
     font-family: var(--font-sans);
-    font-size: var(--font-body-regular);
+    font-size: var(--font-body-size);
     font-weight: var(--font-regular);
   }
   /* label */
@@ -248,7 +249,23 @@ body {
   }
   .font-label-regular {
     font-family: var(--font-sans);
-    font-size: var(--font-label-regular);
+    font-size: var(--font-label-size);
+    font-weight: var(--font-regular);
+  }
+  /* caption */
+  .font-caption-semibold {
+    font-family: var(--font-sans);
+    font-size: var(--font-caption-size);
+    font-weight: var(--font-semibold);
+  }
+  .font-caption-medium {
+    font-family: var(--font-sans);
+    font-size: var(--font-caption-size);
+    font-weight: var(--font-medium);
+  }
+  .font-caption-regular {
+    font-family: var(--font-sans);
+    font-size: var(--font-caption-size);
     font-weight: var(--font-regular);
   }
   /* small */
@@ -265,7 +282,7 @@ body {
   .font-small-regular {
     font-family: var(--font-sans);
     font-size: var(--font-small-size);
-    font-weight: var(--font-light);
+    font-weight: var(--font-regular);
   }
 
 

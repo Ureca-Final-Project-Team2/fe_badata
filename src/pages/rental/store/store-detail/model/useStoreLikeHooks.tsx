@@ -36,14 +36,10 @@ export function useStoreLikeHooks({
     try {
       // API 요청
       await likeStore(storeId);
-      console.log(`가맹점 ${storeId} 찜 상태 변경:`, newState ? '찜함' : '찜 해제');
     } catch (error) {
       // API 요청 실패 시 이전 상태로 롤백
       setLiked(previousState);
       console.error(`가맹점 ${storeId} 찜 API 호출 실패:`, error);
-
-      // TODO: 사용자에게 에러 알림 표시 (토스트, 스낵바 등)
-      // showErrorToast('찜 상태 변경에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsLoading(false);
     }

@@ -52,7 +52,10 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       {/* 기기 선택 */}
       <div className="relative">
         <DeviceSelectSection
-          devices={devices}
+          devices={devices.map((device) => ({
+            ...device,
+            totalCount: device.remainCount, // or set to a correct value if available
+          }))}
           selectedDevices={selectedDevices}
           onCountChange={onDeviceCountChange}
           dateRange={dateRange}
