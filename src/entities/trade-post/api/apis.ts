@@ -10,6 +10,7 @@ import type {
   ReportRequest,
   ReportResponse,
   SearchTrendsContent,
+  UpdatePostResponse,
 } from '@/entities/trade-post/lib/types';
 
 // 게시물 목록 조회
@@ -25,23 +26,29 @@ export const deleteTradePost = async (postId: number): Promise<DeletePostRespons
 };
 
 // 데이터 게시물 수정
-export const updateDataPost = async (postId: number, data: DataUpdateRequest) => {
+export const updateDataPost = async (
+  postId: number,
+  data: DataUpdateRequest,
+): Promise<UpdatePostResponse> => {
   const response = await axiosInstance.patch(END_POINTS.TRADES.UPDATE_DATA(postId), data, {
     headers: {
       'Content-Type': 'application/json',
     },
   });
-  return response;
+  return response.data;
 };
 
 // 기프티콘 게시물 수정
-export const updateGifticonPost = async (postId: number, data: GifticonUpdateRequest) => {
+export const updateGifticonPost = async (
+  postId: number,
+  data: GifticonUpdateRequest,
+): Promise<UpdatePostResponse> => {
   const response = await axiosInstance.patch(END_POINTS.TRADES.UPDATE_GIFTICON(postId), data, {
     headers: {
       'Content-Type': 'application/json',
     },
   });
-  return response;
+  return response.data;
 };
 
 // 게시물 좋아요
