@@ -12,10 +12,6 @@ export function useLikedStores(cursor?: number, size: number = 10) {
   }>({
     queryKey: ['likedStores', cursor, size],
     queryFn: () => fetchLikedStores(cursor, size),
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
   });
 
   return {

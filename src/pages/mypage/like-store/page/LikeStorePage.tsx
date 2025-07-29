@@ -30,8 +30,6 @@ export default function LikeStorePage() {
             store={{
               id: item.storeId,
               name: item.name,
-              latitude: 0, // 타입 요구로 임시값
-              longititude: 0, // 타입 요구로 임시값
             }}
             storeDetail={{
               storeName: item.name,
