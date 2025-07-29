@@ -50,20 +50,9 @@ export const useFetchStoresHooks = (
 
         const mergedParams = mapFilterStateToApiParams(newBounds, filterState);
 
-        // 디버깅: 실제 요청 파라미터 확인
-        console.log('[fetchStores] mergedParams:', mergedParams);
         const stores = await fetchStores(mergedParams);
-        // 디버깅: 응답 데이터 확인
-        console.log('[fetchStores] 응답 stores:', stores);
         setStores(stores);
-
-        console.log('현재 카메라 영역의 스토어 조회:', {
-          bounds: newBounds,
-          storeCount: stores.length,
-        });
       } catch (e) {
-        // 디버깅: 에러 객체 확인
-        console.error('[fetchStores] API 호출 에러:', e);
         console.error('가맹점 불러오기 실패:', e);
       } finally {
         setIsLoading(false);

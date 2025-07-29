@@ -110,7 +110,6 @@ const RentalPage = () => {
 
   // 목록보기 버튼 클릭 핸들러
   const handleListView = () => {
-    console.log('📋 목록보기 버튼 클릭, 현재 상태:', isDrawerOpen);
     setIsDrawerOpen((prev) => !prev); // Drawer 열림/닫힘 토글
   };
 
@@ -121,7 +120,6 @@ const RentalPage = () => {
 
   // 정렬 기준 선택 핸들러
   const handleSortSelect = (sortType: string) => {
-    console.log('🔄 정렬 기준 변경:', { from: currentSort, to: sortType });
     setCurrentSort(sortType);
   };
 
@@ -188,25 +186,11 @@ const RentalPage = () => {
 
   // API 데이터를 StoreCardProps 형태로 변환
   const storeList = convertToStoreCardProps(stores);
-  console.log('🏪 StoreList 변환 결과:', {
-    storesLength: stores.length,
-    storeListLength: storeList.length,
-    isDrawerOpen,
-    isLoading,
-  });
-
   // 필터링 조건이 바뀔 때마다 현재 선택된 가맹점의 디바이스도 다시 필터링
   const filteredDevicesList = filterDevices(selectedStore.selectedDevices, filterState);
 
   // 필터 상태가 변경될 때 스토어 리스트 다시 불러오기
   useEffect(() => {
-    console.log('🔄 필터 조건 변경됨:', {
-      filterState,
-      dateRange,
-      userLocation,
-      currentSort,
-      hasActiveFilters: hasActiveFilters(),
-    });
     // useStoreListWithInfiniteScroll의 queryKey가 변경되면 자동으로 다시 불러옴
   }, [filterState, dateRange, userLocation, currentSort]);
 

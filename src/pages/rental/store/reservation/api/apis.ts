@@ -62,13 +62,9 @@ export const fetchRentalDevices = async (
   params?: FetchRentalDevicesParams,
 ): Promise<RentalDevice[]> => {
   try {
-    console.log('예약 가능한 장비 조회 요청:', { storeId, params });
-
     const response = await axiosInstance.get(END_POINTS.RENTAL.AVAILABLE_DEVICE(storeId), {
       params,
     });
-
-    console.log('예약 가능한 장비 조회 응답:', response);
 
     // axios interceptor에서 이미 response.data를 반환하므로 직접 사용
     return Array.isArray(response) ? response : [];
@@ -87,8 +83,6 @@ export const createReservation = async (
   reservationData: CreateReservationRequest,
 ): Promise<number> => {
   try {
-    console.log('예약 요청 데이터:', reservationData);
-
     const response: CreateReservationResponse = await axiosInstance.post(
       END_POINTS.RENTAL.RESERVATIONS,
       reservationData,
@@ -114,11 +108,7 @@ export const requestRestockNotification = async (
   data: RestockNotificationRequest,
 ): Promise<{ success: boolean; notificationId?: number; error?: string }> => {
   try {
-    console.log('📦 재입고 알림 신청 요청:', data);
-
     const response = await axiosInstance.post(END_POINTS.RENTAL.RESTOCK, data);
-
-    console.log('📦 재입고 알림 신청 응답:', response);
 
     return parseRestockResponse(response);
   } catch (error: unknown) {

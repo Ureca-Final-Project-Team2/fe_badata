@@ -41,7 +41,6 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
       setIsLoading(true);
       const userLocation = await getUserLocation();
       const detail = await fetchStoreDetail(storeId, userLocation.lat, userLocation.lng);
-      console.log('🔍 StoreDetail API 응답:', detail);
       setStoreDetail(detail);
     } catch (error) {
       console.error('가맹점 상세 정보 조회 실패:', error);

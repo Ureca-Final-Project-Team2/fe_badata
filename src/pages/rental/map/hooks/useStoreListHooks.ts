@@ -17,19 +17,12 @@ export const useStoreList = (params: UseStoreListParams) => {
   return useInfiniteQuery({
     queryKey: ['storeList', params],
     queryFn: async ({ pageParam = 0 }) => {
-      console.log('🔍 StoreList API 요청:', {
-        ...params,
-        page: pageParam,
-        size: 10,
-      });
-
       const response = await fetchStoreList({
         ...params,
         page: pageParam,
         size: 10, // 10개씩 고정
       });
 
-      console.log('📦 StoreList API 응답:', response);
       return response;
     },
     getNextPageParam: (lastPage, allPages) => {
@@ -99,11 +92,11 @@ export const convertToStoreCardProps = (storeList: StoreListItem[]): StoreCardPr
       endTime: store.closeTime,
       storeName: store.name,
       distanceFromMe: store.distanceFromMe, // 거리 정보 추가
+      name: store.name, // StoreDetail 타입에 name 필드 추가
     },
     deviceCount: store.leftDeviceCount,
     onLikeClick: () => {
       // 찜하기 기능 구현 필요
-      console.log('Like clicked for store:', store.id);
     },
     isLiked: false, // 찜하기 상태는 별도 API로 관리 필요
   }));

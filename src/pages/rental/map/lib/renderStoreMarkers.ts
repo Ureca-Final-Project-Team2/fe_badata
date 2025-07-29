@@ -125,7 +125,6 @@ const setupMarkerEventListeners = (
       const lat = center.getLat();
       const lng = center.getLng();
       storeDetail = await fetchStoreDetail(store.id, lat, lng);
-      console.log('🔍 상세 정보:', storeDetail);
     } catch (error) {
       console.error('상세 정보 조회 실패:', error);
     }

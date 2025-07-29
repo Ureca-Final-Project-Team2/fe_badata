@@ -62,7 +62,6 @@ export const DragBottomSheet = ({
     if (typeof window !== 'undefined') {
       const height = window.innerHeight;
       setWindowHeight(height);
-      console.log('Window height set to:', height);
     }
   }, []);
 
@@ -70,7 +69,6 @@ export const DragBottomSheet = ({
     if (windowHeight === 0) return;
 
     const targetY = open ? expandedY : collapsedY; // 목록보기 버튼 클릭 시 header까지 올라가도록
-    console.log('🎯 DragDrawer 상태 변경:', { open, targetY, expandedY, collapsedY, windowHeight });
 
     // 애니메이션으로 부드럽게 이동
     controls.start({
@@ -84,8 +82,6 @@ export const DragBottomSheet = ({
   }, [open, controls, windowHeight, expandedY, collapsedY]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
-    console.log('Drag ended at:', info.point.y, 'middleY:', middleY);
-
     if (info.point.y < middleY) {
       controls.start({ y: expandedY });
     } else if (info.point.y > middleY + 80) {
@@ -97,7 +93,6 @@ export const DragBottomSheet = ({
   };
 
   if (windowHeight === 0) {
-    console.log('WindowHeight is 0, waiting for height...');
     // windowHeight가 0일 때도 렌더링하되, 높이는 0으로 설정
     return (
       <motion.div
@@ -108,7 +103,6 @@ export const DragBottomSheet = ({
   }
 
   const handleSortClick = () => {
-    console.log('정렬 기준 클릭');
     onSortClick?.();
   };
 
@@ -173,7 +167,6 @@ export const DragBottomSheet = ({
         ) : storeList && storeList.length > 0 ? (
           <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
             {(() => {
-              console.log('🎴 StoreCard 렌더링:', { storeListLength: storeList.length, storeList });
               return null;
             })()}
             {storeList.map((store, idx) => (
