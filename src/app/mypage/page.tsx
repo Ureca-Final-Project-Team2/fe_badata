@@ -58,7 +58,7 @@ export default function MyPage() {
           className="bg-white rounded-t-[50px] relative px-6 -mt-12"
           style={{ minHeight: 'calc(100vh - 100px)' }}
         >
-          <div className="pt-6 pb-6 space-y-6">
+          <div className="pt-10 pb-6 space-y-8">
             <TradeSection />
             <RentalSection />
             <SosSection />
