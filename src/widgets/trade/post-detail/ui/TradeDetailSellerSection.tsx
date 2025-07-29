@@ -12,7 +12,7 @@ interface TradeDetailSellerSectionProps {
   sellerId: number;
   sellerName: string;
   isFollowing: boolean;
-  onFollowChange?: (isFollowing: boolean) => void;
+  onFollowChange?: () => void;
 }
 
 export const TradeDetailSellerSection = ({
@@ -41,7 +41,7 @@ export const TradeDetailSellerSection = ({
         userId={sellerId}
         name={sellerName}
         isFollowing={isFollowing}
-        onFollowChange={onFollowChange}
+        onFollowClick={onFollowChange}
       />
 
       {/* 판매자의 다른 상품 리스트 */}
