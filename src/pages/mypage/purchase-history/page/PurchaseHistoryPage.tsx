@@ -70,7 +70,7 @@ export default function PurchaseHistoryPage() {
             avatarSrc={userInfo?.profileImage ?? ICONS.ETC.SHELL.src.toString()}
           />
 
-          <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
+          <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-6 mb-6">
             <div className="flex flex-col items-center flex-1">
               <span className="font-label-semibold text-[var(--black)]">거래 내역</span>
               <span className="font-body-semibold text-[var(--black)] mt-1">{soldPostsCount}</span>
