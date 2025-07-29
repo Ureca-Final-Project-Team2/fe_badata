@@ -19,7 +19,7 @@ export const ReportStatusSection = () => (
       ].map(({ count, label }) => (
         <div
           key={label}
-          className="bg-[var(--main-1)] rounded-xl p-4 shadow-sm flex flex-col items-center"
+          className="bg-[var(--main-1)] rounded-xl p-4 flex flex-col items-center"
         >
           <div className="font-body-semibold">{count}</div>
           <div className="font-label-regular mt-1">{label}</div>

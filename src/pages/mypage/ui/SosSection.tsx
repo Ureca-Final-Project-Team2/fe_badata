@@ -9,7 +9,7 @@ export const SosSection = () => (
   <>
     <h2 className="mb-2 font-body-semibold">나의 SOS</h2>
     <Link href="/mypage/sos-history" className="group">
-      <section className="bg-[var(--main-1)] rounded-xl p-4 shadow-sm">
+      <section className="bg-[var(--main-1)] rounded-xl p-4">
         <div className="flex items-center gap-3">
           <Image
             src={ICONS.MYPAGE.MYSOS}
