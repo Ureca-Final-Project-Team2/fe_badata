@@ -57,12 +57,14 @@ function ContentSection({ store }: ContentSectionProps) {
         >
           {store.phoneNumber}
         </a>
-        <span
-          className="text-[var(--main-5)] cursor-pointer font-label-regular ml-1"
-          onClick={() => copyPhoneNumber(store.phoneNumber)}
-        >
-          복사
-        </span>
+        {store.phoneNumber && (
+          <span
+            className="text-[var(--main-5)] cursor-pointer font-label-regular ml-1"
+            onClick={() => copyPhoneNumber(store.phoneNumber!)}
+          >
+            복사
+          </span>
+        )}
       </div>
     </div>
   );

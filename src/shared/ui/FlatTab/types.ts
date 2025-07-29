@@ -1,4 +1,3 @@
-import type { flatTabVariants } from '@/shared/ui/FlatTab';
 import type { VariantProps } from 'class-variance-authority';
 
 export type FlatTabItem = {
@@ -16,10 +15,10 @@ export interface TabItem {
 }
 
 export interface FlatTabProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof flatTabVariants> {
+  extends React.HTMLAttributes<HTMLDivElement> {
   items: TabItem[];
   defaultValue?: string;
   value?: string;
   onValueChange?: (value: string) => void;
 }
+

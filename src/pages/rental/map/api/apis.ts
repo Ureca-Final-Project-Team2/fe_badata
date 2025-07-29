@@ -73,6 +73,16 @@ export const fetchStoreList = async (params: StoreListParams): Promise<StoreList
     return response;
   } catch (error) {
     console.error('fetchStoreList API 호출 실패:', error);
-    return { showStoreResponses: [], hasNext: false };
+    return {
+      leftDeviceCount: 0,
+      closeTime: '',
+      detailAddress: '',
+      latitude: 0,
+      name: '',
+      longititude: 0,
+      id: 0,
+      showStoreResponses: [],
+      hasNext: false,
+    };
   }
 };

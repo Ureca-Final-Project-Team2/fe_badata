@@ -26,6 +26,7 @@ import { ListViewButton } from '@/pages/rental/map/ui/ListViewButton';
 import { MapSection } from '@/pages/rental/map/ui/MapSection';
 import RentalFilterContent from '@/pages/rental/map/ui/RentalFilterContent';
 import { SortDrawer } from '@/pages/rental/map/ui/SortDrawer';
+import { formatDateToLocalDateTime } from '@/shared/lib/formatDate';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
@@ -123,28 +124,6 @@ const RentalPage = () => {
     setCurrentSort(sortType);
   };
 
-  // 날짜를 한국 시간으로 변환하는 함수
-  const formatDateToKST = (date: Date) => {
-    const kstOffset = 9 * 60; // 한국 시간대 오프셋 (분)
-    const utc = date.getTime() + date.getTimezoneOffset() * 60000;
-    const kst = new Date(utc + kstOffset * 60000);
-    return kst.toISOString();
-  };
-
-  // 필터 조건이 실제로 설정되었는지 확인하는 함수
-  const hasActiveFilters = () => {
-    return (
-      dateRange?.from ||
-      dateRange?.to ||
-      filterState.star > 0 ||
-      filterState.minPrice ||
-      filterState.maxPrice ||
-      filterState.dataAmount ||
-      filterState.dataType ||
-      filterState.maxSupportConnection
-    );
-  };
-
   // 스토어 리스트 무한 스크롤 훅 사용
   const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error, fetchNextPage } =
     useStoreListWithInfiniteScroll({
@@ -153,11 +132,11 @@ const RentalPage = () => {
       sort: [currentSort], // 현재 선택된 정렬 기준 사용
       enabled: userLocation.lat !== 0 && userLocation.lng !== 0, // 위치가 설정된 후에만 API 호출
       // 필터링 조건들 추가 (사용자가 선택한 경우만)
-      rentalStartDate: dateRange?.from ? formatDateToKST(dateRange.from) : undefined,
-      rentalEndDate: dateRange?.to ? formatDateToKST(dateRange.to) : undefined,
+      rentalStartDate: dateRange?.from ? formatDateToLocalDateTime(dateRange.from) : undefined,
+      rentalEndDate: dateRange?.to ? formatDateToLocalDateTime(dateRange.to) : undefined,
       reviewRating: filterState.star > 0 ? filterState.star : undefined,
-      minPrice: filterState.minPrice,
-      maxPrice: filterState.maxPrice,
+      minPrice: filterState.minPrice && filterState.minPrice > 0 ? filterState.minPrice : undefined,
+      maxPrice: filterState.maxPrice && filterState.maxPrice > 0 ? filterState.maxPrice : undefined,
       dataCapacity: (() => {
         if (!filterState.dataAmount) return undefined;
         switch (filterState.dataAmount) {

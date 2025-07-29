@@ -15,7 +15,7 @@ export interface StoreDevice {
   deviceName: string;
   dataCapacity: number;
   imageUrl: string;
-  price?: number; // 가격 정보
+  price: number; // 가격 정보
   leftCount?: number; // 남은 재고 수량
   dataType?: '5G' | '4G/LTE'; // 데이터 타입
   maxSupportConnection?: number; // 최대 접속 가능 기기 수

@@ -1,5 +1,4 @@
-import type { StoreDevice } from '@/pages/rental/map/lib/types';
-import type { StoreDetail } from '@/pages/rental/store/store-detail/lib/types';
+import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
 
 export interface SelectedStoreState {
   selectedDevices: StoreDevice[];
