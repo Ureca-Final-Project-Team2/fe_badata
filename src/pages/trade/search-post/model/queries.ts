@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { getSearchTrends } from '@/entities/trade-post/api/apis';
 import { getSearchTradePosts } from '@/pages/trade/search-post/api/apis';
 
 import type { BasePost } from '@/entities/trade-post/lib/types';
@@ -23,4 +24,25 @@ export const useSearchTradePostsQuery = (keyword: string) => {
     gcTime: 5 * 60 * 1000,
     staleTime: 5 * 60 * 1000,
   });
+};
+
+// 실시간 인기 검색어 조회 쿼리
+export const useSearchTrendsQuery = () => {
+  const {
+    data: searchTrends,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['search-trends'],
+    queryFn: getSearchTrends,
+    gcTime: 10 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
+    refetchInterval: 5 * 60 * 1000,
+  });
+
+  return {
+    searchTrends: searchTrends ?? [],
+    isLoading,
+    error,
+  };
 };

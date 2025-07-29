@@ -14,6 +14,12 @@ export enum ErrorCode {
   OCR_PROCESSING_FAILED = 3011,
   EXPIRED_POST_ACCESS = 3012,
   EXPIRED_POST_MODIFY = 3013,
+  DELETED_POST_ACCESS_DENIED = 3020,
+  // 거래 결제
+  SELF_PAYMENT_DENIED = 3023,
+  COIN_DECIMAL_NOT_ALLOWED = 3029,
+  COIN_NOT_ENOUGH = 3030,
+  COIN_EXCEED_PRICE = 3032,
 
   // 유저 팔로우
   FOLLOW_SELF_ERROR = 2014,
@@ -36,6 +42,13 @@ export const ErrorMessageMap: Record<ErrorCode, string> = {
   [ErrorCode.OCR_PROCESSING_FAILED]: 'OCR 처리에 실패했습니다.',
   [ErrorCode.EXPIRED_POST_ACCESS]: '이미 마감 기한이 지난 게시글입니다.',
   [ErrorCode.EXPIRED_POST_MODIFY]: '마감 기한이 지난 게시글은 수정할 수 없습니다.',
+  [ErrorCode.DELETED_POST_ACCESS_DENIED]: '삭제된 게시글에 접근할 수 없습니다.',
+
+  // 거래 결제
+  [ErrorCode.SELF_PAYMENT_DENIED]: '본인 게시글은 구매할 수 없습니다.',
+  [ErrorCode.COIN_DECIMAL_NOT_ALLOWED]: '포인트는 소수점 이하를 사용할 수 없습니다.',
+  [ErrorCode.COIN_NOT_ENOUGH]: '포인트가 부족합니다.',
+  [ErrorCode.COIN_EXCEED_PRICE]: '포인트는 게시글 가격을 초과할 수 없습니다.',
 
   // 유저 팔로우
   [ErrorCode.FOLLOW_SELF_ERROR]: '자기 자신을 팔로우할 수 없습니다.',

@@ -8,6 +8,7 @@ import type {
   LikeContent,
   ReportRequest,
   ReportResponse,
+  SearchTrendsContent,
 } from '@/entities/trade-post/lib/types';
 
 // 게시물 목록 조회
@@ -53,6 +54,7 @@ export const deleteTradePostLike = async (postId: number): Promise<LikeContent> 
   return content;
 };
 
+// 게시물 신고
 export const reportTradePost = async (
   postId: number,
   reportData: ReportRequest,
@@ -62,4 +64,10 @@ export const reportTradePost = async (
     reportData,
   );
   return content;
+};
+
+// 거래 실시간 인기 검색어 조회
+export const getSearchTrends = async (): Promise<string[]> => {
+  const response: SearchTrendsContent = await axiosInstance.get(END_POINTS.TRADES.SEARCH_TRENDS);
+  return response.trendingTopics ?? [];
 };

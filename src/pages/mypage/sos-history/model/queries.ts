@@ -1,10 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getSosHistory } from '@/pages/mypage/sos-history/api/apis';
+import { getSosHistory } from '../api/apis';
 
-export const useSosHistoryQuery = () => {
-  return useQuery({
-    queryKey: ['sosHistory'],
-    queryFn: getSosHistory,
+import type { SosHistoryResponse } from '../lib/types';
+
+export const useSosHistoryListQuery = (
+  cursor?: number,
+  size = 10
+) =>
+  useQuery<SosHistoryResponse['content'] | null>({
+    queryKey: ['sosHistoryList', cursor, size],
+    queryFn: () => getSosHistory(cursor, size),
   });
-};
