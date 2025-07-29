@@ -20,7 +20,8 @@ const SearchResultItem = React.memo(
       (text: string) => {
         if (!keyword.trim()) return text;
 
-        const regex = new RegExp(`(${keyword})`, 'gi');
+        const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escapedKeyword})`, 'gi');
         const parts = text.split(regex);
 
         return parts.map((part, index) =>
