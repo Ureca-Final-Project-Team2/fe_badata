@@ -119,9 +119,6 @@ const setupMarkerEventListeners = (
   });
 
   window.kakao.maps.event.addListener(marker, 'click', async () => {
-    console.log('=== 가맹점 마커 클릭 ===');
-    console.log('🏪 가맹점 정보:', store);
-
     let storeDetail: StoreDetail | undefined = undefined;
     try {
       const center = map.getCenter();
@@ -132,7 +129,6 @@ const setupMarkerEventListeners = (
     } catch (error) {
       console.error('상세 정보 조회 실패:', error);
     }
-
     if (onStoreMarkerClick) onStoreMarkerClick(safeDevices, storeDetail, store.id);
   });
 };

@@ -6,6 +6,7 @@ export interface AllPost {
   partner?: string;
   mobileCarrier?: MobileCarrier;
   price: number;
+  capacity?: number;
   createdAt: Date;
   postImage: string;
   postCategory: 'DATA' | 'GIFTICON';
@@ -100,4 +101,8 @@ export interface ReportRequest {
 
 export interface ReportResponse {
   reportId: number;
+}
+
+export interface SearchTrendsContent {
+  trendingTopics: string[];
 }

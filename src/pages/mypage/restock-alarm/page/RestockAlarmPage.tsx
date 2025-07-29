@@ -3,12 +3,11 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import { useRestockAlarmListQuery } from '@/pages/mypage/restock-alarm/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 
-import { useRestockAlarmListQuery } from '../model/queries';
-
-import type { RestockAlarmItem } from '../lib/types';
+import type { RestockAlarmItem } from '@/pages/mypage/restock-alarm/lib/types';
 
 export default function RestockAlarmPage() {
   const router = useRouter();

@@ -30,6 +30,7 @@ export const useReservationPayment = ({
     try {
       // 예약 요청 데이터 구성
       const reservationData = {
+        storeId,
         storeDevices: Object.entries(selectedDevices)
           .filter(([, count]) => count > 0)
           .map(([deviceId, count]) => {
