@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getTradePosts } from '@/entities/trade-post/api/apis';
-import { getTradePostDetail } from '@/pages/trade/data/detail/api/apis';
+import { getTradePostDetail } from '@/features/trade/data/detail/api/apis';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import DataPage from '@/pages/trade/data/page/DataPage';
+import DataPage from '@/features/trade/data/page/DataPage';
 
 export const dynamic = 'force-dynamic';
 

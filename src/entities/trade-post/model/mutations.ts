@@ -124,7 +124,10 @@ export const useUpdateGifticonPostMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<UpdatePostResponse, Error, { postId: number; data: GifticonUpdateRequest }>({
-    mutationFn: ({ postId, data }) => updateGifticonPost(postId, data),
+    mutationFn: async ({ postId, data }) => {
+      const response = await updateGifticonPost(postId, data);
+      return response;
+    },
     onSuccess: (data, { postId }) => {
       queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
       queryClient.invalidateQueries({ queryKey: ['trade', 'detail', postId] });
