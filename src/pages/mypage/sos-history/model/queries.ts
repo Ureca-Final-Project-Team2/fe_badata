@@ -8,7 +8,7 @@ export const useSosHistoryListQuery = (
   cursor?: number,
   size = 10
 ) =>
-  useQuery<SosHistoryResponse['content'] | null>({
+  useQuery<SosHistoryResponse['content']>({
     queryKey: ['sosHistoryList', cursor, size],
     queryFn: () => getSosHistory(cursor, size),
   });

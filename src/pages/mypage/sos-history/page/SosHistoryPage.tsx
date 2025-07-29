@@ -12,11 +12,12 @@ import { SosHistoryList } from '../ui/SosHistoryList';
 export default function SosHistoryPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useSosHistoryListQuery();
+  
   if (isLoading) return <div>불러오는 중...</div>;
   if (isError) return <div>에러 발생</div>;
-  if (!data) return <div>데이터 없음</div>;
+  if (!data || !data.item) return <div>데이터 없음</div>;
 
-  const items = data.item ?? [];
+  const items = data.item;
 
   return (
     <BaseLayout
@@ -46,7 +47,7 @@ export default function SosHistoryPage() {
                   key={item.sosId}
                   name={item.responderId ? `박OO` : '미정'}
                   date={item.createdAt.slice(0, 10)}
-                  amount={'100MB'}
+                  amount={item.dataAmount}
                   status={item.isSuccess ? '요청 완료' : '요청 중'}
                 />
               ))
