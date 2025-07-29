@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserStats } from '@/entities/follow';
-import { useSalesQuery } from '@/entities/user/model/queries';
+import { useSalesQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab';
 import { PageHeader } from '@/shared/ui/Header';
@@ -36,6 +36,8 @@ export default function SalesHistoryPage() {
     isLoading: isLoadingStats,
     invalidateStats,
   } = useUserStats();
+
+  const { data: soldPostsCount } = useUserSoldPostsCountQuery(profile?.userId);
 
   const postCategory = tab === '전체' ? undefined : tab === '데이터' ? 'DATA' : 'GIFTICON';
 
@@ -104,7 +106,7 @@ export default function SalesHistoryPage() {
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
             <div className="flex flex-col items-center flex-1">
               <span className="font-label-semibold text-[var(--black)]">거래 내역</span>
-              <span className="font-body-semibold text-[var(--black)] mt-1">12</span>
+              <span className="font-body-semibold text-[var(--black)] mt-1">{soldPostsCount}</span>
             </div>
             <div
               className="flex flex-col items-center flex-1 cursor-pointer group"
