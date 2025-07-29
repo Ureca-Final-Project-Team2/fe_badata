@@ -22,7 +22,7 @@ interface ReservationPageProps {
   storeId: number;
 }
 
-const ReservationPage = ({ storeId }: ReservationPageProps) => {
+export default function ReservationPage({ storeId }: ReservationPageProps) {
   const [showReceiptModal, setShowReceiptModal] = useState(false);
 
   // 커스텀 훅들
@@ -89,6 +89,4 @@ const ReservationPage = ({ storeId }: ReservationPageProps) => {
       />
     </>
   );
-};
-
-export default ReservationPage;
+}

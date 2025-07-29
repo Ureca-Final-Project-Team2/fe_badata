@@ -16,7 +16,7 @@ import { PageHeader } from '@/shared/ui/Header';
 
 import type { DataPost, GifticonPost } from '@/entities/trade-post/lib/types';
 
-export function TradeSearchPage() {
+export default function TradeSearchPage() {
   const router = useRouter();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValueHooks(search, 300);

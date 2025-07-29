@@ -16,7 +16,7 @@ import type { ReportType } from '@/entities/trade-post/lib/types';
 interface ReportPageProps {
   postId: number;
 }
-export const ReportPage = ({ postId }: ReportPageProps) => {
+export default function ReportPage({ postId }: ReportPageProps) {
   const router = useRouter();
   const [selectedReason, setSelectedReason] = useState<ReportType | null>(null);
   const [comment, setComment] = useState('');
@@ -97,4 +97,4 @@ export const ReportPage = ({ postId }: ReportPageProps) => {
       </RegisterButton>
     </BaseLayout>
   );
-};
+}

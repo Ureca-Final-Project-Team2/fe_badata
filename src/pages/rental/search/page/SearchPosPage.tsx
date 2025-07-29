@@ -20,7 +20,7 @@ import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
 
 import type { PlaceSearchResult } from '@/pages/rental/search/utils/address/searchPlaces';
 
-const SearchPosPage = () => {
+export default function SearchPosPage() {
   const queryClient = useQueryClient();
   const createAddressMutation = useCreateAddressHistory();
   const deleteAddressMutation = useDeleteAddressHistory();
@@ -257,6 +257,4 @@ const SearchPosPage = () => {
       </div>
     </BaseLayout>
   );
-};
-
-export default SearchPosPage;
+}

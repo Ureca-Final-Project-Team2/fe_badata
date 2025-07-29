@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import { Phone, Share } from 'lucide-react';
 
-import InfoAction from '@/pages/rental/store/store-detail/page/InfoAction';
+import InfoAction from '@/pages/rental/store/store-detail/ui/InfoAction';
 import { ICONS } from '@/shared/config/iconPath';
 import { formatDistanceString } from '@/shared/lib/format/distanceUtils';
 

@@ -1,13 +1,12 @@
 import React from 'react';
 
-import CalendarSection from '@/pages/rental/store/reservation/page/CalendarSection';
-import DeviceSelectSection from '@/pages/rental/store/reservation/page/DeviceSelectSection';
-import NoticeSection from '@/pages/rental/store/reservation/page/NoticeSection';
-import {
-  convertFromReducerDateRange,
-  convertToReducerDateRange,
-} from '@/pages/rental/store/reservation/utils/typeConverters';
-import { RegisterButton } from '@/shared/ui/RegisterButton/RegisterButton';
+import { RegisterButton } from '@/shared/ui/RegisterButton';
+
+import { convertFromReducerDateRange, convertToReducerDateRange } from '../utils';
+
+import CalendarSection from './CalendarSection';
+import DeviceSelectSection from './DeviceSelectSection';
+import NoticeSection from './NoticeSection';
 
 interface ReservationFormProps {
   dateRange: { from: Date | null; to: Date | null } | null;

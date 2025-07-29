@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ReceiptSection from '@/pages/rental/store/reservation/page/ReceiptSection';
+import ReceiptSection from './ReceiptSection';
 
 interface ReservationModalProps {
   isOpen: boolean;

@@ -3,9 +3,11 @@ import React, { useMemo } from 'react';
 import { CircleCheck } from 'lucide-react';
 
 import ReservationDeviceCard from '@/pages/rental/map/ui/ReservationDeviceCard';
-import { useRestockModal } from '@/pages/rental/store/reservation/hooks/useRestockModalHooks';
-import { useScrollDrag } from '@/pages/rental/store/reservation/hooks/useScrollDragHooks';
-import RestockNotificationModal from '@/pages/rental/store/reservation/ui/RestockNotificationModal';
+
+import { useRestockModal } from '../hooks/useRestockModalHooks';
+import { useScrollDrag } from '../hooks/useScrollDragHooks';
+
+import RestockNotificationModal from './RestockNotificationModal';
 
 interface Device {
   id: number;

@@ -36,7 +36,7 @@ import type { StoreDetail, StoreDevice } from '@/pages/rental/map/lib/types';
 import type { RentalFilterState } from '@/pages/rental/map/model/rentalFilterReducer';
 import type { DateRange } from 'react-day-picker';
 
-const RentalPage = () => {
+export default function RentalPage() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [selectedStore, dispatchSelectedStore] = useReducer(
@@ -295,6 +295,4 @@ const RentalPage = () => {
       )}
     </BaseLayout>
   );
-};
-
-export default RentalPage;
+}

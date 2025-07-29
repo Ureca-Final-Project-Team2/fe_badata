@@ -12,13 +12,13 @@ import {
   type TabValue,
 } from '@/pages/rental/store/store-detail/lib/storeDetailConstants';
 import { useStoreLikeHooks } from '@/pages/rental/store/store-detail/model/useStoreLikeHooks';
-import ContentSection from '@/pages/rental/store/store-detail/page/ContentSection';
-import ImageSection from '@/pages/rental/store/store-detail/page/ImageSection';
-import InfoSection from '@/pages/rental/store/store-detail/page/InfoSection';
+import ContentSection from '@/pages/rental/store/store-detail/ui/ContentSection';
+import ImageSection from '@/pages/rental/store/store-detail/ui/ImageSection';
+import InfoSection from '@/pages/rental/store/store-detail/ui/InfoSection';
 import {
   StoreDetailError,
   StoreDetailLoading,
-} from '@/pages/rental/store/store-detail/page/StoreDetailStates';
+} from '@/pages/rental/store/store-detail/ui/StoreDetailStates';
 import { getUserLocation } from '@/pages/rental/utils/locationUtils';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FlatTab } from '@/shared/ui/FlatTab/FlatTab';

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
-import AddressInfoSection from '@/pages/rental/search/page/AddressInfoSection';
-import AddressHistoryItem from '@/pages/rental/search/ui/AddressHistoryItem';
+import AddressHistoryItem from './AddressHistoryItem';
+import AddressInfoSection from './AddressInfoSection';
 
 // 주소 이력 목록 컴포넌트
 const AddressHistoryList = React.memo(

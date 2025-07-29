@@ -25,7 +25,7 @@ interface Props {
   sellerName: string;
 }
 
-export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Props) => {
+export default function TradeDetailPage({ postUserId, post, postType, sellerName }: Props) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const { isFollowing, setIsFollowing } = useFollowState(postUserId);
   const { share } = useShareHooks();
@@ -136,4 +136,4 @@ export const TradeDetailPage = ({ postUserId, post, postType, sellerName }: Prop
       />
     </BaseLayout>
   );
-};
+}
