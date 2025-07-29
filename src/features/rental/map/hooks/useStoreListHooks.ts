@@ -40,7 +40,13 @@ export const flattenStoreList = (
   data: InfiniteData<{ showStoreResponses: StoreListItem[]; hasNext: boolean }> | undefined,
 ): StoreListItem[] => {
   if (!data?.pages) return [];
-  return data.pages.flatMap((page) => page.showStoreResponses);
+  return data.pages.flatMap((page) => {
+    // 안전한 처리 추가
+    if (!page || !Array.isArray(page.showStoreResponses)) {
+      return [];
+    }
+    return page.showStoreResponses;
+  });
 };
 // 스토어 리스트와 무한 스크롤을 함께 사용하는 올인원 훅
 export const useStoreListWithInfiniteScroll = (params: UseStoreListParams) => {
@@ -98,6 +104,6 @@ export const convertToStoreCardProps = (storeList: StoreListItem[]): StoreCardPr
     onLikeClick: () => {
       // 찜하기 기능 구현 필요
     },
-    isLiked: false, // 찜하기 상태는 별도 API로 관리 필요
+    isLiked: store.liked, // API에서 받은 liked 상태 사용
   }));
 };
