@@ -6,7 +6,7 @@ export interface CoinHistoryItem {
   id: number;
   usedCoin: number;
   coinSource: 'REVIEW_REWARD' | 'SOS_REWARD' | 'GIFTICON_PURCHASE' | 'DATA_PURCHASE';
-  totalCoin: number;
+  totalCoin: number | null;
   createdAt: string;
 }
 

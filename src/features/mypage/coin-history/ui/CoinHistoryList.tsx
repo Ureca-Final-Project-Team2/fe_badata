@@ -1,3 +1,4 @@
+import { useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
 import { CoinHistoryItem } from '@/features/mypage/coin-history/ui/CoinHistoryItem';
 
 import type { CoinHistoryResponse } from '@/features/mypage/coin-history/lib/types';
@@ -8,6 +9,8 @@ interface CoinHistoryListProps {
 }
 
 export function CoinHistoryList({ historyData, isLoading }: CoinHistoryListProps) {
+  const { data: userCoinData } = useUserCoinQuery();
+
   if (isLoading) {
     return (
       <div className="space-y-3">
@@ -28,12 +31,12 @@ export function CoinHistoryList({ historyData, isLoading }: CoinHistoryListProps
     );
   }
 
-  // 현재 잔액에서 역순으로 계산하여 각 시점의 잔액 구하기
+  // 현재 사용자의 코인 잔액을 기준으로 각 시점의 잔액 계산
   const itemsWithCalculatedBalance = historyData.item.map((item, index) => {
-    // 현재 잔액에서 시작 (가장 최근 내역의 totalCoin)
-    let balance = historyData.item[0].totalCoin;
+    // 현재 사용자의 코인 잔액에서 시작
+    let balance = userCoinData?.coin || 0;
 
-    // 현재 내역부터 역순으로 계산
+    // 현재 내역부터 역순으로 계산하여 각 시점의 잔액 구하기
     for (let i = 0; i <= index; i++) {
       const currentItem = historyData.item[i];
       // 현재 내역의 usedCoin을 빼서 이전 시점의 잔액 계산

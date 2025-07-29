@@ -9,7 +9,7 @@ import type { CoinHistoryItem as CoinHistoryItemType } from '@/features/mypage/c
 
 interface CoinHistoryItemProps {
   item: CoinHistoryItemType;
-  calculatedBalance: number;
+  calculatedBalance?: number;
 }
 
 export function CoinHistoryItem({ item, calculatedBalance }: CoinHistoryItemProps) {
@@ -36,9 +36,11 @@ export function CoinHistoryItem({ item, calculatedBalance }: CoinHistoryItemProp
         <span className="font-small-regular text-[var(--gray-dark)]">
           {formatDate(item.createdAt)}
         </span>
-        <span className="font-small-regular text-[var(--gray-dark)]">
-          전체 {calculatedBalance} 코인
-        </span>
+        {calculatedBalance !== undefined && (
+          <span className="font-small-regular text-[var(--gray-dark)]">
+            전체 {calculatedBalance} 코인
+          </span>
+        )}
       </div>
     </div>
   );
