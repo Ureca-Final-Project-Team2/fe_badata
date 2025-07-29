@@ -5,7 +5,7 @@ import { ICONS } from '@/shared/config/iconPath';
 
 export const RentalSection = () => (
   <>
-    <h2 className="font-body-semibold">나의 공유기 대여</h2>
+    <h2 className="mb-2 font-body-semibold">나의 공유기 대여</h2>
     <section className="bg-[var(--main-1)] rounded-xl p-4 shadow-sm">
       <ul className="space-y-5">
         <li>
