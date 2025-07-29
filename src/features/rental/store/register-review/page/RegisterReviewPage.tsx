@@ -1,9 +1,12 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import { useSearchParams } from 'next/navigation';
 
-import ReviewRegisterForm from '@/features/rental/store/register-review/ui/ReviewRegisterForm';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+
+import ReviewRegisterForm from '../ui/ReviewRegisterForm';
 
 export default function RegisterReviewPage() {
   const searchParams = useSearchParams();
@@ -11,7 +14,9 @@ export default function RegisterReviewPage() {
 
   return (
     <BaseLayout showHeader={false}>
-      <ReviewRegisterForm reservationId={reservationId} />
+      <Suspense fallback={<div>리뷰 등록 폼을 불러오는 중입니다...</div>}>
+        <ReviewRegisterForm reservationId={reservationId} />
+      </Suspense>
     </BaseLayout>
   );
 }
