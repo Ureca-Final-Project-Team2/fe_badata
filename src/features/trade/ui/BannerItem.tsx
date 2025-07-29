@@ -91,7 +91,7 @@ const BannerItem = ({
           }}
         />
         <div className="flex flex-col gap-1 py-2 w-[200px]">
-          <span className="text-[var(--black)] font-body-semibold leading-tight line-clamp-2 min-h-[44px]">
+          <span className="text-[var(--black)] font-body-semibold leading-tight line-clamp-1 min-h-[20px]">
             {title}
           </span>
           <span className="text-[var(--black)] mt-1.5 font-label-regular leading-none truncate">
