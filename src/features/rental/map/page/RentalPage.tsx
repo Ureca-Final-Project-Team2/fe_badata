@@ -9,6 +9,7 @@ declare global {
 }
 
 import { CenterScrollSwiper } from '@/entities/scroll';
+import { useLocation } from '@/features/rental/map/hooks/useLocationHooks';
 import {
   convertToStoreCardProps,
   useStoreListWithInfiniteScroll,
@@ -23,21 +24,19 @@ import { CurrentLocationButton } from '@/features/rental/map/ui/CurrentLocationB
 import DeviceCard from '@/features/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/features/rental/map/ui/DrawerSection';
 import { ListViewButton } from '@/features/rental/map/ui/ListViewButton';
+import { LocationDisplay } from '@/features/rental/map/ui/LocationDisplay';
 import { MapSection } from '@/features/rental/map/ui/MapSection';
 import RentalFilterContent from '@/features/rental/map/ui/RentalFilterContent';
+import { SearchPosHeader } from '@/features/rental/map/ui/SearchPosHeader';
 import { SortDrawer } from '@/features/rental/map/ui/SortDrawer';
-import { formatDateToLocalDateTime } from '@/shared/lib/formatDate';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { DatePicker } from '@/shared/ui/DatePicker/DatePicker';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
 import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 import type { RentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
-import type { DateRange } from 'react-day-picker';
 
 export default function RentalPage() {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [selectedStore, dispatchSelectedStore] = useReducer(
     selectedStoreReducer,
@@ -52,9 +51,23 @@ export default function RentalPage() {
   });
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
 
-  // 사용자 위치 가져오기
+  // 위치 관련 훅 사용
+  const {
+    userLocation: locationData,
+    userAddress,
+    isLoading: locationLoading,
+    error: locationError,
+    refreshLocation,
+  } = useLocation();
+
+  // 사용자 위치 가져오기 - useLocation 훅의 위치 정보를 우선 사용
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (locationData) {
+      setUserLocation({
+        lat: locationData.lat,
+        lng: locationData.lng,
+      });
+    } else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setUserLocation({
@@ -73,10 +86,13 @@ export default function RentalPage() {
         },
       );
     }
-  }, []);
+  }, [locationData]);
 
   // 현재 위치로 이동하는 함수
   const handleCurrentLocation = () => {
+    // 위치 새로고침
+    refreshLocation();
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -101,6 +117,8 @@ export default function RentalPage() {
           maximumAge: 300000,
         },
       );
+    } else {
+      console.log('Geolocation이 지원되지 않습니다');
     }
   };
 
@@ -132,8 +150,6 @@ export default function RentalPage() {
       sort: [currentSort], // 현재 선택된 정렬 기준 사용
       enabled: userLocation.lat !== 0 && userLocation.lng !== 0, // 위치가 설정된 후에만 API 호출
       // 필터링 조건들 추가 (사용자가 선택한 경우만)
-      rentalStartDate: dateRange?.from ? formatDateToLocalDateTime(dateRange.from) : undefined,
-      rentalEndDate: dateRange?.to ? formatDateToLocalDateTime(dateRange.to) : undefined,
       reviewRating: filterState.star > 0 ? filterState.star : undefined,
       minPrice: filterState.minPrice && filterState.minPrice > 0 ? filterState.minPrice : undefined,
       maxPrice: filterState.maxPrice && filterState.maxPrice > 0 ? filterState.maxPrice : undefined,
@@ -171,7 +187,7 @@ export default function RentalPage() {
   // 필터 상태가 변경될 때 스토어 리스트 다시 불러오기
   useEffect(() => {
     // useStoreListWithInfiniteScroll의 queryKey가 변경되면 자동으로 다시 불러옴
-  }, [filterState, dateRange, userLocation, currentSort]);
+  }, [filterState, userLocation, currentSort]);
 
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
@@ -190,7 +206,13 @@ export default function RentalPage() {
         storeDetail: selectedStore.selectedStoreDetail,
       });
     }
-  }, [filterState]);
+  }, [
+    filterState,
+    filteredDevicesList,
+    selectedStore.selectedDevices.length,
+    selectedStore.selectedStoreDetail,
+    selectedStore.selectedStoreId,
+  ]);
 
   return (
     <BaseLayout
@@ -199,22 +221,13 @@ export default function RentalPage() {
       showHeader
       showBottomNav
       header={
-        <div className="max-w-[428px] px-4 pt-4 bg-white/80 z-30 flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center w-full">
-            <div className="w-[90%]">
-              <DatePicker
-                value={dateRange}
-                onChange={setDateRange}
-                placeholder="대여 기간을 선택해주세요"
-              />
-            </div>
+        <div className="max-w-[428px] px-4 pt-4 z-30">
+          <div className="flex flex-row items-center gap-1">
+            <SearchPosHeader search="" setSearch={() => {}} onSubmit={() => {}} />
             <FilterIcon
-              alt=""
-              className="w-8 h-8 ml-4 flex-shrink-0"
-              onClick={() => {
-                setTempFilterState(filterState); // Drawer 열 때 tempFilterState를 filterState로 초기화
-                setFilterDrawerOpen(true);
-              }}
+              alt="필터 아이콘"
+              className="w-8 h-8 flex-shrink-0 cursor-pointer"
+              onClick={() => setFilterDrawerOpen(true)}
             />
           </div>
         </div>
@@ -229,24 +242,31 @@ export default function RentalPage() {
         </div>
       }
     >
-      <MapSection
-        filterState={filterState}
-        onStoreMarkerClick={(
-          devices: StoreDevice[],
-          storeDetail?: StoreDetail,
-          storeId?: number,
-        ) => {
-          dispatchSelectedStore({
-            type: 'SELECT_STORE',
-            devices,
-            storeId: storeId ?? 0,
-            storeDetail,
-          });
-        }}
-        onMapReady={(map) => {
-          setMapInstance(map);
-        }}
+      <LocationDisplay
+        userAddress={userAddress}
+        isLoading={locationLoading}
+        error={locationError}
       />
+      <div className="w-full h-[calc(100vh-190px)]">
+        <MapSection
+          filterState={filterState}
+          onStoreMarkerClick={(
+            devices: StoreDevice[],
+            storeDetail?: StoreDetail,
+            storeId?: number,
+          ) => {
+            dispatchSelectedStore({
+              type: 'SELECT_STORE',
+              devices,
+              storeId: storeId ?? 0,
+              storeDetail,
+            });
+          }}
+          onMapReady={(map) => {
+            setMapInstance(map);
+          }}
+        />
+      </div>
       <DrawerSection
         storeList={storeList}
         isLoading={isLoading}
@@ -275,14 +295,12 @@ export default function RentalPage() {
           }}
         />
       </FilterDrawer>
-
       <SortDrawer
         isOpen={isSortDrawerOpen}
         onClose={() => setIsSortDrawerOpen(false)}
         onSortSelect={handleSortSelect}
         currentSort={currentSort}
       />
-
       {filteredDevicesList.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
           <CenterScrollSwiper
