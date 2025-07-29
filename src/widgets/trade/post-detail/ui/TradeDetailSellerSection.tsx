@@ -19,7 +19,6 @@ export const TradeDetailSellerSection = ({
   sellerId,
   sellerName,
   isFollowing,
-  onFollowChange,
 }: TradeDetailSellerSectionProps) => {
   const { data, isLoading, error } = useUserTradePostsQuery(sellerId);
   const { toggleLike, getCachedLikeState } = useTradePostLikeHooks();
@@ -37,12 +36,7 @@ export const TradeDetailSellerSection = ({
 
   return (
     <div className="mt-20">
-      <UserProfileCard
-        userId={sellerId}
-        name={sellerName}
-        isFollowing={isFollowing}
-        onFollowChange={onFollowChange}
-      />
+      <UserProfileCard userId={sellerId} name={sellerName} isFollowing={isFollowing} />
 
       {/* 판매자의 다른 상품 리스트 */}
       <div className="mt-6">

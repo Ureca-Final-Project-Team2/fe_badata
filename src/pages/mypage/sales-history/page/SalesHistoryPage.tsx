@@ -47,6 +47,13 @@ export default function SalesHistoryPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
     useSalesQuery(undefined, postCategory, isCompleted, undefined, 30);
 
+  // Handle tab change with type safety
+  const handleTabChange = (value: string) => {
+    if (value === '전체' || value === '데이터' || value === '쿠폰') {
+      setTab(value as '전체' | '데이터' | '쿠폰');
+    }
+  };
+
   useEffect(() => {
     const handleFocus = () => {
       invalidateStats();
@@ -131,7 +138,7 @@ export default function SalesHistoryPage() {
         </div>
 
         <div>
-          <FlatTab items={tabList} value={tab} onValueChange={setTab} />
+          <FlatTab items={tabList} value={tab} onValueChange={handleTabChange} />
         </div>
 
         <div className="flex justify-center mt-4 mb-4">
