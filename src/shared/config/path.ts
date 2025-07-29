@@ -18,5 +18,6 @@ export const PATH = {
   RENTAL: {
     STORE_DETAIL: '/rental/:storeId',
     REGISTER_REVIEW: '/rental/store/register-review',
+    EDIT_REVIEW: '/rental/store/edit-review',
   },
 } as const;
