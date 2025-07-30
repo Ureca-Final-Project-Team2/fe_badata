@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-
 import { useStoreLikeToggle } from '@/shared/hooks/useStoreLikeToggle';
 import { formatDistanceString } from '@/shared/lib/format/distanceUtils';
 import { ImageBox } from '@/shared/ui/ImageBox';
@@ -26,18 +24,12 @@ export function StoreCard({
     isLoading: isLikeLoading,
     shouldShowLikeActive,
     handleLikeToggle,
-    setLiked,
   } = useStoreLikeToggle({
     storeId: store.id,
     initialIsLiked: isLiked,
     onToggle: onLikeToggle,
     disableToast,
   });
-
-  // isLiked prop이 변경될 때 liked 상태 업데이트
-  useEffect(() => {
-    setLiked(isLiked);
-  }, [isLiked, setLiked]);
 
   const operatingStatus = storeDetail.isOpening ? '영업 중' : '영업 종료';
 
