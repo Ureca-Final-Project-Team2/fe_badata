@@ -112,7 +112,7 @@ export class MarkerCache {
         markerData.marker.setImage(
           createMarkerImage(shouldShowLikeActive, isCluster ?? markerData.isCluster),
         );
-        if (isLiked !== undefined) markerData.isLiked = shouldShowLikeActive;
+        if (isLiked !== undefined) markerData.isLiked = isLiked;
         if (isCluster !== undefined) markerData.isCluster = isCluster;
       }
     }
