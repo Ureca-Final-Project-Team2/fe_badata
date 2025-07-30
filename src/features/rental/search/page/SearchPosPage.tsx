@@ -141,7 +141,7 @@ export default function SearchPosPage() {
         queryClient.invalidateQueries({ queryKey });
       }
     },
-    [setKeyword, queryClient],
+    [setKeyword, queryClient, sort],
   );
 
   // 현재 위치 클릭 핸들러

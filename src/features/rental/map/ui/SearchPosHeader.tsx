@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { Search } from 'lucide-react';
 
+import { PATH } from '@/shared/config/path';
 import { InputField } from '@/shared/ui/InputField';
 
 interface SearchPosHeaderProps {
@@ -23,12 +24,12 @@ export const SearchPosHeader = ({
 
   const handleClick = () => {
     if (!isSearchPage) {
-      router.push('/rental/search-pos');
+      router.push(PATH.RENTAL.SEARCH_POS);
     }
   };
 
   return (
-    <div onClick={handleClick} className={isSearchPage ? '' : 'cursor-pointer'}>
+    <div onClick={handleClick} className={`${isSearchPage ? '' : 'cursor-pointer'} w-full`}>
       <InputField
         variant="address"
         value={search}
@@ -42,7 +43,7 @@ export const SearchPosHeader = ({
         icon={<Search className="text-[var(--gray-dark)]" />}
         placeholder="지번, 도로명, 건물명으로 검색"
         autoFocus={isSearchPage}
-        className="bg-[var(--gray-light)] text-[var(--gray-dark)] placeholder-[var(--gray-dark)] w-[350px] flex-shrink-0"
+        className="bg-[var(--gray-light)] text-[var(--gray-dark)] placeholder-[var(--gray-dark)] w-full"
       />
     </div>
   );

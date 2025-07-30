@@ -5,15 +5,16 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { Home, ShoppingCart, User, Wifi, X } from 'lucide-react';
 
+import { PATH } from '@/shared/config/path';
 import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 
 import { WAVE_CLIP_PATH } from './constants';
 
 const NAV_CONFIG = [
-  { label: '홈', path: '/', icon: Home },
-  { label: '거래', path: '/trade', icon: ShoppingCart },
-  { label: '대여', path: '/rental', icon: Wifi },
-  { label: '마이', path: '/mypage', icon: User },
+  { label: '홈', path: PATH.ROOT, icon: Home },
+  { label: '거래', path: PATH.TRADE.MAIN, icon: ShoppingCart },
+  { label: '대여', path: PATH.RENTAL.MAIN, icon: Wifi },
+  { label: '마이', path: PATH.MYPAGE.MAIN, icon: User },
 ];
 
 const NavItem = ({
@@ -28,7 +29,7 @@ const NavItem = ({
   const Icon = item.icon;
   return (
     <li className="flex-1 flex flex-col items-center justify-end pb-3">
-      <button onClick={onClick} className="flex flex-col items-center gap-1">
+      <button onClick={onClick} className="flex flex-col items-center gap-1 cursor-pointer">
         <Icon
           size={24}
           stroke={isActive ? 'var(--main-3)' : 'var(--gray-light)'}
@@ -80,7 +81,7 @@ export const BottomNav = () => {
         ))}
 
         {/* SOS 버튼 */}
-        <li className="relative mb-6 z-20 flex flex-col items-center transition-transform duration-300">
+        <li className=" relative mb-6 z-20 flex flex-col items-center transition-transform duration-300">
           <button
             onClick={toggleDrawer}
             className={`w-[80px] h-[80px] rounded-full flex items-center justify-center transition-color duration-100 ${

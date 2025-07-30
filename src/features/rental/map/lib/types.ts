@@ -90,6 +90,7 @@ export interface StoreListItem {
   detailAddress: string;
   leftDeviceCount: number;
   storeImageUrl: string;
+  liked: boolean;
   opening: boolean;
 }
 
@@ -97,7 +98,6 @@ export interface StoreListItem {
   가맹점 목록 리스트
 */
 export interface StoreListResponse {
-  stores: never[];
   leftDeviceCount: number;
   closeTime: string;
   detailAddress: string;
@@ -107,6 +107,7 @@ export interface StoreListResponse {
   id: number;
   showStoreResponses: StoreListItem[];
   hasNext: boolean;
+  liked: boolean;
 }
 
 /*

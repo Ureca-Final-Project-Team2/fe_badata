@@ -16,7 +16,15 @@ export const PATH = {
     DEADLINE_GIFTICON: '/trade/deadline/gifticon',
   },
   RENTAL: {
+    MAIN: '/rental',
     STORE_DETAIL: '/rental/:storeId',
     REGISTER_REVIEW: '/rental/store/register-review',
+    SEARCH_POS: '/rental/search-pos',
+  },
+  MYPAGE: {
+    MAIN: '/mypage',
+    LIKE_STORE: '/mypage/like-store',
+    FOLLOWER: '/mypage/follower',
+    FOLLOWING: '/mypage/following',
   },
 } as const;

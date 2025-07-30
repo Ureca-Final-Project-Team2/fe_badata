@@ -86,7 +86,7 @@ export function useLocation(): UseLocationReturn {
         setIsLoading(false);
       },
       (error) => {
-        console.log('GPS 위치 획득 실패, fallback 사용:', error);
+        console.log('GPS 위치 획득 실패:', error);
         setError('위치를 가져올 수 없습니다.');
 
         // fallback: 서울시청 좌표
@@ -96,8 +96,8 @@ export function useLocation(): UseLocationReturn {
       },
       {
         enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000, // 5분
+        timeout: 15000, // 타임아웃 증가
+        maximumAge: 0, // 캐시된 위치 정보 사용하지 않음
       },
     );
   }, []);
