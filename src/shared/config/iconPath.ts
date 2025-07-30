@@ -47,6 +47,8 @@ export const ICONS = {
   },
   TRADE: {
     BRAND_LOGO: {
+      // Data Default img
+      DATA_DEFAULT: '/assets/data/Data_Default.png',
       KT: '/assets/data/KT_Logo.png',
       UPLUS: '/assets/data/LGU_Logo.png',
       SKT: '/assets/data/SKT_Logo.png',
@@ -55,70 +57,70 @@ export const ICONS = {
   GIFTICON: {
     BRAND_LOGO: {
       // Gifticon Default img
-      gifticon_default: '/assets/gifticon/Gifticon_Default.svg',
+      GIFTICON_DEFAULT: '/assets/gifticon/Gifticon_Default.svg',
 
       // OTT/뮤직
-      youtube_premium: '/assets/gifticon/ott-music/YouTube_Logo.png',
-      cgv: '/assets/gifticon/ott-music/CGV_Logo.png',
-      emoticon_plus: '/assets/gifticon/ott-music/Emoticon_Logo.png',
-      netflix: '/assets/gifticon/ott-music/NEFLIX_Logo.png',
-      genie_music: '/assets/gifticon/ott-music/Genie_Logo.png',
-      disney_plus: '/assets/gifticon/ott-music/Disney_Logo.png',
-      baemin: '/assets/gifticon/ott-music/Baemin_Logo.png',
-      tving: '/assets/gifticon/ott-music/TVING_Logo.png',
-      v_coloring: '/assets/gifticon/ott-music/V_Logo.png',
+      YOUTUBE_PREMIUM: '/assets/gifticon/ott-music/YouTube_Logo.png',
+      CGV: '/assets/gifticon/ott-music/CGV_Logo.png',
+      EMOTICON_PLUS: '/assets/gifticon/ott-music/Emoticon_Logo.png',
+      NETFLIX: '/assets/gifticon/ott-music/NEFLIX_Logo.png',
+      GENIE_MUSIC: '/assets/gifticon/ott-music/Genie_Logo.png',
+      DISNEY_PLUS: '/assets/gifticon/ott-music/Disney_Logo.png',
+      BAEMIN: '/assets/gifticon/ott-music/Baemin_Logo.png',
+      TVING: '/assets/gifticon/ott-music/TVING_Logo.png',
+      V_COLORING: '/assets/gifticon/ott-music/V_Logo.png',
 
       // 도서/아티클
-      toptoon: '/assets/gifticon/book-article/Toptoon_Logo.png',
-      blice: '/assets/gifticon/book-article/Blice_Logo.png',
-      kakao_page: '/assets/gifticon/book-article/kakaopage_Logo.png',
-      jaedam_shorts: '/assets/gifticon/book-article/Jaedam_Logo.png',
-      ridi: '/assets/gifticon/book-article/RIDI_Logo.png',
-      yes24: '/assets/gifticon/book-article/Yes24_Logo.png',
-      long_black: '/assets/gifticon/book-article/LongBlack_Logo.png',
-      dbr: '/assets/gifticon/book-article/DBR_Logo.png',
-      hbr: '/assets/gifticon/book-article/HBR_Logo.png',
-      mobile_hk: '/assets/gifticon/book-article/MobileHG_Logo.png',
-      millie_library: '/assets/gifticon/book-article/Millie_Logo.png',
-      outstanding: '/assets/gifticon/book-article/OUTSTANDING_Logo.png',
-      culture_land: '/assets/gifticon/book-article/Cultureland_Logo.png',
-      story_tell: '/assets/gifticon/book-article/Storytel_Logo.png',
-      kakao_webtoon: '/assets/gifticon/book-article/KakaoWebtoon_Logo.png',
-      the_jungang_plus: '/assets/gifticon/book-article/TheJungang_Logo.png',
+      TOPTOON: '/assets/gifticon/book-article/Toptoon_Logo.png',
+      BLICE: '/assets/gifticon/book-article/Blice_Logo.png',
+      KAKAO_PAGE: '/assets/gifticon/book-article/kakaopage_Logo.png',
+      JAEDAM_SHORTS: '/assets/gifticon/book-article/Jaedam_Logo.png',
+      RIDI: '/assets/gifticon/book-article/RIDI_Logo.png',
+      YES24: '/assets/gifticon/book-article/Yes24_Logo.png',
+      LONG_BLACK: '/assets/gifticon/book-article/LongBlack_Logo.png',
+      DBR: '/assets/gifticon/book-article/DBR_Logo.png',
+      HBR: '/assets/gifticon/book-article/HBR_Logo.png',
+      MOBILE_HK: '/assets/gifticon/book-article/MobileHG_Logo.png',
+      MILLIE_LIBRARY: '/assets/gifticon/book-article/Millie_Logo.png',
+      OUTSTANDING: '/assets/gifticon/book-article/OUTSTANDING_Logo.png',
+      CULTURE_LAND: '/assets/gifticon/book-article/Cultureland_Logo.png',
+      STORY_TELL: '/assets/gifticon/book-article/Storytel_Logo.png',
+      KAKAO_WEBTOON: '/assets/gifticon/book-article/KakaoWebtoon_Logo.png',
+      THE_JUNGANG_PLUS: '/assets/gifticon/book-article/TheJungang_Logo.png',
 
       // 자기개발
-      class101: '/assets/gifticon/self-development/Class101_Logo.png',
-      siwonschool: '/assets/gifticon/self-development/Siwonschool_Logo.png',
-      yanadoo: '/assets/gifticon/self-development/Yanadoo_Logo.png',
-      cake: '/assets/gifticon/self-development/Cake_Logo.png',
-      moonjeonga_chinese: '/assets/gifticon/self-development/MoonChinese_Logo.png',
+      CLASS101: '/assets/gifticon/self-development/Class101_Logo.png',
+      SIWON_SCHOOL: '/assets/gifticon/self-development/Siwonschool_Logo.png',
+      YANADOO: '/assets/gifticon/self-development/Yanadoo_Logo.png',
+      CAKE: '/assets/gifticon/self-development/Cake_Logo.png',
+      MOONJEONGA_CHINESE: '/assets/gifticon/self-development/MoonChinese_Logo.png',
 
       // 식품
-      paul_bassett: '/assets/gifticon/food/PaulBassett_Logo.png',
-      yogiyo: '/assets/gifticon/food/Yogiyo_Logo.png',
-      cj_market: '/assets/gifticon/food/CJtheMarket_Logo.png',
-      illy: '/assets/gifticon/food/Illy_Logo.png',
-      mega_mgc_coffee: '/assets/gifticon/food/Megacoffee_Logo.png',
-      baskin_robbins: '/assets/gifticon/food/BR_Logo.png',
-      paris_baguette: '/assets/gifticon/food/PB_Logo.png',
-      papa_johns: '/assets/gifticon/food/PAPAJOHNS_Logo.png',
+      PAUL_BASSETT: '/assets/gifticon/food/PaulBassett_Logo.png',
+      YOGIYO: '/assets/gifticon/food/Yogiyo_Logo.png',
+      CJ_MARKET: '/assets/gifticon/food/CJtheMarket_Logo.png',
+      ILIY: '/assets/gifticon/food/Illy_Logo.png',
+      MEGA_MGC_COFFEE: '/assets/gifticon/food/Megacoffee_Logo.png',
+      BASKIN_ROBBINS: '/assets/gifticon/food/BR_Logo.png',
+      PARIS_BAGUETTE: '/assets/gifticon/food/PB_Logo.png',
+      PAPA_JOHNS: '/assets/gifticon/food/PAPAJOHNS_Logo.png',
 
       // 생활/편의
-      snow: '/assets/gifticon/lifestyle/SNOW_Logo.png',
-      mcafee_security: '/assets/gifticon/lifestyle/McAfee_Logo.png',
-      gs_caltex: '/assets/gifticon/lifestyle/GS_Logo.png',
-      daiso: '/assets/gifticon/lifestyle/Daiso_Logo.png',
-      cu: '/assets/gifticon/lifestyle/CU_Logo.png',
+      SNOW: '/assets/gifticon/lifestyle/SNOW_Logo.png',
+      MC_AFEE_SECURITY: '/assets/gifticon/lifestyle/McAfee_Logo.png',
+      GS_CALTEX: '/assets/gifticon/lifestyle/GS_Logo.png',
+      DAISO: '/assets/gifticon/lifestyle/Daiso_Logo.png',
+      CU: '/assets/gifticon/lifestyle/CU_Logo.png',
 
       // 패션/뷰티
-      oliveyoung: '/assets/gifticon/fashion-beauty/OliveYoung_Logo.png',
-      spao: '/assets/gifticon/fashion-beauty/SPAO_Logo.png',
+      OLIVEYOUNG: '/assets/gifticon/fashion-beauty/OliveYoung_Logo.png',
+      SPAO: '/assets/gifticon/fashion-beauty/SPAO_Logo.png',
 
       // 키즈
-      cookids: '/assets/gifticon/kids/COOKIDS_Logo.png',
+      COOKIDS: '/assets/gifticon/kids/COOKIDS_Logo.png',
 
       // 반려동물
-      happydog_tv: '/assets/gifticon/pet/HappyDogTV_Logo.png',
+      HAPPYDOG_TV: '/assets/gifticon/pet/HappyDogTV_Logo.png',
     },
   } as const,
 };

@@ -55,12 +55,18 @@ export const TradeDetailProductSection = ({
             <div className="h-6 flex items-center justify-center">
               {postType === 'DATA' ? (
                 <div className="h-6 flex items-center justify-center bg-[var(--gray-light)] rounded-full">
-                  <span className="text-xs font-medium text-[var(--gray-dark)]">?</span>
+                  <Image
+                    src={ICONS.TRADE.BRAND_LOGO.DATA_DEFAULT}
+                    alt="데이터 기본"
+                    width={0}
+                    height={24}
+                    className="h-6 w-auto object-contain rounded-sm"
+                  />
                 </div>
               ) : (
                 <div className="h-6 flex items-center justify-center">
                   <Image
-                    src={ICONS.GIFTICON.BRAND_LOGO.gifticon_default}
+                    src={ICONS.GIFTICON.BRAND_LOGO.GIFTICON_DEFAULT}
                     alt="기프티콘 기본"
                     width={0}
                     height={24}
