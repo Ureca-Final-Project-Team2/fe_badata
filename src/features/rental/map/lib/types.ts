@@ -40,6 +40,7 @@ export interface StoreCardProps {
   storeDetail: StoreDetail;
   deviceCount: number;
   onLikeClick?: () => void;
+  onLikeToggle?: (storeId: number, isLiked: boolean) => void;
   isLiked?: boolean;
   className?: string;
 }

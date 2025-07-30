@@ -78,3 +78,15 @@ export const fetchStoreList = async (params: StoreListParams): Promise<StoreList
   });
   return response;
 };
+
+/**
+ * 가맹점 좋아요/좋아요 취소 토글
+ */
+export const toggleStoreLike = async (storeId: number, isLiked: boolean): Promise<boolean> => {
+  try {
+    await axiosInstance.post(END_POINTS.STORES.LIKESTORE(storeId));
+    return !isLiked; // 토글된 상태 반환
+  } catch (error) {
+    throw error;
+  }
+};
