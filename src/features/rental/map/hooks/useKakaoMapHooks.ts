@@ -61,7 +61,7 @@ const createCurrentLocationMarker = (map: kakao.maps.Map): kakao.maps.Marker => 
   return currentLocationMarker;
 };
 
-export const useKakaoMapHooks = () => {
+export const useKakaoMapHooks = (initialLat?: number, initialLng?: number) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const currentLocationMarkerRef = useRef<kakao.maps.Marker | null>(null);
@@ -79,15 +79,24 @@ export const useKakaoMapHooks = () => {
           return;
         }
 
+        // 초기 좌표 결정: URL 파라미터가 있으면 해당 좌표, 없으면 선릉 좌표
+        const initialCenter =
+          initialLat && initialLng
+            ? new window.kakao.maps.LatLng(initialLat, initialLng)
+            : new window.kakao.maps.LatLng(37.24954834707699, 127.02894277555716);
+
         const map = new window.kakao.maps.Map(mapRef.current, {
-          center: new window.kakao.maps.LatLng(35.1796, 129.0756), // 부산 좌표로 변경
+          center: initialCenter,
           level: 4,
         });
 
         setMap(map);
 
-        // 현재 위치 마커를 맵 생성 시 한 번만 생성
-        currentLocationMarkerRef.current = createCurrentLocationMarker(map);
+        // URL 파라미터가 있을 때는 현재 위치 마커를 생성하지 않음
+        if (!initialLat || !initialLng) {
+          // 현재 위치 마커를 맵 생성 시 한 번만 생성
+          currentLocationMarkerRef.current = createCurrentLocationMarker(map);
+        }
 
         console.log('✅ 맵 초기화 완료');
       });

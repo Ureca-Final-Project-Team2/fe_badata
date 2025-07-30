@@ -12,6 +12,8 @@ import type { RentalFilterState } from '@/features/rental/map/model/rentalFilter
 
 interface MapSectionProps {
   filterState: RentalFilterState;
+  initialLat?: number;
+  initialLng?: number;
   onStoreMarkerClick?: (
     devices: StoreDevice[],
     storeDetail?: StoreDetail,
@@ -20,8 +22,14 @@ interface MapSectionProps {
   onMapReady?: (map: kakao.maps.Map) => void;
 }
 
-export const MapSection = ({ filterState, onStoreMarkerClick, onMapReady }: MapSectionProps) => {
-  const { mapRef, map } = useKakaoMapHooks();
+export const MapSection = ({
+  filterState,
+  initialLat,
+  initialLng,
+  onStoreMarkerClick,
+  onMapReady,
+}: MapSectionProps) => {
+  const { mapRef, map } = useKakaoMapHooks(initialLat, initialLng);
   const storesResult = useFetchStoresHooks(map, filterState);
   const stores = storesResult.stores;
 

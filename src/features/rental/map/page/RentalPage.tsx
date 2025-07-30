@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 
+import { useSearchParams } from 'next/navigation';
+
 import { CenterScrollSwiper } from '@/entities/scroll';
 import { useLocation } from '@/features/rental/map/hooks/useLocationHooks';
 import {
@@ -31,6 +33,7 @@ import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 import type { RentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
 
 export default function RentalPage() {
+  const searchParams = useSearchParams();
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [selectedStore, dispatchSelectedStore] = useReducer(
     selectedStoreReducer,
@@ -45,6 +48,12 @@ export default function RentalPage() {
   });
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
 
+  // URL 파라미터에서 선택된 위치 정보 가져오기
+  const selectedLat = searchParams?.get('lat');
+  const selectedLng = searchParams?.get('lng');
+  const selectedAddress = searchParams?.get('address');
+  const selectedPlaceName = searchParams?.get('placeName');
+
   // 위치 관련 훅 사용
   const {
     userLocation: locationData,
@@ -54,32 +63,46 @@ export default function RentalPage() {
     refreshLocation,
   } = useLocation();
 
-  // 사용자 위치 가져오기
+  // URL 파라미터로부터 선택된 위치 설정
   useEffect(() => {
-    if (locationData) {
-      setUserLocation({
-        lat: locationData.lat,
-        lng: locationData.lng,
-      });
-    } else if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.log('위치 정보를 가져올 수 없습니다:', error.message);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 300000,
-        },
-      );
+    if (selectedLat && selectedLng) {
+      const lat = parseFloat(selectedLat);
+      const lng = parseFloat(selectedLng);
+
+      if (!isNaN(lat) && !isNaN(lng)) {
+        setUserLocation({ lat, lng });
+      }
     }
-  }, [locationData]);
+  }, [selectedLat, selectedLng]);
+
+  // 사용자 위치 가져오기 (URL 파라미터가 없을 때만)
+  useEffect(() => {
+    if (!selectedLat && !selectedLng) {
+      if (locationData) {
+        setUserLocation({
+          lat: locationData.lat,
+          lng: locationData.lng,
+        });
+      } else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setUserLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          (error) => {
+            console.log('위치 정보를 가져올 수 없습니다:', error.message);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000,
+          },
+        );
+      }
+    }
+  }, [locationData, selectedLat, selectedLng]);
 
   // 현재 위치로 이동하는 함수
   const handleCurrentLocation = useCallback(() => {
@@ -110,6 +133,48 @@ export default function RentalPage() {
       );
     }
   }, [refreshLocation, mapInstance]);
+
+  // 지도 준비 완료 시 호출되는 콜백
+  const handleMapReady = useCallback(
+    (map: kakao.maps.Map) => {
+      setMapInstance(map);
+
+      // URL 파라미터가 있으면 선택된 위치에 마커 생성
+      if (selectedLat && selectedLng) {
+        const lat = parseFloat(selectedLat);
+        const lng = parseFloat(selectedLng);
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+          const newPosition = new window.kakao.maps.LatLng(lat, lng);
+
+          // 선택된 위치 마커 생성
+          const marker = new window.kakao.maps.Marker({
+            position: newPosition,
+            map: map,
+          });
+
+          // 인포윈도우 생성
+          const infowindow = new window.kakao.maps.InfoWindow({
+            content: `
+              <div style="padding: 10px; text-align: center; min-width: 150px;">
+                <div style="font-weight: bold; margin-bottom: 5px;">${selectedPlaceName || '선택된 위치'}</div>
+                <div style="font-size: 12px; color: #666;">${selectedAddress || ''}</div>
+              </div>
+            `,
+          });
+
+          // 마커 클릭 시 인포윈도우 표시
+          window.kakao.maps.event.addListener(marker, 'click', () => {
+            infowindow.open(map, marker);
+          });
+
+          // 인포윈도우 자동 표시
+          infowindow.open(map, marker);
+        }
+      }
+    },
+    [selectedLat, selectedLng, selectedAddress, selectedPlaceName],
+  );
 
   // Drawer 상태 관리
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -190,10 +255,6 @@ export default function RentalPage() {
     [],
   );
 
-  const handleMapReady = useCallback((map: kakao.maps.Map) => {
-    setMapInstance(map);
-  }, []);
-
   // 필터링된 디바이스 업데이트
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
@@ -255,6 +316,8 @@ export default function RentalPage() {
       <div className="w-full h-[calc(100vh-190px)]">
         <MapSection
           filterState={filterState}
+          initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
+          initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
           onStoreMarkerClick={handleStoreMarkerClick}
           onMapReady={handleMapReady}
         />
