@@ -31,8 +31,7 @@ export const setupMarkerEventListeners = (
     });
 
     window.kakao.maps.event.addListener(marker, 'click', async () => {
-      if (isCluster) return; // 클러스터는 클릭 이벤트 무시
-
+      // 모든 마커 클릭 허용
       let storeDetail: StoreDetail | undefined = undefined;
       try {
         const center = map.getCenter();
@@ -47,6 +46,5 @@ export const setupMarkerEventListeners = (
   } else if (marker instanceof window.kakao.maps.CustomOverlay) {
     // CustomOverlay는 이미 클릭 이벤트가 설정되어 있으므로 추가 이벤트만 설정
     // 물방울 마커는 클릭 시 크기 변경과 DeviceCard 표시가 이미 dropletMarker.ts에서 처리됨
-    console.log('📍 물방울 마커 이벤트 리스너 설정 완료');
   }
 };

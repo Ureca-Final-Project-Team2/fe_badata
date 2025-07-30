@@ -77,7 +77,22 @@ export const createDropletMarker = (
 
   // 클릭 이벤트 추가
   if (onClick) {
-    markerContainer.addEventListener('click', onClick);
+    console.log('💧 onClick 함수 설정됨:', storeId, typeof onClick);
+    markerContainer.addEventListener('click', (e) => {
+      console.log('💧 물방울 마커 클릭 이벤트 발생:', storeId);
+      console.log('💧 onClick 함수 존재 여부:', !!onClick);
+      console.log('💧 onClick 함수 타입:', typeof onClick);
+      e.stopPropagation(); // 이벤트 버블링 방지
+
+      try {
+        onClick();
+        console.log('💧 onClick 함수 실행 완료');
+      } catch (error) {
+        console.error('💧 onClick 함수 실행 중 오류:', error);
+      }
+    });
+  } else {
+    console.log('💧 onClick 함수가 없음:', storeId);
   }
 
   // CustomOverlay 생성

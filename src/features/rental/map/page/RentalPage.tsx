@@ -137,7 +137,6 @@ export default function RentalPage() {
 
             // 사용자 현재 위치에 커스텀 마커 생성
             createCurrentLocationMarker(mapInstance);
-            console.log('📍 현재 위치 버튼 클릭 - 커스텀 마커 생성');
           }
         },
         (error) => {
@@ -260,9 +259,58 @@ export default function RentalPage() {
     [selectedStore.selectedDevices, filterState],
   );
 
+  // DeviceCard 표시 조건 디버깅
+  useEffect(() => {
+    console.log('📱 DeviceCard 표시 조건 확인:', {
+      selectedDevicesCount: selectedStore.selectedDevices.length,
+      filteredDevicesCount: filteredDevicesList.length,
+      selectedStoreId: selectedStore.selectedStoreId,
+      hasSelectedDevices: selectedStore.selectedDevices.length > 0,
+      willShowFilteredDeviceCard: filteredDevicesList.length > 0,
+      willShowFallbackDeviceCard:
+        filteredDevicesList.length === 0 && selectedStore.selectedDevices.length > 0,
+    });
+  }, [selectedStore.selectedDevices, filteredDevicesList, selectedStore.selectedStoreId]);
+
   // 콜백 함수들
   const handleStoreMarkerClick = useCallback(
     (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
+      console.log('🎯 handleStoreMarkerClick 호출됨:', {
+        storeId,
+        devicesCount: devices.length,
+        hasStoreDetail: !!storeDetail,
+        selectedStoreId,
+      });
+
+      console.log(
+        '🎯 디바이스 상세 정보:',
+        devices.map((device) => ({
+          storeDeviceId: device.storeDeviceId,
+          deviceName: device.deviceName,
+          dataCapacity: device.dataCapacity,
+          price: device.price,
+          leftCount: device.leftCount,
+          dataType: device.dataType,
+          maxSupportConnection: device.maxSupportConnection,
+          reviewRating: device.reviewRating,
+        })),
+      );
+
+      if (storeDetail) {
+        console.log('🎯 가맹점 상세 정보:', {
+          name: storeDetail.name,
+          storeId: storeDetail.storeId,
+          detailAddress: storeDetail.detailAddress,
+          phoneNumber: storeDetail.phoneNumber,
+          distanceFromMe: storeDetail.distanceFromMe,
+          reviewRating: storeDetail.reviewRating,
+          isOpening: storeDetail.isOpening,
+          startTime: storeDetail.startTime,
+          endTime: storeDetail.endTime,
+          liked: storeDetail.liked,
+        });
+      }
+
       // 이전에 선택된 가맹점 마커를 작게 만들기
       if (selectedStoreId && selectedStoreId !== storeId) {
         const cache = markerCaches.get(mapInstance!);
@@ -282,15 +330,31 @@ export default function RentalPage() {
         }
       }
 
+      console.log('🎯 selectedStore 업데이트:', {
+        devicesCount: devices.length,
+        storeId: storeId ?? 0,
+        hasStoreDetail: !!storeDetail,
+      });
+
       dispatchSelectedStore({
         type: 'SELECT_STORE',
         devices,
         storeId: storeId ?? 0,
         storeDetail,
       });
+
+      console.log('🎯 DeviceCard 표시 요청 완료');
     },
     [selectedStoreId, mapInstance],
   );
+
+  // handleStoreMarkerClick 함수 정의 확인
+  useEffect(() => {
+    console.log('🎯 handleStoreMarkerClick 함수 정의 확인:', {
+      isDefined: !!handleStoreMarkerClick,
+      functionType: typeof handleStoreMarkerClick,
+    });
+  }, [handleStoreMarkerClick]);
 
   // 필터링된 디바이스 업데이트
   useEffect(() => {
@@ -399,6 +463,17 @@ export default function RentalPage() {
           <CenterScrollSwiper
             key={filteredDevicesList.map((d: StoreDevice) => d.storeDeviceId).join('-')}
             items={filteredDevicesList}
+          >
+            {(device: StoreDevice) => <DeviceCard device={device} />}
+          </CenterScrollSwiper>
+        </div>
+      )}
+      {/* 필터링된 결과가 없지만 선택된 디바이스가 있는 경우 원본 디바이스 표시 */}
+      {filteredDevicesList.length === 0 && selectedStore.selectedDevices.length > 0 && (
+        <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
+          <CenterScrollSwiper
+            key={selectedStore.selectedDevices.map((d: StoreDevice) => d.storeDeviceId).join('-')}
+            items={selectedStore.selectedDevices}
           >
             {(device: StoreDevice) => <DeviceCard device={device} />}
           </CenterScrollSwiper>

@@ -1,4 +1,4 @@
-import { fetchStoreDevices } from '@/features/rental/map/api/apis';
+import { fetchStoreDetail, fetchStoreDevices } from '@/features/rental/map/api/apis';
 import { createDropletMarker } from '@/features/rental/map/lib/dropletMarker';
 import { createInfoWindow } from '@/features/rental/map/lib/markerCache';
 import { setupMarkerEventListeners } from '@/features/rental/map/lib/markerEventHandlers';
@@ -20,20 +20,16 @@ export const createStoreMarker = async (
   ) => void,
 ): Promise<{ storeId: number; deviceCount: number } | null> => {
   try {
-    console.log('📍 마커 생성 시작:', store.name, store.id);
-
     const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
 
     // 줌 레벨 확인 (클러스터 마커인지 확인)
-    const isCluster = store.isCluster || false;
-    console.log('📍 클러스터 여부:', isCluster);
+    const isCluster = false; // 모든 마커를 일반 가맹점 마커로 처리
 
     let safeDevices: StoreDevice[] = [];
     let totalLeftCount = 0;
 
     // 줌 레벨 4 이상(클러스터)이거나 클러스터 마커인 경우 디바이스 정보 조회 생략
     if (!isCluster) {
-      console.log('📍 디바이스 정보 조회 시작');
       // 디바이스 데이터 조회 (필터 파라미터 전달)
       const deviceParams = {
         ...filterParams,
@@ -46,11 +42,9 @@ export const createStoreMarker = async (
 
       // leftCount 총합 계산
       totalLeftCount = safeDevices.reduce((sum, device) => sum + (device.leftCount ?? 0), 0);
-      console.log('📍 디바이스 개수:', safeDevices.length, '총 leftCount:', totalLeftCount);
     } else {
       // 클러스터 마커인 경우 store의 leftDeviceCount 사용
       totalLeftCount = store.leftDeviceCount;
-      console.log('📍 클러스터 leftDeviceCount:', totalLeftCount);
     }
 
     // 로그인 상태 확인 (전역 상태에서 가져오기)
@@ -61,29 +55,28 @@ export const createStoreMarker = async (
 
     // 좋아요 상태 결정: 로그인한 사용자이고 liked가 true인 경우에만 파란색 표시
     const isLiked = isLoggedIn && store.liked;
-    console.log(
-      '📍 로그인 상태:',
-      isLoggedIn,
-      '좋아요 상태:',
-      store.liked,
-      '최종 좋아요:',
-      isLiked,
-    );
 
     // 마커 캐시 확인
     if (cache && cache.hasMarker(store.id)) {
-      console.log('📍 기존 마커 업데이트:', store.id);
       // 기존 마커가 있으면 디바이스 개수와 liked 상태 업데이트
       cache.updateMarker(store.id, totalLeftCount, isLiked, store.isCluster);
       return { storeId: store.id, deviceCount: totalLeftCount };
     }
 
-    console.log('📍 새 마커 생성:', store.id, '위치:', position.getLat(), position.getLng());
-
     // 물방울 마커 클릭 핸들러
-    const handleMarkerClick = () => {
-      if (onStoreMarkerClick && !isCluster) {
-        onStoreMarkerClick(safeDevices, undefined, store.id);
+    const handleMarkerClick = async () => {
+      if (onStoreMarkerClick) {
+        let storeDetail: StoreDetail | undefined = undefined;
+        try {
+          const center = map.getCenter();
+          const lat = center.getLat();
+          const lng = center.getLng();
+          storeDetail = await fetchStoreDetail(store.id, lat, lng);
+        } catch (error) {
+          console.error('상세 정보 조회 실패:', error);
+        }
+
+        onStoreMarkerClick(safeDevices, storeDetail, store.id);
       }
     };
 
@@ -98,8 +91,6 @@ export const createStoreMarker = async (
       totalLeftCount, // 디바이스 개수 전달
     );
 
-    console.log('📍 물방울 마커 생성 완료:', store.id);
-
     // 인포윈도우 생성
     const infowindow = createInfoWindow(store.name);
 
@@ -113,7 +104,6 @@ export const createStoreMarker = async (
         isLiked: isLiked,
         isCluster: store.isCluster || false,
       });
-      console.log('📍 마커 캐시에 추가 완료:', store.id);
     }
 
     // 이벤트 리스너 설정
@@ -122,12 +112,11 @@ export const createStoreMarker = async (
       infowindow,
       map,
       store.id,
-      isCluster,
+      false, // 모든 마커를 클릭 가능하게 설정
       onStoreMarkerClick,
       safeDevices,
     );
 
-    console.log('📍 마커 생성 완료:', store.id, '디바이스 개수:', totalLeftCount);
     return { storeId: store.id, deviceCount: totalLeftCount };
   } catch (error) {
     console.error('마커 생성 중 오류 발생:', error);
