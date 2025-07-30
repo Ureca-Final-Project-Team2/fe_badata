@@ -16,14 +16,60 @@ import type {
  */
 export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> => {
   try {
-    const response = await axiosInstance.get(END_POINTS.STORES.ALLDEVICE(), {
+    const endpoint = END_POINTS.STORES.ALLDEVICE();
+
+    // URL 파라미터 구성
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        if (Array.isArray(value)) {
+          // 배열인 경우 여러 번 추가 (dataCapacity=999&dataCapacity=111 형태)
+          value.forEach((v) => queryParams.append(key, v.toString()));
+        } else {
+          queryParams.append(key, value.toString());
+        }
+      }
+    });
+
+    const fullUrl = `${endpoint}?${queryParams.toString()}`;
+    console.log('🔗 API URL:', fullUrl);
+
+    const response = await axiosInstance.get(endpoint, {
       params,
     });
-    // response 자체가 배열인지 확인 (axios interceptor에서 이미 data를 추출)
-    const stores = Array.isArray(response) ? response : [];
-    return stores;
+    console.log('🔗 resposne 확인:', response);
+    // API 응답 구조 확인 및 처리
+    let stores: Record<string, unknown>[] = [];
+
+    if (response && typeof response === 'object') {
+      // response가 객체인 경우 (MapStoresResponse 구조)
+      if ('content' in response && Array.isArray(response.content)) {
+        stores = response.content as Record<string, unknown>[];
+      } else if (Array.isArray(response)) {
+        // response 자체가 배열인 경우 (이전 버전 호환성)
+        stores = response as Record<string, unknown>[];
+      }
+    }
+
+    // API 응답을 Store 타입에 맞게 매핑
+    const mappedStores = stores.map((store: Record<string, unknown>) => {
+      const isCluster = !store.name; // name이 null이면 클러스터
+      const mappedStore = {
+        id: store.id as number,
+        name: (store.name as string) || `클러스터 ${store.id}`, // name이 null인 경우 클러스터 ID로 대체
+        latitude: store.latitude as number,
+        longititude: store.longititude as number,
+        leftDeviceCount: store.leftDeviceCount as number,
+        liked: (store.liked as boolean) || false,
+        isCluster,
+      };
+
+      return mappedStore;
+    });
+
+    return mappedStores;
   } catch (error) {
-    console.error('fetchStores API 호출 실패:', error);
+    console.error('❌ fetchStores API 호출 실패:', error);
     return [];
   }
 };

@@ -25,33 +25,54 @@ export const createStoreMarker = async (
   try {
     const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
 
-    // 디바이스 데이터 조회 (필터 파라미터 전달)
-    const deviceParams = {
-      ...filterParams,
-      maxSupportConnection: filterParams.maxSupportConnection
-        ? [filterParams.maxSupportConnection]
-        : undefined,
-    };
-    const devices = await fetchStoreDevices(store.id, deviceParams);
-    const safeDevices = Array.isArray(devices) ? devices : [];
+    // 줌 레벨 확인 (클러스터 마커인지 확인)
+    const isCluster = store.isCluster || false;
 
-    // leftCount 총합 계산
-    const totalLeftCount = safeDevices.reduce((sum, device) => sum + (device.leftCount ?? 0), 0);
+    let safeDevices: StoreDevice[] = [];
+    let totalLeftCount = 0;
 
-    // 디바이스가 0개면 마커 생성하지 않음
-    if (safeDevices.length === 0 || totalLeftCount === 0) {
-      return null;
+    // 줌 레벨 4 이상(클러스터)이거나 클러스터 마커인 경우 디바이스 정보 조회 생략
+    if (!isCluster) {
+      // 디바이스 데이터 조회 (필터 파라미터 전달)
+      const deviceParams = {
+        ...filterParams,
+        maxSupportConnection: filterParams.maxSupportConnection
+          ? [filterParams.maxSupportConnection]
+          : undefined,
+      };
+      const devices = await fetchStoreDevices(store.id, deviceParams);
+      safeDevices = Array.isArray(devices) ? devices : [];
+
+      // leftCount 총합 계산
+      totalLeftCount = safeDevices.reduce((sum, device) => sum + (device.leftCount ?? 0), 0);
+
+      // 디바이스가 0개면 마커 생성하지 않음 (클러스터가 아닌 경우에만)
+      if (safeDevices.length === 0 || totalLeftCount === 0) {
+        return null;
+      }
+    } else {
+      // 클러스터 마커인 경우 store의 leftDeviceCount 사용
+      totalLeftCount = store.leftDeviceCount;
     }
+
+    // 로그인 상태 확인 (전역 상태에서 가져오기)
+    const isLoggedIn =
+      typeof window !== 'undefined' && localStorage.getItem('auth-storage')
+        ? JSON.parse(localStorage.getItem('auth-storage') || '{}').state?.isLoggedIn || false
+        : false;
+
+    // 좋아요 상태 결정: 로그인한 사용자이고 liked가 true인 경우에만 like_active 표시
+    const shouldShowLikeActive = isLoggedIn && store.liked;
 
     // 마커 캐시 확인
     if (cache && cache.hasMarker(store.id)) {
-      // 기존 마커가 있으면 디바이스 개수만 업데이트
-      cache.updateMarker(store.id, totalLeftCount);
+      // 기존 마커가 있으면 디바이스 개수와 liked 상태 업데이트
+      cache.updateMarker(store.id, totalLeftCount, shouldShowLikeActive, store.isCluster);
       return { storeId: store.id, deviceCount: totalLeftCount };
     }
 
-    // 새 마커 생성
-    const markerImage = createMarkerImage();
+    // 새 마커 생성 (클러스터든 일반 마커든 좋아요 상태에 따라 아이콘 결정)
+    const markerImage = createMarkerImage(shouldShowLikeActive, store.isCluster);
     const marker = new window.kakao.maps.Marker({
       map,
       position,
@@ -72,11 +93,15 @@ export const createStoreMarker = async (
         overlay,
         infowindow,
         deviceCount: totalLeftCount,
+        isLiked: shouldShowLikeActive,
+        isCluster: store.isCluster || false,
       });
     }
 
-    // 이벤트 리스너 설정
-    setupMarkerEventListeners(marker, map, infowindow, store, safeDevices, onStoreMarkerClick);
+    // 이벤트 리스너 설정 (클러스터가 아닌 경우에만)
+    if (!isCluster) {
+      setupMarkerEventListeners(marker, map, infowindow, store, safeDevices, onStoreMarkerClick);
+    }
 
     return { storeId: store.id, deviceCount: totalLeftCount };
   } catch (error) {
