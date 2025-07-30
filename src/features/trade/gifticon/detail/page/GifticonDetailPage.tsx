@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
+import { getPartnerDefaultImage } from '@/shared/lib/getPartnerDefaultImage';
 import { useShareHooks } from '@/shared/model/useShareHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -15,6 +16,7 @@ import { TradeDetailProductSection } from '@/widgets/trade/post-detail/ui/TradeD
 import { TradeDetailSellerSection } from '@/widgets/trade/post-detail/ui/TradeDetailSellerSection';
 import { useFollowState } from '@/widgets/user/model/useFollowState';
 
+import type { KoreanBrandName } from '@/shared/config/brandMapping';
 import type { PostType, TradeDetailPost } from '@/widgets/trade/post-detail/lib/types';
 
 interface Props {
@@ -65,11 +67,7 @@ export default function GifticonDetailPage({ postUserId, post, postType, sellerN
       {/* 썸네일 이미지 */}
       <div className="w-full h-[400px] relative overflow-hidden">
         <Image
-          src={
-            !post.postImage || post.postImage === '' || post.postImage === 'no image'
-              ? '/assets/trade-detail.jpg'
-              : post.postImage
-          }
+          src={getPartnerDefaultImage(post.partner as KoreanBrandName)}
           alt="thumbnail"
           fill
           sizes="(max-width: 768px) 100vw, 430px"
