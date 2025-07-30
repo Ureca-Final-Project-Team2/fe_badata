@@ -113,7 +113,7 @@ export function TradeGifticonRegisterForm() {
       onSuccess: () => {
         makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
         dispatch({ type: 'RESET' });
-        router.push(PATH.TRADE.GIFTICON);
+        router.push(`${PATH.TRADE.MAIN}?page=gifticon`);
       },
       onError: () => {
         makeToast('게시물 등록에 실패했습니다.', 'warning');

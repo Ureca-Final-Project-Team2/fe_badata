@@ -34,7 +34,7 @@ export function TradeDataRegisterForm() {
       {
         onSuccess: () => {
           makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
-          router.push(PATH.TRADE.DATA);
+          router.push(`${PATH.TRADE.MAIN}?page=data`);
         },
         onError: () => {
           makeToast('게시물 등록에 실패했습니다.', 'warning');
