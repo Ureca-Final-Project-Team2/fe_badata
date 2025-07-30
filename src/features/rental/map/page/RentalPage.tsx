@@ -40,8 +40,8 @@ export default function RentalPage() {
   const [tempFilterState, setTempFilterState] =
     useState<RentalFilterState>(initialRentalFilterState);
   const [userLocation, setUserLocation] = useState({
-    lat: 0,
-    lng: 0,
+    lat: null as number | null,
+    lng: null as number | null,
   });
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
 
