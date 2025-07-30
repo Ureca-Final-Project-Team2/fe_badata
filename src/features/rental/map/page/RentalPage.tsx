@@ -132,10 +132,14 @@ export default function RentalPage() {
   // 스토어 리스트 훅
   const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error, fetchNextPage } =
     useStoreListWithInfiniteScroll({
-      centerLat: userLocation.lat,
-      centerLng: userLocation.lng,
+      centerLat: userLocation.lat ?? 0,
+      centerLng: userLocation.lng ?? 0,
       sort: [currentSort],
-      enabled: userLocation.lat !== 0 && userLocation.lng !== 0,
+      enabled:
+        userLocation.lat !== null &&
+        userLocation.lng !== null &&
+        userLocation.lat !== 0 &&
+        userLocation.lng !== 0,
       reviewRating: filterState.star > 0 ? filterState.star : undefined,
       minPrice: filterState.minPrice && filterState.minPrice > 0 ? filterState.minPrice : undefined,
       maxPrice: filterState.maxPrice && filterState.maxPrice > 0 ? filterState.maxPrice : undefined,
