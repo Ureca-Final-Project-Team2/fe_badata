@@ -3,6 +3,8 @@
 import { useEffect, useRef } from 'react';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
+import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { Header } from '@/shared/ui/Header';
 
 export default function HomePage() {
   const user = useAuthStore((state) => state.user);
@@ -15,5 +17,9 @@ export default function HomePage() {
     }
   }, [user]);
 
-  return <></>;
+  return (
+    <BaseLayout header={<Header />} paddingX>
+      홈화면
+    </BaseLayout>
+  );
 }
