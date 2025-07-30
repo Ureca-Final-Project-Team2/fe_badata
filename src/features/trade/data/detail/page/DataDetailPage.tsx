@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
+import { getCarrierDefaultImage } from '@/shared/lib/getCarrierDefaultImage';
 import { useShareHooks } from '@/shared/model/useShareHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -15,6 +16,7 @@ import { TradeDetailProductSection } from '@/widgets/trade/post-detail/ui/TradeD
 import { TradeDetailSellerSection } from '@/widgets/trade/post-detail/ui/TradeDetailSellerSection';
 import { useFollowState } from '@/widgets/user/model/useFollowState';
 
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
 import type { PostType, TradeDetailPost } from '@/widgets/trade/post-detail/lib/types';
 
 interface Props {
@@ -67,7 +69,7 @@ export default function DataDetailPage({ postUserId, post, postType, sellerName 
         <Image
           src={
             !post.postImage || post.postImage === '' || post.postImage === 'no image'
-              ? '/assets/trade-detail.jpg'
+              ? getCarrierDefaultImage(post.mobileCarrier as MobileCarrier)
               : post.postImage
           }
           alt="thumbnail"
