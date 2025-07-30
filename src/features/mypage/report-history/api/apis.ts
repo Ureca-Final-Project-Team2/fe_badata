@@ -1,24 +1,21 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { ReportHistoryItem } from '@/features/mypage/report-history/lib/types';
+import type { ReportHistoryResponse, ReportInfo } from '@/features/mypage/report-history/lib/types';
 
 export const getReportHistoryList = async (
   reportStatus: string,
   cursor?: number,
   size = 10,
-): Promise<{
-  item: ReportHistoryItem[];
-  nextCursor: number;
-  hasNext: boolean;
-} | null> => {
-  // like-store 방식으로 수정: 직접 응답 반환
-  const response = await axiosInstance.get(END_POINTS.MYPAGE.REPORT_LIST, {
+): Promise<ReportHistoryResponse['content']> => {
+  const response = await axiosInstance.get<ReportHistoryResponse>(END_POINTS.MYPAGE.REPORT_LIST, {
     params: { reportStatus, cursor, size },
   });
-  return response as unknown as {
-    item: ReportHistoryItem[];
-    nextCursor: number;
-    hasNext: boolean;
-  };
+  return response as unknown as ReportHistoryResponse['content'];
 };
+
+export const getReportInfo = async (reportId: number): Promise<ReportInfo> => {
+  const response = await axiosInstance.get(END_POINTS.MYPAGE.REPORT_INFO(reportId));
+  return response as unknown as ReportInfo;
+};
+
