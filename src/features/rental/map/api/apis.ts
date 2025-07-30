@@ -31,13 +31,9 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
       }
     });
 
-    const fullUrl = `${endpoint}?${queryParams.toString()}`;
-    console.log('🔗 API URL:', fullUrl);
-
     const response = await axiosInstance.get(endpoint, {
       params,
     });
-    console.log('🔗 resposne 확인:', response);
     // API 응답 구조 확인 및 처리
     let stores: Record<string, unknown>[] = [];
 
@@ -69,7 +65,7 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
 
     return mappedStores;
   } catch (error) {
-    console.error('❌ fetchStores API 호출 실패:', error);
+    console.error(' fetchStores API 호출 실패:', error);
     return [];
   }
 };
