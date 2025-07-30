@@ -13,6 +13,8 @@ export const transformStoreResponseToStoreCard = (
       name: storeResponse.name,
       latitude: storeResponse.latitude,
       longititude: storeResponse.longititude,
+      leftDeviceCount: storeResponse.leftDeviceCount,
+      liked: storeResponse.liked,
     },
     storeDetail: {
       storeId: storeResponse.id,

@@ -36,6 +36,11 @@ export default function LikeStorePage() {
   // 제거된 스토어를 필터링
   const filteredItems = likeStoreItems?.filter((item) => !removedStoreIds.has(item.storeId)) || [];
 
+  console.log('🔗 LikeStorePage - likeStoreItems:', likeStoreItems);
+  console.log('🔗 LikeStorePage - isLoading:', isLoading);
+  console.log('🔗 LikeStorePage - isError:', isError);
+  console.log('🔗 LikeStorePage - filteredItems:', filteredItems);
+
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
   if (!filteredItems || filteredItems.length === 0) {
@@ -74,6 +79,8 @@ export default function LikeStorePage() {
                   name: item.name,
                   latitude: 0,
                   longititude: 0,
+                  leftDeviceCount: item.availableDevice,
+                  liked: true,
                 }}
                 storeDetail={{
                   name: item.name,
