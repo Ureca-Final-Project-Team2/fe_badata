@@ -16,8 +16,9 @@ export const convertDevicesForUI = (devices: RentalDevice[]) => {
     imageUrl: device.imageUrl,
     dataCapacity: device.dataCapacity,
     price: device.price,
-    remainCount: device.availableCount,
-    totalCount: device.totalCount, // 가맹점 보유 총 기기 수 추가
+    remainCount: device.availableCount, // availableCount를 remainCount로 매핑
+    availableCount: device.availableCount, // 날짜별 대여 가능한 수량
+    totalCount: device.totalCount, // 가맹점 보유 총 기기 수
   }));
 };
 

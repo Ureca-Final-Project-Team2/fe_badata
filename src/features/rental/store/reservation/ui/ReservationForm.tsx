@@ -17,7 +17,8 @@ interface ReservationFormProps {
     imageUrl: string;
     dataCapacity: number;
     price: number;
-    remainCount: number;
+    availableCount: number; // remainCount 대신 availableCount 사용
+    totalCount: number; // API에서 오는 totalCount
   }>;
   selectedDevices: Record<string, number>;
   onDeviceCountChange: (deviceId: number, count: number) => void;
@@ -53,7 +54,9 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
         <DeviceSelectSection
           devices={devices.map((device) => ({
             ...device,
-            totalCount: device.remainCount, // or set to a correct value if available
+            remainCount: device.availableCount, // ReservationDeviceCard에서 사용하는 remainCount로 매핑
+            availableCount: device.availableCount, // 날짜별 대여 가능한 수량
+            totalCount: device.totalCount, // API에서 오는 totalCount 사용
           }))}
           selectedDevices={selectedDevices}
           onCountChange={onDeviceCountChange}

@@ -15,8 +15,9 @@ interface Device {
   imageUrl: string;
   dataCapacity: number | string;
   price: number;
-  remainCount: number;
+  availableCount: number; // 날짜별 대여 가능한 수량
   totalCount: number; // 가맹점 보유 총 기기 수
+  remainCount?: number; // ReservationDeviceCard 호환성을 위해 유지
 }
 
 interface DeviceSelectSectionProps {
@@ -79,7 +80,7 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
               count={memoizedSelectedDevices[device.id] ?? 0}
               onCountChange={(newCount: number) => onCountChange(device.id, newCount)}
               selected={!!memoizedSelectedDevices[device.id]}
-              max={device.remainCount}
+              max={device.availableCount}
               onRestockRequest={handleRestockRequest}
             />
           </div>

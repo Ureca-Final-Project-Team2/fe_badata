@@ -13,6 +13,7 @@ interface ReservationDeviceCardProps {
     dataCapacity?: number | string;
     price?: number;
     remainCount?: number;
+    availableCount?: number; // 날짜별 대여 가능한 수량
     totalCount?: number; // 가맹점 보유 총 기기 수
     id?: number;
   };
@@ -43,11 +44,13 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
     isRestockNotified = false,
   }) => {
     const sz = CARD_SIZE;
-    const { deviceName, imageUrl, dataCapacity, price, remainCount, totalCount } = device;
-    const actualRemainCount = remainCount ?? 0;
-    const actualTotalCount = totalCount ?? remainCount ?? 10; // fallback to remainCount or 10
-    const maxCount = max ?? Math.max(0, actualRemainCount);
-    const isSoldOut = actualRemainCount <= 0;
+    const { deviceName, imageUrl, dataCapacity, price, availableCount, totalCount } = device;
+    // availableCount: 날짜별 대여 가능한 수량, 없으면 0
+    const actualAvailableCount = availableCount ?? 0;
+    // API에서 totalCount를 직접 제공하므로 그대로 사용
+    const actualTotalCount = totalCount ?? 1; // 최소 1개는 보장
+    const maxCount = max ?? Math.max(0, actualAvailableCount);
+    const isSoldOut = actualAvailableCount <= 0; // 날짜별 대여 가능한 수량이 0이면 품절
 
     // 커스텀 훅 사용
     const { canIncrement, handleDecrement, handleIncrement } = useDeviceQuantity({
@@ -60,7 +63,7 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
     const handleNotifyToggle = useCallback(() => {
       if (!isRestockNotified) {
         // 재입고 알림 신청 모달 열기 (상위 컴포넌트에서 처리)
-        if (onRestockRequest && device.id && device.deviceName && actualTotalCount) {
+        if (onRestockRequest && device.id && device.deviceName && actualTotalCount >= 0) {
           onRestockRequest({
             id: device.id,
             deviceName: device.deviceName,
@@ -99,7 +102,7 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
           deviceName={deviceName}
           dataCapacity={dataCapacity}
           price={price}
-          remainCount={actualRemainCount}
+          remainCount={actualAvailableCount} // availableCount를 표시
           count={count}
           isSoldOut={isSoldOut}
           onDecrement={handleDecrement}
