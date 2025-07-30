@@ -144,10 +144,42 @@ export class MarkerCache {
   getMarkerCount(): number {
     return this.markers.size;
   }
+
+  // 특정 스토어의 마커 데이터 반환
+  getMarkerData(storeId: number) {
+    const key = this.getMarkerKey(storeId);
+    return this.markers.get(key);
+  }
 }
 
 // 맵별 마커 캐시 관리
 export const markerCaches = new WeakMap<kakao.maps.Map, MarkerCache>();
+
+// 전역 마커 업데이트 이벤트 시스템
+type MarkerUpdateCallback = (storeId: number, isLiked: boolean) => void;
+const markerUpdateCallbacks = new Set<MarkerUpdateCallback>();
+
+// 마커 업데이트 콜백 등록
+export const registerMarkerUpdateCallback = (callback: MarkerUpdateCallback): void => {
+  markerUpdateCallbacks.add(callback);
+};
+
+// 마커 업데이트 콜백 해제
+export const unregisterMarkerUpdateCallback = (callback: MarkerUpdateCallback): void => {
+  markerUpdateCallbacks.delete(callback);
+};
+
+// 전역 마커 좋아요 상태 업데이트 함수 (낙관적 업데이트용)
+export const updateMarkerLikeStatus = (storeId: number, isLiked: boolean): void => {
+  // 등록된 모든 콜백에 업데이트 이벤트 전파
+  markerUpdateCallbacks.forEach((callback) => {
+    try {
+      callback(storeId, isLiked);
+    } catch (error) {
+      console.error('마커 업데이트 콜백 실행 중 오류:', error);
+    }
+  });
+};
 
 // 마커 이미지 생성 함수 (캐싱)
 const markerImageCache = new Map<string, kakao.maps.MarkerImage>();

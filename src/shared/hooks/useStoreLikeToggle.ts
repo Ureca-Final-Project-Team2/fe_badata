@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { toggleStoreLike } from '@/features/rental/map/api/apis';
+import { updateMarkerLikeStatus } from '@/features/rental/map/lib/markerCache';
 import { makeToast } from '@/shared/lib/makeToast';
 
 interface UseStoreLikeToggleProps {
@@ -39,10 +40,15 @@ export const useStoreLikeToggle = ({
       try {
         setIsLoading(true);
 
-        await toggleStoreLike(storeId, liked);
-
+        // 낙관적 업데이트: 즉시 UI 상태 변경
         const newLikedState = !liked;
         setLiked(newLikedState);
+
+        // 마커 업데이트 트리거 (낙관적 업데이트)
+        updateMarkerLikeStatus(storeId, newLikedState);
+
+        // API 호출
+        await toggleStoreLike(storeId, liked);
 
         // 토스트 메시지 비활성화가 아닌 경우에만 표시
         if (!disableToast) {
@@ -56,6 +62,11 @@ export const useStoreLikeToggle = ({
         onToggle?.(storeId, newLikedState);
       } catch (error) {
         console.error('가맹점 좋아요 토글 실패:', error);
+
+        // 에러 발생 시 원래 상태로 롤백
+        setLiked(liked);
+        updateMarkerLikeStatus(storeId, liked);
+
         makeToast('좋아요 처리 중 오류가 발생했습니다.', 'warning');
       } finally {
         setIsLoading(false);
