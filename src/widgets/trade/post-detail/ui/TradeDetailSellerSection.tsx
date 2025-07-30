@@ -19,6 +19,7 @@ export const TradeDetailSellerSection = ({
   sellerId,
   sellerName,
   isFollowing,
+  onFollowChange,
 }: TradeDetailSellerSectionProps) => {
   const { data, isLoading, error } = useUserTradePostsQuery(sellerId);
   const { toggleLike, getCachedLikeState } = useTradePostLikeHooks();
