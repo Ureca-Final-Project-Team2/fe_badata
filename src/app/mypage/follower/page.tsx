@@ -1,4 +1,4 @@
-import FollowerPage from "@/pages/mypage/follower/page/FollowerPage";
+import FollowerPage from '@/features/mypage/follower/page/FollowerPage';
 
 export default function Page() {
   return <FollowerPage />;

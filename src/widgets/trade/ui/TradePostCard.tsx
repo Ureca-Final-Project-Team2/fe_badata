@@ -9,7 +9,7 @@ import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PostStatusBadge from '@/shared/ui/PostStatusBadge';
 import PriceText from '@/shared/ui/PriceText';
 
-import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
 const DEFAULT_IMAGE = ICONS.LOGO.DETAIL;
 
 interface TradePostCardProps {

@@ -3,13 +3,13 @@
 import Image from 'next/image';
 
 import { useUserInfoQuery } from '@/entities/user/model/queries';
-import { useUserCoinQuery } from '@/pages/mypage/coin-history/model/queries';
-import { AlarmSettingSection } from '@/pages/mypage/ui/AlarmSettingSection';
-import { DataUsageCardSection } from '@/pages/mypage/ui/DataUsageCardSection';
-import { RentalSection } from '@/pages/mypage/ui/RentalSection';
-import { ReportStatusSection } from '@/pages/mypage/ui/ReportStatusSection';
-import { SosSection } from '@/pages/mypage/ui/SosSection';
-import { TradeSection } from '@/pages/mypage/ui/TradeSection';
+import { useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
+import { AlarmSettingSection } from '@/features/mypage/ui/AlarmSettingSection';
+import { DataUsageCardSection } from '@/features/mypage/ui/DataUsageCardSection';
+import { RentalSection } from '@/features/mypage/ui/RentalSection';
+import { ReportStatusSection } from '@/features/mypage/ui/ReportStatusSection';
+import { SosSection } from '@/features/mypage/ui/SosSection';
+import { TradeSection } from '@/features/mypage/ui/TradeSection';
 import { ICONS } from '@/shared/config/iconPath';
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { Header } from '@/shared/ui/Header';

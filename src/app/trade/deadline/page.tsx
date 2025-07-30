@@ -1,4 +1,4 @@
-import DeadlinePage from '@/pages/trade/deadline/page/DeadlinePage';
+import DeadlinePage from '@/features/trade/deadline/page/DeadlinePage';
 
 export default function Page() {
   return <DeadlinePage />;
