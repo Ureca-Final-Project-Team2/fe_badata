@@ -24,7 +24,7 @@ type MarkerType = kakao.maps.Marker | kakao.maps.CustomOverlay;
 
 // 마커 캐시 관리를 위한 클래스
 export class MarkerCache {
-  private markers = new Map<
+  public markers = new Map<
     string,
     {
       marker: MarkerType;
@@ -34,6 +34,7 @@ export class MarkerCache {
       deviceCount: number;
       isLiked: boolean;
       isCluster: boolean;
+      isSelected: boolean;
     }
   >();
 
@@ -63,6 +64,7 @@ export class MarkerCache {
       deviceCount: number;
       isLiked: boolean;
       isCluster: boolean;
+      isSelected: boolean;
     },
   ): void {
     this.markers.set(this.getMarkerKey(storeId), {

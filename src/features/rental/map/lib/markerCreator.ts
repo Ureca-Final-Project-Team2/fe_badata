@@ -80,13 +80,19 @@ export const createStoreMarker = async (
       }
     };
 
-    // 물방울 마커 생성 (기본 크기는 small, 선택되지 않은 상태)
+    // 현재 선택된 마커인지 확인 (전역 상태에서 가져오기)
+    const isCurrentlySelected =
+      typeof window !== 'undefined' && localStorage.getItem('selected-store-id')
+        ? JSON.parse(localStorage.getItem('selected-store-id') || 'null') === store.id
+        : false;
+
+    // 물방울 마커 생성 (현재 선택된 마커는 크게, 아니면 작게)
     const dropletOverlay = createDropletMarker(
       map,
       position,
       store.id,
       isLiked,
-      false, // 기본적으로 선택되지 않음
+      isCurrentlySelected, // 현재 선택 상태에 따라 크기 결정
       handleMarkerClick,
       totalLeftCount, // 디바이스 개수 전달
     );
@@ -103,6 +109,7 @@ export const createStoreMarker = async (
         deviceCount: totalLeftCount,
         isLiked: isLiked,
         isCluster: store.isCluster || false,
+        isSelected: isCurrentlySelected,
       });
     }
 

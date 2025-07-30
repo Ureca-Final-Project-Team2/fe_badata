@@ -51,7 +51,14 @@ export default function RentalPage() {
   });
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
   const [hasProcessedUrlParams, setHasProcessedUrlParams] = useState(false);
-  const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
+  const [selectedStoreId, setSelectedStoreId] = useState<number | null>(() => {
+    // localStorage에서 선택된 스토어 ID 복원
+    if (typeof window !== 'undefined') {
+      const savedStoreId = localStorage.getItem('selected-store-id');
+      return savedStoreId ? parseInt(savedStoreId, 10) : null;
+    }
+    return null;
+  });
 
   // URL 파라미터에서 선택된 위치 정보 가져오기 (일회성)
   const selectedLat = !hasProcessedUrlParams ? searchParams?.get('lat') : null;
@@ -273,6 +280,8 @@ export default function RentalPage() {
       // 새로 선택된 가맹점 마커를 크게 만들기 (같은 마커를 다시 클릭해도 크게 유지)
       if (storeId) {
         setSelectedStoreId(storeId);
+        // localStorage에 선택된 스토어 ID 저장
+        localStorage.setItem('selected-store-id', storeId.toString());
         const cache = markerCaches.get(mapInstance!);
         if (cache) {
           cache.updateMarkerSelection(storeId, true);
@@ -303,6 +312,7 @@ export default function RentalPage() {
 
       // 선택된 스토어 초기화
       setSelectedStoreId(null);
+      localStorage.removeItem('selected-store-id'); // localStorage에서도 제거
       dispatchSelectedStore({
         type: 'SELECT_STORE',
         devices: [],
@@ -379,6 +389,7 @@ export default function RentalPage() {
           onMapClick={handleMapClick}
           onMapReady={handleMapReady}
           hasUrlParams={!!(selectedLat && selectedLng && !hasProcessedUrlParams)}
+          selectedStoreId={selectedStoreId}
         />
       </div>
       <DrawerSection
