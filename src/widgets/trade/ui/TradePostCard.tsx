@@ -4,6 +4,7 @@ import Image from 'next/image';
 
 import { ICONS } from '@/shared/config/iconPath';
 import { formatPrice } from '@/shared/lib/formatPrice';
+import { getCarrierDefaultImage } from '@/shared/lib/getCarrierDefaultImage';
 import DdayBadge from '@/shared/ui/DdayBadge';
 import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PostStatusBadge from '@/shared/ui/PostStatusBadge';
@@ -59,7 +60,8 @@ const TradePostCard = ({
 }: TradePostCardProps) => {
   const getSafeImageUrl = (url?: string): string => {
     if (!url || url.trim() === '' || url === 'null' || url === 'undefined' || url === 'no image') {
-      return DEFAULT_IMAGE;
+      // 통신사별 디폴트 이미지 사용
+      return mobileCarrier ? getCarrierDefaultImage(mobileCarrier) : DEFAULT_IMAGE;
     }
 
     // URL 유효성 검사
@@ -69,7 +71,8 @@ const TradePostCard = ({
       !url.startsWith('https://') &&
       !url.startsWith('./')
     ) {
-      return DEFAULT_IMAGE;
+      // 통신사별 디폴트 이미지 사용
+      return mobileCarrier ? getCarrierDefaultImage(mobileCarrier) : DEFAULT_IMAGE;
     }
 
     return url;
@@ -107,7 +110,9 @@ const TradePostCard = ({
           height={163}
           className="w-[178px] h-[163px] object-cover rounded-[15px] bg-[var(--gray-light)]"
           onError={(e) => {
-            e.currentTarget.src = DEFAULT_IMAGE;
+            e.currentTarget.src = mobileCarrier
+              ? getCarrierDefaultImage(mobileCarrier)
+              : DEFAULT_IMAGE;
           }}
         />
       </div>
