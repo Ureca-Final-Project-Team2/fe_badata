@@ -103,9 +103,6 @@ export default function RestockAlarmPage() {
           <span className="font-body-semibold text-[var(--black)]">
             전체 <span className="text-[var(--main-5)]">{filteredAlarms.length}</span>개
           </span>
-          <button className="font-body-light-lh text-[var(--gray-mid)]" disabled>
-            전체 삭제
-          </button>
         </div>
 
         {isLoading ? (
@@ -174,6 +171,17 @@ export default function RestockAlarmPage() {
                       >
                         {isDeleting ? '⋯' : '×'}
                       </button>
+                    </div>
+                    <div className="mt-1 text-[12px] text-[var(--gray-mid)] font-body-xs">
+                      {item.storeName}
+                    </div>
+                    <div className="mt-1 flex items-end justify-start w-full">
+                      <span className="font-body-xs-semibold text-[var(--main-5)]">
+                        {item.price.toLocaleString()}원
+                      </span>
+                    </div>
+                    <div className="mt-1 text-[12px] text-[var(--gray-mid)] font-body-xs">
+                      남은 공유기 {item.desiredCount}개
                     </div>
                     <div className="flex items-end justify-start w-full mt-1">
                       <span className="font-body-xs-semibold text-[var(--main-5)]">
