@@ -8,8 +8,8 @@ import { useSortStateHook } from '@/shared/model/useSortStateHook';
 
 import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
 
-export const useFilteredTradePostsHooks = (tab: string) => {
-  const { posts } = useTradePostsQuery();
+export const useAllTradePostsHooks = () => {
+  const { posts, isLoading } = useTradePostsQuery();
   const {
     sortOption,
     setSortOption,
@@ -18,17 +18,14 @@ export const useFilteredTradePostsHooks = (tab: string) => {
     closeDrawer: closeSortDrawer,
   } = useSortStateHook<'latest' | 'popular'>('latest');
 
-  const filteredPosts = useMemo(() => {
-    const base = tab === 'all' ? posts : posts?.filter((p) => p.postCategory === tab.toUpperCase());
-
-    return [...(base ?? [])].sort((a, b) => {
-      if (sortOption === 'latest') {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      } else {
-        return b.likesCount - a.likesCount;
-      }
-    });
-  }, [posts, tab, sortOption]);
+  const sortedPosts = useMemo(() => {
+    if (!posts) return [];
+    return [...posts].sort((a, b) =>
+      sortOption === 'latest'
+        ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        : b.likesCount - a.likesCount,
+    );
+  }, [posts, sortOption]);
 
   const router = useRouter();
 
@@ -41,8 +38,8 @@ export const useFilteredTradePostsHooks = (tab: string) => {
   };
 
   return {
-    filteredPosts,
-    isLoading: false,
+    posts: sortedPosts,
+    isLoading,
     sortOption,
     sortHandlers: {
       sortOption,

@@ -2,11 +2,6 @@
 
 import { useSearchParams } from 'next/navigation';
 
-import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
-import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
-import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
-import { useFilteredTradePostsHooks } from '@/features/trade/model/useFilteredTradePostsHooks';
-import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
 import { TradeDeadlineBanner } from '@/features/trade/ui/TradeDeadlineBanner';
 import { TradeFlatTab } from '@/features/trade/ui/TradeFlatTab';
 import { TradeList } from '@/features/trade/ui/TradeList';
@@ -17,42 +12,21 @@ import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFlo
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
+import { useAllTradePostsHooks } from '../model/useAllTradePostsHooks';
+
 export default function TradePage() {
   const searchParams = useSearchParams();
   const currentTab = searchParams?.get('page') ?? 'all';
 
   const {
-    filteredPosts,
+    posts,
     isLoading,
     sortOption,
     sortHandlers: { openSortDrawer, closeSortDrawer, setSortOption, onItemClick, isSortDrawerOpen },
-  } = useFilteredTradePostsHooks(currentTab);
-
-  const {
-    dataFilterState,
-    dataDispatch,
-    dataDrawerOpen,
-    openDataDrawer,
-    closeDataDrawer,
-    submitDataFilter,
-  } = useDataFilterHooks();
-
-  const {
-    gifticonPrice,
-    setGifticonPrice,
-    gifticonDrawerOpen,
-    openGifticonDrawer,
-    closeGifticonDrawer,
-    submitGifticonFilter,
-  } = useGifticonFilterHooks();
+  } = useAllTradePostsHooks();
 
   const handleSortClick = () => {
     openSortDrawer();
-  };
-
-  const handleFilterClick = () => {
-    if (currentTab === 'data') openDataDrawer();
-    else if (currentTab === 'gifticon') openGifticonDrawer();
   };
 
   return (
@@ -68,11 +42,10 @@ export default function TradePage() {
         )}
 
         <TradeList
-          items={filteredPosts}
+          items={posts}
           isLoading={isLoading}
           sortLabel={sortOption === 'latest' ? '최신순' : '인기순'}
           onSortClick={handleSortClick}
-          onFilterClick={['data', 'gifticon'].includes(currentTab) ? handleFilterClick : undefined}
           onItemClick={onItemClick}
         />
       </BaseLayout>
@@ -83,27 +56,6 @@ export default function TradePage() {
         sortOption={sortOption}
         onSortChange={setSortOption}
       />
-
-      {currentTab === 'data' && (
-        <DataFilterDrawer
-          isOpen={dataDrawerOpen}
-          onClose={closeDataDrawer}
-          filterState={dataFilterState}
-          dispatch={dataDispatch}
-          onSubmit={submitDataFilter}
-        />
-      )}
-
-      {currentTab === 'gifticon' && (
-        <GifticonFilterDrawer
-          isOpen={gifticonDrawerOpen}
-          onClose={closeGifticonDrawer}
-          maxPrice={gifticonPrice}
-          onPriceChange={setGifticonPrice}
-          onSubmit={submitGifticonFilter}
-          onReset={() => setGifticonPrice(50000)}
-        />
-      )}
     </>
   );
 }
