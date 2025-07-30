@@ -36,7 +36,7 @@ export const TradeDetailSellerSection = ({
   };
 
   return (
-    <div className="mt-20">
+    <div className="mt-16">
       <UserProfileCard
         userId={sellerId}
         name={sellerName}
