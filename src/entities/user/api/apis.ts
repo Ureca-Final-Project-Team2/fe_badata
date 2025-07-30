@@ -4,6 +4,7 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 import type {
   CoinResponse,
   FollowingsContent,
+  FollowToggleResponse,
   PurchaseResponse,
   SalesContent,
   UserInfoResponse,
@@ -17,9 +18,11 @@ export const userApis = {
     return response;
   },
 
-  postFollowToggle: async (userId: number) => {
-    const response = await axiosInstance.post(END_POINTS.USER.FOLLOW(userId));
-    return response.data;
+  postFollowToggle: async (userId: number): Promise<FollowToggleResponse> => {
+    const response: FollowToggleResponse = await axiosInstance.post(
+      END_POINTS.USER.FOLLOW_TOGGLE(userId),
+    );
+    return response;
   },
 
   getFollowings: async (
@@ -31,8 +34,10 @@ export const userApis = {
     if (cursor !== undefined) params.append('cursor', cursor.toString());
     params.append('size', size.toString());
 
-    const response = await axiosInstance.get(`${END_POINTS.MYPAGE.FOLLOWINGS}?${params}`);
-    return response.data;
+    const response: ApiResponse<FollowingsContent> = await axiosInstance.get(
+      `${END_POINTS.MYPAGE.FOLLOWINGS}?${params}`,
+    );
+    return response;
   },
 
   getSales: async (

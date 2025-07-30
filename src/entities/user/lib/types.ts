@@ -38,6 +38,10 @@ export interface UserInfoResponse {
   days: number;
 }
 
+export interface FollowToggleResponse {
+  following: boolean;
+}
+
 export interface PurchaseItem {
   id: number;
   postId: number;
