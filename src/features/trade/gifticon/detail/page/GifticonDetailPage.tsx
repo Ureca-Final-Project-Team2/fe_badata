@@ -79,7 +79,7 @@ export default function TradeDetailPage({ postUserId, post, postType, sellerName
       </div>
 
       {/* 통합 정보 카드 - 이미지 위로 25px 겹침 */}
-      <div className="relative -mt-[50px] bg-white rounded-t-[50px] shadow-[0_-4px_8px_-1px_rgba(0,0,0,0.1)]">
+      <div className="relative -mt-[50px] bg-[var(--white)] rounded-t-[50px] shadow-[0_-4px_8px_-1px_rgba(0,0,0,0.1)]">
         {/* 상품 정보 섹션 */}
         <div className="px-6 pt-7">
           <TradeDetailProductSection
@@ -100,7 +100,7 @@ export default function TradeDetailPage({ postUserId, post, postType, sellerName
             sellerId={postUserId}
             sellerName={sellerName}
             isFollowing={isFollowing ?? false}
-            onFollowChange={setIsFollowing}
+            onFollowChange={() => setIsFollowing(!isFollowing)}
           />
         </div>
       </div>

@@ -62,11 +62,7 @@ export interface GifticonUpdateRequest {
 }
 
 export interface UpdatePostResponse {
-  code: number;
-  message: string;
-  content: {
-    postId: number;
-  };
+  postId: number;
 }
 
 export interface LikeContent {

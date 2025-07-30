@@ -4,29 +4,32 @@ import { useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserStats } from '@/entities/follow';
-import { usePurchasesQuery } from '@/entities/user/model/queries';
+import {
+  usePurchasesQuery,
+  useUserInfoQuery,
+  useUserSoldPostsCountQuery,
+} from '@/entities/user/model/queries';
+import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
-const profile = {
-  name: '홍길동',
-  days: 15,
-  avatarSrc: '/assets/profile-default.png',
-  tradeCount: 14,
-};
-
 export default function PurchaseHistoryPage() {
   const router = useRouter();
+  const profile = useAuthStore((s) => s.user);
   const {
     followerCount,
     followingCount,
     isLoading: isLoadingStats,
     invalidateStats,
   } = useUserStats();
+
+  const { data: soldPostsCount } = useUserSoldPostsCountQuery(profile?.userId);
+  const { data: userInfo } = useUserInfoQuery();
 
   useEffect(() => {
     const handleFocus = () => {
@@ -61,14 +64,16 @@ export default function PurchaseHistoryPage() {
     >
       <div className="w-full max-w-[428px]">
         <div className="flex flex-col items-center mt-4">
-          <MyProfileCard name={profile.name} days={profile.days} avatarSrc={profile.avatarSrc} />
+          <MyProfileCard
+            name={userInfo?.nickName ?? '사용자'}
+            days={userInfo?.days ?? 0}
+            avatarSrc={userInfo?.profileImage ?? ICONS.ETC.SHELL.src.toString()}
+          />
 
-          <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
+          <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-6 mb-6">
             <div className="flex flex-col items-center flex-1">
               <span className="font-label-semibold text-[var(--black)]">거래 내역</span>
-              <span className="font-body-semibold text-[var(--black)] mt-1">
-                {profile.tradeCount}
-              </span>
+              <span className="font-body-semibold text-[var(--black)] mt-1">{soldPostsCount}</span>
             </div>
             <div
               className="flex flex-col items-center flex-1 cursor-pointer group"

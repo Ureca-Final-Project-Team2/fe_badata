@@ -100,7 +100,7 @@ export default function TradeDetailPage({ postUserId, post, postType, sellerName
             sellerId={postUserId}
             sellerName={sellerName}
             isFollowing={isFollowing ?? false}
-            onFollowChange={setIsFollowing}
+            onFollowChange={() => setIsFollowing(!isFollowing)}
           />
         </div>
       </div>
