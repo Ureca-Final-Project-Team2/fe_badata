@@ -14,6 +14,7 @@ export const SearchHeader = ({ search, setSearch, onSubmit }: SearchHeaderProps)
   return (
     <section className="mt-4 mb-6">
       <InputField
+        className="border-[var(--gray)]"
         variant="address"
         value={search}
         onChange={(e) => setSearch(e.target.value)}

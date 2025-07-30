@@ -3,6 +3,8 @@ import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import { ShoppingBasket } from 'lucide-react';
+
 import { ICONS } from '@/shared/config/iconPath';
 
 interface PaymentReceiptModalProps {
@@ -132,10 +134,11 @@ const PaymentReceiptModal: React.FC<PaymentReceiptModalProps> = ({
       <div className="mt-4 flex gap-3">
         {/* 거래 페이지로 이동 버튼 */}
         <button
-          className="w-[180px] py-3 rounded-xl font-body-semibold shadow-md transition bg-[var(--main-5)] text-[var(--white)] hover:bg-[var(--main-4)]"
+          className="w-[180px] py-3 rounded-xl font-body-semibold shadow-md transition bg-[var(--main-5)] text-[var(--white)] hover:bg-[var(--main-4)] flex items-center justify-center gap-2"
           onClick={handleNavigateToTrade}
         >
-          홈으로 이동
+          <ShoppingBasket className="w-6 h-6" />
+          쇼핑 계속하기
         </button>
       </div>
     </div>

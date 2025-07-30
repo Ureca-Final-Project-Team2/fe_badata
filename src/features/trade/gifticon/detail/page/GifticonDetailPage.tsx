@@ -25,7 +25,7 @@ interface Props {
   sellerName: string;
 }
 
-export default function TradeDetailPage({ postUserId, post, postType, sellerName }: Props) {
+export default function GifticonDetailPage({ postUserId, post, postType, sellerName }: Props) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const { isFollowing, setIsFollowing } = useFollowState(postUserId);
   const { share } = useShareHooks();

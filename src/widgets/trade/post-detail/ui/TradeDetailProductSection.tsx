@@ -53,7 +53,7 @@ export const TradeDetailProductSection = ({
       </div>
 
       {/* 상품명 */}
-      <div className="mb-6">
+      <div className="mb-8">
         <span className="font-body-semibold text-[var(--black)]">{name}</span>
       </div>
 
@@ -91,9 +91,9 @@ export const TradeDetailProductSection = ({
 
       {/* 제품 상세 설명 */}
       {description && (
-        <div className="mt-6">
-          <div className="bg-[var(--white)] rounded-lg p-4 shadow-sm">
-            <div className="whitespace-pre-wrap font-caption-regular text-[var(--gray-dark)] leading-relaxed">
+        <div className="mt-8">
+          <div className="bg-[var(--white)] rounded-lg">
+            <div className="whitespace-pre-wrap font-label-regular text-[var(--gray-dark)] leading-relaxed">
               {description}
             </div>
           </div>
