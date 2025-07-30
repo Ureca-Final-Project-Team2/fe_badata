@@ -1,5 +1,7 @@
 'use client';
 
+import { toast } from 'sonner';
+
 import { useRespondToSosRequest } from '@/widgets/sos/model/mutations';
 import { useSosWebSocket } from '@/widgets/sos/model/useSosWebSocket';
 
@@ -18,24 +20,21 @@ export function SosResponseModal({ isOpen, onClose, sosId, requesterName }: SosR
     respondToSosRequest(
       { sosId },
       {
-        onSuccess: (data) => {
-          console.log('SOS 응답이 성공적으로 처리되었습니다:', data);
-          
+        onSuccess: () => {         
           // WebSocket을 통해 응답 알림 전송
           sendSosResponse(sosId, isSuccess);
           
           onClose();
-          // 성공/실패에 따른 추가 처리 (토스트 메시지 등)
+          // 성공/실패에 따른 추가 처리 (토스트 메시지)
           if (isSuccess) {
-            // 데이터를 나눠준 경우의 처리
-            console.log('데이터를 나눠주었습니다.');
+            toast.success('데이터를 성공적으로 나눠주었습니다!');
           } else {
             // 거절한 경우의 처리
-            console.log('SOS 요청을 거절했습니다.');
+            toast.info('SOS 요청을 거절했습니다.');
           }
         },
-        onError: (error) => {
-          console.error('SOS 응답 처리 중 오류가 발생했습니다:', error);
+        onError: () => {
+          toast.error('SOS 응답 처리 중 오류가 발생했습니다. 다시 시도해 주세요.');
           // 에러 처리 (토스트 메시지 등)
         },
       }
@@ -45,18 +44,27 @@ export function SosResponseModal({ isOpen, onClose, sosId, requesterName }: SosR
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
-      <div className="bg-white rounded-lg p-6 mx-4 max-w-sm w-full">
-        <div className="text-center">
-          <div className="text-4xl mb-4">🆘</div>
-          <h2 className="font-title-semibold mb-2 text-black">SOS 요청</h2>
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sos-modal-title"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div
+        className="bg-white rounded-lg p-6 mx-4 max-w-sm w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+      <div className="text-center">
+        <div className="text-4xl mb-4">🆘</div>
+          <h2 id="sos-modal-title" className="font-title-semibold mb-2 text-black">
+            SOS 요청
+          </h2>
           <p className="font-body-regular text-gray-600 mb-4">
             {requesterName ? `${requesterName}님이` : '다른 사용자가'} 데이터가 부족합니다.
           </p>
-          <p className="font-body-regular text-gray-600 mb-6">
-            데이터를 나눠주시겠습니까?
-          </p>
-          
+          <p className="font-body-regular text-gray-600 mb-6">데이터를 나눠주시겠습니까?</p>
+
           <div className="flex gap-3">
             <button
               onClick={() => handleRespond(false)}

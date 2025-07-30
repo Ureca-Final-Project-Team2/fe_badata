@@ -139,7 +139,7 @@ export function useSosWebSocket({ onSosRequest, onSosResponse }: UseSosWebSocket
       wsRef.current.send(JSON.stringify(message));
     }
   };
-
+  
   useEffect(() => {
     if (user?.userId) {
       connect();

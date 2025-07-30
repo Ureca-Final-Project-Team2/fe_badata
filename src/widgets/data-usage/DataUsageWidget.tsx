@@ -27,8 +27,8 @@ export const DataUsageWidget = forwardRef<HTMLDivElement, DataUsageWidgetProps>(
     },
     ref,
   ) => {
-    const remainingData = totalDataAmount - dataAmount;
-    const percentage = Math.min(Math.round((remainingData / totalDataAmount) * 100), 100);
+    const remainingData = Math.max(totalDataAmount - dataAmount, 0);
+    const percentage = totalDataAmount > 0 ? Math.min(Math.round((remainingData / totalDataAmount) * 100), 100) : 0;
     const formattedUsage = `${remainingData}GB / ${totalDataAmount}GB`;
 
     return (

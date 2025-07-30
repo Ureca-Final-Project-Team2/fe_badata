@@ -36,14 +36,14 @@ export interface SosRequestMessage extends WebSocketMessage {
 
 // SOS 응답 메시지
 export interface SosResponseMessage extends WebSocketMessage {
-  type: 'SOS_RESPONSE';
+  type: 'SOS_ACCEPT' | 'SOS_REJECT';
   data: {
     sosId: number;
     responderId: number;
     responderName: string;
     isAccepted: boolean;
     donatedAmount?: number; // 100MB
-    message?: string;
+    reason?: string; // SOS_REJECT일 때만
   };
 }
 

@@ -34,8 +34,12 @@ export interface SosNotification {
   timestamp: string;
 }
 
-export interface SosWebSocketMessage {
-  type: 'SOS_REQUEST' | 'SOS_RESPONSE' | 'CONNECT' | 'DISCONNECT';
-  data?: SosNotification;
-  userId?: number;
-} 
+export type SosWebSocketMessage = 
+  | {
+      type: 'SOS_REQUEST' | 'SOS_RESPONSE';
+      data: SosNotification;
+    }
+  | {
+      type: 'CONNECT' | 'DISCONNECT';
+      userId: number;
+    };

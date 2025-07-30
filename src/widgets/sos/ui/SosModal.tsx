@@ -26,9 +26,9 @@ export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
         onConfirm?.();
         onClose();
       },
-      onError: (error) => {
-        console.error('SOS 요청 생성 중 오류가 발생했습니다:', error);
-        // 에러 처리 (토스트 메시지 등)
+      onError: () => {
+        // TODO: 토스트 메시지나 에러 모달로 사용자에게 알림 표시
+        alert('SOS 요청 생성에 실패했습니다. 다시 시도해주세요.');
       },
     });
   };
