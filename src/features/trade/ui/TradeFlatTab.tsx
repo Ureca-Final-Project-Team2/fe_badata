@@ -1,17 +1,18 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { PATH } from '@/shared/config/path';
 import { FlatTab } from '@/shared/ui/FlatTab';
 
 interface TradeFlatTabProps {
   className?: string;
+  basePath?: string;
 }
 
-export function TradeFlatTab({ className }: TradeFlatTabProps) {
+export function TradeFlatTab({ className, basePath }: TradeFlatTabProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const page = searchParams?.get('page') ?? 'all';
 
   const tabs = [
@@ -21,7 +22,8 @@ export function TradeFlatTab({ className }: TradeFlatTabProps) {
   ];
 
   const handleTabChange = (tabId: string) => {
-    router.push(`${PATH.TRADE.MAIN}?page=${tabId}`);
+    const path = basePath ?? pathname;
+    router.push(`${path}?page=${tabId}`);
   };
 
   return (

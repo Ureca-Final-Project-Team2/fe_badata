@@ -1,19 +1,11 @@
 'use client';
 
-import { useReducer, useState } from 'react';
-
 import { useRouter } from 'next/navigation';
 
 import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
-import { DATA_SORT_OPTIONS } from '@/features/trade/data/lib/constants';
-import {
-  dataFilterReducer,
-  initialDataFilterState,
-} from '@/features/trade/data/model/dataFilterReducer';
-import { useFilteredDataPostsHooks } from '@/features/trade/data/model/useFilteredDataPostsHooks';
 import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
-import { DataList } from '@/features/trade/data/ui/DataList';
-import { DataListFilter } from '@/features/trade/data/ui/DataListFilter';
+import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
+import { TradeList } from '@/features/trade/ui/TradeList';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
@@ -23,36 +15,41 @@ import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFlo
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
-import type { AllPost } from '@/entities/trade-post/lib/types';
-import type { DataSortOption } from '@/features/trade/data/lib/constants';
-import type { DataFilterState } from '@/features/trade/data/model/dataFilterReducer';
-
 export default function DataPage() {
   const router = useRouter();
 
-  const {
-    sortOption,
-    setSortOption,
-    isSortDrawerOpen,
-    openDrawer: openSortDrawer,
-    closeDrawer: closeSortDrawer,
-  } = useSortStateHook<DataSortOption>('latest');
-
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
-  const [filterState, dispatchFilter] = useReducer(dataFilterReducer, initialDataFilterState);
-
   const { posts, isLoading } = useTradePostsQuery();
+  const { sortOption, setSortOption, isSortDrawerOpen, openDrawer, closeDrawer } = useSortStateHook<
+    'latest' | 'popular'
+  >('latest');
 
-  const filteredPosts = useFilteredDataPostsHooks(posts, filterState, sortOption);
+  const {
+    dataFilterState,
+    dataDispatch,
+    dataDrawerOpen,
+    openDataDrawer,
+    closeDataDrawer,
+    submitDataFilter,
+  } = useDataFilterHooks();
 
-  const currentSortLabel = DATA_SORT_OPTIONS.find((o) => o.value === sortOption)?.label ?? '최신순';
+  const filteredPosts = (posts ?? [])
+    .filter((p) => {
+      const { carriers, capacities, priceRange } = dataFilterState;
+      return (
+        p.postCategory === 'DATA' &&
+        (carriers.length === 0 || (p.mobileCarrier && carriers.includes(p.mobileCarrier))) &&
+        (capacities.length === 0 || capacities.includes(p.capacity?.toString() ?? '')) &&
+        (!priceRange || p.price <= Number(priceRange))
+      );
+    })
+    .sort((a, b) =>
+      sortOption === 'latest'
+        ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        : b.likesCount - a.likesCount,
+    );
 
-  const handleItemClick = (item: AllPost) => {
+  const handleCardClick = (item: (typeof filteredPosts)[number]) => {
     router.push(PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id)));
-  };
-
-  const handleFilterSubmit = (filters: DataFilterState) => {
-    dispatchFilter({ type: 'SET_ALL_FILTERS', payload: filters });
   };
 
   return (
@@ -62,28 +59,30 @@ export default function DataPage() {
         showBottomNav={!isSortDrawerOpen}
         fab={<TradeFloatingButton />}
       >
-        <TradeFlatTab />
+        <TradeFlatTab basePath="/trade" />
         <TradeSearchInput />
-        <DataListFilter
-          sortLabel={currentSortLabel}
-          onSortClick={openSortDrawer}
-          onFilterClick={() => setIsFilterDrawerOpen(true)}
+        <TradeList
+          items={filteredPosts}
+          isLoading={isLoading}
+          sortLabel={sortOption === 'latest' ? '최신순' : '인기순'}
+          onSortClick={openDrawer}
+          onFilterClick={openDataDrawer}
+          onItemClick={handleCardClick}
         />
-        <DataList items={filteredPosts} isLoading={isLoading} onItemClick={handleItemClick} />
       </BaseLayout>
 
       <TradeSortFilter
         isOpen={isSortDrawerOpen}
-        onClose={closeSortDrawer}
+        onClose={closeDrawer}
         sortOption={sortOption}
         onSortChange={setSortOption}
       />
       <DataFilterDrawer
-        isOpen={isFilterDrawerOpen}
-        onClose={() => setIsFilterDrawerOpen(false)}
-        filterState={filterState}
-        dispatch={dispatchFilter}
-        onSubmit={handleFilterSubmit}
+        isOpen={dataDrawerOpen}
+        onClose={closeDataDrawer}
+        filterState={dataFilterState}
+        dispatch={dataDispatch}
+        onSubmit={submitDataFilter}
       />
     </>
   );

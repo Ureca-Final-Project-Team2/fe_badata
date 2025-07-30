@@ -1,45 +1,33 @@
-import { usePathname, useRouter } from 'next/navigation';
+'use client';
 
-import { PATH } from '@/shared/config/path';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import { FlatTab } from '@/shared/ui/FlatTab';
 
 interface TradeFlatTabProps {
   className?: string;
+  basePath: string;
 }
-export function TradeFlatTab({ className }: TradeFlatTabProps) {
-  const router = useRouter();
-  const pathname = usePathname();
 
-  const tabItems = [
-    { id: 'all', label: '전체', content: null },
-    { id: 'data', label: '데이터', content: null },
-    { id: 'gifticon', label: '기프티콘', content: null },
+export function TradeFlatTab({ className, basePath }: TradeFlatTabProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = searchParams?.get('page') ?? 'all';
+
+  const tabs = [
+    { id: 'all', label: '전체' },
+    { id: 'data', label: '데이터' },
+    { id: 'gifticon', label: '기프티콘' },
   ];
 
-  const defaultValue = pathname?.includes('/data')
-    ? 'data'
-    : pathname?.includes('/gifticon')
-      ? 'gifticon'
-      : 'all';
-
   const handleTabChange = (tabId: string) => {
-    switch (tabId) {
-      case 'all':
-        router.push(PATH.TRADE.MAIN);
-        break;
-      case 'data':
-        router.push(PATH.TRADE.DATA);
-        break;
-      case 'gifticon':
-        router.push(PATH.TRADE.GIFTICON);
-        break;
-    }
+    router.push(`${basePath}?page=${tabId}`);
   };
 
   return (
     <FlatTab
-      items={tabItems}
-      defaultValue={defaultValue}
+      items={tabs}
+      defaultValue={tabs.find((tab) => tab.id === page)?.id ?? 'all'}
       onValueChange={handleTabChange}
       className={className}
     />

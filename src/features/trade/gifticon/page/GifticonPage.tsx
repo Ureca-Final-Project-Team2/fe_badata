@@ -1,58 +1,57 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
 import { GifticonFilter } from '@/features/trade/gifticon/ui/GifticonFilter';
-import { GifticonList } from '@/features/trade/gifticon/ui/GifticonList';
+import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
+import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
+import { TradeFlatTab } from '@/features/trade/ui/TradeFlatTab';
+import { TradeList } from '@/features/trade/ui/TradeList';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header } from '@/shared/ui/Header';
-import { TradeFlatTab } from '@/widgets/trade/flat-tab/ui/TradeFlatTab';
 import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFloatingButton';
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
-import type { AllPost } from '@/entities/trade-post/lib/types';
-
-const SORT_OPTIONS = [
-  { value: 'latest', label: '최신순' },
-  { value: 'popular', label: '인기순' },
-];
-
 export default function GifticonPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedCategory = searchParams?.get('category') ?? '전체';
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const { posts, isLoading } = useTradePostsQuery();
+
+  const {
+    openGifticonDrawer,
+    gifticonPrice,
+    setGifticonPrice,
+    gifticonDrawerOpen,
+    closeGifticonDrawer,
+    submitGifticonFilter,
+  } = useGifticonFilterHooks();
+
   const { sortOption, setSortOption, isSortDrawerOpen, openDrawer, closeDrawer } = useSortStateHook<
     'latest' | 'popular'
   >('latest');
 
-  const { posts, isLoading } = useTradePostsQuery();
-
-  const processedPosts = useMemo(() => {
-    if (!posts) return [];
-
-    const gifticonPosts = posts.filter((p) => p.postCategory === 'GIFTICON');
-
-    const filtered = gifticonPosts.filter(
-      (p) => selectedCategory === '전체' || p.gifticonCategory === selectedCategory,
-    );
-
-    return [...filtered].sort((a, b) =>
+  const filteredPosts = (posts ?? [])
+    .filter((p) => {
+      return (
+        p.postCategory === 'GIFTICON' &&
+        (selectedCategory === '전체' || p.gifticonCategory === selectedCategory) &&
+        p.price <= gifticonPrice
+      );
+    })
+    .sort((a, b) =>
       sortOption === 'latest'
         ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         : b.likesCount - a.likesCount,
     );
-  }, [posts, selectedCategory, sortOption]);
 
-  const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortOption)?.label ?? '최신순';
-
-  const handleItemClick = (item: AllPost) => {
-    router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(item.id)));
+  const handleCardClick = (post: (typeof filteredPosts)[number]) => {
+    router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(post.id)));
   };
 
   return (
@@ -66,21 +65,32 @@ export default function GifticonPage() {
         <TradeSearchInput />
         <GifticonFilter
           selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
+          onSelectCategory={(cat) => router.push(`?page=gifticon&category=${cat}`)}
         />
-        <GifticonList
-          items={processedPosts}
+        <TradeList
+          items={filteredPosts}
           isLoading={isLoading}
-          sortLabel={currentSortLabel}
+          sortLabel={sortOption === 'latest' ? '최신순' : '인기순'}
           onSortClick={openDrawer}
-          onItemClick={handleItemClick}
+          onFilterClick={openGifticonDrawer}
+          onItemClick={handleCardClick}
         />
       </BaseLayout>
+
       <TradeSortFilter
         isOpen={isSortDrawerOpen}
         onClose={closeDrawer}
         sortOption={sortOption}
         onSortChange={setSortOption}
+      />
+
+      <GifticonFilterDrawer
+        isOpen={gifticonDrawerOpen}
+        onClose={closeGifticonDrawer}
+        maxPrice={gifticonPrice}
+        onPriceChange={setGifticonPrice}
+        onSubmit={submitGifticonFilter}
+        onReset={() => setGifticonPrice(50000)}
       />
     </>
   );
