@@ -4,15 +4,17 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useReportHistoryListQuery, useReportInfoQuery } from '@/features/mypage/report-history/model/queries';
+import {
+  useReportHistoryListQuery,
+  useReportInfoQuery,
+} from '@/features/mypage/report-history/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { SectionDivider } from '@/shared/ui/SectionDivider';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
-import type { ReportHistoryItem } from '@/features/mypage/report-history/lib/types';
+import type { ReportHistoryItem, ReportInfo } from '@/features/mypage/report-history/lib/types';
 import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
-
 
 interface TimelineItemProps {
   label: string;
@@ -51,7 +53,7 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
 
 export default function ReportHistoryPage() {
   const router = useRouter();
-  const reportStatus = 'ANSWER'; // 혹은 동적으로 받는 경우 prop 또는 상태 처리
+  const reportStatus = 'ANSWER';
   const { data, isLoading, isError, refetch } = useReportHistoryListQuery(reportStatus);
   const [selectedIdx, setSelectedIdx] = useState(0);
 
@@ -59,29 +61,42 @@ export default function ReportHistoryPage() {
   const selectedItem = items[selectedIdx];
   const reportId = selectedItem?.id;
 
-const {
-  data: reportInfo,
-  isLoading: isReportInfoLoading, // eslint-disable-line @typescript-eslint/no-unused-vars
-  isError: isReportInfoError, // eslint-disable-line @typescript-eslint/no-unused-vars
-} = useReportInfoQuery(reportId ?? 0);
+  const { data: reportInfo } = useReportInfoQuery(reportId ?? 0);
 
-const STEP_ORDER = ['SALE', 'QUESTION', 'ANSWER', 'COMPLETE'] as const;
-const STEP_LABELS = ['판매', '문의', '답변', '완료'];
+  const STEP_ITEMS = [
+    {
+      key: 'SALE',
+      label: '구매',
+      text: '구매 결제',
+      getDate: (info: ReportInfo) => info.paymentDateTime,
+    },
+    {
+      key: 'QUESTION',
+      label: '문의',
+      text: '타인 사용 및 취소',
+      getDate: (info: ReportInfo) => info.questionDateTime,
+    },
+    {
+      key: 'ANSWER',
+      label: '답변',
+      text: '사용 불가 사유 확인',
+      getDate: () => '',
+    },
+    {
+      key: 'COMPLETE',
+      label: '완료',
+      text: '환불 요청',
+      getDate: () => '',
+    },
+  ] as const;
 
-const currentStepIdx = reportInfo ? STEP_ORDER.indexOf(reportInfo.reportStatus) : 0;
-
-function getStepDate(idx: number): string {
-  if (!reportInfo) return '';
-  switch (STEP_ORDER[idx]) {
-    case 'SALE':
-      return new Date(reportInfo.paymentDateTime).toLocaleDateString();
-    case 'QUESTION':
-      return new Date(reportInfo.questionDateTime).toLocaleDateString();
-    default:
-      return '';
+  function getCurrentStepIdx(info: ReportInfo): number {
+    if (!info.paymentDateTime) return -1;
+    if (info.reportStatus === 'COMPLETE') return 3;
+    if (info.reportStatus === 'ANSWER') return 2;
+    if (info.questionDateTime) return 1;
+    return 0;
   }
-}
-
 
   if (isLoading) {
     return (
@@ -121,7 +136,7 @@ function getStepDate(idx: number): string {
     );
   }
 
-  if (!items || items.length === 0) {
+  if (items.length === 0) {
     return (
       <BaseLayout
         header={<PageHeader title="신고 내역" onBack={() => router.back()} />}
@@ -175,16 +190,20 @@ function getStepDate(idx: number): string {
           <h2 className="font-body-semibold mb-4">신고 진행 과정</h2>
           {selectedItem && reportInfo && (
             <ul className="flex flex-col gap-6">
-              {STEP_LABELS.map((label, idx) => (
-                <TimelineItem
-                  key={label}
-                  label={label}
-                  text={`${label} 단계`}
-                  date={getStepDate(idx)}
-                  color={idx <= currentStepIdx ? 'main' : 'gray'}
-                  isLast={idx === STEP_LABELS.length - 1}
-                />
-              ))}
+              {STEP_ITEMS.map((step, idx) => {
+                const isActive = idx <= getCurrentStepIdx(reportInfo);
+                const date = step.getDate(reportInfo);
+                return (
+                  <TimelineItem
+                    key={step.key}
+                    label={step.label}
+                    text={step.text}
+                    date={date ? new Date(date).toLocaleString() : ''}
+                    color={isActive ? 'main' : 'gray'}
+                    isLast={idx === STEP_ITEMS.length - 1}
+                  />
+                );
+              })}
             </ul>
           )}
         </div>
