@@ -2,18 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getReportHistoryList } from '@/features/mypage/report-history/api/apis';
 
-import type { ReportHistoryItem } from '@/features/mypage/report-history/lib/types';
+import type { ReportHistoryApiResponse } from '@/features/mypage/report-history/lib/types';
 
-export const useReportHistoryListQuery = (reportStatus: string, cursor?: number, size = 10) =>
-  useQuery<{
-    item: ReportHistoryItem[];
-    nextCursor: number;
-    hasNext: boolean;
-  } | null>({
-    queryKey: ['reportHistoryList', reportStatus, cursor, size],
-    queryFn: () => getReportHistoryList(reportStatus, cursor, size),
-    staleTime: 1000 * 60 * 5, // like-store와 동일한 설정
+export const useReportHistoryListQuery = (cursor?: number, size = 10) =>
+  useQuery<ReportHistoryApiResponse>({
+    queryKey: ['reportHistoryList', 'reports', cursor, size],
+    queryFn: () => getReportHistoryList(cursor, size),
+    staleTime: 1000 * 60 * 5, // 5분
+    gcTime: 1000 * 60 * 5, // 5분
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
+    retry: 1,
   });
