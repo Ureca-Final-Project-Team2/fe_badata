@@ -66,8 +66,15 @@ export const fetchStoreDetail = async (
  * 가맹점 리스트(무한 스크롤) 조회
  */
 export const fetchStoreList = async (params: StoreListParams): Promise<StoreListResponse> => {
+  // sort 배열을 문자열로 변환하여 쿼리 파라미터에서 [] 표기 제거
+  const { sort, ...otherParams } = params;
+  const sortString = Array.isArray(sort) ? sort.join(',') : sort;
+
   const response: StoreListResponse = await axiosInstance.get(END_POINTS.STORES.STORELIST, {
-    params,
+    params: {
+      ...otherParams,
+      sort: sortString,
+    },
   });
   return response;
 };
