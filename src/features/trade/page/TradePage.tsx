@@ -2,6 +2,11 @@
 
 import { useSearchParams } from 'next/navigation';
 
+import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
+import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
+import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
+import { useFilteredTradePostsHooks } from '@/features/trade/model/useFilteredTradePostsHooks';
+import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
 import { TradeDeadlineBanner } from '@/features/trade/ui/TradeDeadlineBanner';
 import { TradeFlatTab } from '@/features/trade/ui/TradeFlatTab';
 import { TradeList } from '@/features/trade/ui/TradeList';
@@ -11,12 +16,6 @@ import { Header } from '@/shared/ui/Header';
 import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFloatingButton';
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
-
-import { DataFilterDrawer } from '../data/ui/DataFilterDrawer';
-import { GifticonFilterDrawer } from '../gifticon/ui/GifticonFilterDrawer';
-import { useDataFilterHooks } from '../model/useDataFilterHooks';
-import { useFilteredTradePostsHooks } from '../model/useFilteredTradePostsHooks';
-import { useGifticonFilterHooks } from '../model/useGifticonFilterHooks';
 
 export default function TradePage() {
   const searchParams = useSearchParams();

@@ -2,10 +2,9 @@
 
 import { Suspense } from 'react';
 
+import TrendingPageClient from '@/features/trade/trending/_client/TrendingPageClient';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeaderWithBack } from '@/shared/ui/Header/PageHeaderWithBack';
-
-import TrendingPageClient from '../_client/TrendingPageClient';
 
 export default function TrendingPage() {
   return (

@@ -4,7 +4,7 @@ import {
   dataFilterReducer,
   initialDataFilterState,
   type DataFilterState,
-} from '../data/model/dataFilterReducer';
+} from '@/features/trade/data/model/dataFilterReducer';
 
 export const useDataFilterHooks = () => {
   const [state, dispatch] = useReducer(dataFilterReducer, initialDataFilterState);

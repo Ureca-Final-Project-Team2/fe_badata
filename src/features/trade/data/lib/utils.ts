@@ -1,4 +1,4 @@
-import { PRICE_RANGES } from './constants';
+import { PRICE_RANGES } from '@/features/trade/data/lib/constants';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
 import type { DataSortOption } from '@/features/trade/data/lib/constants';

@@ -2,17 +2,16 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
+import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
+import { DeadlineFlatTab } from '@/features/trade/deadline/ui/DeadlineFlatTab';
 import { DeadlineList } from '@/features/trade/deadline/ui/DeadlineList';
+import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
 import { useTradeDeadlineQuery } from '@/features/trade/model/queries';
+import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
+import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
-
-import { DataFilterDrawer } from '../../data/ui/DataFilterDrawer';
-import { GifticonFilterDrawer } from '../../gifticon/ui/GifticonFilterDrawer';
-import { useDataFilterHooks } from '../../model/useDataFilterHooks';
-import { useGifticonFilterHooks } from '../../model/useGifticonFilterHooks';
-import { DeadlineFlatTab } from '../ui/DeadlineFlatTab';
 
 import type { DeadlinePost } from '@/entities/trade-post/lib/types';
 
