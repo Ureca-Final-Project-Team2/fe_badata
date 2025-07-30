@@ -5,20 +5,24 @@ import type {
   PostReviewRequest,
   QuickReply,
   ReservationDetails,
+  ReviewDetailResponse,
+  UpdateReviewRequest,
 } from '@/features/rental/store/register-review/lib/types';
 
-// 퀵 리플라이 목록 조회
 export const getQuickReplies = async (): Promise<QuickReply[]> => {
   const content: QuickReply[] = await axiosInstance.get(END_POINTS.STORES.REVIEW_QUICK_REPLIES);
   return content;
 };
 
-// 특정 예약의 상세 정보 조회(가맹점, 대여 기기, 방문 횟수)
 export const getReservationDetails = async (reservationId: number): Promise<ReservationDetails> => {
   const content: ReservationDetails = await axiosInstance.get(
     END_POINTS.RENTAL.RESERVATION_DETAILS(reservationId),
   );
   return content;
+};
+
+export const getReviewDetail = async (reviewId: number): Promise<ReviewDetailResponse> => {
+  return await axiosInstance.get(`${END_POINTS.STORES.REVIEW}/${reviewId}`);
 };
 
 export const postReview = async (
@@ -45,4 +49,17 @@ export const postReview = async (
   );
 
   return response;
+};
+
+export const updateReview = async (reviewId: number, data: UpdateReviewRequest) => {
+  const formData = new FormData();
+  formData.append('comment', data.comment);
+  formData.append('rating', data.rating.toString());
+  data.quickReplyIds.forEach((id) => formData.append('quickReplyIds', id.toString()));
+  if (data.file) formData.append('file', data.file);
+  return await axiosInstance.patch(`${END_POINTS.STORES.REVIEW}/${reviewId}`, formData);
+};
+
+export const deleteReview = async (reviewId: number) => {
+  return await axiosInstance.delete(`${END_POINTS.STORES.REVIEW}/${reviewId}`);
 };
