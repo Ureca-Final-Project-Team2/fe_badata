@@ -6,7 +6,49 @@ export interface Store {
   name: string;
   latitude: number;
   longititude: number;
+  leftDeviceCount: number;
+  liked: boolean;
+  isCluster?: boolean; // 클러스터 여부
 }
+
+/*
+  지도 API 응답 - 줌 레벨 3 이하 (개별 가맹점)
+*/
+export interface MapStoreResponse {
+  id: number;
+  longititude: number;
+  latitude: number;
+  name: string;
+  leftDeviceCount: number;
+  liked: boolean;
+}
+
+/*
+  지도 API 응답 - 줌 레벨 4 이상 (클러스터링)
+*/
+export interface MapClusterResponse {
+  id: number; // 클러스터링 아이디 (의미 없는 데이터)
+  longititude: number; // 클러스터링된 위경도 중심값
+  latitude: number; // 클러스터링된 위경도 중심값
+  name: null; // 이름은 의미가 없어서 null로 전달
+  leftDeviceCount: number; // 클러스터링 내에 조건에 맞는 남은 갯수
+  liked: boolean; // 클러스터 내 좋아요 상태 (true/false)
+}
+
+/*
+  지도 API 공통 응답 타입
+*/
+export type MapStoreItem = MapStoreResponse | MapClusterResponse;
+
+/*
+  지도 API 응답
+*/
+export interface MapStoresResponse {
+  code: number;
+  message: string | null;
+  content: MapStoreItem[];
+}
+
 /*
   가맹점 장비 정보
 */
@@ -40,6 +82,7 @@ export interface StoreCardProps {
   storeDetail: StoreDetail;
   deviceCount: number;
   onLikeClick?: () => void;
+  onLikeToggle?: (storeId: number, isLiked: boolean) => void;
   isLiked?: boolean;
   className?: string;
 }
@@ -128,7 +171,7 @@ export interface StoreDetail {
 }
 
 /*
-  가맹점 목록 리스트 파라미터
+  지도 가맹점 목록 조회 파라미터
 */
 export interface FetchStoresParams {
   // 지도 영역 좌표
@@ -138,6 +181,7 @@ export interface FetchStoresParams {
   neLng?: number;
 
   // 필터 조건
+  isOpeningNow?: boolean;
   rentalStartDate?: string;
   rentalEndDate?: string;
   reviewRating?: number;
@@ -146,6 +190,7 @@ export interface FetchStoresParams {
   dataCapacity?: number[];
   is5G?: boolean;
   maxSupportConnection?: number[];
+  zoomLevel?: number; // 줌 레벨 추가
 }
 
 /*

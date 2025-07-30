@@ -12,11 +12,24 @@ interface BoundsType {
 export const mapFilterStateToApiParams = (
   bounds: BoundsType,
   filterState?: RentalFilterState,
+  zoomLevel?: number,
 ): Record<string, unknown> => {
   const mergedParams: Record<string, unknown> = { ...bounds };
 
+  // zoomLevel 추가
+  if (zoomLevel !== undefined) {
+    mergedParams.zoomLevel = zoomLevel;
+  }
+
+  // filterState가 없으면 기본 필터 값들을 추가하지 않음 (초기 로드)
   if (!filterState) {
     return mergedParams;
+  }
+
+  // filterState가 있을 때만 필터 조건들 추가
+  // 오픈 여부
+  if ('isOpeningNow' in filterState && filterState.isOpeningNow !== undefined) {
+    mergedParams.isOpeningNow = filterState.isOpeningNow;
   }
 
   // 가격
@@ -42,7 +55,7 @@ export const mapFilterStateToApiParams = (
   if (filterState.dataAmount && filterState.dataAmount !== '무제한') {
     mergedParams.dataCapacity = [parseInt(filterState.dataAmount.replace('GB', ''))];
   } else if (filterState.dataAmount === '무제한') {
-    mergedParams.dataCapacity = [99999]; // 백엔드와 협의된 값 사용
+    mergedParams.dataCapacity = [999]; // 백엔드와 협의된 값 사용
   }
   // 데이터 타입 (dataType → is5G)
   if (filterState.dataType === '5G') {
@@ -60,10 +73,6 @@ export const mapFilterStateToApiParams = (
   }
   if (filterState.dateRange?.to) {
     mergedParams.rentalEndDate = formatDateToLocalDateTime(filterState.dateRange.to);
-  }
-  // 오픈 여부
-  if ('isOpeningNow' in filterState && filterState.isOpeningNow !== undefined) {
-    mergedParams.isOpeningNow = filterState.isOpeningNow;
   }
 
   return mergedParams;

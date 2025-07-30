@@ -85,6 +85,8 @@ export const convertToStoreCardProps = (storeList: StoreListItem[]): StoreCardPr
     store: {
       id: store.id,
       name: store.name,
+      leftDeviceCount: store.leftDeviceCount,
+      liked: store.liked,
       latitude: store.latitude,
       longititude: store.longititude,
     },
@@ -97,13 +99,13 @@ export const convertToStoreCardProps = (storeList: StoreListItem[]): StoreCardPr
       startTime: store.openTime,
       endTime: store.closeTime,
       storeName: store.name,
-      distanceFromMe: store.distanceFromMe, // 거리 정보 추가
-      name: store.name, // StoreDetail 타입에 name 필드 추가
+      distanceFromMe: store.distanceFromMe,
+      name: store.name,
     },
     deviceCount: store.leftDeviceCount,
     onLikeClick: () => {
       // 찜하기 기능 구현 필요
     },
-    isLiked: store.liked, // API에서 받은 liked 상태 사용
+    isLiked: store.liked,
   }));
 };

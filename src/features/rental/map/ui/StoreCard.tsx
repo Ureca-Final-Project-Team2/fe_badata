@@ -1,8 +1,9 @@
 'use client';
 
+import { useStoreLikeToggle } from '@/shared/hooks/useStoreLikeToggle';
 import { formatDistanceString } from '@/shared/lib/format/distanceUtils';
 import { ImageBox } from '@/shared/ui/ImageBox';
-import { LikeButtonCircle } from '@/shared/ui/LikeButtonCircle/LikeButtonCircle';
+import { StoreLikeButton } from '@/shared/ui/StoreLikeButton';
 
 import type { StoreCardProps } from '@/features/rental/map/lib/types';
 
@@ -13,11 +14,23 @@ export function StoreCard({
   store,
   storeDetail,
   deviceCount,
-  onLikeClick,
+  onLikeToggle,
   isLiked = false,
   className,
   showDistance = true,
-}: StoreCardProps & { showDistance?: boolean }) {
+  disableToast = false,
+}: StoreCardProps & { showDistance?: boolean; disableToast?: boolean }) {
+  const {
+    isLoading: isLikeLoading,
+    shouldShowLikeActive,
+    handleLikeToggle,
+  } = useStoreLikeToggle({
+    storeId: store.id,
+    initialIsLiked: isLiked,
+    onToggle: onLikeToggle,
+    disableToast,
+  });
+
   const operatingStatus = storeDetail.isOpening ? '영업 중' : '영업 종료';
 
   return (
@@ -55,14 +68,15 @@ export function StoreCard({
           </div>
         </div>
       </div>
-      {/* 오른쪽 상단 LikeButtonCircle */}
-      <LikeButtonCircle
-        active={isLiked}
-        onClick={onLikeClick}
-        size="sm"
-        shadow
-        className="absolute right-3 top-3"
-      />
+      {/* 오른쪽 상단 좋아요 버튼 */}
+      <div className="absolute right-3 top-3">
+        <StoreLikeButton
+          isLiked={shouldShowLikeActive}
+          isLoading={isLikeLoading}
+          onClick={handleLikeToggle}
+          size="sm"
+        />
+      </div>
     </div>
   );
 }

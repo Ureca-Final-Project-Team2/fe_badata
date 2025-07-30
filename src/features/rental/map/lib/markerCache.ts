@@ -28,6 +28,8 @@ export class MarkerCache {
       infowindow: kakao.maps.InfoWindow;
       storeId: number;
       deviceCount: number;
+      isLiked: boolean;
+      isCluster: boolean;
     }
   >();
 
@@ -55,6 +57,8 @@ export class MarkerCache {
       overlay: kakao.maps.CustomOverlay;
       infowindow: kakao.maps.InfoWindow;
       deviceCount: number;
+      isLiked: boolean;
+      isCluster: boolean;
     },
   ): void {
     this.markers.set(this.getMarkerKey(storeId), {
@@ -75,13 +79,42 @@ export class MarkerCache {
   }
 
   // 마커 업데이트 (디바이스 개수 변경 시)
-  updateMarker(storeId: number, newDeviceCount: number): void {
+  updateMarker(
+    storeId: number,
+    newDeviceCount: number,
+    isLiked?: boolean,
+    isCluster?: boolean,
+  ): void {
     const key = this.getMarkerKey(storeId);
     const markerData = this.markers.get(key);
-    if (markerData && markerData.deviceCount !== newDeviceCount) {
-      // 오버레이 내용 업데이트
-      markerData.overlay.setContent(`<div style="${OVERLAY_STYLES}">${newDeviceCount}</div>`);
-      markerData.deviceCount = newDeviceCount;
+    if (markerData) {
+      // 디바이스 개수 업데이트
+      if (markerData.deviceCount !== newDeviceCount) {
+        markerData.overlay.setContent(`<div style="${OVERLAY_STYLES}">${newDeviceCount}</div>`);
+        markerData.deviceCount = newDeviceCount;
+      }
+
+      // liked 상태나 클러스터 상태가 변경된 경우 마커 이미지 업데이트
+      const shouldUpdateImage =
+        (isLiked !== undefined && markerData.isLiked !== isLiked) ||
+        (isCluster !== undefined && markerData.isCluster !== isCluster);
+
+      if (shouldUpdateImage) {
+        // 로그인 상태 확인
+        const isLoggedIn =
+          typeof window !== 'undefined' && localStorage.getItem('auth-storage')
+            ? JSON.parse(localStorage.getItem('auth-storage') || '{}').state?.isLoggedIn || false
+            : false;
+
+        // 좋아요 상태 결정: 로그인한 사용자이고 liked가 true인 경우에만 like_active 표시
+        const shouldShowLikeActive = isLoggedIn && (isLiked ?? markerData.isLiked);
+
+        markerData.marker.setImage(
+          createMarkerImage(shouldShowLikeActive, isCluster ?? markerData.isCluster),
+        );
+        if (isLiked !== undefined) markerData.isLiked = isLiked;
+        if (isCluster !== undefined) markerData.isCluster = isCluster;
+      }
     }
   }
 
@@ -111,23 +144,79 @@ export class MarkerCache {
   getMarkerCount(): number {
     return this.markers.size;
   }
+
+  // 특정 스토어의 마커 데이터 반환
+  getMarkerData(storeId: number) {
+    const key = this.getMarkerKey(storeId);
+    return this.markers.get(key);
+  }
 }
 
 // 맵별 마커 캐시 관리
 export const markerCaches = new WeakMap<kakao.maps.Map, MarkerCache>();
 
+// 전역 마커 업데이트 이벤트 시스템
+type MarkerUpdateCallback = (storeId: number, isLiked: boolean) => void;
+const markerUpdateCallbacks = new Set<MarkerUpdateCallback>();
+
+// 마커 업데이트 콜백 등록
+export const registerMarkerUpdateCallback = (callback: MarkerUpdateCallback): void => {
+  markerUpdateCallbacks.add(callback);
+};
+
+// 마커 업데이트 콜백 해제
+export const unregisterMarkerUpdateCallback = (callback: MarkerUpdateCallback): void => {
+  markerUpdateCallbacks.delete(callback);
+};
+
+// 전역 마커 좋아요 상태 업데이트 함수 (낙관적 업데이트용)
+export const updateMarkerLikeStatus = (storeId: number, isLiked: boolean): void => {
+  // 등록된 모든 콜백에 업데이트 이벤트 전파
+  markerUpdateCallbacks.forEach((callback) => {
+    try {
+      callback(storeId, isLiked);
+    } catch (error) {
+      console.error('마커 업데이트 콜백 실행 중 오류:', error);
+    }
+  });
+};
+
 // 마커 이미지 생성 함수 (캐싱)
 const markerImageCache = new Map<string, kakao.maps.MarkerImage>();
-export const createMarkerImage = (): kakao.maps.MarkerImage => {
-  const cacheKey = 'default_marker';
+
+// 아이콘 경로를 가져오는 헬퍼 함수
+const getIconPath = (icon: string | { src: string }): string => {
+  return typeof icon === 'string' ? icon : icon.src;
+};
+
+export const createMarkerImage = (
+  isLiked: boolean = false,
+  isCluster: boolean = false,
+): kakao.maps.MarkerImage => {
+  let cacheKey: string;
+
+  // 로그인 상태 확인
+  const isLoggedIn =
+    typeof window !== 'undefined' && localStorage.getItem('auth-storage')
+      ? JSON.parse(localStorage.getItem('auth-storage') || '{}').state?.isLoggedIn || false
+      : false;
+
+  // 좋아요 상태 결정: 로그인한 사용자이고 liked가 true인 경우에만 like_active 표시
+  const shouldShowLikeActive = isLoggedIn && isLiked;
+
+  if (isCluster) {
+    cacheKey = shouldShowLikeActive ? 'cluster_liked_marker' : 'cluster_default_marker';
+  } else {
+    cacheKey = shouldShowLikeActive ? 'liked_marker' : 'default_marker';
+  }
+
+  // 아이콘 선택 로직 단순화
+  const icon = shouldShowLikeActive ? ICONS.ETC.LIKE_ACTIVE : ICONS.ETC.LIKE_NONACTIVE;
+  const markerImageSrc = getIconPath(icon);
+
   if (markerImageCache.has(cacheKey)) {
     return markerImageCache.get(cacheKey)!;
   }
-
-  const markerImageSrc =
-    typeof ICONS.ETC.LIKE_NONACTIVE === 'string'
-      ? ICONS.ETC.LIKE_NONACTIVE
-      : ICONS.ETC.LIKE_NONACTIVE.src;
 
   const markerImage = new window.kakao.maps.MarkerImage(
     markerImageSrc,

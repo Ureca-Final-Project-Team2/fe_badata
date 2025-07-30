@@ -15,3 +15,11 @@ export const getRestockAlarmList = async (
     throw error;
   }
 };
+
+export const deleteRestockAlarm = async (restockId: number): Promise<void> => {
+  try {
+    await axiosInstance.delete(END_POINTS.RENTAL.RENTAL_CANCEL(restockId));
+  } catch (error: unknown) {
+    throw error;
+  }
+};

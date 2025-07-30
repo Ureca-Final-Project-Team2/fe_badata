@@ -27,6 +27,7 @@ export const MapSection = ({ filterState, onStoreMarkerClick, onMapReady }: MapS
 
   const lastStoresRef = useRef<Store[]>([]);
   const lastFilterStateRef = useRef<RentalFilterState>(filterState);
+  const isMapReadyRef = useRef(false);
 
   // 디바운스된 마커 렌더링 함수
   const debouncedRenderMarkers = useMemo(
@@ -42,7 +43,9 @@ export const MapSection = ({ filterState, onStoreMarkerClick, onMapReady }: MapS
             storeId?: number,
           ) => void,
         ) => {
+          console.log('🎨 마커 렌더링 시작:', { storesCount: stores.length });
           await renderStoreMarkers(map, stores, filterState, onStoreMarkerClick);
+          console.log('✅ 마커 렌더링 완료');
         },
         200,
       ),
@@ -51,9 +54,10 @@ export const MapSection = ({ filterState, onStoreMarkerClick, onMapReady }: MapS
 
   // 마커 렌더링 함수를 메모이제이션
   const renderMarkers = useCallback(async () => {
-    if (!map) return;
+    if (!map) {
+      return;
+    }
 
-    // 디바운스된 렌더링 함수 호출
     debouncedRenderMarkers(map, stores, filterState, onStoreMarkerClick);
   }, [map, stores, filterState, onStoreMarkerClick, debouncedRenderMarkers]);
 
@@ -62,6 +66,11 @@ export const MapSection = ({ filterState, onStoreMarkerClick, onMapReady }: MapS
     const storesChanged = JSON.stringify(stores) !== JSON.stringify(lastStoresRef.current);
     const filterChanged =
       JSON.stringify(filterState) !== JSON.stringify(lastFilterStateRef.current);
+
+    // 맵이 준비되지 않았으면 렌더링하지 않음
+    if (!isMapReadyRef.current) {
+      return false;
+    }
 
     if (storesChanged || filterChanged) {
       lastStoresRef.current = stores;
@@ -74,13 +83,16 @@ export const MapSection = ({ filterState, onStoreMarkerClick, onMapReady }: MapS
   // 마커 렌더링 효과
   useEffect(() => {
     if (shouldRenderMarkers) {
+      console.log('🎯 마커 렌더링 실행');
       renderMarkers();
     }
   }, [shouldRenderMarkers, renderMarkers]);
 
-  // 맵 준비 완료 시 콜백 호출
+  // 맵 준비 완료 시 콜백 호출 및 플래그 설정
   useEffect(() => {
     if (map && onMapReady) {
+      console.log('🗺️ 맵 준비 완료');
+      isMapReadyRef.current = true;
       onMapReady(map);
     }
   }, [map, onMapReady]);
