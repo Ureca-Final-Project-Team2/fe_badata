@@ -183,12 +183,17 @@ export const updateMarkerLikeStatus = (storeId: number, isLiked: boolean): void 
 
 // 마커 이미지 생성 함수 (캐싱)
 const markerImageCache = new Map<string, kakao.maps.MarkerImage>();
+
+// 아이콘 경로를 가져오는 헬퍼 함수
+const getIconPath = (icon: string | { src: string }): string => {
+  return typeof icon === 'string' ? icon : icon.src;
+};
+
 export const createMarkerImage = (
   isLiked: boolean = false,
   isCluster: boolean = false,
 ): kakao.maps.MarkerImage => {
   let cacheKey: string;
-  let markerImageSrc: string;
 
   // 로그인 상태 확인
   const isLoggedIn =
@@ -200,26 +205,14 @@ export const createMarkerImage = (
   const shouldShowLikeActive = isLoggedIn && isLiked;
 
   if (isCluster) {
-    // 클러스터 마커 (줌 레벨 5 이상) - 좋아요 상태에 따라 아이콘 결정
     cacheKey = shouldShowLikeActive ? 'cluster_liked_marker' : 'cluster_default_marker';
-    markerImageSrc = shouldShowLikeActive
-      ? typeof ICONS.ETC.LIKE_ACTIVE === 'string'
-        ? ICONS.ETC.LIKE_ACTIVE
-        : ICONS.ETC.LIKE_ACTIVE.src
-      : typeof ICONS.ETC.LIKE_NONACTIVE === 'string'
-        ? ICONS.ETC.LIKE_NONACTIVE
-        : ICONS.ETC.LIKE_NONACTIVE.src;
   } else {
-    // 일반 마커 (줌 레벨 3 이하) - 좋아요 상태에 따라 아이콘 결정
     cacheKey = shouldShowLikeActive ? 'liked_marker' : 'default_marker';
-    markerImageSrc = shouldShowLikeActive
-      ? typeof ICONS.ETC.LIKE_ACTIVE === 'string'
-        ? ICONS.ETC.LIKE_ACTIVE
-        : ICONS.ETC.LIKE_ACTIVE.src
-      : typeof ICONS.ETC.LIKE_NONACTIVE === 'string'
-        ? ICONS.ETC.LIKE_NONACTIVE
-        : ICONS.ETC.LIKE_NONACTIVE.src;
   }
+
+  // 아이콘 선택 로직 단순화
+  const icon = shouldShowLikeActive ? ICONS.ETC.LIKE_ACTIVE : ICONS.ETC.LIKE_NONACTIVE;
+  const markerImageSrc = getIconPath(icon);
 
   if (markerImageCache.has(cacheKey)) {
     return markerImageCache.get(cacheKey)!;
