@@ -25,6 +25,7 @@ export const usePostReviewMutation = () => {
       reservationId: number;
       reviewData: PostReviewRequest;
     }) => postReview(reservationId, reviewData),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['review'] }),
   });
 };
 
