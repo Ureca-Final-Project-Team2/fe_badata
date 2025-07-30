@@ -14,7 +14,10 @@ export default function CoinHistoryPage() {
   const { data, isLoading, isError } = useUserCoinQuery();
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
-  if (isLoading) {
+  // Hydration mismatch 방지를 위해 초기 상태 처리
+  const isInitialLoading = isLoading && !data;
+
+  if (isInitialLoading) {
     return (
       <BaseLayout
         header={<PageHeader title="코인 내역" onBack={() => history.back()} />}
