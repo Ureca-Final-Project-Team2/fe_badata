@@ -9,10 +9,11 @@ import {
   useDeleteRestockAlarmMutation,
   useRestockAlarmListQuery,
 } from '@/features/mypage/restock-alarm/model/queries';
+import { AlarmNoticeSection } from '@/features/mypage/ui/AlarmNoticeSection';
+import { DeleteConfirmModal } from '@/features/mypage/ui/DeleteConfirmModal';
 import { makeToast } from '@/shared/lib/makeToast';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
-import { Modal } from '@/shared/ui/Modal';
 
 import type { RestockAlarmItem } from '@/features/mypage/restock-alarm/lib/types';
 
@@ -21,6 +22,7 @@ export default function RestockAlarmPage() {
   const { data, isLoading, isError } = useRestockAlarmListQuery();
   const deleteMutation = useDeleteRestockAlarmMutation();
   const alarms: RestockAlarmItem[] = data?.item || [];
+
   const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
 
   // 확인 모달 상태
@@ -68,6 +70,7 @@ export default function RestockAlarmPage() {
       showBottomNav
     >
       <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-0 pb-[84px] px-4">
+        <AlarmNoticeSection />
         <div className="flex items-center justify-between mt-6 mb-4">
           <span className="font-body-semibold text-[var(--black)]">
             전체 <span className="text-[var(--main-5)]">{alarms.length}</span>개
@@ -135,54 +138,13 @@ export default function RestockAlarmPage() {
           </ul>
         )}
 
-        <div className="mt-6 rounded-xl border-2 border-[var(--gray-light)] bg-[var(--white)] overflow-hidden">
-          <div className="flex items-center gap-2 px-3 py-2 bg-[var(--main-1)]">
-            <span className="font-body-xs-semibold text-[var(--main-5)]">ⓘ</span>
-            <span className="font-body-xs-semibold text-[var(--black)]">이용안내</span>
-          </div>
-          <div className="px-3 pb-3 pt-0 bg-[var(--white)]">
-            <ul className="list-disc pl-4">
-              <li className="font-body-light-lh text-[var(--gray-mid)] mb-1">
-                기기의 입고 시점에 따라 1회 발송되고, 이미 발송된 재입고 알림은 다시 발송되지
-                않으므로 고객님께서 확인 후 원하실 때만 알림을 다시 받고 싶으실 경우 해당 상품
-                페이지에서 재신청해주시기 바랍니다.
-              </li>
-              <li className="font-body-light-lh text-[var(--gray-mid)]">
-                대여 기간 내에 기기가 재고로 되지 않게 되면 재입고 알림 신청 내역에서 자동으로
-                삭제됩니다.
-              </li>
-            </ul>
-          </div>
-        </div>
+        <DeleteConfirmModal
+          isOpen={showConfirmModal}
+          onClose={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          item={itemToDelete}
+        />
       </div>
-
-      {/* 확인 모달 */}
-      <Modal isOpen={showConfirmModal} onClose={handleCancelDelete}>
-        <div className="p-6 w-[280px] mx-auto">
-          <div className="text-center mb-6">
-            <h3 className="font-title-semibold text-[var(--black)] text-lg mb-2">
-              재입고 알림 취소
-            </h3>
-            <p className="font-body-light-lh text-[var(--gray-mid)]">
-              재입고 알림을 취소하시겠습니까?
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={handleCancelDelete}
-              className="flex-1 py-3 px-4 font-body-semibold bg-[var(--gray-light)] border border-[var(--gray-light)] rounded-lg hover:bg-[var(--gray-light)]"
-            >
-              취소
-            </button>
-            <button
-              onClick={handleConfirmDelete}
-              className="flex-1 py-3 text-[var(--white)] px-4 font-body-semibold bg-[var(--main-5)] rounded-lg hover:bg-[var(--main-4)]"
-            >
-              확인
-            </button>
-          </div>
-        </div>
-      </Modal>
     </BaseLayout>
   );
 }
