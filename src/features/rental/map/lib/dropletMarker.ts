@@ -11,8 +11,6 @@ export const createDropletMarker = (
   onClick?: () => void,
   deviceCount: number = 0,
 ): kakao.maps.CustomOverlay => {
-  console.log('💧 물방울 마커 생성:', storeId, '디바이스 개수:', deviceCount, '좋아요:', isLiked);
-
   // 마커 컨테이너 생성
   const markerContainer = document.createElement('div');
   markerContainer.className = 'droplet-marker';
@@ -21,8 +19,8 @@ export const createDropletMarker = (
   // 크기 결정 (선택된 경우 Large, 기본 Small)
   const size = isSelected ? 'large' : 'small';
   const sizeStyles = {
-    small: { width: '24px', height: '24px', fontSize: '10px' },
-    large: { width: '40px', height: '40px', fontSize: '14px' },
+    small: { width: '30px', height: '30px', fontSize: '16px' },
+    large: { width: '40px', height: '40px', fontSize: '20px' },
   };
 
   // 색상 결정 (좋아요한 경우 main-5, 기본 회색)
@@ -56,7 +54,7 @@ export const createDropletMarker = (
     z-index: ${isSelected ? 1001 : 1000};
   `;
 
-  // 숫자 표시 (디바이스 개수 또는 하트 아이콘)
+  // 숫자 표시 (디바이스 개수)
   const numberElement = document.createElement('span');
   numberElement.style.cssText = `
     color: white;
@@ -70,29 +68,22 @@ export const createDropletMarker = (
     font-size: ${sizeStyles[size].fontSize};
   `;
 
-  // 좋아요한 경우 하트 아이콘, 아니면 디바이스 개수
-  numberElement.textContent = isLiked ? '♥' : deviceCount.toString();
+  // 항상 디바이스 개수 표시
+  numberElement.textContent = deviceCount.toString();
 
   markerContainer.appendChild(numberElement);
 
   // 클릭 이벤트 추가
   if (onClick) {
-    console.log('💧 onClick 함수 설정됨:', storeId, typeof onClick);
     markerContainer.addEventListener('click', (e) => {
-      console.log('💧 물방울 마커 클릭 이벤트 발생:', storeId);
-      console.log('💧 onClick 함수 존재 여부:', !!onClick);
-      console.log('💧 onClick 함수 타입:', typeof onClick);
       e.stopPropagation(); // 이벤트 버블링 방지
 
       try {
         onClick();
-        console.log('💧 onClick 함수 실행 완료');
       } catch (error) {
         console.error('💧 onClick 함수 실행 중 오류:', error);
       }
     });
-  } else {
-    console.log('💧 onClick 함수가 없음:', storeId);
   }
 
   // CustomOverlay 생성
@@ -105,8 +96,6 @@ export const createDropletMarker = (
 
   // 지도에 오버레이 추가
   dropletOverlay.setMap(map);
-
-  console.log('💧 물방울 마커 생성 완료:', storeId, '위치:', position.getLat(), position.getLng());
 
   return dropletOverlay;
 };
@@ -125,8 +114,8 @@ export const updateDropletMarker = (
 
   const size = isSelected ? 'large' : 'small';
   const sizeStyles = {
-    small: { width: '24px', height: '24px', fontSize: '10px' },
-    large: { width: '40px', height: '40px', fontSize: '14px' },
+    small: { width: '30px', height: '30px', fontSize: '14px' },
+    large: { width: '40px', height: '40px', fontSize: '18px' },
   };
 
   const backgroundColor = isLiked ? '#238CFA' : '#6b7280';
@@ -144,7 +133,7 @@ export const updateDropletMarker = (
   // 숫자 업데이트
   const numberElement = markerContainer.querySelector('span');
   if (numberElement) {
-    numberElement.textContent = isLiked ? '♥' : deviceCount?.toString() || '0';
+    numberElement.textContent = deviceCount?.toString() || '0';
     numberElement.style.fontSize = sizeStyles[size].fontSize;
   }
 };

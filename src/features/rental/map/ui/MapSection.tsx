@@ -71,12 +71,6 @@ export const MapSection = ({
       return;
     }
 
-    console.log('🎨 renderMarkers 호출:', {
-      storesCount: stores.length,
-      hasOnStoreMarkerClick: !!onStoreMarkerClick,
-      filterState,
-    });
-
     debouncedRenderMarkers(map, stores, filterState, onStoreMarkerClick);
   }, [map, stores, filterState, onStoreMarkerClick, debouncedRenderMarkers]);
 

@@ -259,64 +259,14 @@ export default function RentalPage() {
     [selectedStore.selectedDevices, filterState],
   );
 
-  // DeviceCard 표시 조건 디버깅
-  useEffect(() => {
-    console.log('📱 DeviceCard 표시 조건 확인:', {
-      selectedDevicesCount: selectedStore.selectedDevices.length,
-      filteredDevicesCount: filteredDevicesList.length,
-      selectedStoreId: selectedStore.selectedStoreId,
-      hasSelectedDevices: selectedStore.selectedDevices.length > 0,
-      willShowFilteredDeviceCard: filteredDevicesList.length > 0,
-      willShowFallbackDeviceCard:
-        filteredDevicesList.length === 0 && selectedStore.selectedDevices.length > 0,
-    });
-  }, [selectedStore.selectedDevices, filteredDevicesList, selectedStore.selectedStoreId]);
-
   // 콜백 함수들
   const handleStoreMarkerClick = useCallback(
     (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
-      console.log('🎯 handleStoreMarkerClick 호출됨:', {
-        storeId,
-        devicesCount: devices.length,
-        hasStoreDetail: !!storeDetail,
-        selectedStoreId,
-      });
-
-      console.log(
-        '🎯 디바이스 상세 정보:',
-        devices.map((device) => ({
-          storeDeviceId: device.storeDeviceId,
-          deviceName: device.deviceName,
-          dataCapacity: device.dataCapacity,
-          price: device.price,
-          leftCount: device.leftCount,
-          dataType: device.dataType,
-          maxSupportConnection: device.maxSupportConnection,
-          reviewRating: device.reviewRating,
-        })),
-      );
-
-      if (storeDetail) {
-        console.log('🎯 가맹점 상세 정보:', {
-          name: storeDetail.name,
-          storeId: storeDetail.storeId,
-          detailAddress: storeDetail.detailAddress,
-          phoneNumber: storeDetail.phoneNumber,
-          distanceFromMe: storeDetail.distanceFromMe,
-          reviewRating: storeDetail.reviewRating,
-          isOpening: storeDetail.isOpening,
-          startTime: storeDetail.startTime,
-          endTime: storeDetail.endTime,
-          liked: storeDetail.liked,
-        });
-      }
-
       // 이전에 선택된 가맹점 마커를 작게 만들기
       if (selectedStoreId && selectedStoreId !== storeId) {
         const cache = markerCaches.get(mapInstance!);
         if (cache) {
           cache.updateMarkerSelection(selectedStoreId, false);
-          console.log('📍 이전 선택된 가맹점 마커 작게 만들기:', selectedStoreId);
         }
       }
 
@@ -326,15 +276,8 @@ export default function RentalPage() {
         const cache = markerCaches.get(mapInstance!);
         if (cache) {
           cache.updateMarkerSelection(storeId, true);
-          console.log('📍 새로 선택된 가맹점 마커 크게 만들기:', storeId);
         }
       }
-
-      console.log('🎯 selectedStore 업데이트:', {
-        devicesCount: devices.length,
-        storeId: storeId ?? 0,
-        hasStoreDetail: !!storeDetail,
-      });
 
       dispatchSelectedStore({
         type: 'SELECT_STORE',
@@ -342,19 +285,9 @@ export default function RentalPage() {
         storeId: storeId ?? 0,
         storeDetail,
       });
-
-      console.log('🎯 DeviceCard 표시 요청 완료');
     },
     [selectedStoreId, mapInstance],
   );
-
-  // handleStoreMarkerClick 함수 정의 확인
-  useEffect(() => {
-    console.log('🎯 handleStoreMarkerClick 함수 정의 확인:', {
-      isDefined: !!handleStoreMarkerClick,
-      functionType: typeof handleStoreMarkerClick,
-    });
-  }, [handleStoreMarkerClick]);
 
   // 필터링된 디바이스 업데이트
   useEffect(() => {
