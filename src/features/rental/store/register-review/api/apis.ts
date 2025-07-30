@@ -60,6 +60,6 @@ export const updateReview = async (reviewId: number, data: UpdateReviewRequest) 
   return await axiosInstance.patch(`${END_POINTS.STORES.REVIEW}/${reviewId}`, formData);
 };
 
-export const deleteReview = async (reviewId: number) => {
-  return await axiosInstance.delete(`${END_POINTS.STORES.REVIEW}/${reviewId}`);
+export const deleteReview = async (reviewId: number): Promise<void> => {
+  await axiosInstance.delete(`${END_POINTS.STORES.REVIEW}/${reviewId}`);
 };
