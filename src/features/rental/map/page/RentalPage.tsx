@@ -11,6 +11,7 @@ import {
   useStoreListWithInfiniteScroll,
 } from '@/features/rental/map/hooks/useStoreListHooks';
 import { createCurrentLocationMarker } from '@/features/rental/map/lib/currentLocationMarker';
+import { markerCaches } from '@/features/rental/map/lib/markerCache';
 import { filterDevices } from '@/features/rental/map/model/filtereDevices';
 import { initialRentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
 import {
@@ -50,6 +51,7 @@ export default function RentalPage() {
   });
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
   const [hasProcessedUrlParams, setHasProcessedUrlParams] = useState(false);
+  const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
 
   // URL 파라미터에서 선택된 위치 정보 가져오기 (일회성)
   const selectedLat = !hasProcessedUrlParams ? searchParams?.get('lat') : null;
@@ -261,6 +263,25 @@ export default function RentalPage() {
   // 콜백 함수들
   const handleStoreMarkerClick = useCallback(
     (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
+      // 이전에 선택된 가맹점 마커를 작게 만들기
+      if (selectedStoreId && selectedStoreId !== storeId) {
+        const cache = markerCaches.get(mapInstance!);
+        if (cache) {
+          cache.updateMarkerSelection(selectedStoreId, false);
+          console.log('📍 이전 선택된 가맹점 마커 작게 만들기:', selectedStoreId);
+        }
+      }
+
+      // 새로 선택된 가맹점 마커를 크게 만들기
+      if (storeId) {
+        setSelectedStoreId(storeId);
+        const cache = markerCaches.get(mapInstance!);
+        if (cache) {
+          cache.updateMarkerSelection(storeId, true);
+          console.log('📍 새로 선택된 가맹점 마커 크게 만들기:', storeId);
+        }
+      }
+
       dispatchSelectedStore({
         type: 'SELECT_STORE',
         devices,
@@ -268,7 +289,7 @@ export default function RentalPage() {
         storeDetail,
       });
     },
-    [],
+    [selectedStoreId, mapInstance],
   );
 
   // 필터링된 디바이스 업데이트

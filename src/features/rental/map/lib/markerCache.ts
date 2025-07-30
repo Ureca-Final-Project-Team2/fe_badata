@@ -1,3 +1,4 @@
+import { updateDropletMarker } from '@/features/rental/map/lib/dropletMarker';
 import { ICONS } from '@/shared/config/iconPath';
 
 // 상수 정의
@@ -18,13 +19,16 @@ const OVERLAY_STYLES = `
   line-height: ${MARKER_SIZE}px;
 `;
 
+// 마커 타입 정의 (기존 Marker 또는 새로운 CustomOverlay)
+type MarkerType = kakao.maps.Marker | kakao.maps.CustomOverlay;
+
 // 마커 캐시 관리를 위한 클래스
 export class MarkerCache {
   private markers = new Map<
     string,
     {
-      marker: kakao.maps.Marker;
-      overlay: kakao.maps.CustomOverlay;
+      marker: MarkerType;
+      overlay: kakao.maps.CustomOverlay | null;
       infowindow: kakao.maps.InfoWindow;
       storeId: number;
       deviceCount: number;
@@ -53,8 +57,8 @@ export class MarkerCache {
   addMarker(
     storeId: number,
     markerData: {
-      marker: kakao.maps.Marker;
-      overlay: kakao.maps.CustomOverlay;
+      marker: MarkerType;
+      overlay: kakao.maps.CustomOverlay | null;
       infowindow: kakao.maps.InfoWindow;
       deviceCount: number;
       isLiked: boolean;
@@ -72,8 +76,18 @@ export class MarkerCache {
     const key = this.getMarkerKey(storeId);
     const markerData = this.markers.get(key);
     if (markerData) {
-      markerData.marker.setMap(null);
-      markerData.overlay.setMap(null);
+      // 마커 타입에 따라 제거
+      if (markerData.marker instanceof window.kakao.maps.Marker) {
+        markerData.marker.setMap(null);
+      } else if (markerData.marker instanceof window.kakao.maps.CustomOverlay) {
+        markerData.marker.setMap(null);
+      }
+
+      // 오버레이 제거
+      if (markerData.overlay) {
+        markerData.overlay.setMap(null);
+      }
+
       this.markers.delete(key);
     }
   }
@@ -88,41 +102,69 @@ export class MarkerCache {
     const key = this.getMarkerKey(storeId);
     const markerData = this.markers.get(key);
     if (markerData) {
-      // 디바이스 개수 업데이트
-      if (markerData.deviceCount !== newDeviceCount) {
+      // 디바이스 개수 업데이트 (기존 오버레이가 있는 경우에만)
+      if (markerData.overlay && markerData.deviceCount !== newDeviceCount) {
         markerData.overlay.setContent(`<div style="${OVERLAY_STYLES}">${newDeviceCount}</div>`);
         markerData.deviceCount = newDeviceCount;
       }
 
-      // liked 상태나 클러스터 상태가 변경된 경우 마커 이미지 업데이트
+      // liked 상태나 클러스터 상태가 변경된 경우 마커 업데이트
       const shouldUpdateImage =
         (isLiked !== undefined && markerData.isLiked !== isLiked) ||
         (isCluster !== undefined && markerData.isCluster !== isCluster);
 
       if (shouldUpdateImage) {
-        // 로그인 상태 확인
-        const isLoggedIn =
-          typeof window !== 'undefined' && localStorage.getItem('auth-storage')
-            ? JSON.parse(localStorage.getItem('auth-storage') || '{}').state?.isLoggedIn || false
-            : false;
+        // 물방울 마커인 경우 업데이트
+        if (markerData.marker instanceof window.kakao.maps.CustomOverlay) {
+          updateDropletMarker(
+            markerData.marker,
+            isLiked || markerData.isLiked,
+            false,
+            newDeviceCount,
+          );
+        } else {
+          // 기존 마커인 경우 이미지 업데이트
+          const markerImage = createMarkerImage(
+            isLiked || markerData.isLiked,
+            isCluster || markerData.isCluster,
+          );
+          (markerData.marker as kakao.maps.Marker).setImage(markerImage);
+        }
 
-        // 좋아요 상태 결정: 로그인한 사용자이고 liked가 true인 경우에만 like_active 표시
-        const shouldShowLikeActive = isLoggedIn && (isLiked ?? markerData.isLiked);
-
-        markerData.marker.setImage(
-          createMarkerImage(shouldShowLikeActive, isCluster ?? markerData.isCluster),
-        );
-        if (isLiked !== undefined) markerData.isLiked = isLiked;
-        if (isCluster !== undefined) markerData.isCluster = isCluster;
+        markerData.isLiked = isLiked !== undefined ? isLiked : markerData.isLiked;
+        markerData.isCluster = isCluster !== undefined ? isCluster : markerData.isCluster;
       }
+    }
+  }
+
+  // 마커 선택 상태 업데이트 (크기 변경)
+  updateMarkerSelection(storeId: number, isSelected: boolean): void {
+    const key = this.getMarkerKey(storeId);
+    const markerData = this.markers.get(key);
+    if (markerData && markerData.marker instanceof window.kakao.maps.CustomOverlay) {
+      updateDropletMarker(
+        markerData.marker,
+        markerData.isLiked,
+        isSelected,
+        markerData.deviceCount,
+      );
     }
   }
 
   // 모든 마커 제거
   clearAll(): void {
     this.markers.forEach((markerData) => {
-      markerData.marker.setMap(null);
-      markerData.overlay.setMap(null);
+      // 마커 타입에 따라 제거
+      if (markerData.marker instanceof window.kakao.maps.Marker) {
+        markerData.marker.setMap(null);
+      } else if (markerData.marker instanceof window.kakao.maps.CustomOverlay) {
+        markerData.marker.setMap(null);
+      }
+
+      // 오버레이 제거
+      if (markerData.overlay) {
+        markerData.overlay.setMap(null);
+      }
     });
     this.markers.clear();
   }
@@ -132,8 +174,17 @@ export class MarkerCache {
     const keysToRemove: string[] = [];
     this.markers.forEach((markerData, key) => {
       if (!keepStoreIds.has(markerData.storeId)) {
-        markerData.marker.setMap(null);
-        markerData.overlay.setMap(null);
+        // 마커 타입에 따라 제거
+        if (markerData.marker instanceof window.kakao.maps.Marker) {
+          markerData.marker.setMap(null);
+        } else if (markerData.marker instanceof window.kakao.maps.CustomOverlay) {
+          markerData.marker.setMap(null);
+        }
+
+        // 오버레이 제거
+        if (markerData.overlay) {
+          markerData.overlay.setMap(null);
+        }
         keysToRemove.push(key);
       }
     });
