@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 import { ArrowUpDown } from 'lucide-react';
@@ -77,7 +77,7 @@ export const DragBottomSheet = ({
   const y = useMotionValue(collapsedY);
   const controls = useAnimation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
       const height = window.innerHeight;
       setWindowHeight(height);
