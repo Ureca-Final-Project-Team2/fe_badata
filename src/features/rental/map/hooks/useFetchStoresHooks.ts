@@ -61,7 +61,7 @@ export const useFetchStoresHooks = (
       // 500ms 디바운싱
       debounceRef.current = setTimeout(async () => {
         try {
-          console.log('🚀 API 호출 시작');
+          if (!map) return;
           setIsLoading(true);
 
           setCurrentBounds(newBounds);
@@ -69,10 +69,7 @@ export const useFetchStoresHooks = (
           lastFilterStateRef.current = filterState;
 
           const mergedParams = mapFilterStateToApiParams(newBounds, filterState, zoomLevel);
-          console.log('🔧 API 파라미터:', mergedParams);
-
           const stores = await fetchStores(mergedParams);
-          console.log('📦 받아온 stores 개수:', stores.length);
 
           // stores가 실제로 변경되었는지 확인
           const storesChanged = JSON.stringify(stores) !== JSON.stringify(lastStoresRef.current);
@@ -81,13 +78,15 @@ export const useFetchStoresHooks = (
             lastStoresRef.current = stores;
           }
         } catch (e) {
-          console.error('❌ 가맹점 불러오기 실패:', e);
+          console.error('가맹점 불러오기 실패:', e);
         } finally {
-          setIsLoading(false);
+          if (map) {
+            setIsLoading(false);
+          }
         }
       }, 500);
     } catch (error) {
-      console.error('❌ 맵 bounds 가져오기 실패:', error);
+      console.error('맵 bounds 가져오기 실패:', error);
     }
   }, [map, filterState]);
 
@@ -99,7 +98,6 @@ export const useFetchStoresHooks = (
 
     // 초기화 플래그 확인
     if (!isInitializedRef.current) {
-      console.log('🎯 맵 초기화 및 이벤트 리스너 등록');
       isInitializedRef.current = true;
 
       // 초기 로드
@@ -127,7 +125,6 @@ export const useFetchStoresHooks = (
   // filterState 변경 시 즉시 업데이트 (초기화 후에만)
   useEffect(() => {
     if (map && filterState && isInitializedRef.current) {
-      console.log('🔍 filterState 변경 감지');
       updateStoresByBounds();
     }
   }, [filterState, map, updateStoresByBounds]);
