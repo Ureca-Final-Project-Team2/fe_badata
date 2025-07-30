@@ -8,7 +8,8 @@ export const useUserCoinQuery = () => {
   return useQuery<UserCoin>({
     queryKey: ['userCoin'],
     queryFn: getUserCoin,
-    enabled: typeof window !== 'undefined',
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -18,6 +19,7 @@ export const useUserCoinHistoryInfiniteQuery = (size: number = 10) => {
     queryFn: ({ pageParam }) => getUserCoinHistory({ cursor: pageParam, size }),
     initialPageParam: undefined as number | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    enabled: typeof window !== 'undefined',
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
 };

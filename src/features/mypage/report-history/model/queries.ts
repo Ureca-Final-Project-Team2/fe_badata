@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getReportHistoryList } from '@/features/mypage/report-history/api/apis';
 
-import type { ReportHistoryApiResponse } from '@/features/mypage/report-history/lib/types';
+import type { ReportHistoryResponse } from '../lib/types';
 
-export const useReportHistoryListQuery = (cursor?: number, size = 10) =>
-  useQuery<ReportHistoryApiResponse>({
-    queryKey: ['reportHistoryList', 'reports', cursor, size],
-    queryFn: () => getReportHistoryList(cursor, size),
-    staleTime: 1000 * 60 * 5, // 5분
-    gcTime: 1000 * 60 * 5, // 5분
+export const useReportHistoryListQuery = (reportStatus: string, cursor?: number, size = 10) =>
+  useQuery<ReportHistoryResponse['content']>({
+    queryKey: ['reportHistoryList', reportStatus, cursor, size],
+    queryFn: () => getReportHistoryList(reportStatus, cursor, size),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     refetchOnReconnect: false,
