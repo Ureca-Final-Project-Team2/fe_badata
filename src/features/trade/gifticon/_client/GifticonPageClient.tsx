@@ -10,7 +10,6 @@ import { TradeFlatTab } from '@/features/trade/ui/TradeFlatTab';
 import { TradeList } from '@/features/trade/ui/TradeList';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
-import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFloatingButton';
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
@@ -83,7 +82,6 @@ export default function GifticonPageClient() {
         onSubmit={submitGifticonFilter}
         onReset={() => setGifticonPrice(50000)}
       />
-      <TradeFloatingButton />
     </>
   );
 }
