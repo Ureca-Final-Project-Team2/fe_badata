@@ -26,6 +26,7 @@ export function useLocation(): UseLocationReturn {
   const lastCallTimeRef = useRef<number>(0);
   const lastCoordsRef = useRef<{ lat: number; lng: number } | null>(null);
   const isInitializedRef = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const isDev = process.env.NODE_ENV === 'development';
 
@@ -36,7 +37,12 @@ export function useLocation(): UseLocationReturn {
       clearTimeout(debounceRef.current);
     }
 
-    // 강화된 쓰로틀링: 5초 내에 같은 좌표로 호출되면 무시
+    // 이전 요청이 있다면 취소
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // 강화된 쓰로틀링: 10초 내에 같은 좌표로 호출되면 무시
     const now = Date.now();
     const lastCoords = lastCoordsRef.current;
     const isSameCoords =
@@ -44,14 +50,17 @@ export function useLocation(): UseLocationReturn {
       Math.abs(lastCoords.lat - lat) < 0.0001 &&
       Math.abs(lastCoords.lng - lng) < 0.0001;
 
-    if (isSameCoords && now - lastCallTimeRef.current < 5000) {
+    if (isSameCoords && now - lastCallTimeRef.current < 10000) {
       if (isDev) console.log('🚫 같은 좌표로 너무 자주 호출됨, 무시');
       return;
     }
 
-    // 강화된 디바운싱: 2초 후에 실행
+    // 강화된 디바운싱: 3초 후에 실행
     debounceRef.current = setTimeout(async () => {
       try {
+        // 새로운 AbortController 생성
+        abortControllerRef.current = new AbortController();
+
         const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_REST_API_KEY;
         if (!KAKAO_REST_API_KEY) {
           if (isDev) console.warn('Kakao REST API 키가 설정되지 않았습니다.');
@@ -69,6 +78,7 @@ export function useLocation(): UseLocationReturn {
           headers: {
             Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
           },
+          signal: abortControllerRef.current.signal,
         });
 
         if (response.ok) {
@@ -85,6 +95,9 @@ export function useLocation(): UseLocationReturn {
             if (isDev) console.log('주소 정보가 없습니다.');
             setUserAddress('현재위치');
           }
+        } else if (response.status === 429) {
+          if (isDev) console.warn('🚫 API 호출 제한 도달, 주소 변환 건너뜀');
+          setUserAddress('현재위치');
         } else {
           if (isDev) console.error('REST API 요청 실패:', response.status, response.statusText);
           setUserAddress('현재위치');
@@ -94,10 +107,14 @@ export function useLocation(): UseLocationReturn {
         lastCallTimeRef.current = Date.now();
         lastCoordsRef.current = { lat, lng };
       } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          if (isDev) console.log('📍 주소 변환 요청 취소됨');
+          return;
+        }
         if (isDev) console.error('주소 변환 실패:', error);
         setUserAddress('현재위치');
       }
-    }, 2000); // 2초 디바운싱으로 증가
+    }, 3000); // 3초 디바운싱으로 증가
   }, []);
 
   // GPS 위치 가져오기
@@ -159,8 +176,8 @@ export function useLocation(): UseLocationReturn {
         Math.abs(lastCoords.lat - userLocation.lat) < 0.0001 &&
         Math.abs(lastCoords.lng - userLocation.lng) < 0.0001;
 
-      // 같은 좌표이고 10초 내에 호출된 경우 무시
-      if (isSameCoords && now - lastCallTimeRef.current < 10000) {
+      // 같은 좌표이고 15초 내에 호출된 경우 무시
+      if (isSameCoords && now - lastCallTimeRef.current < 15000) {
         if (isDev) console.log('🚫 같은 위치로 너무 자주 호출됨, 무시');
         return;
       }
@@ -174,6 +191,9 @@ export function useLocation(): UseLocationReturn {
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
     };
   }, []);

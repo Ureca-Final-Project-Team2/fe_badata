@@ -81,8 +81,14 @@ export const DragBottomSheet = ({
     if (typeof window !== 'undefined') {
       const height = window.innerHeight;
       setWindowHeight(height);
+
+      // open이 true이면, 최초 mount 시 expandedY로 초기화
+      if (open) {
+        const expandedY = 60;
+        y.set(expandedY); // 최초 위치 강제 설정
+      }
     }
-  }, []);
+  }, [open, y]);
 
   useEffect(() => {
     if (windowHeight === 0) return;

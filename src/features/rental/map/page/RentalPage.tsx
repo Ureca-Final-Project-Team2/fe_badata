@@ -1,23 +1,19 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CenterScrollSwiper } from '@/entities/scroll';
-import { useLocation } from '@/features/rental/map/hooks/useLocationHooks';
+import { useDrawerState } from '@/features/rental/map/hooks/useDrawerStaterHooks';
+import { useFilterState } from '@/features/rental/map/hooks/useFilterStaterHooks';
+import { useSelectedStore } from '@/features/rental/map/hooks/useSelectedStore';
 import {
   convertToStoreCardProps,
   useStoreListWithInfiniteScroll,
 } from '@/features/rental/map/hooks/useStoreListHooks';
+import { useUrlParams } from '@/features/rental/map/hooks/useUrlParamsrHooks';
+import { useUserLocation } from '@/features/rental/map/hooks/useUserLocationrHooks';
 import { createCurrentLocationMarker } from '@/features/rental/map/lib/currentLocationMarker';
-import { markerCaches } from '@/features/rental/map/lib/markerCache';
 import { filterDevices } from '@/features/rental/map/model/filtereDevices';
-import { initialRentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
-import {
-  initialSelectedStoreState,
-  selectedStoreReducer,
-} from '@/features/rental/map/model/selectedStoreReducer';
 import { CurrentLocationButton } from '@/features/rental/map/ui/CurrentLocationButton';
 import DeviceCard from '@/features/rental/map/ui/DeviceCard';
 import { DrawerSection } from '@/features/rental/map/ui/DrawerSection';
@@ -31,104 +27,62 @@ import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
-import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
-import type { RentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
+import type { StoreDevice } from '@/features/rental/map/lib/types';
 
 export default function RentalPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
-  const [selectedStore, dispatchSelectedStore] = useReducer(
-    selectedStoreReducer,
-    initialSelectedStoreState,
-  );
-  const [filterState, setFilterState] = useState<RentalFilterState>(initialRentalFilterState);
-  const [tempFilterState, setTempFilterState] =
-    useState<RentalFilterState>(initialRentalFilterState);
-  const [userLocation, setUserLocation] = useState({
-    lat: null as number | null,
-    lng: null as number | null,
-  });
-  const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
-  const [hasProcessedUrlParams, setHasProcessedUrlParams] = useState(false);
-  const [selectedStoreId, setSelectedStoreId] = useState<number | null>(() => {
-    // localStorage에서 선택된 스토어 ID 복원
-    if (typeof window !== 'undefined') {
-      const savedStoreId = localStorage.getItem('selected-store-id');
-      return savedStoreId ? parseInt(savedStoreId, 10) : null;
-    }
-    return null;
-  });
-
-  // URL 파라미터에서 선택된 위치 정보 가져오기 (일회성)
-  const selectedLat = !hasProcessedUrlParams ? searchParams?.get('lat') : null;
-  const selectedLng = !hasProcessedUrlParams ? searchParams?.get('lng') : null;
-  const selectedAddress = !hasProcessedUrlParams ? searchParams?.get('address') : null;
-  const selectedPlaceName = !hasProcessedUrlParams ? searchParams?.get('placeName') : null;
-
-  // 위치 관련 훅 사용
   const {
-    userLocation: locationData,
-    userAddress,
-    isLoading: locationLoading,
-    error: locationError,
-    refreshLocation,
-  } = useLocation();
+    selectedLat,
+    selectedLng,
+    selectedAddress,
+    selectedPlaceName,
+    hasProcessedUrlParams,
+    setHasProcessedUrlParams,
+    clearUrlParams,
+  } = useUrlParams();
 
-  // URL 파라미터 처리 (일회성)
+  const { userLocation, setUserLocation, userAddress, locationLoading, locationError } =
+    useUserLocation(selectedLat || null, selectedLng || null, hasProcessedUrlParams);
+
+  const {
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isSortDrawerOpen,
+    setIsSortDrawerOpen,
+    currentSort,
+    handleListView,
+    handleSortClick,
+    handleSortSelect,
+  } = useDrawerState();
+
+  const {
+    filterState,
+    tempFilterState,
+    setTempFilterState,
+    filterDrawerOpen,
+    setFilterDrawerOpen,
+    handleFilterSubmit,
+  } = useFilterState();
+
+  const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
+
+  const {
+    selectedStore,
+    selectedStoreId,
+    handleStoreMarkerClick,
+    handleMapClick,
+    dispatchSelectedStore,
+  } = useSelectedStore(mapInstance);
+
+  // URL 파라미터 처리 완료 표시
   useEffect(() => {
     if (selectedLat && selectedLng && !hasProcessedUrlParams) {
-      const lat = parseFloat(selectedLat);
-      const lng = parseFloat(selectedLng);
-
-      if (!isNaN(lat) && !isNaN(lng)) {
-        setUserLocation({ lat, lng });
-        setHasProcessedUrlParams(true);
-
-        // URL 파라미터 제거 (일회성 처리)
-        const newUrl = new URL(window.location.href);
-        newUrl.searchParams.delete('lat');
-        newUrl.searchParams.delete('lng');
-        newUrl.searchParams.delete('address');
-        newUrl.searchParams.delete('placeName');
-        router.replace(newUrl.pathname, { scroll: false });
-      }
+      setHasProcessedUrlParams(true);
+      clearUrlParams();
     }
-  }, [selectedLat, selectedLng, hasProcessedUrlParams, router]);
-
-  // 사용자 위치 가져오기 (URL 파라미터가 없을 때만)
-  useEffect(() => {
-    if (!selectedLat && !selectedLng && !hasProcessedUrlParams) {
-      if (locationData) {
-        setUserLocation({
-          lat: locationData.lat,
-          lng: locationData.lng,
-        });
-      } else if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setUserLocation({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-          },
-          (error) => {
-            console.log('위치 정보를 가져올 수 없습니다:', error.message);
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 300000,
-          },
-        );
-      }
-    }
-  }, [locationData, selectedLat, selectedLng, hasProcessedUrlParams]);
+  }, [selectedLat, selectedLng, hasProcessedUrlParams, setHasProcessedUrlParams, clearUrlParams]);
 
   // 현재 위치로 이동하는 함수
   const handleCurrentLocation = useCallback(() => {
-    refreshLocation();
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -141,22 +95,40 @@ export default function RentalPage() {
           if (mapInstance) {
             const newPosition = new window.kakao.maps.LatLng(newLocation.lat, newLocation.lng);
             mapInstance.setCenter(newPosition);
-
-            // 사용자 현재 위치에 커스텀 마커 생성
             createCurrentLocationMarker(mapInstance);
           }
         },
         (error) => {
           console.log('위치 정보를 가져올 수 없습니다:', error.message);
+          // fallback: 서울시청 좌표
+          const fallbackLocation = {
+            lat: 37.5665,
+            lng: 126.978,
+          };
+          setUserLocation(fallbackLocation);
+
+          if (mapInstance) {
+            const newPosition = new window.kakao.maps.LatLng(
+              fallbackLocation.lat,
+              fallbackLocation.lng,
+            );
+            mapInstance.setCenter(newPosition);
+            createCurrentLocationMarker(mapInstance);
+          }
         },
         {
           enableHighAccuracy: true,
           timeout: 10000,
-          maximumAge: 300000,
+          maximumAge: 300000, // 5분 캐시 허용
         },
       );
     }
-  }, [refreshLocation, mapInstance]);
+  }, [mapInstance, setUserLocation]);
+
+  // 지도 클릭 핸들러
+  const handleMapClickWrapper = useCallback(async () => {
+    await handleMapClick();
+  }, [handleMapClick]);
 
   // 지도 준비 완료 시 호출되는 콜백
   const handleMapReady = useCallback(
@@ -199,24 +171,6 @@ export default function RentalPage() {
     },
     [selectedLat, selectedLng, selectedAddress, selectedPlaceName, hasProcessedUrlParams],
   );
-
-  // Drawer 상태 관리
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isSortDrawerOpen, setIsSortDrawerOpen] = useState(false);
-  const [currentSort, setCurrentSort] = useState('distance,asc');
-
-  // 이벤트 핸들러들
-  const handleListView = useCallback(() => {
-    setIsDrawerOpen((prev) => !prev);
-  }, []);
-
-  const handleSortClick = useCallback(() => {
-    setIsSortDrawerOpen(true);
-  }, []);
-
-  const handleSortSelect = useCallback((sortType: string) => {
-    setCurrentSort(sortType);
-  }, []);
 
   // 스토어 리스트 훅
   const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error, fetchNextPage } =
@@ -266,62 +220,6 @@ export default function RentalPage() {
     [selectedStore.selectedDevices, filterState],
   );
 
-  // 콜백 함수들
-  const handleStoreMarkerClick = useCallback(
-    (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
-      // 이전에 선택된 가맹점 마커를 작게 만들기 (다른 마커인 경우에만)
-      if (selectedStoreId && selectedStoreId !== storeId) {
-        const cache = markerCaches.get(mapInstance!);
-        if (cache) {
-          cache.updateMarkerSelection(selectedStoreId, false);
-        }
-      }
-
-      // 새로 선택된 가맹점 마커를 크게 만들기 (같은 마커를 다시 클릭해도 크게 유지)
-      if (storeId) {
-        setSelectedStoreId(storeId);
-        // localStorage에 선택된 스토어 ID 저장
-        localStorage.setItem('selected-store-id', storeId.toString());
-        const cache = markerCaches.get(mapInstance!);
-        if (cache) {
-          cache.updateMarkerSelection(storeId, true);
-        }
-      }
-
-      dispatchSelectedStore({
-        type: 'SELECT_STORE',
-        devices,
-        storeId: storeId ?? 0,
-        storeDetail,
-      });
-    },
-    [selectedStoreId, mapInstance],
-  );
-
-  // 지도 클릭 시 DeviceCard 닫기
-  const handleMapClick = useCallback(() => {
-    // DeviceCard가 열려있으면 닫기
-    if (selectedStore.selectedDevices.length > 0) {
-      // 이전에 선택된 가맹점 마커를 작게 만들기
-      if (selectedStoreId) {
-        const cache = markerCaches.get(mapInstance!);
-        if (cache) {
-          cache.updateMarkerSelection(selectedStoreId, false);
-        }
-      }
-
-      // 선택된 스토어 초기화
-      setSelectedStoreId(null);
-      localStorage.removeItem('selected-store-id'); // localStorage에서도 제거
-      dispatchSelectedStore({
-        type: 'SELECT_STORE',
-        devices: [],
-        storeId: 0,
-        storeDetail: undefined,
-      });
-    }
-  }, [selectedStore.selectedDevices.length, selectedStoreId, mapInstance]);
-
   // 필터링된 디바이스 업데이트
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
@@ -346,6 +244,7 @@ export default function RentalPage() {
     selectedStore.selectedDevices.length,
     selectedStore.selectedStoreDetail,
     selectedStore.selectedStoreId,
+    dispatchSelectedStore,
   ]);
 
   return (
@@ -386,7 +285,7 @@ export default function RentalPage() {
           initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
           initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
           onStoreMarkerClick={handleStoreMarkerClick}
-          onMapClick={handleMapClick}
+          onMapClick={handleMapClickWrapper}
           onMapReady={handleMapReady}
           hasUrlParams={!!(selectedLat && selectedLng && !hasProcessedUrlParams)}
           selectedStoreId={selectedStoreId}
@@ -414,10 +313,7 @@ export default function RentalPage() {
           onClose={() => setFilterDrawerOpen(false)}
           filterState={tempFilterState}
           setFilterState={setTempFilterState}
-          onSubmit={(filters) => {
-            setFilterState(filters);
-            setFilterDrawerOpen(false);
-          }}
+          onSubmit={handleFilterSubmit}
         />
       </FilterDrawer>
       <SortDrawer
