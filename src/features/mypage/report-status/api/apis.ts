@@ -1,14 +1,9 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { ReportStatusResponse } from '../lib/types';
+import type { ReportStatus } from '../lib/types';
 
-
-
-export const getReportStatus = async (): Promise<ReportStatusResponse> => {
-  const response = await axiosInstance.get<ReportStatusResponse>(
-    END_POINTS.MYPAGE.REPORT_TOTAL_COUNT,
-  );
-
-  return response.data;
+export const getReportStatus = async (): Promise<ReportStatus> => {
+  const content: ReportStatus = await axiosInstance.get(END_POINTS.MYPAGE.REPORT_TOTAL_COUNT);
+  return content;
 };

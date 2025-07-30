@@ -7,9 +7,10 @@ import { useReportStatusQuery } from '@/features/mypage/report-status/model/quer
 export const ReportStatusSection = () => {
   const { data } = useReportStatusQuery();
 
-  const questionCount = data?.content.questionCount ?? 0;
-  const answerCount = data?.content.answerCount ?? 0;
-  const completeCount = data?.content.completeCount ?? 0;
+  const questionCount = data?.questionCount ?? 0;
+  const answerCount = data?.answerCount ?? 0;
+  const completeCount = data?.completeCount ?? 0;
+
 
   const statusList = [
     { count: questionCount, label: '신고 접수' },
