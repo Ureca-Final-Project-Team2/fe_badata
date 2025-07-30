@@ -118,7 +118,6 @@ export default function ReviewRegisterForm({
           },
           onError: (error) => {
             console.error('리뷰 등록 실패: ', error);
-            makeToast('리뷰 등록에 실패했습니다.', 'warning');
           },
         },
       );

@@ -5,12 +5,16 @@ import {
   postReview,
   updateReview,
 } from '@/features/rental/store/register-review/api/apis';
+import { ErrorMessageMap } from '@/shared/config/errorCodes';
+import { HTTPError } from '@/shared/lib/HTTPError';
+import { makeToast } from '@/shared/lib/makeToast';
 import { queryClient } from '@/shared/lib/queryClient';
 
 import type {
   PostReviewRequest,
   UpdateReviewRequest,
 } from '@/features/rental/store/register-review/lib/types';
+import type { ErrorCode } from '@/shared/config/errorCodes';
 
 export const usePostReviewMutation = () => {
   return useMutation({
@@ -36,5 +40,11 @@ export const useDeleteReviewMutation = () => {
   return useMutation({
     mutationFn: deleteReview,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['review'] }),
+    onError: (error) => {
+      if (error instanceof HTTPError) {
+        const errorMessage = ErrorMessageMap[error.code as ErrorCode] ?? error.message;
+        makeToast(errorMessage, 'warning');
+      }
+    },
   });
 };

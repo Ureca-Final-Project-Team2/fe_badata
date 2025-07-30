@@ -24,6 +24,9 @@ export enum ErrorCode {
   // 유저 팔로우
   FOLLOW_SELF_ERROR = 2014,
   FOLLOW_USER_NOT_FOUND = 2011,
+
+  // 리뷰
+  REVIEW_DELETE_NOT_ALLOWED = 4019,
 }
 
 export const ErrorMessageMap: Record<ErrorCode, string> = {
@@ -53,4 +56,7 @@ export const ErrorMessageMap: Record<ErrorCode, string> = {
   // 유저 팔로우
   [ErrorCode.FOLLOW_SELF_ERROR]: '자기 자신을 팔로우할 수 없습니다.',
   [ErrorCode.FOLLOW_USER_NOT_FOUND]: '유저 정보를 찾을 수 없습니다.',
+
+  // 리뷰
+  [ErrorCode.REVIEW_DELETE_NOT_ALLOWED]: '작성한 지 7일 이내의 리뷰는 삭제할 수 없습니다.',
 };

@@ -9,7 +9,6 @@ import { useDeleteReviewMutation } from '@/features/rental/store/register-review
 import { formatDateToDash } from '@/features/rental/store/review/lib/utils';
 import { ICONS } from '@/shared/config/iconPath';
 import { PATH } from '@/shared/config/path';
-import { makeToast } from '@/shared/lib/makeToast';
 import { Drawer, DrawerButton } from '@/shared/ui/Drawer';
 import { Profile } from '@/shared/ui/Profile';
 
@@ -41,14 +40,7 @@ export default function ReviewItem({ review, isOwner }: ReviewItemProps) {
 
   const handleDelete = () => {
     if (window.confirm('리뷰를 삭제하시겠습니까?')) {
-      deleteReviewMutation.mutate(review.reviewId, {
-        onSuccess: () => {
-          makeToast('리뷰가 삭제되었습니다.', 'success');
-        },
-        onError: () => {
-          makeToast('리뷰 삭제에 실패했습니다.', 'warning');
-        },
-      });
+      deleteReviewMutation.mutate(review.reviewId);
     }
   };
 
