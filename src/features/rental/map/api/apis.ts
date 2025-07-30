@@ -124,9 +124,19 @@ export const fetchStoreList = async (params: StoreListParams): Promise<StoreList
 /**
  * 가맹점 좋아요/좋아요 취소 토글
  */
-export const toggleStoreLike = async (storeId: number, isLiked: boolean): Promise<boolean> => {
+export const toggleStoreLike = async (
+  storeId: number,
+  isLiked: boolean,
+  signal?: AbortSignal,
+): Promise<boolean> => {
   try {
-    await axiosInstance.post(END_POINTS.STORES.LIKESTORE(storeId));
+    await axiosInstance.post(
+      END_POINTS.STORES.LIKESTORE(storeId),
+      {},
+      {
+        signal,
+      },
+    );
     return !isLiked; // 토글된 상태 반환
   } catch (error) {
     throw error;
