@@ -20,6 +20,7 @@ interface MapSectionProps {
     storeDetail?: StoreDetail,
     storeId?: number,
   ) => void;
+  onMapClick?: () => void;
   onMapReady?: (map: kakao.maps.Map) => void;
   // URL 파라미터가 있는지 확인하는 prop 추가
   hasUrlParams?: boolean;
@@ -30,6 +31,7 @@ export const MapSection = ({
   initialLat,
   initialLng,
   onStoreMarkerClick,
+  onMapClick,
   onMapReady,
   hasUrlParams = false,
 }: MapSectionProps) => {
@@ -113,9 +115,16 @@ export const MapSection = ({
         currentLocationMarkerRef.current = createCurrentLocationMarker(map);
       }
 
+      // 지도 클릭 이벤트 추가
+      if (onMapClick) {
+        window.kakao.maps.event.addListener(map, 'click', () => {
+          onMapClick();
+        });
+      }
+
       onMapReady(map);
     }
-  }, [map, onMapReady, hasUrlParams]);
+  }, [map, onMapReady, onMapClick, hasUrlParams]);
 
   return <div ref={mapRef} className="w-full h-full" />;
 };

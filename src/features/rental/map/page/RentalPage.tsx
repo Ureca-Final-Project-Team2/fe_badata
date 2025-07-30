@@ -262,7 +262,7 @@ export default function RentalPage() {
   // 콜백 함수들
   const handleStoreMarkerClick = useCallback(
     (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
-      // 이전에 선택된 가맹점 마커를 작게 만들기
+      // 이전에 선택된 가맹점 마커를 작게 만들기 (다른 마커인 경우에만)
       if (selectedStoreId && selectedStoreId !== storeId) {
         const cache = markerCaches.get(mapInstance!);
         if (cache) {
@@ -270,7 +270,7 @@ export default function RentalPage() {
         }
       }
 
-      // 새로 선택된 가맹점 마커를 크게 만들기
+      // 새로 선택된 가맹점 마커를 크게 만들기 (같은 마커를 다시 클릭해도 크게 유지)
       if (storeId) {
         setSelectedStoreId(storeId);
         const cache = markerCaches.get(mapInstance!);
@@ -288,6 +288,29 @@ export default function RentalPage() {
     },
     [selectedStoreId, mapInstance],
   );
+
+  // 지도 클릭 시 DeviceCard 닫기
+  const handleMapClick = useCallback(() => {
+    // DeviceCard가 열려있으면 닫기
+    if (selectedStore.selectedDevices.length > 0) {
+      // 이전에 선택된 가맹점 마커를 작게 만들기
+      if (selectedStoreId) {
+        const cache = markerCaches.get(mapInstance!);
+        if (cache) {
+          cache.updateMarkerSelection(selectedStoreId, false);
+        }
+      }
+
+      // 선택된 스토어 초기화
+      setSelectedStoreId(null);
+      dispatchSelectedStore({
+        type: 'SELECT_STORE',
+        devices: [],
+        storeId: 0,
+        storeDetail: undefined,
+      });
+    }
+  }, [selectedStore.selectedDevices.length, selectedStoreId, mapInstance]);
 
   // 필터링된 디바이스 업데이트
   useEffect(() => {
@@ -353,6 +376,7 @@ export default function RentalPage() {
           initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
           initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
           onStoreMarkerClick={handleStoreMarkerClick}
+          onMapClick={handleMapClick}
           onMapReady={handleMapReady}
           hasUrlParams={!!(selectedLat && selectedLng && !hasProcessedUrlParams)}
         />
