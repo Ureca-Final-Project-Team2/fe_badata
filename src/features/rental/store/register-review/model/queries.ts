@@ -3,7 +3,16 @@ import { useQuery } from '@tanstack/react-query';
 import {
   getQuickReplies,
   getReservationDetails,
+  getReviewDetail,
 } from '@/features/rental/store/register-review/api/apis';
+
+export const useReviewDetailQuery = (reviewId: number) => {
+  return useQuery({
+    queryKey: ['review', reviewId],
+    queryFn: () => getReviewDetail(reviewId),
+    enabled: !!reviewId,
+  });
+};
 
 export const registerReviewQueryKeys = {
   all: ['registerReview'] as const,
