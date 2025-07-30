@@ -1,7 +1,6 @@
 'use client';
 
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
-import { ICONS } from '@/shared/config/iconPath';
 import { useUserTradePostsQuery } from '@/widgets/trade/post-detail/model/queries';
 import SellerPostCard from '@/widgets/trade/ui/SellerPostCard';
 import UserProfileCard from '@/widgets/user/ui/UserProfileCard';
@@ -65,9 +64,9 @@ export const TradeDetailSellerSection = ({
               return (
                 <SellerPostCard
                   key={item.id}
-                  imageUrl={item.postImage === 'no image' ? ICONS.LOGO.DETAIL : item.postImage}
                   title={item.title}
-                  partner={item.partner || ''}
+                  partner={item.partner}
+                  mobileCarrier={item.mobileCarrier}
                   price={item.price}
                   likeCount={item.likesCount}
                   isLiked={updatedPost.isLiked}
