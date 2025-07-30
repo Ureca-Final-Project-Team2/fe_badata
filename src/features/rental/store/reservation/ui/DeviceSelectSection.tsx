@@ -15,8 +15,9 @@ interface Device {
   imageUrl: string;
   dataCapacity: number | string;
   price: number;
-  availableCount: number; // remainCount 대신 availableCount 사용
+  availableCount: number; // 날짜별 대여 가능한 수량
   totalCount: number; // 가맹점 보유 총 기기 수
+  remainCount?: number; // ReservationDeviceCard 호환성을 위해 유지
 }
 
 interface DeviceSelectSectionProps {

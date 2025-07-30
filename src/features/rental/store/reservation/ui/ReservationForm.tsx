@@ -54,8 +54,9 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
         <DeviceSelectSection
           devices={devices.map((device) => ({
             ...device,
-            remainCount: device.availableCount,
-            totalCount: device.totalCount,
+            remainCount: device.availableCount, // ReservationDeviceCard에서 사용하는 remainCount로 매핑
+            availableCount: device.availableCount, // 날짜별 대여 가능한 수량
+            totalCount: device.totalCount, // API에서 오는 totalCount 사용
           }))}
           selectedDevices={selectedDevices}
           onCountChange={onDeviceCountChange}
