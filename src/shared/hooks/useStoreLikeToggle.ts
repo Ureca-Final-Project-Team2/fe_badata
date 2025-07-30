@@ -8,12 +8,14 @@ interface UseStoreLikeToggleProps {
   storeId: number;
   initialIsLiked?: boolean;
   onToggle?: (storeId: number, isLiked: boolean) => void;
+  disableToast?: boolean; // 토스트 메시지 비활성화 옵션
 }
 
 export const useStoreLikeToggle = ({
   storeId,
   initialIsLiked = false,
   onToggle,
+  disableToast = false,
 }: UseStoreLikeToggleProps) => {
   const { isLoggedIn } = useAuthStore();
   const [liked, setLiked] = useState(initialIsLiked);
@@ -42,6 +44,14 @@ export const useStoreLikeToggle = ({
         const newLikedState = !liked;
         setLiked(newLikedState);
 
+        // 토스트 메시지 비활성화가 아닌 경우에만 표시
+        if (!disableToast) {
+          makeToast(
+            newLikedState ? '좋아요가 추가되었습니다.' : '좋아요가 취소되었습니다.',
+            'success',
+          );
+        }
+
         // 콜백 함수 호출
         onToggle?.(storeId, newLikedState);
       } catch (error) {
@@ -51,7 +61,7 @@ export const useStoreLikeToggle = ({
         setIsLoading(false);
       }
     },
-    [storeId, liked, isLoading, isLoggedIn, onToggle],
+    [storeId, liked, isLoading, isLoggedIn, onToggle, disableToast],
   );
 
   // 로그인하지 않은 사용자는 항상 like_nonactive 표시

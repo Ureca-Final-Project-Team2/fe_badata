@@ -20,7 +20,8 @@ export function StoreCard({
   isLiked = false,
   className,
   showDistance = true,
-}: StoreCardProps & { showDistance?: boolean }) {
+  disableToast = false,
+}: StoreCardProps & { showDistance?: boolean; disableToast?: boolean }) {
   const {
     isLoading: isLikeLoading,
     shouldShowLikeActive,
@@ -30,6 +31,7 @@ export function StoreCard({
     storeId: store.id,
     initialIsLiked: isLiked,
     onToggle: onLikeToggle,
+    disableToast,
   });
 
   // isLiked prop이 변경될 때 liked 상태 업데이트
