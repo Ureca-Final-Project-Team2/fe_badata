@@ -1,4 +1,4 @@
-import type { MobileCarrier } from '@/pages/trade/register/data/lib/types';
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
 
 export interface AllPost {
   id: number;
@@ -62,11 +62,7 @@ export interface GifticonUpdateRequest {
 }
 
 export interface UpdatePostResponse {
-  code: number;
-  message: string;
-  content: {
-    postId: number;
-  };
+  postId: number;
 }
 
 export interface LikeContent {

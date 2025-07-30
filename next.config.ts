@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
       'search.pstatic.net',
       'ldb-phinf.pstatic.net',
       'ae01.alicdn.com',
+      'k.kakaocdn.net',
       'img1.kakaocdn.net',
       't1.kakaocdn.net',
     ],

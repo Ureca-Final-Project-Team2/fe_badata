@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { ICONS } from '@/shared/config/iconPath';
 import { HEADER_WIDTH } from '@/shared/config/ui';
@@ -8,6 +9,12 @@ interface HeaderDetailProps {
 }
 
 export function Header_Detail({ title }: HeaderDetailProps) {
+  const router = useRouter();
+
+  const handleBackClick = () => {
+    router.back();
+  };
+
   return (
     <header
       className="w-full h-[70px] px-0 flex items-center justify-between bg-white relative"
@@ -16,7 +23,10 @@ export function Header_Detail({ title }: HeaderDetailProps) {
         minWidth: `${HEADER_WIDTH.MIN}px`,
       }}
     >
-      <div className="flex items-center justify-center w-[60px] h-[58px] absolute left-[24px] top-1/2 -translate-y-1/2">
+      <div
+        className="flex items-center justify-center w-[60px] h-[58px] absolute left-[24px] top-1/2 -translate-y-1/2 cursor-pointer"
+        onClick={handleBackClick}
+      >
         <Image
           src={ICONS.ETC.BACKICON}
           alt="뒤로가기"

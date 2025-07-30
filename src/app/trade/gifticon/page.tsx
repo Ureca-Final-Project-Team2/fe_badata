@@ -1,6 +1,4 @@
-'use client';
-
-import GifticonPage from '@/pages/trade/gifticon/page/GifticonPage';
+import GifticonPage from '@/features/trade/gifticon/page/GifticonPage';
 
 export const dynamic = 'force-dynamic';
 

@@ -1,4 +1,4 @@
-import DataEditPage from '@/pages/trade/register/data/page/DataEditPage';
+import DataEditPage from '@/features/trade/register/data/page/DataEditPage';
 
 interface DataEditPageProps {
   params: Promise<{

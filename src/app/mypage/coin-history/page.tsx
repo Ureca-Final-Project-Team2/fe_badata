@@ -1,4 +1,4 @@
-import CoinHistoryPage from '@/pages/mypage/coin-history/page/CoinHistoryPage';
+import CoinHistoryPage from '@/features/mypage/coin-history/page/CoinHistoryPage';
 
 export const dynamic = 'force-dynamic';
 

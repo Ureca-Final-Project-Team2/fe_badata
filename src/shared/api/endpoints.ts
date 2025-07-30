@@ -1,4 +1,7 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+export const BASE_URL =
+  process.env.NODE_ENV === 'development'
+    ? ''
+    : process.env.NEXT_PUBLIC_API_URL || 'https://api.badata.store';
 export const NETWORK_TIMEOUT = 5000;
 export const SUCCESS_CODE = 20000;
 
@@ -21,11 +24,13 @@ export const END_POINTS = {
     LIKE_POST: (postId: number) => `/api/v1/trades/${postId}/likes`,
     REPORT: (postId: number) => `/api/v1/trades/${postId}/reports`,
     IMAGE: '/api/v1/trades/posts/image',
+    TRENDING: '/api/v1/trades/posts/trending',
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',
     REISSUE: '/api/v1/auth/reissue/token',
-    FOLLOW: (userId: number) => `/api/v1/users/${userId}/follows`,
+    INFO: '/api/v1/users/info',
+    FOLLOW_TOGGLE: (userId: number) => `/api/v1/users/${userId}/follows`,
     SALES: '/api/v1/users/sales',
   },
   STORES: {
@@ -54,17 +59,18 @@ export const END_POINTS = {
     COIN: '/api/v1/users/coin',
     COIN_HISTORY: '/api/v1/users/coin/history',
     DATA_USAGE: '/api/v1/users/data',
-    PURCHASES_HISTORY: '/api/v1/users/purchases',
     FOLLOWINGS: '/api/v1/users/follows',
     FOLLOWERS: '/api/v1/users/follows',
     DELETE_FOLLOW: (followId: number) => `/api/v1/users/follows/${followId}`,
-    LIKE_TRADE_POST: '/api/v1/users/likes/posts',
-    RENTAL_HISTORY: '/api/v1/users/rentals',
+    PURCHASES_HISTORY: '/api/v1/users/purchases',
+    SALES_HISTORY: '/api/v1/users/sales',
     LIKE_STORE: '/api/v1/users/likes/stores',
+    RENTAL_HISTORY: '/api/v1/users/rentals',
+    LIKE_TRADE_POST: '/api/v1/users/likes/posts',
     RESTOCK_ALARM: '/api/v1/users/restock',
     SOS_HISTORY: '/api/v1/users/sos',
     REPORT_LIST: '/api/v1/users/reports',
-    SALES_HISTORY: '/api/v1/users/sales',
+    REPORT_INFO: (reportId: number) => `/api/v1/users/${reportId}/report/info`,
     NOTIFICATION: '/api/v1/users/notification',
   },
 } as const;

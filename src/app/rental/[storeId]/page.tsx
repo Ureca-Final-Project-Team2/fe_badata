@@ -1,4 +1,4 @@
-import StoreDetailPage from '@/pages/rental/store/store-detail/page/StoreDetailPage';
+import StoreDetailPage from '@/features/rental/store/store-detail/page/StoreDetailPage';
 
 interface PageProps {
   params: Promise<{

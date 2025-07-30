@@ -44,7 +44,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <div className="w-[380px]">
+    <div className="w-full">
       {label && (
         <label className="text-[14px] text-[var(--gray-dark)] font-medium mb-1 inline-block">
           {label}

@@ -1,4 +1,4 @@
-import RentalHistoryPage from "@/pages/mypage/rental-history/page/RentalHistoryPage";
+import RentalHistoryPage from '@/features/mypage/rental-history/page/RentalHistoryPage';
 
 export const dynamic = 'force-dynamic';
 

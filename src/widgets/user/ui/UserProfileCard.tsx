@@ -94,7 +94,7 @@ const UserProfileCard = ({
             </button>
           </div>
           <span className="text-[var(--black)] font-small-regular leading-none mt-2">
-            거래내역 {isLoadingSoldCount ? '로딩중...' : displayTradeCount}
+            거래완료 {isLoadingSoldCount ? '로딩중...' : displayTradeCount}
           </span>
         </div>
       </div>

@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
-import { useCoinQuery } from '@/entities/user/model/queries';
-import { BuyButton } from '@/shared/ui/BuyButton/BuyButton';
+import { useCoinQuery } from '@/entities/user';
 import { CoinPaymentModal } from '@/shared/ui/CoinPaymentModal';
 import { usePayment } from '@/widgets/trade/payment/model/usePayment';
+import { DetailLikeButton } from '@/widgets/trade/ui/DetailLikeButton';
+import { PaymentButton } from '@/widgets/trade/ui/PaymentButton';
 
 interface BuyButtonWithPaymentProps {
   postId: number;
@@ -16,26 +17,17 @@ interface BuyButtonWithPaymentProps {
   onPaymentSuccess?: (usedCoin: number) => void;
 }
 
-export default function BuyButtonWithPayment({
+// 좋아요 버튼만을 위한 독립적인 컴포넌트
+const LikeButtonSection = React.memo(function LikeButtonSection({
   postId,
-  title,
-  price,
-  children = '구매하기',
-  initialIsLiked = false,
-  isSold = false,
-  onPaymentSuccess,
-}: BuyButtonWithPaymentProps) {
+  initialIsLiked,
+  disabled,
+}: {
+  postId: number;
+  initialIsLiked: boolean;
+  disabled: boolean;
+}) {
   const [currentIsLiked, setCurrentIsLiked] = useState(initialIsLiked);
-
-  const {
-    data: coinData,
-    isLoading: isCoinLoading,
-    isError: isCoinError,
-    refetch: refetchCoin,
-  } = useCoinQuery();
-  const { loading, isPaid, handlePayment, isCoinModalOpen, openCoinModal, closeCoinModal } =
-    usePayment(postId, title, price, onPaymentSuccess);
-
   const { toggleLikeById, getCachedLikeState, isItemLoading } = useTradePostLikeHooks();
 
   // 캐시에서 좋아요 상태를 가져와서 동기화
@@ -50,6 +42,46 @@ export default function BuyButtonWithPayment({
       setCurrentIsLiked(!currentIsLiked);
     }
   };
+
+  return <DetailLikeButton active={currentIsLiked} onClick={handleLikeClick} disabled={disabled} />;
+});
+
+// 결제 버튼만을 위한 독립적인 컴포넌트
+const PaymentButtonSection = React.memo(function PaymentButtonSection({
+  onClick,
+  children,
+  disabled,
+  isSold,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+  disabled: boolean;
+  isSold: boolean;
+}) {
+  return (
+    <PaymentButton onClick={onClick} disabled={disabled} isSold={isSold}>
+      {children}
+    </PaymentButton>
+  );
+});
+
+export default function BuyButtonWithPayment({
+  postId,
+  title,
+  price,
+  children = '구매하기',
+  initialIsLiked = false,
+  isSold = false,
+  onPaymentSuccess,
+}: BuyButtonWithPaymentProps) {
+  const {
+    data: coinData,
+    isLoading: isCoinLoading,
+    isError: isCoinError,
+    refetch: refetchCoin,
+  } = useCoinQuery();
+  const { loading, isPaid, handlePayment, isCoinModalOpen, openCoinModal, closeCoinModal } =
+    usePayment(postId, title, price, onPaymentSuccess);
 
   const handleBuyClick = () => {
     // 코인 데이터 에러 시 재시도
@@ -66,17 +98,20 @@ export default function BuyButtonWithPayment({
     closeCoinModal();
   };
 
+  const isDisabled = loading || isPaid;
+
   return (
     <>
-      <BuyButton
-        onClick={handleBuyClick}
-        likeActive={currentIsLiked}
-        onLikeClick={handleLikeClick}
-        disabled={loading || isPaid || isItemLoading(postId)}
-        isSold={isSold}
-      >
-        {loading ? '결제 처리 중...' : children}
-      </BuyButton>
+      <div className="flex flex-row items-center gap-6">
+        <LikeButtonSection
+          postId={postId}
+          initialIsLiked={initialIsLiked}
+          disabled={isDisabled || isSold}
+        />
+        <PaymentButtonSection onClick={handleBuyClick} disabled={isDisabled} isSold={isSold}>
+          {loading ? '결제 처리 중...' : children}
+        </PaymentButtonSection>
+      </div>
 
       <CoinPaymentModal
         isOpen={isCoinModalOpen}

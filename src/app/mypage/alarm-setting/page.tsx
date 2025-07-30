@@ -1,4 +1,5 @@
-import AlarmSettingPage from "@/pages/mypage/alarm-setting/page/AlarmSettingPage";
+import AlarmSettingPage from '@/features/mypage/alarm-setting/page/AlarmSettingPage';
+export const dynamic = 'force-dynamic';
 
 export default function Page() {
   return <AlarmSettingPage />;

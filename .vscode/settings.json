@@ -24,7 +24,7 @@
   "path-intellisense.mappings": {
     "@": "${workspaceFolder}/src",
     "@/app": "${workspaceFolder}/src/app",
-    "@/pages": "${workspaceFolder}/src/pages",
+    "@/features": "${workspaceFolder}/src/pages",
     "@/widgets": "${workspaceFolder}/src/widgets",
     "@/entities": "${workspaceFolder}/src/entities",
     "@/shared": "${workspaceFolder}/src/shared",
