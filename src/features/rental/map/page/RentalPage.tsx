@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { CenterScrollSwiper } from '@/entities/scroll';
 import { useLocation } from '@/features/rental/map/hooks/useLocationHooks';
@@ -33,6 +33,7 @@ import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 import type { RentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
 
 export default function RentalPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [selectedStore, dispatchSelectedStore] = useReducer(
@@ -47,12 +48,13 @@ export default function RentalPage() {
     lng: null as number | null,
   });
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
+  const [hasProcessedUrlParams, setHasProcessedUrlParams] = useState(false);
 
-  // URL 파라미터에서 선택된 위치 정보 가져오기
-  const selectedLat = searchParams?.get('lat');
-  const selectedLng = searchParams?.get('lng');
-  const selectedAddress = searchParams?.get('address');
-  const selectedPlaceName = searchParams?.get('placeName');
+  // URL 파라미터에서 선택된 위치 정보 가져오기 (일회성)
+  const selectedLat = !hasProcessedUrlParams ? searchParams?.get('lat') : null;
+  const selectedLng = !hasProcessedUrlParams ? searchParams?.get('lng') : null;
+  const selectedAddress = !hasProcessedUrlParams ? searchParams?.get('address') : null;
+  const selectedPlaceName = !hasProcessedUrlParams ? searchParams?.get('placeName') : null;
 
   // 위치 관련 훅 사용
   const {
@@ -63,21 +65,30 @@ export default function RentalPage() {
     refreshLocation,
   } = useLocation();
 
-  // URL 파라미터로부터 선택된 위치 설정
+  // URL 파라미터 처리 (일회성)
   useEffect(() => {
-    if (selectedLat && selectedLng) {
+    if (selectedLat && selectedLng && !hasProcessedUrlParams) {
       const lat = parseFloat(selectedLat);
       const lng = parseFloat(selectedLng);
 
       if (!isNaN(lat) && !isNaN(lng)) {
         setUserLocation({ lat, lng });
+        setHasProcessedUrlParams(true);
+
+        // URL 파라미터 제거 (일회성 처리)
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete('lat');
+        newUrl.searchParams.delete('lng');
+        newUrl.searchParams.delete('address');
+        newUrl.searchParams.delete('placeName');
+        router.replace(newUrl.pathname, { scroll: false });
       }
     }
-  }, [selectedLat, selectedLng]);
+  }, [selectedLat, selectedLng, hasProcessedUrlParams, router]);
 
   // 사용자 위치 가져오기 (URL 파라미터가 없을 때만)
   useEffect(() => {
-    if (!selectedLat && !selectedLng) {
+    if (!selectedLat && !selectedLng && !hasProcessedUrlParams) {
       if (locationData) {
         setUserLocation({
           lat: locationData.lat,
@@ -102,7 +113,7 @@ export default function RentalPage() {
         );
       }
     }
-  }, [locationData, selectedLat, selectedLng]);
+  }, [locationData, selectedLat, selectedLng, hasProcessedUrlParams]);
 
   // 현재 위치로 이동하는 함수
   const handleCurrentLocation = useCallback(() => {
@@ -139,8 +150,8 @@ export default function RentalPage() {
     (map: kakao.maps.Map) => {
       setMapInstance(map);
 
-      // URL 파라미터가 있으면 선택된 위치에 마커 생성
-      if (selectedLat && selectedLng) {
+      // URL 파라미터가 있으면 선택된 위치에 마커 생성 (일회성)
+      if (selectedLat && selectedLng && !hasProcessedUrlParams) {
         const lat = parseFloat(selectedLat);
         const lng = parseFloat(selectedLng);
 
@@ -173,7 +184,7 @@ export default function RentalPage() {
         }
       }
     },
-    [selectedLat, selectedLng, selectedAddress, selectedPlaceName],
+    [selectedLat, selectedLng, selectedAddress, selectedPlaceName, hasProcessedUrlParams],
   );
 
   // Drawer 상태 관리

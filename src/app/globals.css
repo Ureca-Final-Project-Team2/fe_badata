@@ -181,6 +181,12 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
+/* OceanWaveMarker를 위한 커스텀 스타일 */
+.custom-ocean-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -285,8 +291,6 @@ body {
     font-size: var(--font-small-size);
     font-weight: var(--font-regular);
   }
-
-
 }
 
 @keyframes slideUpDrawer {

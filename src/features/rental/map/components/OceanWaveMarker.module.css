@@ -1,0 +1,169 @@
+/* 기본 마커 컨테이너 */
+.markerContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 크기별 설정 - Medium (기본) */
+.medium {
+  width: 80px;
+  height: 80px;
+}
+
+.medium .wave:nth-child(1) {
+  width: 16px;
+  height: 16px;
+}
+
+.medium .wave:nth-child(2) {
+  width: 24px;
+  height: 24px;
+}
+
+.medium .wave:nth-child(3) {
+  width: 32px;
+  height: 32px;
+}
+
+.medium .wave:nth-child(4) {
+  width: 40px;
+  height: 40px;
+}
+
+.medium .locationMarker {
+  width: 10px;
+  height: 10px;
+  border: 2px solid white;
+}
+
+/* 크기별 설정 - Small (지도용) */
+.small {
+  width: 60px;
+  height: 60px;
+}
+
+.small .wave:nth-child(1) {
+  width: 12px;
+  height: 12px;
+}
+
+.small .wave:nth-child(2) {
+  width: 18px;
+  height: 18px;
+}
+
+.small .wave:nth-child(3) {
+  width: 24px;
+  height: 24px;
+}
+
+.small .wave:nth-child(4) {
+  width: 30px;
+  height: 30px;
+}
+
+.small .locationMarker {
+  width: 8px;
+  height: 8px;
+  border: 2px solid white;
+}
+
+/* 크기별 설정 - Large */
+.large {
+  width: 120px;
+  height: 120px;
+}
+
+.large .wave:nth-child(1) {
+  width: 24px;
+  height: 24px;
+}
+
+.large .wave:nth-child(2) {
+  width: 36px;
+  height: 36px;
+}
+
+.large .wave:nth-child(3) {
+  width: 48px;
+  height: 48px;
+}
+
+.large .wave:nth-child(4) {
+  width: 60px;
+  height: 60px;
+}
+
+.large .locationMarker {
+  width: 14px;
+  height: 14px;
+  border: 3px solid white;
+}
+
+/* 파동 애니메이션 */
+.wave {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: wave-pulse 3s infinite ease-out;
+}
+
+.wave:nth-child(1) {
+  background: var(--main-4);
+  animation-delay: 0s;
+}
+
+.wave:nth-child(2) {
+  background: var(--main-3);
+  animation-delay: 0.5s;
+}
+
+.wave:nth-child(3) {
+  background: var(--main-2);
+  animation-delay: 1s;
+}
+
+.wave:nth-child(4) {
+  background: var(--main-1);
+  animation-delay: 1.5s;
+}
+
+/* 중앙 위치 마커 */
+.locationMarker {
+  position: relative;
+  z-index: 10;
+  background: var(--main-5);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(62, 159, 220, 0.3);
+  animation: marker-pulse 2s infinite ease-in-out;
+}
+
+/* 파동 애니메이션 키프레임 */
+@keyframes wave-pulse {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* 마커 펄스 애니메이션 */
+@keyframes marker-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(62, 159, 220, 0.3);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(62, 159, 220, 0.5);
+  }
+}

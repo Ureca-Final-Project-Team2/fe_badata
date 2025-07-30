@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useFetchStoresHooks } from '@/features/rental/map/hooks/useFetchStoresHooks';
 import { useKakaoMapHooks } from '@/features/rental/map/hooks/useKakaoMapHooks';
+import { createCurrentLocationMarker } from '@/features/rental/map/lib/currentLocationMarker';
 import { renderStoreMarkers } from '@/features/rental/map/lib/renderStoreMarkers';
 import { debounce } from '@/features/rental/map/utils/debounceUtils';
 
@@ -36,6 +37,7 @@ export const MapSection = ({
   const lastStoresRef = useRef<Store[]>([]);
   const lastFilterStateRef = useRef<RentalFilterState>(filterState);
   const isMapReadyRef = useRef(false);
+  const currentLocationMarkerRef = useRef<kakao.maps.CustomOverlay | null>(null);
 
   // 디바운스된 마커 렌더링 함수
   const debouncedRenderMarkers = useMemo(
@@ -101,6 +103,13 @@ export const MapSection = ({
     if (map && onMapReady) {
       console.log('🗺️ 맵 준비 완료');
       isMapReadyRef.current = true;
+
+      // 현재 위치 마커 생성
+      if (!currentLocationMarkerRef.current) {
+        console.log('📍 현재 위치 마커 생성');
+        currentLocationMarkerRef.current = createCurrentLocationMarker(map);
+      }
+
       onMapReady(map);
     }
   }, [map, onMapReady]);
