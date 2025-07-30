@@ -61,8 +61,8 @@ export default function ReportHistoryPage() {
 
 const {
   data: reportInfo,
-  isLoading: isReportInfoLoading,
-  isError: isReportInfoError,
+  isLoading: isReportInfoLoading, // eslint-disable-line @typescript-eslint/no-unused-vars
+  isError: isReportInfoError, // eslint-disable-line @typescript-eslint/no-unused-vars
 } = useReportInfoQuery(reportId ?? 0);
 
 const STEP_ORDER = ['SALE', 'QUESTION', 'ANSWER', 'COMPLETE'] as const;

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getReportHistoryList, getReportInfo } from '@/features/mypage/report-history/api/apis';
 
-import type { ReportHistoryResponse, ReportInfo } from '../lib/types';
+import type { ReportHistoryResponse, ReportInfo } from '@/features/mypage/report-history/lib/types';
 
 export const useReportHistoryListQuery = (reportStatus: string, cursor?: number, size = 10) =>
   useQuery<ReportHistoryResponse['content']>({
