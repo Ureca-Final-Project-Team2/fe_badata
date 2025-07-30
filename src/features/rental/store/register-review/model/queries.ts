@@ -6,22 +6,21 @@ import {
   getReviewDetail,
 } from '@/features/rental/store/register-review/api/apis';
 
-export const useReviewDetailQuery = (reviewId: number) => {
-  return useQuery({
-    queryKey: ['review', reviewId],
-    queryFn: () => getReviewDetail(reviewId),
-    enabled: !!reviewId,
-  });
-};
-
 export const registerReviewQueryKeys = {
   all: ['registerReview'] as const,
   quickReplies: () => [...registerReviewQueryKeys.all, 'quickReplies'] as const,
-  reservationDetails: (reservationId: number) => [
-    ...registerReviewQueryKeys.all,
-    'reservationDetails',
-    reservationId,
-  ],
+  reservationDetails: (reservationId: number) =>
+    [...registerReviewQueryKeys.all, 'reservationDetails', reservationId] as const,
+  reviewDetail: (reviewId: number) =>
+    [...registerReviewQueryKeys.all, 'reviewDetail', reviewId] as const,
+};
+
+export const useReviewDetailQuery = (reviewId: number) => {
+  return useQuery({
+    queryKey: registerReviewQueryKeys.reviewDetail(reviewId),
+    queryFn: () => getReviewDetail(reviewId),
+    enabled: !!reviewId && reviewId > 0,
+  });
 };
 
 export const useQuickReplies = () => {
