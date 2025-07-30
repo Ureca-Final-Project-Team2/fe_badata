@@ -131,7 +131,7 @@ export function CoinPaymentModal({
             <CoinToggle
               checked={useCoin}
               onCheckedChange={setUseCoin}
-              disabled={isCoinLoading || isCoinError}
+              disabled={isCoinLoading || isCoinError || availableCoin === 0}
             />
           </div>
 
