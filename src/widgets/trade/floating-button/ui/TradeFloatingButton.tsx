@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
 
 import { Gift, List, Plus } from 'lucide-react';
