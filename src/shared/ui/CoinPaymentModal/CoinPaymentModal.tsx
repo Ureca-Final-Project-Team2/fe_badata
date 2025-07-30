@@ -91,7 +91,7 @@ export function CoinPaymentModal({
         {/* 원래 결제 금액 */}
         <div className="bg-[var(--gray-light)] rounded-lg p-4">
           <div className="flex justify-between items-center">
-            <span className="text-[var(--black)] font-label-medium">결제 금액</span>
+            <span className="font-label-medium text-[var(--black)]">결제 금액</span>
             <span className="font-label-semibold text-[var(--black)]">
               {formatPrice(originalPrice.toString())}원
             </span>
@@ -102,26 +102,28 @@ export function CoinPaymentModal({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-[var(--black)] font-label-medium">코인 사용</span>
+              <span className="font-label-medium text-[var(--black)]">코인 사용</span>
               {isCoinLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-[var(--main-3)] border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-sm text-[var(--gray-mid)]">잔액 확인 중...</span>
+                  <span className="font-caption-medium text-[var(--gray-mid)]">
+                    잔액 확인 중...
+                  </span>
                 </div>
               ) : isCoinError ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-[var(--red)]">잔액 조회 실패</span>
+                  <span className="font-caption-medium text-[var(--red)]">잔액 조회 실패</span>
                   {onRetry && (
                     <button
                       onClick={onRetry}
-                      className="text-xs text-[var(--main-3)] hover:text-[var(--main-4)] underline"
+                      className="font-small-medium text-[var(--main-3)] hover:text-[var(--main-4)] underline"
                     >
                       재시도
                     </button>
                   )}
                 </div>
               ) : (
-                <span className="text-sm text-[var(--gray-mid)]">
+                <span className="font-caption-medium text-[var(--gray-mid)]">
                   (보유: {formatPrice(availableCoin.toString())}원)
                 </span>
               )}
@@ -138,24 +140,24 @@ export function CoinPaymentModal({
             <div className="space-y-3">
               {isCoinError && (
                 <div className="p-3 bg-[var(--red-light)] rounded-lg">
-                  <p className="text-sm text-[var(--red)]">
+                  <p className="font-caption-medium text-[var(--red)]">
                     코인 잔액을 불러올 수 없습니다. 재시도 후 다시 시도해주세요.
                   </p>
                 </div>
               )}
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[var(--gray-mid)]">사용할 코인:</span>
+                <span className="font-caption-medium text-[var(--gray-mid)]">사용할 코인:</span>
                 <input
                   type="number"
                   value={coinAmount}
                   onChange={(e) => handleCoinAmountChange(e.target.value)}
                   placeholder="0"
-                  className="flex-1 px-3 py-2 border border-[var(--gray-light)] rounded-lg text-sm focus:outline-none focus:border-[var(--main-3)]"
+                  className="flex-1 px-3 py-2 border border-[var(--gray-light)] rounded-lg focus:outline-none focus:border-[var(--main-3)] font-caption-medium"
                   min="0"
                   max={Math.min(availableCoin, originalPrice)}
                   disabled={isCoinLoading || isCoinError}
                 />
-                <span className="text-sm text-[var(--gray-mid)]">원</span>
+                <span className="font-caption-medium text-[var(--gray-mid)]">원</span>
               </div>
               <div className="font-small-regular text-[var(--gray-mid)]">
                 최대 {formatPrice(Math.min(availableCoin, originalPrice).toString())}원까지 사용
@@ -170,7 +172,7 @@ export function CoinPaymentModal({
           <div className="space-y-2">
             <div className="flex justify-between items-center text-sm">
               <span className="text-[var(--gray-mid)]">할인 금액</span>
-              <span className="text-[var(--main-3)] font-medium">
+              <span className="font-medium text-[var(--main-3)]">
                 -{formatPrice(discountAmount.toString())}원
               </span>
             </div>
@@ -191,7 +193,7 @@ export function CoinPaymentModal({
         <button
           onClick={handleConfirm}
           disabled={finalPrice === 0 || isCoinLoading || isCoinError}
-          className="w-full bg-[var(--main-3)] text-[var(--white)] py-4 rounded-lg font-body-semibold disabled:bg-[var(--gray-light)] disabled:text-[var(--gray-mid)]"
+          className="w-full py-4 rounded-lg bg-[var(--main-3)] hover:bg-[var(--main-4)] transition-colors duration-200 disabled:bg-[var(--gray-light)] disabled:text-[var(--gray-mid)] disabled:hover:bg-[var(--gray-light)] font-body-semibold text-[var(--white)]"
         >
           {isCoinLoading
             ? '잔액 확인 중...'
