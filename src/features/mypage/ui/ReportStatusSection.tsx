@@ -2,8 +2,23 @@
 
 import Link from 'next/link';
 
-export const ReportStatusSection = () => (
-  <>
+import { useReportStatusQuery } from '@/features/mypage/report-status/model/queries';
+
+export const ReportStatusSection = () => {
+  const { data } = useReportStatusQuery();
+
+  const questionCount = data?.questionCount ?? 0;
+  const answerCount = data?.answerCount ?? 0;
+  const completeCount = data?.completeCount ?? 0;
+
+
+  const statusList = [
+    { count: questionCount, label: '신고 접수' },
+    { count: answerCount, label: '신고 검토' },
+    { count: completeCount, label: '신고 완료' },
+  ];
+
+  return (
     <section className="mt-8">
       <div className="flex justify-between items-end mb-2">
         <h2 className="font-body-semibold leading-[28px]">나의 신고 내역 조회</h2>
@@ -13,11 +28,7 @@ export const ReportStatusSection = () => (
       </div>
 
       <section className="grid grid-cols-3 gap-2 text-center">
-        {[
-          { count: 0, label: '신고 접수' },
-          { count: 1, label: '신고 검토' },
-          { count: 1, label: '신고 완료' },
-        ].map(({ count, label }) => (
+        {statusList.map(({ count, label }) => (
           <div
             key={label}
             className="bg-[var(--main-1)] rounded-xl p-4 shadow-sm flex flex-col items-center"
@@ -28,5 +39,5 @@ export const ReportStatusSection = () => (
         ))}
       </section>
     </section>
-  </>
-);
+  );
+};

@@ -70,6 +70,7 @@ export const END_POINTS = {
     LIKE_TRADE_POST: '/api/v1/users/likes/posts',
     RESTOCK_ALARM: '/api/v1/users/restock',
     SOS_HISTORY: '/api/v1/users/sos',
+    REPORT_TOTAL_COUNT: '/api/v1/users/report/totalCount',
     REPORT_LIST: '/api/v1/users/reports',
     REPORT_INFO: (reportId: number) => `/api/v1/users/${reportId}/report/info`,
     NOTIFICATION: '/api/v1/users/notification',
