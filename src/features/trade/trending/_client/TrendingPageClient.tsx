@@ -13,7 +13,7 @@ import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
-import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
+import type { DeadlinePost } from '@/entities/trade-post/lib/types';
 
 const SORT_OPTIONS = [
   { value: 'latest', label: '최신순' },
@@ -75,7 +75,7 @@ export default function TrendingPageClient() {
 
   const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortOption)?.label ?? '최신순';
 
-  const handleCardClick = (item: PostItem) => {
+  const handleCardClick = (item: DeadlinePost) => {
     const path =
       item.postCategory === 'DATA'
         ? PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id))

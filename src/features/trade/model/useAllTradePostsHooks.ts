@@ -6,7 +6,7 @@ import { useTradePostsQuery } from '@/entities/trade-post/model/queries';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 
-import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
+import type { DeadlinePost } from '@/entities/trade-post/lib/types';
 
 export const useAllTradePostsHooks = () => {
   const { posts, isLoading } = useTradePostsQuery();
@@ -29,7 +29,7 @@ export const useAllTradePostsHooks = () => {
 
   const router = useRouter();
 
-  const onItemClick = (item: PostItem) => {
+  const onItemClick = (item: DeadlinePost) => {
     const path =
       item.postCategory === 'DATA'
         ? PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id))

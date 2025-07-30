@@ -6,14 +6,14 @@ import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostL
 import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
-import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
+import type { DeadlinePost } from '@/entities/trade-post/lib/types';
 
 interface TradeListProps {
-  items: PostItem[];
+  items: DeadlinePost[];
   isLoading: boolean;
   sortLabel: string;
   onSortClick: () => void;
-  onItemClick?: (item: PostItem) => void;
+  onItemClick?: (item: DeadlinePost) => void;
   onFilterClick?: () => void;
 }
 
@@ -35,7 +35,7 @@ export function TradeList({
     return <div className="text-center text-[var(--gray)] py-6">게시물이 없습니다.</div>;
   }
 
-  const handleCardClick = (item: PostItem) => {
+  const handleCardClick = (item: DeadlinePost) => {
     onItemClick?.(item);
   };
 
