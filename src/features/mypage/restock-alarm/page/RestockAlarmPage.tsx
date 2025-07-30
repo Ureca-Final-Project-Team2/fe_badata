@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -36,6 +36,16 @@ export default function RestockAlarmPage() {
     setShowConfirmModal(true);
   };
 
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleConfirmDelete = async () => {
     if (!itemToDelete) return;
 
@@ -50,7 +60,7 @@ export default function RestockAlarmPage() {
       makeToast('재입고 알림을 해제하였습니다.', 'success');
 
       // 애니메이션 완료 후 실제 제거
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setRemovedAlarmIds((prev) => new Set([...prev, itemToDelete.id]));
         setRemovingAlarmIds((prev) => {
           const newSet = new Set(prev);
