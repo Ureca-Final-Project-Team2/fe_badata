@@ -59,7 +59,7 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
       },
       {
         onSuccess: () => {
-          router.push(`${PATH.TRADE.GIFTICON}/${postId}`);
+          router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(postId)));
         },
         onError: (error) => {
           console.error('수정 실패:', error);

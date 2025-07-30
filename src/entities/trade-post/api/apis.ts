@@ -2,8 +2,8 @@ import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 import type {
-  AllPost,
   DataUpdateRequest,
+  DeadlinePost,
   DeletePostResponse,
   GifticonUpdateRequest,
   LikeContent,
@@ -14,8 +14,10 @@ import type {
 } from '@/entities/trade-post/lib/types';
 
 // 게시물 목록 조회
-export const getTradePosts = async (): Promise<AllPost[]> => {
-  const content: { postsResponse: AllPost[] } = await axiosInstance.get(END_POINTS.TRADES.LIST);
+export const getTradePosts = async (): Promise<DeadlinePost[]> => {
+  const content: { postsResponse: DeadlinePost[] } = await axiosInstance.get(
+    END_POINTS.TRADES.LIST,
+  );
   return content.postsResponse ?? [];
 };
 

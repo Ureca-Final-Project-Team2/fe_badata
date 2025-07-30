@@ -51,7 +51,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
       },
       {
         onSuccess: () => {
-          router.push(`${PATH.TRADE.DATA}/${postId}`);
+          router.push(PATH.TRADE.DATA_DETAIL.replace(':id', String(postId)));
         },
         onError: (error) => {
           console.error('수정 실패:', error);

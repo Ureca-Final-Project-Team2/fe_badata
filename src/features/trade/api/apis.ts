@@ -1,11 +1,19 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { DeadlinePost } from '@/entities/trade-post/lib/types';
+import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
 
-export const getTradeDeadlinePosts = async (): Promise<DeadlinePost[]> => {
-  const content: { postsResponse: DeadlinePost[] } = await axiosInstance.get(
+export const getTradeDeadlinePosts = async (): Promise<PostItem[]> => {
+  const content: { postsResponse: PostItem[] } = await axiosInstance.get(
     END_POINTS.TRADES.DEADLINE,
   );
+  return content.postsResponse ?? [];
+};
+
+export const getTradeTrendingPosts = async (): Promise<PostItem[]> => {
+  const content: { postsResponse: PostItem[] } = await axiosInstance.get(
+    END_POINTS.TRADES.TRENDING,
+  );
+
   return content.postsResponse ?? [];
 };

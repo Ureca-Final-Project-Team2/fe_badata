@@ -3,12 +3,12 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
-import { DeadlineFlatTab } from '@/features/trade/deadline/ui/DeadlineFlatTab';
-import { DeadlineList } from '@/features/trade/deadline/ui/DeadlineList';
 import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
-import { useTradeDeadlineQuery } from '@/features/trade/model/queries';
+import { useTradeTrendingQuery } from '@/features/trade/model/queries';
 import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
 import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
+import { TrendingFlatTab } from '@/features/trade/trending/ui/TrendingFlatTab';
+import { TrendingList } from '@/features/trade/trending/ui/TrendingList';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
@@ -20,12 +20,12 @@ const SORT_OPTIONS = [
   { value: 'popular', label: '인기순' },
 ] as const;
 
-export default function DeadlinePageClient() {
+export default function TrendingPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams?.get('page') ?? 'all';
 
-  const { deadlinePosts: posts, isLoading } = useTradeDeadlineQuery();
+  const { trendingPosts: posts, isLoading } = useTradeTrendingQuery();
   const { sortOption, setSortOption, isSortDrawerOpen, openDrawer, closeDrawer } = useSortStateHook<
     'latest' | 'popular'
   >('latest');
@@ -85,16 +85,16 @@ export default function DeadlinePageClient() {
 
   return (
     <>
-      <DeadlineFlatTab className="my-4" />
-      <DeadlineList
+      <TrendingFlatTab className="my-4" />
+      <TrendingList
         items={filteredPosts}
         isLoading={isLoading}
         sortLabel={currentSortLabel}
         onSortClick={openDrawer}
-        onItemClick={handleCardClick}
         onFilterClick={
           page === 'data' ? openDataDrawer : page === 'gifticon' ? openGifticonDrawer : undefined
         }
+        onItemClick={handleCardClick}
       />
       <TradeSortFilter
         isOpen={isSortDrawerOpen}

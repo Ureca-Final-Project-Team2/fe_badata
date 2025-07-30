@@ -1,18 +1,11 @@
-'use client';
+import { Suspense } from 'react';
 
-import { TradeDeadlineBanner } from '@/features/trade/ui/TradeDeadlineBanner';
-import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { Header } from '@/shared/ui/Header';
-import { TradeFlatTab } from '@/widgets/trade/flat-tab/ui/TradeFlatTab';
-import { TradeFloatingButton } from '@/widgets/trade/floating-button/ui/TradeFloatingButton';
-import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
+import TradePageClient from '@/features/trade/_client/TradePageClient';
 
-export default function TradePage() {
+export default function Page() {
   return (
-    <BaseLayout header={<Header />} showBottomNav fab={<TradeFloatingButton />} paddingX>
-      <TradeFlatTab />
-      <TradeSearchInput />
-      <TradeDeadlineBanner />
-    </BaseLayout>
+    <Suspense fallback={<div>게시물을 불러오는 중입니다...</div>}>
+      <TradePageClient />
+    </Suspense>
   );
 }

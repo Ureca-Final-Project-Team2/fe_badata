@@ -4,25 +4,25 @@ import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostL
 import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
-import type { DeadlinePost } from '@/entities/trade-post/lib/types';
+import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
 
-interface DeadlineListProps {
-  items: DeadlinePost[];
+interface TrendingListProps {
+  items: PostItem[];
   isLoading: boolean;
   sortLabel: string;
   onSortClick: () => void;
-  onItemClick?: (item: DeadlinePost) => void;
+  onItemClick?: (item: PostItem) => void;
   onFilterClick?: () => void;
 }
 
-export function DeadlineList({
+export function TrendingList({
   items,
   isLoading,
   sortLabel,
   onSortClick,
-  onItemClick,
   onFilterClick,
-}: DeadlineListProps) {
+  onItemClick,
+}: TrendingListProps) {
   const { toggleLike, isItemLoading } = useTradePostLikeHooks();
 
   if (isLoading) {
@@ -30,20 +30,17 @@ export function DeadlineList({
   }
 
   if (items.length === 0) {
-    return <div>마감 임박 게시물이 없습니다.</div>;
+    return <div>실시간 핫한 게시물이 없습니다.</div>;
   }
 
-  const handleCardClick = (item: DeadlinePost) => {
-    if (onItemClick) {
-      onItemClick(item);
-    }
+  const handleCardClick = (item: PostItem) => {
+    onItemClick?.(item);
   };
 
   return (
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
         <SortButton onClick={onSortClick} label={sortLabel} />
-
         {onFilterClick && (
           <button
             onClick={onFilterClick}

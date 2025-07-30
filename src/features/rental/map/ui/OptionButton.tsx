@@ -15,7 +15,7 @@ const OptionButtonComponent = ({
   <button
     type="button"
     aria-pressed={selected}
-    className={`w-[85px] h-[34px] rounded-full flex items-center justify-center font-label-semibold border-none shadow-none transition-colors duration-150 focus:outline-none ${
+    className={`min-w-[80px] px-2.5 py-1 rounded-full flex items-center justify-center font-label-semibold border-none shadow-none transition-colors duration-150 focus:outline-none ${
       selected ? 'focus:ring-2 focus:ring-[var(--main-5)]' : ''
     } ${selected ? 'bg-[var(--main-5)] text-white' : 'bg-white text-[var(--main-5)]'} ${className}`}
     {...rest}
