@@ -45,7 +45,8 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
     const sz = CARD_SIZE;
     const { deviceName, imageUrl, dataCapacity, price, remainCount, totalCount } = device;
     const actualRemainCount = remainCount ?? 0;
-    const actualTotalCount = totalCount ?? remainCount ?? 10; // fallback to remainCount or 10
+    // API에서 totalCount를 직접 제공하므로 그대로 사용
+    const actualTotalCount = totalCount ?? 1; // 최소 1개는 보장
     const maxCount = max ?? Math.max(0, actualRemainCount);
     const isSoldOut = actualRemainCount <= 0;
 
@@ -60,7 +61,7 @@ const ReservationDeviceCard: React.FC<ReservationDeviceCardProps> = React.memo(
     const handleNotifyToggle = useCallback(() => {
       if (!isRestockNotified) {
         // 재입고 알림 신청 모달 열기 (상위 컴포넌트에서 처리)
-        if (onRestockRequest && device.id && device.deviceName && actualTotalCount) {
+        if (onRestockRequest && device.id && device.deviceName && actualTotalCount >= 0) {
           onRestockRequest({
             id: device.id,
             deviceName: device.deviceName,

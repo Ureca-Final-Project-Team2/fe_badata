@@ -15,7 +15,7 @@ interface Device {
   imageUrl: string;
   dataCapacity: number | string;
   price: number;
-  remainCount: number;
+  availableCount: number; // remainCount 대신 availableCount 사용
   totalCount: number; // 가맹점 보유 총 기기 수
 }
 
@@ -79,7 +79,7 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
               count={memoizedSelectedDevices[device.id] ?? 0}
               onCountChange={(newCount: number) => onCountChange(device.id, newCount)}
               selected={!!memoizedSelectedDevices[device.id]}
-              max={device.remainCount}
+              max={device.availableCount}
               onRestockRequest={handleRestockRequest}
             />
           </div>
