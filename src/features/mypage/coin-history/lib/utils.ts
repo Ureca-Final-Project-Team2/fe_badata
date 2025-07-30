@@ -24,39 +24,31 @@ export const calculateBalanceHistory = (
   items: CoinHistoryItem[],
   currentBalance: number
 ): (CoinHistoryItem & { calculatedBalance: number })[] => {
-  return items.map((item, index) => {
-    // 현재 사용자의 코인 잔액에서 시작
-    let balance = currentBalance;
-
-    // 현재 내역부터 역순으로 계산하여 각 시점의 잔액 구하기
-    for (let i = 0; i <= index; i++) {
-      const currentItem = items[i];
-      const isPositive = isPositiveTransaction(currentItem.coinSource);
-      
-      if (isPositive) {
-        // 획득한 코인은 현재 잔액에서 빼서 이전 시점의 잔액 계산
-        balance -= Math.abs(currentItem.usedCoin);
-      } else {
-        // 사용한 코인은 현재 잔액에 더해서 이전 시점의 잔액 계산
-        balance += Math.abs(currentItem.usedCoin);
-      }
-    }
-
-    // 각 거래 후의 잔액을 계산
+ // 현재 잔액에서 모든 거래를 역산하여 초기 잔액 계산
+  let initialBalance = currentBalance;
+  for (let i = items.length - 1; i >= 0; i--) {
+    const item = items[i];
     const isPositive = isPositiveTransaction(item.coinSource);
-    let finalBalance = balance;
-    
     if (isPositive) {
-      // 획득한 거래의 경우, 해당 거래 후의 잔액 = 이전 잔액 + 획득 코인
-      finalBalance = balance + Math.abs(item.usedCoin);
+      initialBalance -= Math.abs(item.usedCoin);
     } else {
-      // 사용한 거래의 경우, 해당 거래 후의 잔액 = 이전 잔액 - 사용 코인
-      finalBalance = balance - Math.abs(item.usedCoin);
+      initialBalance += Math.abs(item.usedCoin);
     }
-
+  }
+  
+  // 초기 잔액부터 순방향으로 각 거래 후 잔액 계산
+  let runningBalance = Math.max(0, initialBalance);
+  return items.map((item) => {
+    const isPositive = isPositiveTransaction(item.coinSource);
+    if (isPositive) {
+      runningBalance += Math.abs(item.usedCoin);
+    } else {
+      runningBalance -= Math.abs(item.usedCoin);
+    }
+    
     return {
       ...item,
-      calculatedBalance: Math.max(0, finalBalance),
+      calculatedBalance: Math.max(0, runningBalance),
     };
   });
 };
