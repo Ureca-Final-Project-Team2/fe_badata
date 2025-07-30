@@ -10,6 +10,7 @@ import {
   convertToStoreCardProps,
   useStoreListWithInfiniteScroll,
 } from '@/features/rental/map/hooks/useStoreListHooks';
+import { createCurrentLocationMarker } from '@/features/rental/map/lib/currentLocationMarker';
 import { filterDevices } from '@/features/rental/map/model/filtereDevices';
 import { initialRentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
 import {
@@ -131,6 +132,10 @@ export default function RentalPage() {
           if (mapInstance) {
             const newPosition = new window.kakao.maps.LatLng(newLocation.lat, newLocation.lng);
             mapInstance.setCenter(newPosition);
+
+            // 사용자 현재 위치에 커스텀 마커 생성
+            createCurrentLocationMarker(mapInstance);
+            console.log('📍 현재 위치 버튼 클릭 - 커스텀 마커 생성');
           }
         },
         (error) => {
@@ -331,6 +336,7 @@ export default function RentalPage() {
           initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
           onStoreMarkerClick={handleStoreMarkerClick}
           onMapReady={handleMapReady}
+          hasUrlParams={!!(selectedLat && selectedLng && !hasProcessedUrlParams)}
         />
       </div>
       <DrawerSection

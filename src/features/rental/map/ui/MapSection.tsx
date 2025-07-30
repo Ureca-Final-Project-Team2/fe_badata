@@ -21,6 +21,8 @@ interface MapSectionProps {
     storeId?: number,
   ) => void;
   onMapReady?: (map: kakao.maps.Map) => void;
+  // URL 파라미터가 있는지 확인하는 prop 추가
+  hasUrlParams?: boolean;
 }
 
 export const MapSection = ({
@@ -29,6 +31,7 @@ export const MapSection = ({
   initialLng,
   onStoreMarkerClick,
   onMapReady,
+  hasUrlParams = false,
 }: MapSectionProps) => {
   const { mapRef, map } = useKakaoMapHooks(initialLat, initialLng);
   const storesResult = useFetchStoresHooks(map, filterState);
@@ -104,15 +107,15 @@ export const MapSection = ({
       console.log('🗺️ 맵 준비 완료');
       isMapReadyRef.current = true;
 
-      // 현재 위치 마커 생성
-      if (!currentLocationMarkerRef.current) {
-        console.log('📍 현재 위치 마커 생성');
+      // URL 파라미터가 없을 때만 현재 위치 마커 생성 (실제 사용자 현재 위치일 때)
+      if (!currentLocationMarkerRef.current && !hasUrlParams) {
+        console.log('📍 현재 위치 마커 생성 (사용자 실제 위치)');
         currentLocationMarkerRef.current = createCurrentLocationMarker(map);
       }
 
       onMapReady(map);
     }
-  }, [map, onMapReady]);
+  }, [map, onMapReady, hasUrlParams]);
 
   return <div ref={mapRef} className="w-full h-full" />;
 };
