@@ -4,7 +4,7 @@ type ReviewFormAction =
   | { type: 'SET_RATING'; payload: number }
   | { type: 'TOGGLE_QUICK_REPLY'; payload: number }
   | { type: 'SET_COMMENT'; payload: string }
-  | { type: 'SET_IMAGE'; payload: File | undefined }
+  | { type: 'SET_IMAGE'; payload: string | File | undefined }
   | { type: 'RESET' };
 
 export const initialState: ReviewFormState = {

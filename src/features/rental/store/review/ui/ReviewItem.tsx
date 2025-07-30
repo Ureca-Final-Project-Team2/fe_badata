@@ -5,14 +5,13 @@ import { useRouter } from 'next/navigation';
 
 import { MoreHorizontal } from 'lucide-react';
 
+import { useDeleteReviewMutation } from '@/features/rental/store/register-review/model/mutations';
+import { formatDateToDash } from '@/features/rental/store/review/lib/utils';
 import { ICONS } from '@/shared/config/iconPath';
 import { PATH } from '@/shared/config/path';
 import { makeToast } from '@/shared/lib/makeToast';
 import { Drawer, DrawerButton } from '@/shared/ui/Drawer';
 import { Profile } from '@/shared/ui/Profile';
-
-import { useDeleteReviewMutation } from '../../register-review/model/mutations';
-import { formatDateToDash } from '../lib/utils';
 
 import type { ReviewItem as ReviewItemType } from '@/features/rental/store/review/lib/types.ts';
 

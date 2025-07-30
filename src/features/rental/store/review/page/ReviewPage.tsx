@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 
 import { useParams } from 'next/navigation';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import {
   useInfiniteStoreReviews,
   useStoreReviewMeta,
@@ -17,6 +18,7 @@ import type { ReviewSortType } from '@/features/rental/store/review/lib/types';
 export default function ReviewPage() {
   const params = useParams();
   const storeId = Number(params?.storeId);
+  const { user } = useAuthStore();
   const [selectedSort, setSelectedSort] = useState<ReviewSortType>('latest');
 
   const { data: metaData, isLoading: metaLoading } = useStoreReviewMeta(storeId);
@@ -63,7 +65,11 @@ export default function ReviewPage() {
         {allReviews.length > 0 ? (
           <>
             {allReviews.map((review) => (
-              <ReviewItem key={review.reviewId} review={review} />
+              <ReviewItem
+                key={review.reviewId}
+                review={review}
+                isOwner={user?.userId === review.writerId}
+              />
             ))}
 
             {hasNextPage && (
