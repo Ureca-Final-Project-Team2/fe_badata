@@ -2,11 +2,11 @@ import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 import type {
-  AllPost,
   DataUpdateRequest,
   DeletePostResponse,
   GifticonUpdateRequest,
   LikeContent,
+  DeadlinePost as PostItem,
   ReportRequest,
   ReportResponse,
   SearchTrendsContent,
@@ -14,8 +14,8 @@ import type {
 } from '@/entities/trade-post/lib/types';
 
 // 게시물 목록 조회
-export const getTradePosts = async (): Promise<AllPost[]> => {
-  const content: { postsResponse: AllPost[] } = await axiosInstance.get(END_POINTS.TRADES.LIST);
+export const getTradePosts = async (): Promise<PostItem[]> => {
+  const content: { postsResponse: PostItem[] } = await axiosInstance.get(END_POINTS.TRADES.LIST);
   return content.postsResponse ?? [];
 };
 

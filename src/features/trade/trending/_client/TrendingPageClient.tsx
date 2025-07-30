@@ -4,13 +4,13 @@ import { useMemo } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { useTradeTrendingQuery } from '@/features/trade/model/queries';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
-import { TrendingFlatTab } from '../TrendingFlatTab';
-import { TrendingList } from '../TrendingList';
+import { useTradeTrendingQuery } from '../../model/queries';
+import { TrendingFlatTab } from '../ui/TrendingFlatTab';
+import { TrendingList } from '../ui/TrendingList';
 
 import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
 

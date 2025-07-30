@@ -3,10 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { getTradePosts } from '@/entities/trade-post/api/apis';
 import { getTradePostDetail } from '@/features/trade/data/detail/api/apis';
 
-import type { AllPost } from '@/entities/trade-post/lib/types';
+import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
 
 export const useTradePostsQuery = () => {
-  const { data: posts, isLoading } = useQuery<AllPost[]>({
+  const { data: posts, isLoading } = useQuery<PostItem[]>({
     queryKey: ['trade-posts'],
     queryFn: getTradePosts,
     gcTime: 5 * 60 * 1000,

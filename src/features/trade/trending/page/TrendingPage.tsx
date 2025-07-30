@@ -1,3 +1,5 @@
+'use client';
+
 import { Suspense } from 'react';
 
 import { BaseLayout } from '@/shared/ui/BaseLayout';
