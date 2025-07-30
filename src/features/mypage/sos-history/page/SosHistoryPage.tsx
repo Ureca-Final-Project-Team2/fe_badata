@@ -66,7 +66,7 @@ export default function SosHistoryPage() {
               items.map((item) => (
                 <SosHistoryList
                   key={item.sosId}
-                  name={item.responderId ? `박OO` : '미정'}
+                  name={item.responderId ? `응답자 ${item.responderId}` : '미정'}
                   date={item.createdAt.slice(0, 10)}
                   amount={item.dataAmount}
                   status={item.isSuccess ? '요청 완료' : '요청 중'}

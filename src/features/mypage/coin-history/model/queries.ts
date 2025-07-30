@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { getUserCoin, getUserCoinHistory } from '@/features/mypage/coin-history/api/apis';
 
-import type { CoinHistoryParams, UserCoin } from '@/features/mypage/coin-history/lib/types';
+import type { UserCoin } from '@/features/mypage/coin-history/lib/types';
 
 export const useUserCoinQuery = () => {
   return useQuery<UserCoin>({
@@ -12,10 +12,12 @@ export const useUserCoinQuery = () => {
   });
 };
 
-export const useUserCoinHistoryQuery = (params?: CoinHistoryParams) => {
-  return useQuery({
-    queryKey: ['userCoinHistory', params],
-    queryFn: () => getUserCoinHistory(params),
+export const useUserCoinHistoryInfiniteQuery = (size: number = 10) => {
+  return useInfiniteQuery({
+    queryKey: ['userCoinHistory', 'infinite'],
+    queryFn: ({ pageParam }) => getUserCoinHistory({ cursor: pageParam, size }),
+    initialPageParam: undefined as number | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
     enabled: typeof window !== 'undefined',
   });
 };
