@@ -15,4 +15,17 @@ export const useDataUsageQuery = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
   });
-}; 
+};
+
+export const useUserDataAmount = () => {
+  return useQuery<DataUsageResponse>({
+    queryKey: ['data-usage'],
+    queryFn: getDataUsage,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    retry: 3,
+    retryDelay: 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+  });
+};
