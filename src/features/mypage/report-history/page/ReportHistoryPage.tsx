@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useReportHistoryListQuery } from '@/features/mypage/report-history/model/queries';
+import { useReportHistoryListQuery, useReportInfoQuery } from '@/features/mypage/report-history/model/queries';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { SectionDivider } from '@/shared/ui/SectionDivider';
@@ -12,6 +12,7 @@ import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
 import type { ReportHistoryItem } from '@/features/mypage/report-history/lib/types';
 import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
+
 
 interface TimelineItemProps {
   label: string;
@@ -56,6 +57,31 @@ export default function ReportHistoryPage() {
 
   const items: ReportHistoryItem[] = data?.item ?? [];
   const selectedItem = items[selectedIdx];
+  const reportId = selectedItem?.id;
+
+const {
+  data: reportInfo,
+  isLoading: isReportInfoLoading,
+  isError: isReportInfoError,
+} = useReportInfoQuery(reportId ?? 0);
+
+const STEP_ORDER = ['SALE', 'QUESTION', 'ANSWER', 'COMPLETE'] as const;
+const STEP_LABELS = ['판매', '문의', '답변', '완료'];
+
+const currentStepIdx = reportInfo ? STEP_ORDER.indexOf(reportInfo.reportStatus) : 0;
+
+function getStepDate(idx: number): string {
+  if (!reportInfo) return '';
+  switch (STEP_ORDER[idx]) {
+    case 'SALE':
+      return new Date(reportInfo.paymentDateTime).toLocaleDateString();
+    case 'QUESTION':
+      return new Date(reportInfo.questionDateTime).toLocaleDateString();
+    default:
+      return '';
+  }
+}
+
 
   if (isLoading) {
     return (
@@ -147,16 +173,16 @@ export default function ReportHistoryPage() {
           </div>
           <SectionDivider className="my-6" />
           <h2 className="font-body-semibold mb-4">신고 진행 과정</h2>
-          {selectedItem && (
+          {selectedItem && reportInfo && (
             <ul className="flex flex-col gap-6">
-              {['판매', '문의', '답변', '완료'].map((label, idx) => (
+              {STEP_LABELS.map((label, idx) => (
                 <TimelineItem
                   key={label}
                   label={label}
                   text={`${label} 단계`}
-                  date={''}
-                  color={idx <= 1 ? 'main' : 'gray'}
-                  isLast={idx === 3}
+                  date={getStepDate(idx)}
+                  color={idx <= currentStepIdx ? 'main' : 'gray'}
+                  isLast={idx === STEP_LABELS.length - 1}
                 />
               ))}
             </ul>

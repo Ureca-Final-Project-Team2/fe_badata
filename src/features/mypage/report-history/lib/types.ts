@@ -23,3 +23,16 @@ export interface ReportHistoryResponse {
 export interface ReportHistoryApiResponse {
   data: ReportHistoryResponse;
 }
+
+export interface ReportInfo {
+  paymentDateTime: string;
+  questionDateTime: string;
+  reportStatus: 'SALE' | 'QUESTION' | 'ANSWER' | 'COMPLETE'; // ENUM 정의 참고
+  reportType: string;
+}
+
+export interface ReportInfoResponse {
+  code: number;
+  message: string | null;
+  content: ReportInfo;
+}

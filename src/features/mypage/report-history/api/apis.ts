@@ -1,7 +1,7 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { ReportHistoryResponse } from '@/features/mypage/report-history/lib/types';
+import type { ReportHistoryResponse, ReportInfo } from '@/features/mypage/report-history/lib/types';
 
 export const getReportHistoryList = async (
   reportStatus: string,
@@ -13,3 +13,9 @@ export const getReportHistoryList = async (
   });
   return response as unknown as ReportHistoryResponse['content'];
 };
+
+export const getReportInfo = async (reportId: number): Promise<ReportInfo> => {
+  const response = await axiosInstance.get(END_POINTS.MYPAGE.REPORT_INFO(reportId));
+  return response as unknown as ReportInfo;
+};
+
