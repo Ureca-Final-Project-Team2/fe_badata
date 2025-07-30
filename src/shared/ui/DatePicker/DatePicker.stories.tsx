@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { DatePicker } from './DatePicker';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { DateRange } from 'react-day-picker';
 
 const meta: Meta<typeof DatePicker> = {
   title: 'Components/DatePicker',
@@ -18,14 +19,16 @@ type Story = StoryObj<typeof DatePicker>;
 
 export const Default: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
-    return <DatePicker date={date} onDateChange={setDate} />;
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+    return (
+      <DatePicker value={dateRange} onChange={setDateRange} placeholder="날짜를 선택해주세요" />
+    );
   },
 };
 
 export const MobileDatePicker: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
     return (
       <div
         style={{
@@ -34,7 +37,7 @@ export const MobileDatePicker: Story = {
           margin: '0 auto',
         }}
       >
-        <DatePicker date={date} onDateChange={setDate} />
+        <DatePicker value={dateRange} onChange={setDateRange} placeholder="날짜를 선택해주세요" />
       </div>
     );
   },

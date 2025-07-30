@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import { userApis } from '../api/apis';
+import { userApis } from '@/entities/user/api/apis';
 
 import type {
   CoinResponse,

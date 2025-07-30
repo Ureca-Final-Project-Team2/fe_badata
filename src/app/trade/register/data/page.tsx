@@ -1,4 +1,4 @@
-import DataRegisterPage from '@/pages/trade/register/data/page/DataRegisterPage';
+import DataRegisterPage from '@/features/trade/register/data/page/DataRegisterPage';
 
 export const dynamic = 'force-dynamic';
 

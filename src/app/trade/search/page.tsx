@@ -1,4 +1,4 @@
-import { TradeSearchPage } from '@/pages/trade/search-post/page/SearchTradePage';
+import TradeSearchPage from '@/features/trade/search-post/page/SearchTradePage';
 
 export const dynamic = 'force-dynamic';
 

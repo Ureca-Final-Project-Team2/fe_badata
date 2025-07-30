@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getTradePostDetail } from '@/pages/trade/data/detail/api/apis';
+import { getTradePostDetail } from '@/features/trade/data/detail/api/apis';
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 

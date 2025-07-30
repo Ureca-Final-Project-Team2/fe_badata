@@ -1,7 +1,6 @@
 import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { Drawer } from '@/shared/ui/Drawer';
-
-import { useSosDrawer } from '../model/useSosDrawer';
+import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 
 export function SosDrawer() {
   const { isDrawerOpen, closeDrawer } = useSosDrawer();
