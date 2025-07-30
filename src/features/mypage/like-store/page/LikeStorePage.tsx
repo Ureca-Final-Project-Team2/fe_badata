@@ -1,19 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
 import { useLikedStores } from '@/features/mypage/like-store/model/queries';
 import { StoreCard } from '@/features/rental/map/ui/StoreCard';
+import { isStoreOpen } from '@/shared/lib/utils/storeIsOpeningUtils';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
+
+const ANIMATION_DURATION = 500; // 애니메이션 지속 시간 상수화
 
 export default function LikeStorePage() {
   const router = useRouter();
   const { likeStoreItems, isLoading, isError } = useLikedStores();
   const [removedStoreIds, setRemovedStoreIds] = useState<Set<number>>(new Set());
   const [removingStoreIds, setRemovingStoreIds] = useState<Set<number>>(new Set());
+  const timeoutRefs = useRef<Set<NodeJS.Timeout>>(new Set());
 
   // 좋아요 취소 시 리스트에서 제거
   const handleLikeToggle = (storeId: number, isLiked: boolean) => {
@@ -22,16 +26,26 @@ export default function LikeStorePage() {
       setRemovingStoreIds((prev) => new Set([...prev, storeId]));
 
       // 애니메이션 완료 후 실제 제거
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setRemovedStoreIds((prev) => new Set([...prev, storeId]));
         setRemovingStoreIds((prev) => {
           const newSet = new Set(prev);
           newSet.delete(storeId);
           return newSet;
         });
-      }, 500); // 애니메이션 지속 시간
+        timeoutRefs.current.delete(timeoutId);
+      }, ANIMATION_DURATION);
+
+      timeoutRefs.current.add(timeoutId);
     }
   };
+
+  // 컴포넌트 언마운트 시 타이머 정리
+  useEffect(() => {
+    return () => {
+      timeoutRefs.current.forEach(clearTimeout);
+    };
+  }, []);
 
   // 제거된 스토어를 필터링
   const filteredItems = likeStoreItems?.filter((item) => !removedStoreIds.has(item.storeId)) || [];
@@ -89,7 +103,7 @@ export default function LikeStorePage() {
                   endTime: item.endTime,
                   imageUrl: item.storeImage,
                   detailAddress: item.detailAddress,
-                  isOpening: true, // 실제 오픈 여부는 별도 로직 필요
+                  isOpening: isStoreOpen(item.startTime, item.endTime),
                 }}
                 deviceCount={item.availableDevice}
                 isLiked={true}
