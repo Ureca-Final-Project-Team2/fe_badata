@@ -1,5 +1,3 @@
-'use client';
-
 import GifticonPage from '@/features/trade/gifticon/page/GifticonPage';
 
 export const dynamic = 'force-dynamic';

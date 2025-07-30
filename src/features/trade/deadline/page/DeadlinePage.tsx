@@ -1,9 +1,8 @@
 import { Suspense } from 'react';
 
+import DeadlinePageClient from '@/features/trade/deadline/_client/DeadlinePageClient';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeaderWithBack } from '@/shared/ui/Header/PageHeaderWithBack';
-
-import DeadlinePageClient from '../_client/DeadlinePageClient';
 
 export default function DeadlinePage() {
   return (
