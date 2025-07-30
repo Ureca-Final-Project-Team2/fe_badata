@@ -44,7 +44,7 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
         </div>
       </div>
       <div className="flex-1 pt-1">
-        <div className="font-body-xs-semibold text-gray-900 mb-1">{text}</div>
+        <div className="font-label-semibold text-gray-900 mb-1">{text}</div>
         <div className="font-small-regular text-[var(--gray-mid)]">{date}</div>
       </div>
     </li>
@@ -106,8 +106,8 @@ export default function ReportHistoryPage() {
       >
         <div className="flex items-center justify-center h-64 text-center">
           <div>
-            <div className="text-lg font-semibold mb-2">불러오는 중...</div>
-            <div className="text-sm text-gray-500">신고 내역을 불러오고 있습니다</div>
+            <div className="font-title-semibold mb-2">불러오는 중...</div>
+            <div className="font-caption-regular text-gray-500">신고 내역을 불러오고 있습니다</div>
           </div>
         </div>
       </BaseLayout>
@@ -144,8 +144,8 @@ export default function ReportHistoryPage() {
       >
         <div className="flex items-center justify-center h-64 text-center">
           <div>
-            <div className="text-lg font-semibold mb-2">신고 내역이 없습니다</div>
-            <div className="text-sm text-gray-500">신고한 게시물이 없습니다</div>
+            <div className="font-title-semibold mb-2">신고 내역이 없습니다</div>
+            <div className="font-caption-regular text-gray-500">신고한 게시물이 없습니다</div>
           </div>
         </div>
       </BaseLayout>
