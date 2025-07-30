@@ -24,6 +24,8 @@ export default function RestockAlarmPage() {
   const alarms: RestockAlarmItem[] = data?.item || [];
 
   const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
+  const [removedAlarmIds, setRemovedAlarmIds] = useState<Set<number>>(new Set());
+  const [removingAlarmIds, setRemovingAlarmIds] = useState<Set<number>>(new Set());
 
   // 확인 모달 상태
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -40,9 +42,22 @@ export default function RestockAlarmPage() {
     try {
       setDeletingIds((prev) => new Set(prev).add(itemToDelete.id));
 
+      // 애니메이션을 위한 제거 중 상태 설정
+      setRemovingAlarmIds((prev) => new Set([...prev, itemToDelete.id]));
+
       await deleteMutation.mutateAsync(itemToDelete.id);
 
       makeToast('재입고 알림을 해제하였습니다.', 'success');
+
+      // 애니메이션 완료 후 실제 제거
+      setTimeout(() => {
+        setRemovedAlarmIds((prev) => new Set([...prev, itemToDelete.id]));
+        setRemovingAlarmIds((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(itemToDelete.id);
+          return newSet;
+        });
+      }, 500); // 애니메이션 지속 시간
     } catch (error) {
       console.error('재입고 알림 삭제 실패:', error);
       makeToast('재입고 알림 삭제에 실패했습니다.', 'warning');
@@ -64,6 +79,9 @@ export default function RestockAlarmPage() {
     setItemToDelete(null);
   };
 
+  // 제거된 알림을 필터링
+  const filteredAlarms = alarms.filter((item) => !removedAlarmIds.has(item.id));
+
   return (
     <BaseLayout
       header={<PageHeader title="재입고 알림 내역" onBack={() => router.back()} />}
@@ -73,7 +91,7 @@ export default function RestockAlarmPage() {
         <AlarmNoticeSection />
         <div className="flex items-center justify-between mt-6 mb-4">
           <span className="font-body-semibold text-[var(--black)]">
-            전체 <span className="text-[var(--main-5)]">{alarms.length}</span>개
+            전체 <span className="text-[var(--main-5)]">{filteredAlarms.length}</span>개
           </span>
           <button className="font-body-light-lh text-[var(--gray-mid)]" disabled>
             전체 삭제
@@ -89,20 +107,32 @@ export default function RestockAlarmPage() {
           <div className="text-center py-8 text-[var(--red-main)] animate-fade-in">
             데이터를 불러오지 못했습니다.
           </div>
-        ) : alarms.length === 0 ? (
+        ) : filteredAlarms.length === 0 ? (
           <div className="text-center py-8 text-[var(--gray-mid)] animate-fade-in">
             알림 내역이 없습니다.
           </div>
         ) : (
           <ul className="flex flex-col gap-4">
-            {alarms.map((item, index) => {
+            {filteredAlarms.map((item, index) => {
               const isDeleting = deletingIds.has(item.id);
+              const isRemoving = removingAlarmIds.has(item.id);
               const staggerClass = `animate-stagger-${Math.min(index + 1, 5)}`;
 
               return (
                 <li
                   key={item.id}
-                  className={`flex gap-3 p-0 min-h-[72px] animate-slide-in-up ${staggerClass}`}
+                  className={`flex gap-3 p-0 min-h-[72px] transition-all duration-500 ease-in-out ${
+                    isRemoving ? 'animate-slide-out-down' : `animate-slide-in-up ${staggerClass}`
+                  }`}
+                  style={{
+                    transform: isRemoving
+                      ? 'translateY(100%) scale(0.8)'
+                      : 'translateY(0) scale(1)',
+                    opacity: isRemoving ? 0 : 1,
+                    height: isRemoving ? '0' : 'auto',
+                    marginBottom: isRemoving ? '0' : '16px',
+                    overflow: 'hidden',
+                  }}
                 >
                   <div className="w-[72px] h-[72px] bg-[var(--gray-light)] rounded-md overflow-hidden flex-shrink-0">
                     <Image
