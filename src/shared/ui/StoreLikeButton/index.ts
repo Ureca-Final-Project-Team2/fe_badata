@@ -1,0 +1,1 @@
+export { StoreLikeButton } from './StoreLikeButton';
