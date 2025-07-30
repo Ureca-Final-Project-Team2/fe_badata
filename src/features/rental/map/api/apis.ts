@@ -18,19 +18,6 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
   try {
     const endpoint = END_POINTS.STORES.ALLDEVICE();
 
-    // URL 파라미터 구성
-    const queryParams = new URLSearchParams();
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          // 배열인 경우 여러 번 추가 (dataCapacity=999&dataCapacity=111 형태)
-          value.forEach((v) => queryParams.append(key, v.toString()));
-        } else {
-          queryParams.append(key, value.toString());
-        }
-      }
-    });
-
     const response = await axiosInstance.get(endpoint, {
       params,
     });
