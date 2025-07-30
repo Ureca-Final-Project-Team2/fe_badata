@@ -8,11 +8,15 @@ import { useSortStateHook } from '@/shared/model/useSortStateHook';
 
 import type { DeadlinePost as PostItem } from '@/entities/trade-post/lib/types';
 
-export const useFilteredTradePosts = (tab: string) => {
+export const useFilteredTradePostsHooks = (tab: string) => {
   const { posts } = useTradePostsQuery();
-  const { sortOption, setSortOption, openDrawer, closeDrawer } = useSortStateHook<
-    'latest' | 'popular'
-  >('latest');
+  const {
+    sortOption,
+    setSortOption,
+    isSortDrawerOpen,
+    openDrawer: openSortDrawer,
+    closeDrawer: closeSortDrawer,
+  } = useSortStateHook<'latest' | 'popular'>('latest');
 
   const filteredPosts = useMemo(() => {
     const base = tab === 'all' ? posts : posts?.filter((p) => p.postCategory === tab.toUpperCase());
@@ -41,9 +45,11 @@ export const useFilteredTradePosts = (tab: string) => {
     isLoading: false,
     sortOption,
     sortHandlers: {
-      openDrawer,
-      closeDrawer,
+      sortOption,
       setSortOption,
+      isSortDrawerOpen,
+      openSortDrawer,
+      closeSortDrawer,
       onItemClick,
     },
   };

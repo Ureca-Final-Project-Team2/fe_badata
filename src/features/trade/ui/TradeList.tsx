@@ -14,6 +14,7 @@ interface TradeListProps {
   sortLabel: string;
   onSortClick: () => void;
   onItemClick?: (item: PostItem) => void;
+  onFilterClick?: () => void;
 }
 
 export function TradeList({
@@ -22,6 +23,7 @@ export function TradeList({
   sortLabel,
   onSortClick,
   onItemClick,
+  onFilterClick,
 }: TradeListProps) {
   const { toggleLike, isItemLoading } = useTradePostLikeHooks();
 
@@ -41,10 +43,15 @@ export function TradeList({
     <section className="bg-white">
       <div className="flex flex-row justify-between py-2">
         <SortButton onClick={onSortClick} label={sortLabel} />
-        <div className="flex flex-row gap-1 items-center font-label-semibold">
-          조건
-          <ListFilter size={14} />
-        </div>
+        {onFilterClick && (
+          <button
+            onClick={onFilterClick}
+            className="flex flex-row gap-1 items-center font-label-semibold"
+          >
+            조건
+            <ListFilter size={14} />
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4 py-4">
