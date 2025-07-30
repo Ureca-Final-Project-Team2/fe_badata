@@ -13,6 +13,7 @@ import { TradeSection } from '@/features/mypage/ui/TradeSection';
 import { ICONS } from '@/shared/config/iconPath';
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { Header } from '@/shared/ui/Header';
+import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
 export default function MyPage() {
@@ -70,6 +71,9 @@ export default function MyPage() {
       <div className="bg-[var(--white)] fixed bottom-0 left-0 right-0 z-50 max-w-[428px] mx-auto">
         <BottomNav />
       </div>
+      
+      {/* SOS Drawer 추가 */}
+      <SosDrawer />
     </div>
   );
 }

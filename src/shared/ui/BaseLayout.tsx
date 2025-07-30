@@ -1,6 +1,7 @@
 'use client';
 
 import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
+import { SosNotificationHandler } from '@/widgets/sos/ui/SosNotificationHandler';
 
 import { cn } from '../lib/cn';
 
@@ -62,8 +63,10 @@ export function BaseLayout({
         )}
 
         {/* 전역 SOS Drawer */}
-
         <SosDrawer />
+
+        {/* 전역 SOS 실시간 알림 핸들러 */}
+        <SosNotificationHandler />
       </div>
     </div>
   );

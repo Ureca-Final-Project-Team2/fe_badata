@@ -151,7 +151,7 @@ export const useReservationDevices = ({
       // 날짜가 초기화된 경우: 모든 장비 조회
       fetchDevicesSafely();
     }
-  }, [fetchDevicesSafely, dateRange?.from, dateRange?.to]);
+  }, [fetchDevicesSafely, dateRange]);
 
   return {
     devices: displayDevices, // 부드러운 전환을 위한 displayDevices 반환

@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useSosHistoryListQuery } from '@/features/mypage/sos-history/model/queries';
 import { SosHistoryList } from '@/features/mypage/sos-history/ui/SosHistoryList';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { DataUsageCard } from '@/shared/ui/DataUsageCard';
 import { PageHeader } from '@/shared/ui/Header';
+import { DataUsageWidgetContainer } from '@/widgets/data-usage/ui/DataUsageWidgetContainer';
 
 export default function SosHistoryPage() {
   const router = useRouter();
@@ -48,17 +48,7 @@ export default function SosHistoryPage() {
       <div className="w-full max-w-[428px]">
         <div className="px-4 pt-0 pb-[96px]">
           <h2 className="font-body-semibold mb-4 mt-4">나의 데이터 요금</h2>
-          <DataUsageCard
-            phoneMasked="010-1**4-5**8"
-            planName="5G 청춘 요금제"
-            billMonth="5월 청구요금"
-            billStatus="납부 완료"
-            billAmount="150,340원"
-            remainingLabel="남은 데이터"
-            totalAmount="10GB"
-            totalValue={10}
-            remainingValue={5}
-          />
+          <DataUsageWidgetContainer />
 
           <h2 className="font-body-semibold mt-8 mb-4">나의 SOS 요청 내역</h2>
           <ul className="flex flex-col gap-4">
