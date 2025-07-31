@@ -26,7 +26,6 @@ export default function PurchaseHistoryPage() {
     isLoading: isLoadingStats,
     invalidateStats,
   } = useUserStats();
-  
   const { data: purchaseCount = 0 } = useUserPostCountQuery('PURCHASE');
   const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
   usePurchasesQuery();
@@ -35,12 +34,10 @@ export default function PurchaseHistoryPage() {
     const handleFocus = () => {
       invalidateStats();
     };
-
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, [invalidateStats]);
 
-  // 모든 아이템을 하나의 배열로 합치기
   const allItems =
     data?.pages?.flatMap((page) => {
       if (!page || !page.content) {

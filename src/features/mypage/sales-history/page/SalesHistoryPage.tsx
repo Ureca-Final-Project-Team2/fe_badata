@@ -30,11 +30,6 @@ export default function SalesHistoryPage() {
   const router = useRouter();
   const profile = useAuthStore((s) => s.user);
   const { data: salesCount = 0 } = useUserPostCountQuery('SALE', !!profile);
-  console.log('🧾 판매 개수:', salesCount);
-  useEffect(() => {
-    console.log('✅ useEffect 내부 salesCount 갱신:', salesCount);
-  }, [salesCount]);
-
   const [tab, setTab] = useState<'전체' | '데이터' | '쿠폰'>('전체');
   const [isCompleted, setIsCompleted] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
@@ -55,7 +50,6 @@ export default function SalesHistoryPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
     useSalesQuery(undefined, postCategory, isCompleted, undefined, 30);
 
-  // Handle tab change with type safety
   const handleTabChange = (value: string) => {
     if (value === '전체' || value === '데이터' || value === '쿠폰') {
       setTab(value as '전체' | '데이터' | '쿠폰');
