@@ -65,4 +65,3 @@ export const BRAND_MAPPING = {
 } as const;
 
 export type KoreanBrandName = keyof typeof BRAND_MAPPING;
-export type EnglishBrandName = (typeof BRAND_MAPPING)[KoreanBrandName];
