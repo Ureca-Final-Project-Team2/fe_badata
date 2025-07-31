@@ -172,20 +172,15 @@ export default function RestockAlarmPage() {
                         {isDeleting ? '⋯' : '×'}
                       </button>
                     </div>
-                    <div className="mt-1 text-[12px] text-[var(--gray-mid)] font-body-xs">
+                    <div className="mt-1 text-[12px] font-body-xs-semibold text-[var(--gray-mid)]">
                       {item.storeName}
                     </div>
-                    <div className="mt-1 flex items-end justify-start w-full">
+                    <div className="mt-[2px] flex items-center justify-between w-full">
                       <span className="font-body-xs-semibold text-[var(--main-5)]">
                         {item.price.toLocaleString()}원
                       </span>
-                    </div>
-                    <div className="mt-1 text-[12px] text-[var(--gray-mid)] font-body-xs">
-                      남은 공유기 {item.desiredCount}개
-                    </div>
-                    <div className="flex items-end justify-start w-full mt-1">
-                      <span className="font-body-xs-semibold text-[var(--main-5)]">
-                        {item.price.toLocaleString()}원
+                      <span className="text-[12px] font-body-xs text-[var(--gray-mid)]">
+                        남은 공유기 {item.desiredCount}개
                       </span>
                     </div>
                   </div>
