@@ -23,6 +23,7 @@ export const useFetchStoresHooks = (
   const lastBoundsRef = useRef(currentBounds);
   const lastFilterStateRef = useRef(filterState);
   const lastStoresRef = useRef<Store[]>([]);
+  const lastZoomLevelRef = useRef<number | null>(null);
   const isInitializedRef = useRef(false);
 
   // 지도 bounds 업데이트 함수
@@ -87,9 +88,24 @@ export const useFetchStoresHooks = (
       const boundsChanged = JSON.stringify(newBounds) !== JSON.stringify(lastBoundsRef.current);
       const filterChanged =
         JSON.stringify(filterState) !== JSON.stringify(lastFilterStateRef.current);
+      const zoomLevelChanged = zoomLevel !== lastZoomLevelRef.current;
 
-      if (!boundsChanged && !filterChanged) {
+      console.log('🔍 변경사항 확인:', {
+        boundsChanged,
+        filterChanged,
+        zoomLevelChanged,
+        currentZoomLevel: zoomLevel,
+        lastZoomLevel: lastZoomLevelRef.current,
+      });
+
+      // 줌 레벨이 변경되었거나 초기 로드인 경우 강제로 API 호출
+      if (zoomLevelChanged || lastZoomLevelRef.current === null) {
+        console.log('✅ 줌 레벨 변경 감지됨, API 호출 시작');
+      } else if (!boundsChanged && !filterChanged && !zoomLevelChanged) {
+        console.log('ℹ️ 변경사항 없음, API 호출 건너뜀');
         return; // 변경사항이 없으면 API 호출하지 않음
+      } else {
+        console.log('✅ 다른 변경사항 감지됨, API 호출 시작');
       }
 
       // 이전 타이머가 있다면 취소
@@ -97,7 +113,11 @@ export const useFetchStoresHooks = (
         clearTimeout(debounceRef.current);
       }
 
-      // 500ms 디바운싱
+      // 줌 레벨 변경 시에는 더 빠르게 응답
+      const debounceTime = zoomLevelChanged ? 100 : 500;
+      console.log(`⏱️ 디바운싱 시간: ${debounceTime}ms`);
+
+      // 디바운싱
       debounceRef.current = setTimeout(async () => {
         try {
           if (!map) return;
@@ -106,6 +126,7 @@ export const useFetchStoresHooks = (
           setCurrentBounds(newBounds);
           lastBoundsRef.current = newBounds;
           lastFilterStateRef.current = filterState;
+          lastZoomLevelRef.current = zoomLevel;
 
           const mergedParams = mapFilterStateToApiParams(newBounds, filterState, zoomLevel);
 
@@ -150,7 +171,7 @@ export const useFetchStoresHooks = (
             setIsLoading(false);
           }
         }
-      }, 500);
+      }, debounceTime);
     } catch (error) {
       console.error('맵 bounds 가져오기 실패:', error);
     }

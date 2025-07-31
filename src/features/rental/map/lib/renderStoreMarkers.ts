@@ -91,6 +91,9 @@ export const debouncedRenderMarkers = debounce(
       return;
     }
 
+    const zoomLevel = map.getLevel();
+    console.log('🔍 마커 렌더링 시작 - 줌 레벨:', zoomLevel);
+
     const cache = await getMarkerCache(map);
     const { existingStoreIds, currentStoreIds } = getStoreIdSets(cache, stores);
     const { storesToRemove, storesToAdd, storesToUpdate } = categorizeStores(

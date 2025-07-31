@@ -1,4 +1,5 @@
 import { fetchStoreDetail, fetchStoreDevices } from '@/features/rental/map/api/apis';
+import { createClusterMarker } from '@/features/rental/map/lib/clusterMarker';
 import { createDropletMarker } from '@/features/rental/map/lib/dropletMarker';
 import { createInfoWindow } from '@/features/rental/map/lib/markerCache';
 import { setupMarkerEventListeners } from '@/features/rental/map/lib/markerEventHandlers';
@@ -34,32 +35,20 @@ export const createStoreMarker = async (
       leftDeviceCount: store.leftDeviceCount,
     });
 
-    let safeDevices: StoreDevice[] = [];
     let totalLeftCount = 0;
 
-    // 줌 레벨 4 이상(클러스터)이거나 클러스터 마커인 경우 디바이스 정보 조회 생략
-    if (!isCluster) {
-      console.log('🔍 개별 가맹점 - 디바이스 정보 조회 시작');
-      // 디바이스 데이터 조회 (필터 파라미터 전달)
-      const deviceParams = {
-        ...filterParams,
-        maxSupportConnection: filterParams.maxSupportConnection
-          ? [filterParams.maxSupportConnection]
-          : undefined,
-      };
-      const devices = await fetchStoreDevices(store.id, deviceParams);
-      safeDevices = Array.isArray(devices) ? devices : [];
-
-      // leftCount 총합 계산
-      totalLeftCount = safeDevices.reduce((sum, device) => sum + (device.leftCount ?? 0), 0);
-      console.log('🔍 개별 가맹점 - 디바이스 정보 조회 완료:', {
-        deviceCount: safeDevices.length,
-        totalLeftCount,
-      });
-    } else {
+    // 줌 레벨 4 이상(클러스터)인 경우에만 디바이스 정보 조회 생략
+    if (zoomLevel >= 4) {
       // 클러스터 마커인 경우 store의 leftDeviceCount 사용
       totalLeftCount = store.leftDeviceCount;
       console.log('🔍 클러스터 - leftDeviceCount 사용:', totalLeftCount);
+    } else {
+      // 줌 레벨 3 이하인 경우 API 응답의 leftDeviceCount 사용
+      totalLeftCount = store.leftDeviceCount;
+      console.log('🔍 개별 가맹점 - API 응답 leftDeviceCount 사용:', totalLeftCount);
+
+      // 디바이스 정보는 클릭 시에만 조회하도록 수정
+      // 여기서는 디바이스 정보 조회를 하지 않음
     }
 
     // 로그인 상태 확인 (전역 상태에서 가져오기)
@@ -82,11 +71,29 @@ export const createStoreMarker = async (
     const handleMarkerClick = async () => {
       if (onStoreMarkerClick) {
         let storeDetail: StoreDetail | undefined = undefined;
+        let safeDevices: StoreDevice[] = [];
+
         try {
           const center = map.getCenter();
           const lat = center.getLat();
           const lng = center.getLng();
           storeDetail = await fetchStoreDetail(store.id, lat, lng);
+
+          // 클릭 시에만 디바이스 정보 조회
+          if (zoomLevel < 4) {
+            const deviceParams = {
+              ...filterParams,
+              maxSupportConnection: filterParams.maxSupportConnection
+                ? [filterParams.maxSupportConnection]
+                : undefined,
+            };
+            const devices = await fetchStoreDevices(store.id, deviceParams);
+            safeDevices = Array.isArray(devices) ? devices : [];
+            console.log('🔍 클릭 시 디바이스 정보 조회:', {
+              deviceCount: safeDevices.length,
+              devices: safeDevices,
+            });
+          }
         } catch (error) {
           console.error('상세 정보 조회 실패:', error);
         }
@@ -101,17 +108,27 @@ export const createStoreMarker = async (
         ? JSON.parse(localStorage.getItem('selected-store-id') || 'null') === store.id
         : false;
 
-    // 물방울 마커 생성 (현재 선택된 마커는 크게, 아니면 작게)
-    const dropletOverlay = createDropletMarker(
-      map,
-      position,
-      store.id,
-      isLiked,
-      isCurrentlySelected, // 현재 선택 상태에 따라 크기 결정
-      handleMarkerClick,
-      totalLeftCount, // 디바이스 개수 전달
-      isCluster, // 클러스터 여부 전달
-    );
+    let marker: kakao.maps.Marker | kakao.maps.CustomOverlay;
+
+    // 줌 레벨에 따라 다른 마커 생성
+    if (zoomLevel >= 4) {
+      // 클러스터 마커 생성
+      marker = createClusterMarker(store, map, position, totalLeftCount, zoomLevel);
+    } else {
+      console.log('🔍 줌 레벨 3 이하 - 물방울 마커 생성 시작');
+
+      // 줌 레벨 3 이하: 물방울 마커 생성
+      marker = createDropletMarker(
+        map,
+        position,
+        store.id,
+        isLiked,
+        isCurrentlySelected,
+        handleMarkerClick,
+        totalLeftCount,
+        isCluster,
+      );
+    }
 
     // 인포윈도우 생성
     const infowindow = createInfoWindow(store.name);
@@ -119,8 +136,8 @@ export const createStoreMarker = async (
     // 캐시에 마커 추가
     if (cache) {
       cache.addMarker(store.id, {
-        marker: dropletOverlay, // CustomOverlay를 marker로 저장
-        overlay: null, // 기존 overlay는 사용하지 않음
+        marker: marker,
+        overlay: null,
         infowindow,
         deviceCount: totalLeftCount,
         isLiked: isLiked,
@@ -129,16 +146,18 @@ export const createStoreMarker = async (
       });
     }
 
-    // 이벤트 리스너 설정
-    setupMarkerEventListeners(
-      dropletOverlay,
-      infowindow,
-      map,
-      store.id,
-      false, // 모든 마커를 클릭 가능하게 설정
-      onStoreMarkerClick,
-      safeDevices,
-    );
+    // 이벤트 리스너 설정 (물방울 마커인 경우에만)
+    if (zoomLevel < 4) {
+      setupMarkerEventListeners(
+        marker as kakao.maps.CustomOverlay,
+        infowindow,
+        map,
+        store.id,
+        false,
+        onStoreMarkerClick,
+        [],
+      );
+    }
 
     return { storeId: store.id, deviceCount: totalLeftCount };
   } catch (error) {
