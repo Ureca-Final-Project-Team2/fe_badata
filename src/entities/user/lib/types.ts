@@ -63,3 +63,7 @@ export interface PurchaseResponse {
 export interface CoinResponse {
   coin: number;
 }
+
+export interface PostCountResponse {
+  postCount: number;
+}

@@ -9,7 +9,7 @@ import { useUserStats } from '@/entities/follow';
 import {
   usePurchasesQuery,
   useUserInfoQuery,
-  useUserSoldPostsCountQuery,
+  useUserPostCountQuery
 } from '@/entities/user/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
@@ -28,8 +28,9 @@ export default function PurchaseHistoryPage() {
     invalidateStats,
   } = useUserStats();
 
-  const { data: soldPostsCount } = useUserSoldPostsCountQuery(profile?.userId);
   const { data: userInfo } = useUserInfoQuery();
+  const { data: purchaseCount = 0 } = useUserPostCountQuery('PURCHASE');
+  console.log('📦 구매 개수:', purchaseCount, '로딩:', isLoading, '에러:', isError);
 
   useEffect(() => {
     const handleFocus = () => {
@@ -62,18 +63,22 @@ export default function PurchaseHistoryPage() {
       header={<PageHeader title="구매 내역" onBack={() => router.back()} />}
       showBottomNav
     >
-      <div className="w-full max-w-[428px]">
-        <div className="flex flex-col items-center mt-4">
-          <MyProfileCard
-            name={userInfo?.nickName ?? '사용자'}
-            days={userInfo?.days ?? 0}
-            avatarSrc={userInfo?.profileImage ?? ICONS.ETC.SHELL.src.toString()}
-          />
+      <div className="flex flex-col items-center mt-4">
+  {userInfo ? (
+    <MyProfileCard
+      name={userInfo.nickName}
+      days={userInfo.days}
+      avatarSrc={userInfo.profileImage ?? ICONS.ETC.SHELL.src.toString()}
+    />
+  ) : (
+    <div className="w-full h-[72px] bg-[var(--gray-light)] rounded-lg animate-pulse" />
+  )}
+
 
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-6 mb-6">
             <div className="flex flex-col items-center flex-1">
               <span className="font-label-semibold text-[var(--black)]">구매 내역</span>
-              <span className="font-body-semibold text-[var(--black)] mt-1">{soldPostsCount}</span>
+              <span className="font-body-semibold text-[var(--black)] mt-1">{purchaseCount}</span>
             </div>
             <div
               className="flex flex-col items-center flex-1 cursor-pointer group"
@@ -148,7 +153,6 @@ export default function PurchaseHistoryPage() {
             </>
           )}
         </div>
-      </div>
     </BaseLayout>
   );
 }
