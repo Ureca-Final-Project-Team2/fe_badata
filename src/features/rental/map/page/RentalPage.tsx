@@ -329,7 +329,9 @@ export default function RentalPage() {
             key={filteredDevicesList.map((d: StoreDevice) => d.storeDeviceId).join('-')}
             items={filteredDevicesList}
           >
-            {(device: StoreDevice) => <DeviceCard device={device} />}
+            {(device: StoreDevice) => (
+              <DeviceCard device={device} storeId={selectedStoreId ?? undefined} />
+            )}
           </CenterScrollSwiper>
         </div>
       )}
@@ -340,7 +342,9 @@ export default function RentalPage() {
             key={selectedStore.selectedDevices.map((d: StoreDevice) => d.storeDeviceId).join('-')}
             items={selectedStore.selectedDevices}
           >
-            {(device: StoreDevice) => <DeviceCard device={device} />}
+            {(device: StoreDevice) => (
+              <DeviceCard device={device} storeId={selectedStoreId ?? undefined} />
+            )}
           </CenterScrollSwiper>
         </div>
       )}

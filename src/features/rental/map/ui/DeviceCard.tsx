@@ -1,5 +1,10 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 import DeviceImage from '@/features/rental/map/ui/DeviceImage';
 import ReserveButton from '@/features/rental/map/ui/ReserveButton';
+import { PATH } from '@/shared/config/path';
 
 import type { StoreDevice } from '@/features/rental/map/lib/types';
 
@@ -11,10 +16,24 @@ const CARD_SIZE = {
   imgRadius: 'rounded-t-[30px]',
 };
 
-export default function DeviceCard({ device }: { device: StoreDevice }) {
+interface DeviceCardProps {
+  device: StoreDevice;
+  storeId?: number;
+}
+
+export default function DeviceCard({ device, storeId }: DeviceCardProps) {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    if (storeId) {
+      router.push(PATH.RENTAL.STORE_DETAIL.replace(':storeId', storeId.toString()));
+    }
+  };
+
   return (
     <div
-      className={`${CARD_SIZE.radius} bg-white ${CARD_SIZE.w} ${CARD_SIZE.h} overflow-hidden flex flex-col`}
+      className={`${CARD_SIZE.radius} bg-white ${CARD_SIZE.w} ${CARD_SIZE.h} overflow-hidden flex flex-col cursor-pointer`}
+      onClick={handleCardClick}
     >
       <div className={`w-full ${CARD_SIZE.img} ${CARD_SIZE.imgRadius} rounded-b-none`}>
         <DeviceImage url={device.imageUrl} alt={device.deviceName} />
