@@ -1,4 +1,4 @@
-import { formatDate, getSourceText } from '../lib/constants';
+import { COIN_SOURCE_CONFIG, formatDate, getSourceText } from '../lib/constants';
 
 import type { CoinSource } from '@/features/mypage/coin-history/lib/constants';
 import type { CoinHistoryItem as CoinHistoryItemType } from '@/features/mypage/coin-history/lib/types';
@@ -8,8 +8,9 @@ interface CoinHistoryItemProps {
 }
 
 export function CoinHistoryItem({ item }: CoinHistoryItemProps) {
-  const displayAmount = item.usedCoin > 0 ? `+${item.usedCoin}` : `${item.usedCoin}`;
-  const amountColor = item.usedCoin > 0 ? 'text-[var(--main-5)]' : 'text-[var(--red)]';
+  const isPositive = COIN_SOURCE_CONFIG[item.coinSource as CoinSource]?.isPositive;
+  const displayAmount = isPositive ? `+${item.usedCoin}` : `-${Math.abs(item.usedCoin)}`;
+  const amountColor = isPositive ? 'text-[var(--main-5)]' : 'text-[var(--red)]';
   const sourceText = getSourceText(item.coinSource as CoinSource);
   const displayDate = formatDate(item.createdAt);
   const totalCoinText = item.totalCoin !== null ? `전체 ${item.totalCoin} 코인` : '';
@@ -19,10 +20,10 @@ export function CoinHistoryItem({ item }: CoinHistoryItemProps) {
       <p className="font-small-regular text-[var(--gray-dark)] px-1">{displayDate}</p>
 
       <div className="bg-[var(--white)] rounded-2xl border border-[var(--gray-light)] px-4 py-3 flex items-center justify-between">
-        <span className="font-body-regular text-[var(--black)]">{sourceText}</span>
+        <span className="font-label-regular text-[var(--black)]">{sourceText}</span>
 
         <div className="flex flex-col items-end">
-          <span className={`font-body-semibold ${amountColor}`}>{displayAmount} 코인</span>
+          <span className={`font-label-semibold ${amountColor}`}>{displayAmount} 코인</span>
           {item.totalCoin !== null && (
             <span className="font-small-regular text-[var(--gray-dark)]">{totalCoinText}</span>
           )}
