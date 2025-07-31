@@ -2,14 +2,11 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { getUserCoin, getUserCoinHistory } from '@/features/mypage/coin-history/api/apis';
 
-import type { UserCoin } from '@/features/mypage/coin-history/lib/types';
-
 export const useUserCoinQuery = () => {
-  return useQuery<UserCoin>({
-    queryKey: ['userCoin'],
+  return useQuery<{ coin: number }>({
+    queryKey: ['user-coin'],
     queryFn: getUserCoin,
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60,
   });
 };
 

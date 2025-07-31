@@ -19,7 +19,7 @@ export function CoinBalanceSection({ coinAmount }: CoinBalanceSectionProps) {
       />
 
       <p className="font-caption-large text-[var(--gray-dark)]">나의 현재 코인</p>
-      <p className="font-body-semibold">+{coinAmount}코인</p>
+      <p className="font-body-semibold">{coinAmount}코인</p>
     </div>
   );
 } 
