@@ -26,7 +26,7 @@ import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 
-import type { StoreDevice } from '@/features/rental/map/lib/types';
+import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 
 export default function RentalPage() {
   const {
@@ -64,13 +64,24 @@ export default function RentalPage() {
 
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
 
-  const {
-    selectedStore,
-    selectedStoreId,
-    handleStoreMarkerClick,
-    handleMapClick,
-    dispatchSelectedStore,
-  } = useSelectedStore(mapInstance);
+  const { selectedStore, selectedStoreId, handleMapClick, dispatchSelectedStore } =
+    useSelectedStore(mapInstance);
+
+  // 마커 클릭 핸들러 수정 - 하단 스와이퍼로 표시
+  const handleMarkerClick = useCallback(
+    async (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
+      if (devices.length > 0 && storeId) {
+        // 선택된 스토어 정보 업데이트
+        dispatchSelectedStore({
+          type: 'SELECT_STORE',
+          devices: devices,
+          storeId: storeId,
+          storeDetail: storeDetail,
+        });
+      }
+    },
+    [dispatchSelectedStore],
+  );
 
   // URL 파라미터 처리 완료 표시
   useEffect(() => {
@@ -283,7 +294,7 @@ export default function RentalPage() {
           filterState={filterState}
           initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
           initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
-          onStoreMarkerClick={handleStoreMarkerClick}
+          onStoreMarkerClick={handleMarkerClick}
           onMapClick={handleMapClickWrapper}
           onMapReady={handleMapReady}
           hasUrlParams={!!(selectedLat && selectedLng && !hasProcessedUrlParams)}

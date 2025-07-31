@@ -17,15 +17,9 @@ import type {
 export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> => {
   try {
     const endpoint = END_POINTS.STORES.ALLDEVICE();
-
-    console.log('🔍 fetchStores 호출 - 파라미터:', params);
-
     const response = await axiosInstance.get(endpoint, {
       params,
     });
-
-    console.log('🔍 fetchStores 응답:', response);
-
     // API 응답 구조 확인 및 처리
     let stores: Record<string, unknown>[] = [];
 
@@ -38,9 +32,6 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
         stores = response as Record<string, unknown>[];
       }
     }
-
-    console.log('🔍 처리된 stores 배열:', stores);
-
     // API 응답을 Store 타입에 맞게 매핑
     const mappedStores = stores.map((store: Record<string, unknown>) => {
       const isCluster = !store.name; // name이 null이면 클러스터
@@ -53,13 +44,8 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
         liked: Boolean(store.liked) || false,
         isCluster,
       };
-
-      console.log('🔍 매핑된 store:', mappedStore);
-
       return mappedStore;
     });
-
-    console.log('🔍 최종 반환 stores:', mappedStores);
 
     return mappedStores;
   } catch (error) {
@@ -76,15 +62,17 @@ export const fetchStoreDevices = async (
   params: FetchStoreDevicesParams,
 ): Promise<StoreDevice[]> => {
   try {
-    // storeId는 클러스터링 ID이므로 실제 API에서는 사용하지 않음
-    // 대신 /api/v1/stores/map 엔드포인트를 사용
-    console.log('fetchStoreDevices', params);
-    const response = await axiosInstance.get(END_POINTS.STORES.ALLDEVICE(), {
+    console.log('🔍 fetchStoreDevices 호출:', { storeId, params });
+
+    // 개별 스토어의 디바이스를 조회할 때는 STORES.ALLSTORE 엔드포인트 사용
+    const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
       params: {
         ...params,
-        // storeId는 클러스터링 ID이므로 제외하고 다른 파라미터들만 전달
+        // storeId는 URL 경로에 포함되므로 params에서 제외
       },
     });
+
+    console.log('🔍 fetchStoreDevices 응답:', response);
     return Array.isArray(response) ? response : [];
   } catch (error) {
     console.error(`스토어 ${storeId} 디바이스 조회 실패:`, error);
