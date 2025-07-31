@@ -8,7 +8,7 @@ import { useUserStats } from '@/entities/follow';
 import {
   usePurchasesQuery,
   useUserInfoQuery,
-  useUserPostCountQuery
+  useUserPostCountQuery,
 } from '@/entities/user/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
@@ -19,7 +19,6 @@ import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
 export default function PurchaseHistoryPage() {
   const router = useRouter();
-  const { data: userInfo } = useUserInfoQuery();
   const {
     followerCount,
     followingCount,
@@ -28,7 +27,8 @@ export default function PurchaseHistoryPage() {
   } = useUserStats();
   const { data: purchaseCount = 0 } = useUserPostCountQuery('PURCHASE');
   const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-  usePurchasesQuery();
+    usePurchasesQuery();
+  const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
 
   useEffect(() => {
     const handleFocus = () => {
@@ -56,16 +56,22 @@ export default function PurchaseHistoryPage() {
       header={<PageHeader title="구매 내역" onBack={() => router.back()} />}
       showBottomNav
     >
-      <div className="flex flex-col items-center mt-4">
-        {userInfo ? (
-          <MyProfileCard
-            name={userInfo.nickName}
-            days={userInfo.days}
-            avatarSrc={userInfo.profileImage ?? ICONS.ETC.SHELL.src.toString()}
-          />
-        ) : (
-          <div className="w-full h-[72px] bg-[var(--gray-light)] rounded-lg animate-pulse" />
-        )}
+      <div className="w-full max-w-[428px]">
+        <div className="flex flex-col items-center mt-4">
+          {userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined ? (
+            <MyProfileCard
+              name={userInfo.nickName}
+              days={userInfo.days}
+              avatarSrc={userInfo.profileImage}
+            />
+          ) : (
+            <MyProfileCard
+              name="로딩 중..."
+              days={0}
+              avatarSrc={ICONS.ETC.SHELL.src.toString()}
+              isLoading={isUserInfoLoading}
+            />
+          )}
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-6 mb-6">
             <div className="flex flex-col items-center flex-1">
               <span className="font-label-semibold text-[var(--black)]">구매 내역</span>
@@ -91,59 +97,60 @@ export default function PurchaseHistoryPage() {
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="pb-[96px]">
-          {isLoading ? (
+      <div className="pb-[96px]">
+        {isLoading ? (
+          <div className="grid grid-cols-2 gap-4">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <TradePostCardSkeleton key={index} />
+            ))}
+          </div>
+        ) : isError ? (
+          <div className="text-center py-8">
+            <p className="text-[var(--gray-mid)]">구매 내역을 불러오는데 실패했습니다.</p>
+            {error && (
+              <p className="text-[var(--gray-mid)] font-caption-regular mt-2">
+                에러: {error.message || '알 수 없는 오류'}
+              </p>
+            )}
+          </div>
+        ) : allItems.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-[var(--gray-mid)]">구매 내역이 없습니다.</p>
+          </div>
+        ) : (
+          <>
             <div className="grid grid-cols-2 gap-4">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <TradePostCardSkeleton key={index} />
+              {allItems.map((item) => (
+                <TradePostCard
+                  key={item.id}
+                  imageUrl={item.postImage}
+                  title={item.title}
+                  partner={item.partner}
+                  price={item.price}
+                  likeCount={item.postLikes}
+                  isCompleted={item.isSold}
+                  isLiked={false}
+                  hasDday={false}
+                />
               ))}
             </div>
-          ) : isError ? (
-            <div className="text-center py-8">
-              <p className="text-[var(--gray-mid)]">구매 내역을 불러오는데 실패했습니다.</p>
-              {error && (
-                <p className="text-[var(--gray-mid)] font-caption-regular mt-2">
-                  에러: {error.message || '알 수 없는 오류'}
-                </p>
-              )}
-            </div>
-          ) : allItems.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-[var(--gray-mid)]">구매 내역이 없습니다.</p>
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-2 gap-4">
-                {allItems.map((item) => (
-                  <TradePostCard
-                    key={item.id}
-                    imageUrl={item.postImage}
-                    title={item.title}
-                    partner={item.partner}
-                    price={item.price}
-                    likeCount={item.postLikes}
-                    isCompleted={item.isSold}
-                    isLiked={false}
-                    hasDday={false}
-                  />
-                ))}
-              </div>
 
-              {hasNextPage && (
-                <div className="text-center py-4">
-                  <button
-                    onClick={() => fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                    className="px-4 py-2 bg-[var(--main-3)] text-[var(--white)] rounded-lg disabled:bg-[var(--gray-light)]"
-                  >
-                    {isFetchingNextPage ? '로딩 중...' : '더 보기'}
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+            {hasNextPage && (
+              <div className="text-center py-4">
+                <button
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                  className="px-4 py-2 bg-[var(--main-3)] text-[var(--white)] rounded-lg disabled:bg-[var(--gray-light)]"
+                >
+                  {isFetchingNextPage ? '로딩 중...' : '더 보기'}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </BaseLayout>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
@@ -9,6 +9,7 @@ interface UserAvatarProps {
   alt?: string;
   size?: 'lg' | 'md'; // lg: 70x70, md: 58x58
   className?: string;
+  isLoading?: boolean;
 }
 
 /**
@@ -17,6 +18,7 @@ interface UserAvatarProps {
  * @param alt - 대체 텍스트
  * @param size - 'lg'(70x70) | 'md'(58x58)
  * @param className - 추가 커스텀 클래스
+ * @param isLoading - 로딩 상태 여부
  */
 const sizeMap = {
   lg: 'w-[70px] h-[70px]',
@@ -25,8 +27,32 @@ const sizeMap = {
 
 const DEFAULT_AVATAR = ICONS.ETC.SHELL;
 
-const UserAvatar = ({ src, alt = '유저 아바타', size = 'md', className = '' }: UserAvatarProps) => {
-  const [imgSrc, setImgSrc] = useState(src || DEFAULT_AVATAR);
+const UserAvatar = ({
+  src,
+  alt = '유저 아바타',
+  size = 'md',
+  className = '',
+  isLoading = false,
+}: UserAvatarProps) => {
+  const [imgSrc, setImgSrc] = useState<typeof DEFAULT_AVATAR | string>(DEFAULT_AVATAR);
+
+  // src가 변경될 때마다 imgSrc 업데이트
+  useEffect(() => {
+    if (src) {
+      setImgSrc(src);
+    } else {
+      setImgSrc(DEFAULT_AVATAR);
+    }
+  }, [src]);
+
+  // 로딩 중일 때는 스켈레톤 효과 적용
+  if (isLoading) {
+    return (
+      <div
+        className={`rounded-full border border-[var(--gray)] bg-[var(--gray-light)] ${sizeMap[size]} ${className} animate-pulse`}
+      />
+    );
+  }
 
   return (
     <Image
