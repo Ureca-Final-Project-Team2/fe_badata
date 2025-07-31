@@ -7,6 +7,7 @@ import ReserveButton from '@/features/rental/map/ui/ReserveButton';
 import { PATH } from '@/shared/config/path';
 
 import type { StoreDevice } from '@/features/rental/map/lib/types';
+import type { DateRange } from 'react-day-picker';
 
 const CARD_SIZE = {
   w: 'w-[270px]',
@@ -19,14 +20,30 @@ const CARD_SIZE = {
 interface DeviceCardProps {
   device: StoreDevice;
   storeId?: number;
+  dateRange?: DateRange;
 }
 
-export default function DeviceCard({ device, storeId }: DeviceCardProps) {
+export default function DeviceCard({ device, storeId, dateRange }: DeviceCardProps) {
   const router = useRouter();
 
   const handleCardClick = () => {
     if (storeId) {
-      router.push(PATH.RENTAL.STORE_DETAIL.replace(':storeId', storeId.toString()));
+      console.log('가맹점 ID:', storeId);
+
+      // 항상 예약 탭으로 이동
+      let reservationPath = `${PATH.RENTAL.STORE_DETAIL.replace(':storeId', storeId.toString())}?tab=reservation`;
+
+      // 대여기간이 설정되어 있으면 URL 파라미터에 추가
+      if (dateRange?.from && dateRange?.to) {
+        const startDate = dateRange.from.toISOString().split('T')[0];
+        const endDate = dateRange.to.toISOString().split('T')[0];
+        reservationPath += `&startDate=${startDate}&endDate=${endDate}`;
+        console.log('대여기간과 함께 예약 탭으로 이동:', reservationPath);
+      } else {
+        console.log('예약 탭으로 이동 (대여기간 없음):', reservationPath);
+      }
+
+      router.push(reservationPath);
     }
   };
 

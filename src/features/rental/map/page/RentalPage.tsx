@@ -330,7 +330,11 @@ export default function RentalPage() {
             items={filteredDevicesList}
           >
             {(device: StoreDevice) => (
-              <DeviceCard device={device} storeId={selectedStoreId ?? undefined} />
+              <DeviceCard
+                device={device}
+                storeId={selectedStoreId ?? undefined}
+                dateRange={filterState.dateRange}
+              />
             )}
           </CenterScrollSwiper>
         </div>
@@ -343,7 +347,11 @@ export default function RentalPage() {
             items={selectedStore.selectedDevices}
           >
             {(device: StoreDevice) => (
-              <DeviceCard device={device} storeId={selectedStoreId ?? undefined} />
+              <DeviceCard
+                device={device}
+                storeId={selectedStoreId ?? undefined}
+                dateRange={filterState.dateRange}
+              />
             )}
           </CenterScrollSwiper>
         </div>
