@@ -2,7 +2,11 @@
  * 현재 위치 마커 생성
  * OceanWaveMarker Large 사이즈 기반 CustomOverlay로 구현
  */
-export const createCurrentLocationMarker = (map: kakao.maps.Map): kakao.maps.CustomOverlay => {
+export const createCurrentLocationMarker = (
+  map: kakao.maps.Map,
+  userLat?: number,
+  userLng?: number,
+): kakao.maps.CustomOverlay => {
   // 마커 컨테이너 생성
   const markerContainer = document.createElement('div');
   markerContainer.className = 'current-location-marker';
@@ -14,7 +18,7 @@ export const createCurrentLocationMarker = (map: kakao.maps.Map): kakao.maps.Cus
     justify-content: center;
     align-items: center;
     pointer-events: none;
-    z-index: 1000;
+    z-index: 9999;
   `;
 
   // 파동 요소들 생성 (7개) - 더 짙은 색상
@@ -104,12 +108,17 @@ export const createCurrentLocationMarker = (map: kakao.maps.Map): kakao.maps.Cus
     document.head.appendChild(style);
   }
 
-  // CustomOverlay 생성
+  // 마커 위치 결정: 사용자 GPS 좌표가 있으면 사용, 없으면 지도 중심 사용
+  const markerPosition =
+    userLat && userLng ? new window.kakao.maps.LatLng(userLat, userLng) : map.getCenter();
+
+  // CustomOverlay 생성 - zIndex를 최상위로 설정
   const currentLocationOverlay = new window.kakao.maps.CustomOverlay({
     content: markerContainer,
-    position: map.getCenter(),
+    position: markerPosition,
     xAnchor: 0.5,
     yAnchor: 0.5,
+    zIndex: 9999,
   });
 
   // 지도에 오버레이 추가

@@ -9,6 +9,8 @@ export const useCurrentLocationMarker = (
   onMapClick?: () => void,
   onMapReady?: (map: kakao.maps.Map) => void,
   isMapReadyRef?: React.MutableRefObject<boolean>,
+  userLat?: number,
+  userLng?: number,
 ) => {
   const currentLocationMarkerRef = useRef<kakao.maps.CustomOverlay | null>(null);
 
@@ -21,8 +23,15 @@ export const useCurrentLocationMarker = (
       }
 
       // URL 파라미터가 없을 때만 현재 위치 마커 생성 (실제 사용자 현재 위치일 때)
-      if (!currentLocationMarkerRef.current && !hasUrlParams) {
-        currentLocationMarkerRef.current = createCurrentLocationMarker(map);
+      if (!hasUrlParams) {
+        // 기존 마커가 있다면 제거
+        if (currentLocationMarkerRef.current) {
+          currentLocationMarkerRef.current.setMap(null);
+          currentLocationMarkerRef.current = null;
+        }
+
+        // 새로운 마커 생성
+        currentLocationMarkerRef.current = createCurrentLocationMarker(map, userLat, userLng);
       }
 
       // 지도 클릭 이벤트 추가
@@ -34,7 +43,18 @@ export const useCurrentLocationMarker = (
 
       onMapReady(map);
     }
-  }, [map, onMapReady, onMapClick, hasUrlParams, isMapReadyRef]);
+  }, [map, onMapReady, onMapClick, hasUrlParams, isMapReadyRef, userLat, userLng]);
+
+  // 사용자 위치가 변경될 때 마커 위치 업데이트
+  useEffect(() => {
+    if (map && currentLocationMarkerRef.current && userLat && userLng && !hasUrlParams) {
+      // 기존 마커 제거
+      currentLocationMarkerRef.current.setMap(null);
+
+      // 새로운 위치에 마커 생성
+      currentLocationMarkerRef.current = createCurrentLocationMarker(map, userLat, userLng);
+    }
+  }, [map, userLat, userLng, hasUrlParams]);
 
   return { currentLocationMarkerRef };
 };

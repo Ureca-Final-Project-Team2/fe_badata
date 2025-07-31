@@ -147,8 +147,8 @@ export function useLocation(): UseLocationReturn {
       },
       {
         enableHighAccuracy: true,
-        timeout: 15000, // 타임아웃 증가
-        maximumAge: 0, // 캐시된 위치 정보 사용하지 않음
+        timeout: 5000, // 타임아웃 단축
+        maximumAge: 60000, // 1분 캐시 허용 (더 빠른 응답)
       },
     );
   }, []);

@@ -21,6 +21,8 @@ export interface MapSectionProps {
   onMapReady?: (map: kakao.maps.Map) => void;
   hasUrlParams?: boolean;
   selectedStoreId?: number | null;
+  userLat?: number;
+  userLng?: number;
 }
 
 export function MapSection({
@@ -32,6 +34,8 @@ export function MapSection({
   onMapReady,
   hasUrlParams = false,
   selectedStoreId,
+  userLat,
+  userLng,
 }: MapSectionProps) {
   const { mapRef, map } = useKakaoMapHooks(initialLat, initialLng);
   const { stores } = useFetchStoresHooks(map, filterState);
@@ -44,7 +48,15 @@ export function MapSection({
     selectedStoreId,
   );
 
-  useCurrentLocationMarker(map, hasUrlParams, onMapClick, onMapReady, isMapReadyRef);
+  useCurrentLocationMarker(
+    map,
+    hasUrlParams,
+    onMapClick,
+    onMapReady,
+    isMapReadyRef,
+    userLat,
+    userLng,
+  );
 
   return <div ref={mapRef} className="w-full h-full" />;
 }

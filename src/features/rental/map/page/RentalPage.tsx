@@ -12,7 +12,6 @@ import {
 } from '@/features/rental/map/hooks/useStoreListHooks';
 import { useUrlParams } from '@/features/rental/map/hooks/useUrlParamsrHooks';
 import { useUserLocation } from '@/features/rental/map/hooks/useUserLocationrHooks';
-import { createCurrentLocationMarker } from '@/features/rental/map/lib/currentLocationMarker';
 import { filterDevices } from '@/features/rental/map/model/filtereDevices';
 import { CurrentLocationButton } from '@/features/rental/map/ui/CurrentLocationButton';
 import DeviceCard from '@/features/rental/map/ui/DeviceCard';
@@ -95,7 +94,7 @@ export default function RentalPage() {
           if (mapInstance) {
             const newPosition = new window.kakao.maps.LatLng(newLocation.lat, newLocation.lng);
             mapInstance.setCenter(newPosition);
-            createCurrentLocationMarker(mapInstance);
+            // 마커는 useCurrentLocationMarker 훅에서 관리하므로 여기서는 생성하지 않음
           }
         },
         (error) => {
@@ -113,7 +112,7 @@ export default function RentalPage() {
               fallbackLocation.lng,
             );
             mapInstance.setCenter(newPosition);
-            createCurrentLocationMarker(mapInstance);
+            // 마커는 useCurrentLocationMarker 훅에서 관리하므로 여기서는 생성하지 않음
           }
         },
         {
@@ -289,6 +288,8 @@ export default function RentalPage() {
           onMapReady={handleMapReady}
           hasUrlParams={!!(selectedLat && selectedLng && !hasProcessedUrlParams)}
           selectedStoreId={selectedStoreId}
+          userLat={userLocation.lat ?? undefined}
+          userLng={userLocation.lng ?? undefined}
         />
       </div>
       <DrawerSection
