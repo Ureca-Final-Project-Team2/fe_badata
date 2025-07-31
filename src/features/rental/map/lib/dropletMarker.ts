@@ -10,6 +10,7 @@ export const createDropletMarker = (
   isSelected: boolean = false,
   onClick?: () => void,
   deviceCount: number = 0,
+  isCluster: boolean = false,
 ): kakao.maps.CustomOverlay => {
   // 마커 컨테이너 생성
   const markerContainer = document.createElement('div');
@@ -68,8 +69,16 @@ export const createDropletMarker = (
     font-size: ${sizeStyles[size].fontSize};
   `;
 
-  // 항상 디바이스 개수 표시
-  numberElement.textContent = deviceCount.toString();
+  // 클러스터 여부에 따라 표시할 텍스트 결정
+  const displayText = isCluster ? deviceCount.toString() : deviceCount.toString();
+  numberElement.textContent = displayText;
+
+  console.log('🔍 마커 텍스트 설정:', {
+    storeId,
+    isCluster,
+    deviceCount,
+    displayText,
+  });
 
   markerContainer.appendChild(numberElement);
 
@@ -108,6 +117,7 @@ export const updateDropletMarker = (
   isLiked: boolean,
   isSelected: boolean,
   deviceCount?: number,
+  isCluster?: boolean,
 ): void => {
   const markerContainer = overlay.getContent() as HTMLElement;
   if (!markerContainer) return;
@@ -133,7 +143,8 @@ export const updateDropletMarker = (
   // 숫자 업데이트
   const numberElement = markerContainer.querySelector('span');
   if (numberElement) {
-    numberElement.textContent = deviceCount?.toString() || '0';
+    const displayText = isCluster ? deviceCount?.toString() || '0' : deviceCount?.toString() || '0';
+    numberElement.textContent = displayText;
     numberElement.style.fontSize = sizeStyles[size].fontSize;
   }
 };

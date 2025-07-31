@@ -123,6 +123,7 @@ export class MarkerCache {
             isLiked || markerData.isLiked,
             false,
             newDeviceCount,
+            isCluster || markerData.isCluster,
           );
         } else {
           // 기존 마커인 경우 이미지 업데이트
@@ -149,6 +150,7 @@ export class MarkerCache {
         markerData.isLiked,
         isSelected,
         markerData.deviceCount,
+        markerData.isCluster,
       );
     }
   }

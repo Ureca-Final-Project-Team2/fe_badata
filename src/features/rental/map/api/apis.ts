@@ -18,9 +18,14 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
   try {
     const endpoint = END_POINTS.STORES.ALLDEVICE();
 
+    console.log('🔍 fetchStores 호출 - 파라미터:', params);
+
     const response = await axiosInstance.get(endpoint, {
       params,
     });
+
+    console.log('🔍 fetchStores 응답:', response);
+
     // API 응답 구조 확인 및 처리
     let stores: Record<string, unknown>[] = [];
 
@@ -34,25 +39,31 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
       }
     }
 
+    console.log('🔍 처리된 stores 배열:', stores);
+
     // API 응답을 Store 타입에 맞게 매핑
     const mappedStores = stores.map((store: Record<string, unknown>) => {
       const isCluster = !store.name; // name이 null이면 클러스터
       const mappedStore = {
-        id: store.id as number,
+        id: Number(store.id) || 0, // 명시적으로 숫자로 변환
         name: (store.name as string) || `클러스터 ${store.id}`, // name이 null인 경우 클러스터 ID로 대체
-        latitude: store.latitude as number,
-        longititude: store.longititude as number,
-        leftDeviceCount: store.leftDeviceCount as number,
-        liked: (store.liked as boolean) || false,
+        latitude: Number(store.latitude) || 0,
+        longititude: Number(store.longititude) || 0,
+        leftDeviceCount: Number(store.leftDeviceCount) || 0,
+        liked: Boolean(store.liked) || false,
         isCluster,
       };
+
+      console.log('🔍 매핑된 store:', mappedStore);
 
       return mappedStore;
     });
 
+    console.log('🔍 최종 반환 stores:', mappedStores);
+
     return mappedStores;
   } catch (error) {
-    console.error(' fetchStores API 호출 실패:', error);
+    console.error('❌ fetchStores API 호출 실패:', error);
     return [];
   }
 };
@@ -65,8 +76,14 @@ export const fetchStoreDevices = async (
   params: FetchStoreDevicesParams,
 ): Promise<StoreDevice[]> => {
   try {
-    const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
-      params,
+    // storeId는 클러스터링 ID이므로 실제 API에서는 사용하지 않음
+    // 대신 /api/v1/stores/map 엔드포인트를 사용
+    console.log('fetchStoreDevices', params);
+    const response = await axiosInstance.get(END_POINTS.STORES.ALLDEVICE(), {
+      params: {
+        ...params,
+        // storeId는 클러스터링 ID이므로 제외하고 다른 파라미터들만 전달
+      },
     });
     return Array.isArray(response) ? response : [];
   } catch (error) {

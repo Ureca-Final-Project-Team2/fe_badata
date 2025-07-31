@@ -43,6 +43,85 @@ export const useKakaoMapHooks = (initialLat?: number, initialLng?: number) => {
                   level: 4,
                 });
 
+                // zoom level 변경 이벤트 리스너 추가
+                console.log('🎯 Zoom 이벤트 리스너 등록 시작');
+                window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
+                  console.log('🔍 Zoom Level 변경 감지됨!');
+                  const zoomLevel = map.getLevel();
+                  const center = map.getCenter();
+                  const bounds = map.getBounds();
+
+                  console.log('🔍 Zoom Level 변경 감지:', {
+                    zoomLevel,
+                    center: {
+                      lat: center.getLat(),
+                      lng: center.getLng(),
+                    },
+                    bounds: {
+                      swLat: bounds.getSouthWest().getLat(),
+                      swLng: bounds.getSouthWest().getLng(),
+                      neLat: bounds.getNorthEast().getLat(),
+                      neLng: bounds.getNorthEast().getLng(),
+                    },
+                    mapInfo: {
+                      centerLat: center.getLat(),
+                      centerLng: center.getLng(),
+                      zoomLevel: zoomLevel,
+                    },
+                  });
+                });
+
+                // bounds 변경 이벤트도 추가
+                window.kakao.maps.event.addListener(map, 'bounds_changed', () => {
+                  console.log('🗺️ Bounds 변경 감지됨!');
+                  const zoomLevel = map.getLevel();
+                  const center = map.getCenter();
+                  const bounds = map.getBounds();
+
+                  console.log('🗺️ Bounds 변경 감지:', {
+                    zoomLevel,
+                    center: {
+                      lat: center.getLat(),
+                      lng: center.getLng(),
+                    },
+                    bounds: {
+                      swLat: bounds.getSouthWest().getLat(),
+                      swLng: bounds.getSouthWest().getLng(),
+                      neLat: bounds.getNorthEast().getLat(),
+                      neLng: bounds.getNorthEast().getLng(),
+                    },
+                  });
+                });
+
+                // 드래그 종료 이벤트도 추가
+                window.kakao.maps.event.addListener(map, 'dragend', () => {
+                  console.log('🖱️ 드래그 종료 감지됨!');
+                  const zoomLevel = map.getLevel();
+                  const center = map.getCenter();
+                  const bounds = map.getBounds();
+
+                  console.log('🖱️ 드래그 종료 감지:', {
+                    zoomLevel,
+                    center: {
+                      lat: center.getLat(),
+                      lng: center.getLng(),
+                    },
+                    bounds: {
+                      swLat: bounds.getSouthWest().getLat(),
+                      swLng: bounds.getSouthWest().getLng(),
+                      neLat: bounds.getNorthEast().getLat(),
+                      neLng: bounds.getNorthEast().getLng(),
+                    },
+                  });
+                });
+
+                console.log('✅ Zoom 이벤트 리스너 등록 완료');
+
+                // 지도 로드 완료 이벤트도 추가
+                window.kakao.maps.event.addListener(map, 'tilesloaded', () => {
+                  console.log('🗺️ 지도 타일 로드 완료!');
+                });
+
                 setMap(map);
                 setIsMapReady(true);
                 console.log('✅ 맵 초기화 완료 (사용자 위치 기준)');
@@ -59,6 +138,85 @@ export const useKakaoMapHooks = (initialLat?: number, initialLng?: number) => {
                 const map = new window.kakao.maps.Map(mapRef.current!, {
                   center: initialCenter,
                   level: 4,
+                });
+
+                // zoom level 변경 이벤트 리스너 추가
+                console.log('🎯 Zoom 이벤트 리스너 등록 시작');
+                window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
+                  console.log('🔍 Zoom Level 변경 감지됨!');
+                  const zoomLevel = map.getLevel();
+                  const center = map.getCenter();
+                  const bounds = map.getBounds();
+
+                  console.log('🔍 Zoom Level 변경 감지:', {
+                    zoomLevel,
+                    center: {
+                      lat: center.getLat(),
+                      lng: center.getLng(),
+                    },
+                    bounds: {
+                      swLat: bounds.getSouthWest().getLat(),
+                      swLng: bounds.getSouthWest().getLng(),
+                      neLat: bounds.getNorthEast().getLat(),
+                      neLng: bounds.getNorthEast().getLng(),
+                    },
+                    mapInfo: {
+                      centerLat: center.getLat(),
+                      centerLng: center.getLng(),
+                      zoomLevel: zoomLevel,
+                    },
+                  });
+                });
+
+                // bounds 변경 이벤트도 추가
+                window.kakao.maps.event.addListener(map, 'bounds_changed', () => {
+                  console.log('🗺️ Bounds 변경 감지됨!');
+                  const zoomLevel = map.getLevel();
+                  const center = map.getCenter();
+                  const bounds = map.getBounds();
+
+                  console.log('🗺️ Bounds 변경 감지:', {
+                    zoomLevel,
+                    center: {
+                      lat: center.getLat(),
+                      lng: center.getLng(),
+                    },
+                    bounds: {
+                      swLat: bounds.getSouthWest().getLat(),
+                      swLng: bounds.getSouthWest().getLng(),
+                      neLat: bounds.getNorthEast().getLat(),
+                      neLng: bounds.getNorthEast().getLng(),
+                    },
+                  });
+                });
+
+                // 드래그 종료 이벤트도 추가
+                window.kakao.maps.event.addListener(map, 'dragend', () => {
+                  console.log('🖱️ 드래그 종료 감지됨!');
+                  const zoomLevel = map.getLevel();
+                  const center = map.getCenter();
+                  const bounds = map.getBounds();
+
+                  console.log('🖱️ 드래그 종료 감지:', {
+                    zoomLevel,
+                    center: {
+                      lat: center.getLat(),
+                      lng: center.getLng(),
+                    },
+                    bounds: {
+                      swLat: bounds.getSouthWest().getLat(),
+                      swLng: bounds.getSouthWest().getLng(),
+                      neLat: bounds.getNorthEast().getLat(),
+                      neLng: bounds.getNorthEast().getLng(),
+                    },
+                  });
+                });
+
+                console.log('✅ Zoom 이벤트 리스너 등록 완료');
+
+                // 지도 로드 완료 이벤트도 추가
+                window.kakao.maps.event.addListener(map, 'tilesloaded', () => {
+                  console.log('🗺️ 지도 타일 로드 완료!');
                 });
 
                 setMap(map);
@@ -80,6 +238,85 @@ export const useKakaoMapHooks = (initialLat?: number, initialLng?: number) => {
             const map = new window.kakao.maps.Map(mapRef.current!, {
               center: initialCenter,
               level: 4,
+            });
+
+            // zoom level 변경 이벤트 리스너 추가
+            console.log('🎯 Zoom 이벤트 리스너 등록 시작');
+            window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
+              console.log('🔍 Zoom Level 변경 감지됨!');
+              const zoomLevel = map.getLevel();
+              const center = map.getCenter();
+              const bounds = map.getBounds();
+
+              console.log('🔍 Zoom Level 변경 감지:', {
+                zoomLevel,
+                center: {
+                  lat: center.getLat(),
+                  lng: center.getLng(),
+                },
+                bounds: {
+                  swLat: bounds.getSouthWest().getLat(),
+                  swLng: bounds.getSouthWest().getLng(),
+                  neLat: bounds.getNorthEast().getLat(),
+                  neLng: bounds.getNorthEast().getLng(),
+                },
+                mapInfo: {
+                  centerLat: center.getLat(),
+                  centerLng: center.getLng(),
+                  zoomLevel: zoomLevel,
+                },
+              });
+            });
+
+            // bounds 변경 이벤트도 추가
+            window.kakao.maps.event.addListener(map, 'bounds_changed', () => {
+              console.log('🗺️ Bounds 변경 감지됨!');
+              const zoomLevel = map.getLevel();
+              const center = map.getCenter();
+              const bounds = map.getBounds();
+
+              console.log('🗺️ Bounds 변경 감지:', {
+                zoomLevel,
+                center: {
+                  lat: center.getLat(),
+                  lng: center.getLng(),
+                },
+                bounds: {
+                  swLat: bounds.getSouthWest().getLat(),
+                  swLng: bounds.getSouthWest().getLng(),
+                  neLat: bounds.getNorthEast().getLat(),
+                  neLng: bounds.getNorthEast().getLng(),
+                },
+              });
+            });
+
+            // 드래그 종료 이벤트도 추가
+            window.kakao.maps.event.addListener(map, 'dragend', () => {
+              console.log('🖱️ 드래그 종료 감지됨!');
+              const zoomLevel = map.getLevel();
+              const center = map.getCenter();
+              const bounds = map.getBounds();
+
+              console.log('🖱️ 드래그 종료 감지:', {
+                zoomLevel,
+                center: {
+                  lat: center.getLat(),
+                  lng: center.getLng(),
+                },
+                bounds: {
+                  swLat: bounds.getSouthWest().getLat(),
+                  swLng: bounds.getSouthWest().getLng(),
+                  neLat: bounds.getNorthEast().getLat(),
+                  neLng: bounds.getNorthEast().getLng(),
+                },
+              });
+            });
+
+            console.log('✅ Zoom 이벤트 리스너 등록 완료');
+
+            // 지도 로드 완료 이벤트도 추가
+            window.kakao.maps.event.addListener(map, 'tilesloaded', () => {
+              console.log('🗺️ 지도 타일 로드 완료!');
             });
 
             setMap(map);

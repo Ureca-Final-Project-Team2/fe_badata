@@ -23,13 +23,23 @@ export const createStoreMarker = async (
     const position = new window.kakao.maps.LatLng(store.latitude, store.longititude);
 
     // 줌 레벨 확인 (클러스터 마커인지 확인)
-    const isCluster = false; // 모든 마커를 일반 가맹점 마커로 처리
+    const zoomLevel = map.getLevel();
+    const isCluster = zoomLevel >= 4 || store.isCluster;
+
+    console.log('🔍 마커 생성:', {
+      storeId: store.id,
+      storeName: store.name,
+      zoomLevel,
+      isCluster,
+      leftDeviceCount: store.leftDeviceCount,
+    });
 
     let safeDevices: StoreDevice[] = [];
     let totalLeftCount = 0;
 
     // 줌 레벨 4 이상(클러스터)이거나 클러스터 마커인 경우 디바이스 정보 조회 생략
     if (!isCluster) {
+      console.log('🔍 개별 가맹점 - 디바이스 정보 조회 시작');
       // 디바이스 데이터 조회 (필터 파라미터 전달)
       const deviceParams = {
         ...filterParams,
@@ -42,9 +52,14 @@ export const createStoreMarker = async (
 
       // leftCount 총합 계산
       totalLeftCount = safeDevices.reduce((sum, device) => sum + (device.leftCount ?? 0), 0);
+      console.log('🔍 개별 가맹점 - 디바이스 정보 조회 완료:', {
+        deviceCount: safeDevices.length,
+        totalLeftCount,
+      });
     } else {
       // 클러스터 마커인 경우 store의 leftDeviceCount 사용
       totalLeftCount = store.leftDeviceCount;
+      console.log('🔍 클러스터 - leftDeviceCount 사용:', totalLeftCount);
     }
 
     // 로그인 상태 확인 (전역 상태에서 가져오기)
@@ -95,6 +110,7 @@ export const createStoreMarker = async (
       isCurrentlySelected, // 현재 선택 상태에 따라 크기 결정
       handleMarkerClick,
       totalLeftCount, // 디바이스 개수 전달
+      isCluster, // 클러스터 여부 전달
     );
 
     // 인포윈도우 생성

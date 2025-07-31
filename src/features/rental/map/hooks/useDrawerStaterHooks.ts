@@ -6,7 +6,12 @@ export const useDrawerState = () => {
   const [isSortDrawerOpen, setIsSortDrawerOpen] = useState(false);
   const [currentSort, setCurrentSort] = useState('distance,asc');
 
-  const handleListView = useCallback(() => {
+  const handleListView = useCallback((storeList?: unknown[], isLoading?: boolean) => {
+    // 데이터가 로딩 중이거나 빈 배열이면 Drawer를 열지 않음
+    if (isLoading || !storeList || storeList.length === 0) {
+      return;
+    }
+
     setIsDrawerOpen((prev) => !prev);
   }, []);
 

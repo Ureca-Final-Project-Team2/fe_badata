@@ -93,6 +93,20 @@ export const DragBottomSheet = ({
   useEffect(() => {
     if (windowHeight === 0) return;
 
+    // 데이터가 로딩 중이거나 빈 배열이면 Drawer를 열지 않음
+    if (isLoading || !storeList || storeList.length === 0) {
+      const targetY = collapsedY;
+      controls.start({
+        y: targetY,
+        transition: {
+          type: 'spring',
+          stiffness: 300,
+          damping: 30,
+        },
+      });
+      return;
+    }
+
     const targetY = open ? expandedY : collapsedY; // 목록보기 버튼 클릭 시 header까지 올라가도록
 
     // 애니메이션으로 부드럽게 이동
@@ -104,7 +118,7 @@ export const DragBottomSheet = ({
         damping: 30,
       },
     });
-  }, [open, controls, windowHeight, expandedY, collapsedY]);
+  }, [open, controls, windowHeight, expandedY, collapsedY, isLoading, storeList]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
     if (info.point.y < middleY) {
@@ -125,6 +139,11 @@ export const DragBottomSheet = ({
         style={{ height: 0 }}
       />
     );
+  }
+
+  // 데이터가 로딩 중이거나 빈 배열이면 Drawer를 렌더링하지 않음
+  if (isLoading || !storeList || storeList.length === 0) {
+    return null;
   }
 
   const handleSortClick = () => {
@@ -194,9 +213,6 @@ export const DragBottomSheet = ({
           </div>
         ) : storeList && storeList.length > 0 ? (
           <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
-            {(() => {
-              return null;
-            })()}
             {storeList.map((store, idx) => {
               const itemKey = `${store.id || `item-${idx}`}`;
               const isNewItem = animatedItems.has(itemKey);
