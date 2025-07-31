@@ -15,13 +15,13 @@ export function getPartnerDefaultImage(partner: KoreanBrandName): string {
     case '이모티콘 플러스':
       return '/assets/gifticon/ott-music/bg/emoticonplus.png';
     case '넷플릭스':
-      return '/assets/gifticon/ott-music/Netflix_Logo.png';
+      return '/assets/gifticon/ott-music/NETFLIX_Logo.png';
     case '지니뮤직':
       return '/assets/gifticon/ott-music/bg/genie.png';
     case '디즈니+':
-      return '/assets/gifticon/ott-music/bg/DisneyPlus.png';
+      return '/assets/gifticon/ott-music/bg/Disneyplus.png';
     case '배달의 민족':
-      return '/assets/gifticon/ott-music/Baemin_Logo.png';
+      return '/assets/gifticon/ott-music/Baemin_Logo.svg';
     case '티빙':
       return '/assets/gifticon/ott-music/bg/TVING2.png';
     case 'V컬러링':

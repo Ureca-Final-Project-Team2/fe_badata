@@ -4,6 +4,7 @@ import Image from 'next/image';
 
 import { BRAND_MAPPING } from '@/shared/config/brandMapping';
 import { ICONS } from '@/shared/config/iconPath';
+import { isDataBrandName, isKoreanBrandName } from '@/shared/lib/typeGuards';
 
 interface TradeDetailProductSectionProps {
   postType: 'GIFTICON' | 'DATA';
@@ -26,15 +27,13 @@ export const TradeDetailProductSection = ({
   description,
   capacity,
 }: TradeDetailProductSectionProps) => {
-  // 데이터(통신사) 브랜드
-  const isDataBrand = brand === 'KT' || brand === 'UPLUS' || brand === 'SKT';
-
   // 브랜드 이미지 경로
-  const brandImageSrc = isDataBrand
-    ? ICONS.TRADE.BRAND_LOGO[brand as 'KT' | 'UPLUS' | 'SKT']
-    : brand && BRAND_MAPPING[brand as keyof typeof BRAND_MAPPING]
-      ? ICONS.GIFTICON.BRAND_LOGO[BRAND_MAPPING[brand as keyof typeof BRAND_MAPPING]]
-      : null;
+  const brandImageSrc =
+    brand && isDataBrandName(brand)
+      ? ICONS.TRADE.BRAND_LOGO[brand]
+      : brand && isKoreanBrandName(brand)
+        ? ICONS.GIFTICON.BRAND_LOGO[BRAND_MAPPING[brand]]
+        : null;
 
   return (
     <>
