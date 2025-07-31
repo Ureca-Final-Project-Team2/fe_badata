@@ -4,12 +4,11 @@ import { useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserStats } from '@/entities/follow';
 import {
   usePurchasesQuery,
   useUserInfoQuery,
-  useUserSoldPostsCountQuery,
+  useUserPostCountQuery
 } from '@/entities/user/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
@@ -20,30 +19,25 @@ import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
 export default function PurchaseHistoryPage() {
   const router = useRouter();
-  const profile = useAuthStore((s) => s.user);
+  const { data: userInfo } = useUserInfoQuery();
   const {
     followerCount,
     followingCount,
     isLoading: isLoadingStats,
     invalidateStats,
   } = useUserStats();
-
-  const { data: soldPostsCount } = useUserSoldPostsCountQuery(profile?.userId);
-  const { data: userInfo } = useUserInfoQuery();
+  const { data: purchaseCount = 0 } = useUserPostCountQuery('PURCHASE');
+  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  usePurchasesQuery();
 
   useEffect(() => {
     const handleFocus = () => {
       invalidateStats();
     };
-
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, [invalidateStats]);
 
-  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    usePurchasesQuery();
-
-  // 모든 아이템을 하나의 배열로 합치기
   const allItems =
     data?.pages?.flatMap((page) => {
       if (!page || !page.content) {
@@ -62,18 +56,20 @@ export default function PurchaseHistoryPage() {
       header={<PageHeader title="구매 내역" onBack={() => router.back()} />}
       showBottomNav
     >
-      <div className="w-full max-w-[428px]">
-        <div className="flex flex-col items-center mt-4">
+      <div className="flex flex-col items-center mt-4">
+        {userInfo ? (
           <MyProfileCard
-            name={userInfo?.nickName ?? '사용자'}
-            days={userInfo?.days ?? 0}
-            avatarSrc={userInfo?.profileImage ?? ICONS.ETC.SHELL.src.toString()}
+            name={userInfo.nickName}
+            days={userInfo.days}
+            avatarSrc={userInfo.profileImage ?? ICONS.ETC.SHELL.src.toString()}
           />
-
+        ) : (
+          <div className="w-full h-[72px] bg-[var(--gray-light)] rounded-lg animate-pulse" />
+        )}
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-6 mb-6">
             <div className="flex flex-col items-center flex-1">
-              <span className="font-label-semibold text-[var(--black)]">거래 내역</span>
-              <span className="font-body-semibold text-[var(--black)] mt-1">{soldPostsCount}</span>
+              <span className="font-label-semibold text-[var(--black)]">구매 내역</span>
+              <span className="font-body-semibold text-[var(--black)] mt-1">{purchaseCount}</span>
             </div>
             <div
               className="flex flex-col items-center flex-1 cursor-pointer group"
@@ -148,7 +144,6 @@ export default function PurchaseHistoryPage() {
             </>
           )}
         </div>
-      </div>
     </BaseLayout>
   );
 }
