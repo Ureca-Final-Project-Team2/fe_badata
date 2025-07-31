@@ -60,6 +60,7 @@ export const END_POINTS = {
     COIN: '/api/v1/users/coin',
     COIN_HISTORY: '/api/v1/users/coin/history',
     DATA_USAGE: '/api/v1/users/data',
+    POST_COUNT: '/api/v1/users/post/count',
     FOLLOWINGS: '/api/v1/users/follows',
     FOLLOWERS: '/api/v1/users/follows',
     DELETE_FOLLOW: (followId: number) => `/api/v1/users/follows/${followId}`,
