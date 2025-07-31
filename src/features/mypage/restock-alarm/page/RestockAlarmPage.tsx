@@ -152,11 +152,16 @@ export default function RestockAlarmPage() {
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col justify-between h-[72px]">
                     <div className="flex items-start w-full">
-                      <div className="font-body-xs-semibold text-[var(--black)] leading-tight break-words whitespace-pre-line overflow-hidden max-h-[52px] flex-1 line-clamp-2">
-                        {item.deviceName} {item.is5G ? '(5G)' : ''}
+                      <div className="flex-1">
+                        <div className="font-label-semibold text-[var(--black)] leading-tight line-clamp-1">
+                          {item.deviceName} {item.is5G ? '(5G)' : ''}
+                        </div>
+                        <div className="mt-[2px] font-label-regular text-[var(--gray-mid)] leading-tight line-clamp-1">
+                          {item.storeName}
+                        </div>
                       </div>
                       <button
-                        className={`cursor-pointer text-[20px] px-2 py-0 ml-2 flex-shrink-0 relative -top-2 transition-all duration-200 ${
+                        className={`cursor-pointer text-[20px] px-2 py-0 ml-2 flex-shrink-0 relative -top-1 transition-all duration-200 ${
                           isDeleting
                             ? 'text-[var(--gray-light)] cursor-not-allowed'
                             : 'text-[var(--gray-mid)] hover:text-[var(--red-main)] hover:scale-110'
@@ -172,14 +177,11 @@ export default function RestockAlarmPage() {
                         {isDeleting ? '⋯' : '×'}
                       </button>
                     </div>
-                    <div className="mt-1 text-[12px] font-body-xs-semibold text-[var(--gray-mid)]">
-                      {item.storeName}
-                    </div>
-                    <div className="mt-[2px] flex items-center justify-between w-full">
-                      <span className="font-body-xs-semibold text-[var(--main-5)]">
+                    <div className="mt-[4px] flex items-center justify-between w-full">
+                      <span className="font-label-semibold text-[var(--main-5)]">
                         {item.price.toLocaleString()}원
                       </span>
-                      <span className="text-[12px] font-body-xs text-[var(--gray-mid)]">
+                      <span className="font-small-regular text-[var(--gray-mid)]">
                         남은 공유기 {item.desiredCount}개
                       </span>
                     </div>
