@@ -31,6 +31,9 @@ export default function SalesHistoryPage() {
   const profile = useAuthStore((s) => s.user);
   const { data: salesCount = 0 } = useUserPostCountQuery('SALE', !!profile);
   console.log('🧾 판매 개수:', salesCount);
+  useEffect(() => {
+    console.log('✅ useEffect 내부 salesCount 갱신:', salesCount);
+  }, [salesCount]);
 
   const [tab, setTab] = useState<'전체' | '데이터' | '쿠폰'>('전체');
   const [isCompleted, setIsCompleted] = useState(false);

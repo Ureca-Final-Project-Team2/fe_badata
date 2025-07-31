@@ -5,6 +5,7 @@ import type {
   CoinResponse,
   FollowingsContent,
   FollowToggleResponse,
+  PostCountResponse,
   PurchaseResponse,
   SalesContent,
   UserInfoResponse
@@ -89,11 +90,11 @@ export const userApis = {
     return response.data;
   },
   getUserPostCount: async (tradeType: 'SALE' | 'PURCHASE'): Promise<number> => {
-  const response = await axiosInstance.get<ApiResponse<{ postCount: number }>>(
-    END_POINTS.MYPAGE.POST_COUNT,
-    { params: { tradeType } },
-  );
-  console.log('🛰️ getUserPostCount 응답:', response); // response.content를 기대
-  return response.content.postCount ?? 0;
+    const response = await axiosInstance.get<PostCountResponse>(
+      END_POINTS.MYPAGE.POST_COUNT,
+      { params: { tradeType } },
+    );
+    console.log('🛰️ getUserPostCount 응답:', response); // 👉 이미 { postCount: 9 }
+    return response.postCount ?? 0;
   },
 };

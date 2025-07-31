@@ -4,11 +4,12 @@ import { useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { userInfo } from 'os';
+
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserStats } from '@/entities/follow';
 import {
   usePurchasesQuery,
-  useUserInfoQuery,
   useUserPostCountQuery
 } from '@/entities/user/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
@@ -27,10 +28,10 @@ export default function PurchaseHistoryPage() {
     isLoading: isLoadingStats,
     invalidateStats,
   } = useUserStats();
-
-  const { data: userInfo } = useUserInfoQuery();
+  
   const { data: purchaseCount = 0 } = useUserPostCountQuery('PURCHASE');
-  console.log('📦 구매 개수:', purchaseCount, '로딩:', isLoading, '에러:', isError);
+  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  usePurchasesQuery();
 
   useEffect(() => {
     const handleFocus = () => {
@@ -40,9 +41,6 @@ export default function PurchaseHistoryPage() {
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, [invalidateStats]);
-
-  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    usePurchasesQuery();
 
   // 모든 아이템을 하나의 배열로 합치기
   const allItems =
