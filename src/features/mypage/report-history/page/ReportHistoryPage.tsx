@@ -8,13 +8,13 @@ import {
   useReportHistoryListQuery,
   useReportInfoQuery,
 } from '@/features/mypage/report-history/model/queries';
+import { isMobileCarrier } from '@/shared/lib/typeGuards';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { SectionDivider } from '@/shared/ui/SectionDivider';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
 import type { ReportHistoryItem, ReportInfo } from '@/features/mypage/report-history/lib/types';
-import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
 
 interface TimelineItemProps {
   label: string;
@@ -162,9 +162,9 @@ export default function ReportHistoryPage() {
           <h2 className="font-body-semibold mb-4">신고 게시물</h2>
           <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar pb-2">
             {items.map((item, idx) => {
-              const safeCarrier = ['SKT', 'KT', 'UPLUS'].includes(item.mobileCarrier)
-                ? (item.mobileCarrier as MobileCarrier)
-                : 'SKT';
+              const safeCarrier = isMobileCarrier(item.mobileCarrier)
+                ? item.mobileCarrier
+                : 'UPLUS';
 
               return (
                 <div

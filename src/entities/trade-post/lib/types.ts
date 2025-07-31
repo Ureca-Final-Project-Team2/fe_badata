@@ -34,7 +34,7 @@ export interface BasePost {
 
 export interface DataPost extends BasePost {
   postCategory: 'DATA';
-  mobileCarrier?: string;
+  mobileCarrier?: MobileCarrier;
   capacity?: number;
 }
 

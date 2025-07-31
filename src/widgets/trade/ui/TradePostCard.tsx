@@ -4,12 +4,15 @@ import Image from 'next/image';
 
 import { ICONS } from '@/shared/config/iconPath';
 import { formatPrice } from '@/shared/lib/formatPrice';
+import { getCarrierDefaultImage } from '@/shared/lib/getCarrierDefaultImage';
+import { getPartnerDefaultImage } from '@/shared/lib/getPartnerDefaultImage';
 import DdayBadge from '@/shared/ui/DdayBadge';
 import { PostLikeButton } from '@/shared/ui/LikeButton/PostLikeButton';
 import PostStatusBadge from '@/shared/ui/PostStatusBadge';
 import PriceText from '@/shared/ui/PriceText';
 
 import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
+import type { KoreanBrandName } from '@/shared/config/brandMapping';
 const DEFAULT_IMAGE = ICONS.LOGO.DETAIL;
 
 interface TradePostCardProps {
@@ -57,22 +60,20 @@ const TradePostCard = ({
   className = '',
   isLikeLoading = false,
 }: TradePostCardProps) => {
-  const getSafeImageUrl = (url?: string): string => {
-    if (!url || url.trim() === '' || url === 'null' || url === 'undefined' || url === 'no image') {
-      return DEFAULT_IMAGE;
+  const getSafeImageUrl = (): string => {
+    // 기프티콘 게시물인 경우 항상 파트너별 디폴트 이미지 사용
+    if (partner) {
+      console.log('imgUrl:', imageUrl); // 디버깅용 로그
+      return getPartnerDefaultImage(partner as KoreanBrandName);
     }
 
-    // URL 유효성 검사
-    if (
-      !url.startsWith('/') &&
-      !url.startsWith('http://') &&
-      !url.startsWith('https://') &&
-      !url.startsWith('./')
-    ) {
-      return DEFAULT_IMAGE;
+    // 데이터 게시물인 경우 통신사별 디폴트 이미지 사용
+    if (mobileCarrier) {
+      return getCarrierDefaultImage(mobileCarrier);
     }
 
-    return url;
+    // 기본 이미지
+    return DEFAULT_IMAGE;
   };
 
   const handleLikeClick = (e: React.MouseEvent) => {
@@ -101,13 +102,21 @@ const TradePostCard = ({
           <PostLikeButton active={isLiked} onClick={handleLikeClick} disabled={isLikeLoading} />
         </div>
         <Image
-          src={getSafeImageUrl(imageUrl)}
+          src={getSafeImageUrl()}
           alt={title}
           width={178}
           height={163}
           className="w-[178px] h-[163px] object-cover rounded-[15px] bg-[var(--gray-light)]"
           onError={(e) => {
-            e.currentTarget.src = DEFAULT_IMAGE;
+            // 기프티콘 게시물인 경우 파트너별 디폴트 이미지 사용
+            if (partner) {
+              e.currentTarget.src = getPartnerDefaultImage(partner as KoreanBrandName);
+            } else {
+              // 데이터 게시물인 경우 통신사별 디폴트 이미지 사용
+              e.currentTarget.src = mobileCarrier
+                ? getCarrierDefaultImage(mobileCarrier)
+                : DEFAULT_IMAGE;
+            }
           }}
         />
       </div>
