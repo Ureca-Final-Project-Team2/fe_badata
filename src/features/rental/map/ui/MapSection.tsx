@@ -3,6 +3,7 @@
 import { useCurrentLocationMarker } from '@/features/rental/map/hooks/useCurrentLocationMarkerHooks';
 import { useFetchStoresHooks } from '@/features/rental/map/hooks/useFetchStoresHooks';
 import { useKakaoMapHooks } from '@/features/rental/map/hooks/useKakaoMapHooks';
+import { useMapZoomLevel } from '@/features/rental/map/hooks/useMapZoomLevel';
 import { useMarkerRendering } from '@/features/rental/map/hooks/useMarkerRenderingrHooks';
 
 import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
@@ -39,6 +40,9 @@ export function MapSection({
 }: MapSectionProps) {
   const { mapRef, map } = useKakaoMapHooks(initialLat, initialLng);
   const { stores } = useFetchStoresHooks(map, filterState);
+
+  // ✅ 줌 레벨 변경 통합 관리 (근본적 해결)
+  useMapZoomLevel(map, filterState, onStoreMarkerClick);
 
   const { isMapReadyRef } = useMarkerRendering(
     map,
