@@ -43,7 +43,7 @@ export default function SalesHistoryPage() {
   } = useUserStats();
 
   const { data: soldPostsCount } = useUserSoldPostsCountQuery(profile?.userId);
-  const { data: userInfo } = useUserInfoQuery();
+  const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
 
   const postCategory = tab === '전체' ? undefined : tab === '데이터' ? 'DATA' : 'GIFTICON';
 
@@ -110,11 +110,20 @@ export default function SalesHistoryPage() {
     >
       <div className="w-full max-w-[428px]">
         <div className="flex flex-col items-center mt-4">
-          <MyProfileCard
-            name={userInfo?.nickName ?? '사용자'}
-            days={userInfo?.days ?? 0}
-            avatarSrc={userInfo?.profileImage ?? ICONS.ETC.SHELL.src.toString()}
-          />
+          {userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined ? (
+            <MyProfileCard
+              name={userInfo.nickName}
+              days={userInfo.days}
+              avatarSrc={userInfo.profileImage}
+            />
+          ) : (
+            <MyProfileCard
+              name="로딩 중..."
+              days={0}
+              avatarSrc={ICONS.ETC.SHELL.src.toString()}
+              isLoading={isUserInfoLoading}
+            />
+          )}
 
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
             <div className="flex flex-col items-center flex-1">
