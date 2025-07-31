@@ -1,4 +1,5 @@
 import type { AllPost } from '@/entities/trade-post/lib/types';
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
 
 export type PostType = 'DATA' | 'GIFTICON';
 
@@ -14,7 +15,7 @@ export interface TradeDetailPost {
   postCategory: PostType;
 
   // 데이터 거래용
-  mobileCarrier?: string;
+  mobileCarrier?: MobileCarrier;
   capacity?: number;
 
   // 기프티콘 거래용
