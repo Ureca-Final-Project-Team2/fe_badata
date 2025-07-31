@@ -147,3 +147,14 @@ export const useUserInfoQuery = () => {
     retry: 1,
   });
 };
+
+// 마이페이지 총 구매, 판매 내역 조회 
+export const useUserPostCountQuery = (tradeType: 'SALE' | 'PURCHASE', enabled: boolean = true) => {
+  return useQuery<number>({
+    queryKey: ['userPostCount', tradeType],
+    queryFn: () => userApis.getUserPostCount(tradeType),
+    enabled,
+    staleTime: 1000 * 60 * 5, // optional
+  });
+};
+

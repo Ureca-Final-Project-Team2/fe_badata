@@ -5,9 +5,10 @@ import type {
   CoinResponse,
   FollowingsContent,
   FollowToggleResponse,
+  PostCountResponse,
   PurchaseResponse,
   SalesContent,
-  UserInfoResponse,
+  UserInfoResponse
 } from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
@@ -87,5 +88,12 @@ export const userApis = {
   getCoin: async (): Promise<ApiResponse<CoinResponse>> => {
     const response = await axiosInstance.get(END_POINTS.MYPAGE.COIN);
     return response.data;
+  },
+  getUserPostCount: async (tradeType: 'SALE' | 'PURCHASE'): Promise<number> => {
+    const response: PostCountResponse = await axiosInstance.get(
+      END_POINTS.MYPAGE.POST_COUNT,
+      { params: { tradeType } }
+    );
+    return response.postCount ?? 0;
   },
 };

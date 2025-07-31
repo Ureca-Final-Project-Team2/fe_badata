@@ -9,7 +9,7 @@ import { useUserStats } from '@/entities/follow';
 import {
   useSalesQuery,
   useUserInfoQuery,
-  useUserSoldPostsCountQuery,
+  useUserPostCountQuery,
 } from '@/entities/user/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
@@ -29,6 +29,7 @@ const tabList = [
 export default function SalesHistoryPage() {
   const router = useRouter();
   const profile = useAuthStore((s) => s.user);
+  const { data: salesCount = 0 } = useUserPostCountQuery('SALE', !!profile);
   const [tab, setTab] = useState<'전체' | '데이터' | '쿠폰'>('전체');
   const [isCompleted, setIsCompleted] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
@@ -42,7 +43,6 @@ export default function SalesHistoryPage() {
     invalidateStats,
   } = useUserStats();
 
-  const { data: soldPostsCount } = useUserSoldPostsCountQuery(profile?.userId);
   const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
 
   const postCategory = tab === '전체' ? undefined : tab === '데이터' ? 'DATA' : 'GIFTICON';
@@ -50,7 +50,6 @@ export default function SalesHistoryPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
     useSalesQuery(undefined, postCategory, isCompleted, undefined, 30);
 
-  // Handle tab change with type safety
   const handleTabChange = (value: string) => {
     if (value === '전체' || value === '데이터' || value === '쿠폰') {
       setTab(value as '전체' | '데이터' | '쿠폰');
@@ -127,8 +126,8 @@ export default function SalesHistoryPage() {
 
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-4 mb-6">
             <div className="flex flex-col items-center flex-1">
-              <span className="font-label-semibold text-[var(--black)]">거래 내역</span>
-              <span className="font-body-semibold text-[var(--black)] mt-1">{soldPostsCount}</span>
+              <span className="font-label-semibold text-[var(--black)]">판매 내역</span>
+              <span className="font-body-semibold text-[var(--black)] mt-1">{salesCount}</span>
             </div>
             <div
               className="flex flex-col items-center flex-1 cursor-pointer group"
