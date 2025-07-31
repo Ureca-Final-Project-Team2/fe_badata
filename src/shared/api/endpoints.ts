@@ -52,6 +52,9 @@ export const END_POINTS = {
     POSITION: '/api/v1/addresses', // 주소 이력 생성, 조회
     DELETE_POSITION: (addressId: number) => `/api/v1/addresses/${addressId}`, // 주소 이력 삭제
   },
+  SOS: {
+    RESPOND: (sosId: number) => `/api/v1/sos/${sosId}/respond`,
+  },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
     COIN_HISTORY: '/api/v1/users/coin/history',
