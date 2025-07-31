@@ -62,9 +62,9 @@ export const createStoreMarker = async (
 
     // 마커 캐시 확인
     if (cache && cache.hasMarker(store.id)) {
-      // 기존 마커가 있으면 디바이스 개수와 liked 상태 업데이트
-      cache.updateMarker(store.id, totalLeftCount, isLiked, store.isCluster);
-      return { storeId: store.id, deviceCount: totalLeftCount };
+      // 기존 마커가 있으면 제거 (줌 레벨 변경 시 새로운 마커 생성)
+      cache.removeMarker(store.id);
+      console.log('🔍 기존 마커 제거됨 (줌 레벨 변경):', store.id);
     }
 
     // 물방울 마커 클릭 핸들러

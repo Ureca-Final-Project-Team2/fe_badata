@@ -95,6 +95,17 @@ export const debouncedRenderMarkers = debounce(
     console.log('🔍 마커 렌더링 시작 - 줌 레벨:', zoomLevel);
 
     const cache = await getMarkerCache(map);
+
+    // 줌 레벨이 변경되었을 때 모든 기존 마커 제거
+    const currentZoomLevel = map.getLevel();
+    const lastZoomLevel = (map as { lastZoomLevel?: number }).lastZoomLevel || currentZoomLevel;
+
+    if (currentZoomLevel !== lastZoomLevel) {
+      console.log('🔍 줌 레벨 변경 감지:', lastZoomLevel, '->', currentZoomLevel);
+      cache.clearAll();
+      (map as { lastZoomLevel?: number }).lastZoomLevel = currentZoomLevel;
+    }
+
     const { existingStoreIds, currentStoreIds } = getStoreIdSets(cache, stores);
     const { storesToRemove, storesToAdd, storesToUpdate } = categorizeStores(
       stores,
