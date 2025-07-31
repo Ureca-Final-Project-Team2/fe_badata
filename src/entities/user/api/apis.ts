@@ -90,11 +90,10 @@ export const userApis = {
     return response.data;
   },
   getUserPostCount: async (tradeType: 'SALE' | 'PURCHASE'): Promise<number> => {
-    const response = await axiosInstance.get<PostCountResponse>(
+    const response: PostCountResponse = await axiosInstance.get(
       END_POINTS.MYPAGE.POST_COUNT,
-      { params: { tradeType } },
+      { params: { tradeType } }
     );
-    console.log('🛰️ getUserPostCount 응답:', response); // 👉 이미 { postCount: 9 }
     return response.postCount ?? 0;
   },
 };

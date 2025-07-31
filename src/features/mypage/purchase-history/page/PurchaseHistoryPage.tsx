@@ -4,12 +4,10 @@ import { useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { userInfo } from 'os';
-
-import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserStats } from '@/entities/follow';
 import {
   usePurchasesQuery,
+  useUserInfoQuery,
   useUserPostCountQuery
 } from '@/entities/user/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
@@ -21,7 +19,7 @@ import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
 export default function PurchaseHistoryPage() {
   const router = useRouter();
-  const profile = useAuthStore((s) => s.user);
+  const { data: userInfo } = useUserInfoQuery();
   const {
     followerCount,
     followingCount,
@@ -62,17 +60,15 @@ export default function PurchaseHistoryPage() {
       showBottomNav
     >
       <div className="flex flex-col items-center mt-4">
-  {userInfo ? (
-    <MyProfileCard
-      name={userInfo.nickName}
-      days={userInfo.days}
-      avatarSrc={userInfo.profileImage ?? ICONS.ETC.SHELL.src.toString()}
-    />
-  ) : (
-    <div className="w-full h-[72px] bg-[var(--gray-light)] rounded-lg animate-pulse" />
-  )}
-
-
+        {userInfo ? (
+          <MyProfileCard
+            name={userInfo.nickName}
+            days={userInfo.days}
+            avatarSrc={userInfo.profileImage ?? ICONS.ETC.SHELL.src.toString()}
+          />
+        ) : (
+          <div className="w-full h-[72px] bg-[var(--gray-light)] rounded-lg animate-pulse" />
+        )}
           <div className="flex justify-between items-center w-full bg-[var(--main-1)] rounded-xl px-4 py-3 mt-6 mb-6">
             <div className="flex flex-col items-center flex-1">
               <span className="font-label-semibold text-[var(--black)]">구매 내역</span>
