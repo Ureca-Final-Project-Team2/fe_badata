@@ -20,7 +20,8 @@ export default function ReservationDetailsSection({
           <div className="w-12 h-12 bg-[var(--gray)] rounded-lg relative overflow-hidden">
             <Image
               src={reservationDetails.storeImageUrl}
-              fill
+              width={48}
+              height={48}
               className="object-cover"
               alt="가맹점이미지"
             />

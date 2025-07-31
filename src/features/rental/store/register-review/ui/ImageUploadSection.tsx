@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Upload } from 'lucide-react';
 
 interface ImageUploadSectionProps {
-  selectedImage: File | undefined;
+  selectedImage: File | string | undefined;
   onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -16,13 +16,18 @@ export default function ImageUploadSection({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (selectedImage) {
+    if (!selectedImage) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    if (typeof selectedImage === 'string') {
+      setPreviewUrl(selectedImage);
+    } else {
       const url = URL.createObjectURL(selectedImage);
       setPreviewUrl(url);
 
       return () => URL.revokeObjectURL(url);
-    } else {
-      setPreviewUrl(null);
     }
   }, [selectedImage]);
 

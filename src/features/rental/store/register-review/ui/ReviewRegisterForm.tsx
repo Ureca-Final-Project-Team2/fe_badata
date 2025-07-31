@@ -1,9 +1,11 @@
-import type React from 'react';
-import { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { usePostReviewMutation } from '@/features/rental/store/register-review/model/mutations';
+import {
+  usePostReviewMutation,
+  useUpdateReviewMutation,
+} from '@/features/rental/store/register-review/model/mutations';
 import {
   useQuickReplies,
   useReservationDetails,
@@ -21,18 +23,44 @@ import { PATH } from '@/shared/config/path';
 import { makeToast } from '@/shared/lib/makeToast';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
 
+import type { ReviewDetailResponse } from '@/features/rental/store/register-review/lib/types';
+
 interface ReviewRegisterFormProps {
   reservationId: number;
+  mode: 'register' | 'edit';
+  reviewDetail?: ReviewDetailResponse;
 }
-export default function ReviewRegisterForm({ reservationId }: ReviewRegisterFormProps) {
+
+export default function ReviewRegisterForm({
+  reservationId,
+  mode,
+  reviewDetail,
+}: ReviewRegisterFormProps) {
   const router = useRouter();
+  const resolvedReservationId =
+    mode === 'edit' && reviewDetail ? reviewDetail.reservationId : reservationId;
+
   const [state, dispatch] = useReducer(reviewFormReducer, initialState);
 
   const { data: quickRepliesData, isLoading: isQuickRepliesLoading } = useQuickReplies();
   const { data: reservationDetailsData, isLoading: isReservationDetailsLoading } =
-    useReservationDetails(reservationId);
+    useReservationDetails(resolvedReservationId);
 
   const postReviewMutation = usePostReviewMutation();
+  const updateReviewMutation = useUpdateReviewMutation();
+
+  useEffect(() => {
+    if (mode === 'edit' && reviewDetail) {
+      dispatch({ type: 'SET_RATING', payload: reviewDetail.rating });
+      reviewDetail.quickReplyIds.forEach((id) => {
+        dispatch({ type: 'TOGGLE_QUICK_REPLY', payload: id });
+      });
+      dispatch({ type: 'SET_COMMENT', payload: reviewDetail.comment });
+      if (reviewDetail.reviewImageUrl) {
+        dispatch({ type: 'SET_IMAGE', payload: reviewDetail.reviewImageUrl });
+      }
+    }
+  }, [mode, reviewDetail]);
 
   const handleRatingChange = (rating: number) => {
     dispatch({ type: 'SET_RATING', payload: rating });
@@ -74,25 +102,42 @@ export default function ReviewRegisterForm({ reservationId }: ReviewRegisterForm
       rating: state.rating,
       quickReplyIds: state.selectedQuickReplies,
       comment: state.comment.trim(),
-      file: state.image,
+      file: typeof state.image === 'string' ? undefined : state.image,
     };
 
-    postReviewMutation.mutate(
-      { reservationId, reviewData },
-      {
-        onSuccess: () => {
-          makeToast('리뷰가 등록되었습니다!', 'success');
-          handleReset();
-          router.push(
-            PATH.RENTAL.STORE_DETAIL.replace(':storeId', String(reservationDetailsData?.storeId)),
-          );
+    if (mode === 'register') {
+      postReviewMutation.mutate(
+        { reservationId, reviewData: { ...reviewData, reservationId } },
+        {
+          onSuccess: () => {
+            makeToast('리뷰가 등록되었습니다!', 'success');
+            handleReset();
+            router.push(
+              PATH.RENTAL.STORE_DETAIL.replace(':storeId', String(reservationDetailsData?.storeId)),
+            );
+          },
+          onError: (error) => {
+            console.error('리뷰 등록 실패: ', error);
+          },
         },
-        onError: (error) => {
-          console.error('리뷰 등록 실패: ', error);
-          makeToast('리뷰 등록에 실패했습니다.', 'warning');
+      );
+    } else if (mode === 'edit' && reviewDetail) {
+      updateReviewMutation.mutate(
+        { reviewId: reviewDetail.reviewId, reviewData },
+        {
+          onSuccess: () => {
+            makeToast('리뷰가 수정되었습니다!', 'success');
+            router.push(
+              PATH.RENTAL.STORE_DETAIL.replace(':storeId', String(reservationDetailsData?.storeId)),
+            );
+          },
+          onError: (error) => {
+            console.error('리뷰 수정 실패: ', error);
+            makeToast('리뷰 수정에 실패했습니다.', 'warning');
+          },
         },
-      },
-    );
+      );
+    }
   };
 
   if (isQuickRepliesLoading || isReservationDetailsLoading) {
@@ -102,6 +147,7 @@ export default function ReviewRegisterForm({ reservationId }: ReviewRegisterForm
   if (!quickRepliesData || !reservationDetailsData) {
     return <div>데이터를 불러오는데 실패했습니다.</div>;
   }
+
   return (
     <>
       <ReservationDetailsSection reservationDetails={reservationDetailsData} />
@@ -120,7 +166,7 @@ export default function ReviewRegisterForm({ reservationId }: ReviewRegisterForm
         variant="primary"
         size="lg"
       >
-        등록하기
+        {mode === 'edit' ? '수정하기' : '등록하기'}
       </RegisterButton>
     </>
   );
