@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { userApis } from '@/entities/user/api/apis';
+import { ErrorCode, ErrorMessageMap } from '@/shared/config/errorCodes';
+import { makeToast } from '@/shared/lib/makeToast';
 
 import type { FollowToggleResponse } from '@/entities/user/lib/types';
 import type { HTTPError } from '@/shared/lib/HTTPError';
@@ -17,9 +19,8 @@ export const useCreateFollowMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['user', 'followings'] });
       queryClient.invalidateQueries({ queryKey: ['user', 'all-followings'] });
     },
-    onError: (error: HTTPError) => {
-      // 에러를 다시 throw하여 컴포넌트에서 처리할 수 있도록 함
-      throw error;
+    onError: () => {
+      makeToast(ErrorMessageMap[ErrorCode.FOLLOW_SELF_ERROR], 'warning');
     },
   });
 };
