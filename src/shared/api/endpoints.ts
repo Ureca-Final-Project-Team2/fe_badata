@@ -53,7 +53,7 @@ export const END_POINTS = {
     DELETE_POSITION: (addressId: number) => `/api/v1/addresses/${addressId}`, // 주소 이력 삭제
   },
   SOS: {
-    RESPOND: (sosId: number) => `/api/v1/sos/${sosId}/respond`,
+    SOS: (sosId: number) => `/api/v1/sos/${sosId}/respond`,
   },
   MYPAGE: {
     COIN: '/api/v1/users/coin',
