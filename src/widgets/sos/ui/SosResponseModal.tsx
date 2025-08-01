@@ -2,7 +2,8 @@
 
 import { toast } from 'sonner';
 
-import { useRespondToSosRequest } from '@/widgets/sos/model/mutations';
+import { useRespondToSosRequest } from '..';
+
 
 interface SosResponseModalProps {
   isOpen: boolean;

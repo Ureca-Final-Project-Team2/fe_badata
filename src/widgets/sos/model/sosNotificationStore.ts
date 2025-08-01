@@ -2,12 +2,10 @@
 
 import { create } from 'zustand';
 
-import type { SosNotification } from '@/widgets/sos/lib/types';
-
 interface SosNotificationState {
-  currentSosRequest: SosNotification | null;
+  currentSosRequest: SosNotificationState | null;
   isResponseModalOpen: boolean;
-  setCurrentSosRequest: (notification: SosNotification | null) => void;
+  setCurrentSosRequest: (notification: SosNotificationState | null) => void;
   openResponseModal: () => void;
   closeResponseModal: () => void;
   clearSosRequest: () => void;
