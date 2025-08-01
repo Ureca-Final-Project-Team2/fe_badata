@@ -35,6 +35,7 @@ export const useFCM = () => {
 
   useEffect(() => {
     const initializeFCM = async () => {
+      // 서버 사이드에서 실행되지 않도록 확인
       if (typeof window === 'undefined') return;
 
       try {
