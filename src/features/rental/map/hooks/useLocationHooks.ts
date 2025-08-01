@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+const DEFAULT_ADDRESS = '서울 강남구 대치동 889-45';
+
 export interface Location {
   lat: number;
   lng: number;
@@ -17,7 +19,7 @@ interface UseLocationReturn {
 
 export function useLocation(): UseLocationReturn {
   const [userLocation, setUserLocation] = useState<Location | null>(null);
-  const [userAddress, setUserAddress] = useState<string>('현재위치');
+  const [userAddress, setUserAddress] = useState<string>(DEFAULT_ADDRESS);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +66,7 @@ export function useLocation(): UseLocationReturn {
         const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_REST_API_KEY;
         if (!KAKAO_REST_API_KEY) {
           if (isDev) console.warn('Kakao REST API 키가 설정되지 않았습니다.');
-          setUserAddress('현재위치');
+          setUserAddress(DEFAULT_ADDRESS);
           return;
         }
 
@@ -89,18 +91,18 @@ export function useLocation(): UseLocationReturn {
             const bunjiAddress = data.documents[0].address?.address_name;
 
             // 도로명 주소가 있으면 도로명 주소를, 없으면 지번 주소를 사용
-            const finalAddress = roadAddress || bunjiAddress || '현재위치';
+            const finalAddress = roadAddress || bunjiAddress || DEFAULT_ADDRESS;
             setUserAddress(finalAddress);
           } else {
             if (isDev) console.log('주소 정보가 없습니다.');
-            setUserAddress('현재위치');
+            setUserAddress(DEFAULT_ADDRESS);
           }
         } else if (response.status === 429) {
           if (isDev) console.warn('🚫 API 호출 제한 도달, 주소 변환 건너뜀');
-          setUserAddress('현재위치');
+          setUserAddress(DEFAULT_ADDRESS);
         } else {
           if (isDev) console.error('REST API 요청 실패:', response.status, response.statusText);
-          setUserAddress('현재위치');
+          setUserAddress(DEFAULT_ADDRESS);
         }
 
         // 성공한 호출 정보 저장
@@ -112,7 +114,7 @@ export function useLocation(): UseLocationReturn {
           return;
         }
         if (isDev) console.error('주소 변환 실패:', error);
-        setUserAddress('현재위치');
+        setUserAddress(DEFAULT_ADDRESS);
       }
     }, 3000); // 3초 디바운싱으로 증가
   }, []);
