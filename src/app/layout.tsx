@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 
 import Providers from '@/app/_providers';
-import { FCMLoader } from '@/components/FCMLoader';
 import { Toaster } from '@/shared/ui/Toaster';
 
 import './globals.css';
@@ -46,7 +45,6 @@ export default function RootLayout({
         />
         <Providers>
           <Toaster />
-          <FCMLoader />
           {children}
         </Providers>
       </body>
