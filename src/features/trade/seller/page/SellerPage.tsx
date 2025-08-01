@@ -102,7 +102,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
 
   return (
     <BaseLayout
-      header={<PageHeader title="판매자 프로필" onBack={() => router.back()} />}
+      header={<PageHeader title={`${sellerName}님의 페이지`} onBack={() => router.back()} />}
       showBottomNav
     >
       <div className="w-full max-w-[428px]">
@@ -160,9 +160,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
             !isError &&
             (!data?.pages ||
               data.pages.length === 0 ||
-              data.pages.every(
-                (page) => !page?.content?.item || page.content.item.length === 0,
-              )) && (
+              data.pages.every((page) => !page?.item || page.item.length === 0)) && (
               <div className="text-center py-8 text-[var(--gray-mid)]">
                 <p>판매글이 없습니다.</p>
               </div>
@@ -171,7 +169,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
           {/* 데이터 표시 */}
           {data?.pages?.map((page, i) => (
             <div key={i} className="grid grid-cols-2 gap-4">
-              {page?.content?.item?.map((item) => (
+              {page?.item?.map((item) => (
                 <TradePostCard
                   key={item.id}
                   imageUrl={item.postImage || '/assets/trade-detail.jpg'}

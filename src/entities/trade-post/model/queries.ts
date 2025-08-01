@@ -9,7 +9,6 @@ import type {
   SellerPostsContent,
   UserInfoResponse,
 } from '@/entities/trade-post/lib/types';
-import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 
 export const useTradePostsQuery = () => {
   const { data: posts, isLoading } = useQuery<DeadlinePost[]>({
@@ -93,14 +92,31 @@ export const useSellerPostsQuery = (
   cursor?: number,
   size: number = 30,
 ) => {
-  return useInfiniteQuery<ApiResponse<SellerPostsContent>>({
+  return useInfiniteQuery<SellerPostsContent>({
     queryKey: ['seller', 'posts', userId, isSold, size],
     queryFn: ({ pageParam }) =>
       tradePostApis.getSellerPosts(userId, isSold, pageParam as number | undefined, size),
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => {
-      if (!lastPage?.content?.hasNext) return undefined;
-      return lastPage.content.nextCursor;
+      if (!lastPage?.hasNext) return undefined;
+      return lastPage.nextCursor;
+    },
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+// 판매자의 거래완료 게시물 개수 조회 훅
+export const useSellerSoldPostsCountQuery = (userId: number) => {
+  return useQuery({
+    queryKey: ['seller', 'sold-count', userId],
+    queryFn: async () => {
+      // 충분히 큰 size로 설정하여 모든 판매 완료 게시물을 가져옴
+      console.log('판매완료 게시물 조회 시작 - userId:', userId);
+      const response = await tradePostApis.getSellerPosts(userId, true, undefined, 10000);
+      console.log('판매완료 게시물 응답:', response);
+      console.log('판매완료 게시물 개수:', response.item?.length || 0);
+      return response.item?.length || 0;
     },
     enabled: !!userId,
     staleTime: 5 * 60 * 1000,

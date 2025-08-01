@@ -6,8 +6,9 @@ import Image from 'next/image';
 
 import { getCarrierDefaultImage } from '@/shared/lib/getCarrierDefaultImage';
 import { useShareHooks } from '@/shared/model/useShareHooks';
-import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { BottomNav } from '@/shared/ui/BottomNav';
 import { PageHeader } from '@/shared/ui/Header';
+import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
 import { usePaymentReceipt } from '@/widgets/trade/payment/model/usePaymentReceipt';
 import BuyButtonWithPayment from '@/widgets/trade/payment/ui/BuyButtonWithPayment';
 import { PaymentReceiptWrapper } from '@/widgets/trade/payment/ui/PaymentReceiptWrapper';
@@ -49,8 +50,8 @@ export default function DataDetailPage({ postUserId, post, postType, sellerName 
   };
 
   return (
-    <BaseLayout
-      header={
+    <div className="relative w-full min-h-screen bg-[var(--main-2)]">
+      <div className="fixed top-0 left-0 right-0 z-20 max-w-[428px] mx-auto">
         <PageHeader
           title="상세보기"
           onBack={() => history.back()}
@@ -58,52 +59,55 @@ export default function DataDetailPage({ postUserId, post, postType, sellerName 
           onShareClick={handleShare}
           onMoreClick={handleMore}
         />
-      }
-      showBottomNav={!isMoreOpen}
-      paddingX={false}
-      className="bg-[var(--main-2)]"
-    >
-      {/* 썸네일 이미지 */}
-      <div className="w-full h-[400px] relative overflow-hidden">
-        <Image
-          src={
-            !post.postImage || post.postImage === '' || post.postImage === 'no image'
-              ? getCarrierDefaultImage(post.mobileCarrier || 'UPLUS')
-              : post.postImage
-          }
-          alt="thumbnail"
-          fill
-          sizes="(max-width: 768px) 100vw, 430px"
-          className="object-cover"
-          priority
-        />
       </div>
 
-      {/* 통합 정보 카드 - 이미지 위로 25px 겹침 */}
-      <div className="relative -mt-[50px] bg-[var(--white)] rounded-t-[50px] shadow-[0_-4px_8px_-1px_rgba(0,0,0,0.1)]">
-        {/* 상품 정보 섹션 */}
-        <div className="px-6 pt-7">
-          <TradeDetailProductSection
-            postType={postType}
-            brand={postType === 'GIFTICON' ? post.partner : post.mobileCarrier}
-            name={post.title}
-            price={post.price}
-            expireDate={post.deadLine}
-            issueDate={post.issueDate}
-            description={post.comment}
-            capacity={post.capacity}
+      <main className="pt-[70px] pb-[70px] w-full max-w-[428px] mx-auto">
+        {/* 썸네일 이미지 */}
+        <div className="w-full h-[400px] relative overflow-hidden">
+          <Image
+            src={
+              !post.postImage || post.postImage === '' || post.postImage === 'no image'
+                ? getCarrierDefaultImage(post.mobileCarrier || 'UPLUS')
+                : post.postImage
+            }
+            alt="thumbnail"
+            fill
+            sizes="(max-width: 768px) 100vw, 430px"
+            className="object-cover"
+            priority
           />
         </div>
 
-        {/* 판매자 정보 섹션 */}
-        <div className="px-6 pb-6">
-          <TradeDetailSellerSection
-            sellerId={postUserId}
-            sellerName={sellerName}
-            isFollowing={isFollowing ?? false}
-            onFollowChange={() => setIsFollowing(!isFollowing)}
-          />
+        {/* 통합 정보 카드 - 이미지 위로 25px 겹침 */}
+        <div className="relative -mt-[50px] bg-[var(--white)] rounded-t-[50px] shadow-[0_-4px_8px_-1px_rgba(0,0,0,0.1)] min-h-screen">
+          {/* 상품 정보 섹션 */}
+          <div className="px-6 pt-7">
+            <TradeDetailProductSection
+              postType={postType}
+              brand={postType === 'GIFTICON' ? post.partner : post.mobileCarrier}
+              name={post.title}
+              price={post.price}
+              expireDate={post.deadLine}
+              issueDate={post.issueDate}
+              description={post.comment}
+              capacity={post.capacity}
+            />
+          </div>
+
+          {/* 판매자 정보 섹션 */}
+          <div className="px-6 pb-6 sm:pb-8 md:pb-12 lg:pb-16 xl:pb-20">
+            <TradeDetailSellerSection
+              sellerId={postUserId}
+              sellerName={sellerName}
+              isFollowing={isFollowing ?? false}
+              onFollowChange={() => setIsFollowing(!isFollowing)}
+            />
+          </div>
         </div>
+      </main>
+
+      <div className="bg-[var(--white)] fixed bottom-0 left-0 right-0 z-50 max-w-[428px] mx-auto">
+        <BottomNav />
       </div>
 
       {/* 구매하기 버튼 */}
@@ -135,6 +139,9 @@ export default function DataDetailPage({ postUserId, post, postType, sellerName 
         postId={post.id}
         postType={postType}
       />
-    </BaseLayout>
+
+      {/* SOS Drawer 추가 */}
+      <SosDrawer />
+    </div>
   );
 }

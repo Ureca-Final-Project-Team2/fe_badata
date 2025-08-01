@@ -1,21 +1,24 @@
 import SellerPage from '@/features/trade/seller/page/SellerPage';
 
 interface SellerPageProps {
-  params: {
+  params: Promise<{
     userId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     name?: string;
     avatar?: string;
-  };
+  }>;
 }
 
-export default function Page({ params, searchParams }: SellerPageProps) {
+export default async function Page({ params, searchParams }: SellerPageProps) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+
   return (
     <SellerPage
-      userId={parseInt(params.userId, 10)}
-      sellerName={searchParams.name || ''}
-      sellerAvatar={searchParams.avatar || ''}
+      userId={parseInt(resolvedParams.userId, 10)}
+      sellerName={resolvedSearchParams.name || ''}
+      sellerAvatar={resolvedSearchParams.avatar || ''}
     />
   );
 }

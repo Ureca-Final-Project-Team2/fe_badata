@@ -15,7 +15,6 @@ import type {
   UpdatePostResponse,
   UserInfoResponse,
 } from '@/entities/trade-post/lib/types';
-import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 
 // 게시물 목록 조회
 export const getTradePosts = async (): Promise<DeadlinePost[]> => {
@@ -98,15 +97,21 @@ export const tradePostApis = {
     isSold: boolean,
     cursor?: number,
     size: number = 30,
-  ): Promise<ApiResponse<SellerPostsContent>> => {
+  ): Promise<SellerPostsContent> => {
     const params = new URLSearchParams();
     if (cursor !== undefined) params.append('cursor', cursor.toString());
     params.append('size', size.toString());
 
-    const response = await axiosInstance.get(
-      `${END_POINTS.TRADES.SELLER_POSTS(userId, isSold)}?${params}`,
-    );
-    return response.data;
+    const url = `${END_POINTS.TRADES.SELLER_POSTS(userId, isSold)}?${params}`;
+
+    try {
+      const response = await axiosInstance.get(url);
+      const responseData = response.data || response;
+      return responseData;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
   },
 
   // 팔로우 토글 API

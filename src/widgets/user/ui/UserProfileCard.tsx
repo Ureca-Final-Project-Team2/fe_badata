@@ -2,8 +2,9 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useSellerSoldPostsCountQuery } from '@/entities/trade-post/model/queries';
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
-import { useAllFollowingsQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
+import { useAllFollowingsQuery } from '@/entities/user/model/queries';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
 import UserAvatar from '@/shared/ui/UserAvatar';
 
@@ -40,7 +41,7 @@ const UserProfileCard = ({
 
   const { data: followings, isLoading: isLoadingFollowings } = useAllFollowingsQuery();
   const { data: soldPostsCount, isLoading: isLoadingSoldCount } =
-    useUserSoldPostsCountQuery(userId);
+    useSellerSoldPostsCountQuery(userId);
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
