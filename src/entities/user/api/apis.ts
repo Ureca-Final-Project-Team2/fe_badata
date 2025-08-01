@@ -4,11 +4,10 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 import type {
   CoinResponse,
   FollowingsContent,
-  FollowToggleResponse,
   PostCountResponse,
   PurchaseResponse,
   SalesContent,
-  UserInfoResponse
+  UserInfoResponse,
 } from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
@@ -16,13 +15,6 @@ import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/typ
 export const userApis = {
   getUserInfo: async (): Promise<UserInfoResponse> => {
     const response: UserInfoResponse = await axiosInstance.get(END_POINTS.USER.INFO);
-    return response;
-  },
-
-  postFollowToggle: async (userId: number): Promise<FollowToggleResponse> => {
-    const response: FollowToggleResponse = await axiosInstance.post(
-      END_POINTS.USER.FOLLOW_TOGGLE(userId),
-    );
     return response;
   },
 
@@ -90,10 +82,9 @@ export const userApis = {
     return response.data;
   },
   getUserPostCount: async (tradeType: 'SALE' | 'PURCHASE'): Promise<number> => {
-    const response: PostCountResponse = await axiosInstance.get(
-      END_POINTS.MYPAGE.POST_COUNT,
-      { params: { tradeType } }
-    );
+    const response: PostCountResponse = await axiosInstance.get(END_POINTS.MYPAGE.POST_COUNT, {
+      params: { tradeType },
+    });
     return response.postCount ?? 0;
   },
 };
