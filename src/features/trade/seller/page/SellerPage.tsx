@@ -20,6 +20,8 @@ import { Switch } from '@/shared/ui/Switch/Switch';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 import UserProfileCard from '@/widgets/user/ui/UserProfileCard';
 
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
+
 interface SellerPageProps {
   userId: number;
   sellerName: string;
@@ -106,7 +108,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
       showBottomNav
     >
       <div className="w-full max-w-[428px]">
-        <div className="flex flex-col items-center mt-4">
+        <div className="flex flex-col items-center mt-8">
           {sellerName && sellerAvatar ? (
             <UserProfileCard
               userId={userId}
@@ -126,7 +128,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
           )}
         </div>
 
-        <div className="flex justify-center mt-4 mb-4">
+        <div className="flex justify-center mt-8 mb-8">
           <Switch
             checked={isCompleted}
             onCheckedChange={handleSwitchToggle}
@@ -174,7 +176,10 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
                   key={item.id}
                   imageUrl={item.postImage || '/assets/trade-detail.jpg'}
                   title={item.title}
-                  partner={item.partner || '제휴처'}
+                  partner={item.postCategory === 'GIFTICON' ? item.partner : undefined}
+                  mobileCarrier={
+                    item.postCategory === 'DATA' ? (item.mobileCarrier as MobileCarrier) : undefined
+                  }
                   price={item.price}
                   likeCount={item.likesCount}
                   isCompleted={isCompleted}
