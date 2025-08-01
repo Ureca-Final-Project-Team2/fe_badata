@@ -1,0 +1,103 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { getToken, onMessage, getMessaging } from 'firebase/messaging';
+import { initializeApp } from 'firebase/app';
+
+const VAPID_KEY =
+  'BA1aWgnW0pgIgDVHAV2iloP2ujHvGsm18OLS2x1LcnisFhAP2_vPHDBz6yOmR0a1XGWUmvU8f9NtUaOnDR_7MmI';
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_APIKEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECTID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
+};
+
+interface FCMToken {
+  token: string;
+  error?: string;
+}
+
+interface FCMessage {
+  title?: string;
+  body?: string;
+  data?: Record<string, unknown>;
+}
+
+export const useFCM = () => {
+  const [token, setToken] = useState<FCMToken>({ token: '' });
+  const [message, setMessage] = useState<FCMessage | null>(null);
+  const [permission, setPermission] = useState<NotificationPermission>('default');
+
+  useEffect(() => {
+    const initializeFCM = async () => {
+      if (typeof window === 'undefined') return;
+
+      try {
+        const permissionResult = await Notification.requestPermission();
+        setPermission(permissionResult);
+
+        if (permissionResult === 'granted') {
+          const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+          console.log('ServiceWorker 등록 완료:', registration);
+
+          const app = initializeApp(firebaseConfig);
+          const messaging = getMessaging(app);
+
+          if (!messaging) {
+            console.error('messaging 초기화 실패:', messaging);
+            setToken({ token: '', error: 'messaging을 초기화할 수 없습니다.' });
+            return;
+          }
+
+          console.log('messaging 초기화 성공:', messaging);
+
+          const currentToken = await getToken(messaging, {
+            vapidKey: VAPID_KEY,
+            serviceWorkerRegistration: registration,
+          });
+
+          if (currentToken) {
+            console.log('FCM Token:', currentToken);
+            setToken({ token: currentToken });
+          } else {
+            console.warn('FCM 토큰 없음');
+            setToken({ token: '', error: '토큰을 가져올 수 없습니다.' });
+          }
+
+          const unsubscribe = onMessage(messaging, (payload) => {
+            console.log('Foreground 알림 수신:', payload);
+            const newMessage = {
+              title: payload.data?.title,
+              body: payload.data?.content,
+              data: payload.data,
+            };
+            setMessage(newMessage);
+            alert(`알림 도착: ${payload.data?.title}\n${payload.data?.content}`);
+          });
+
+          return () => unsubscribe();
+        } else {
+          setToken({ token: '', error: '알림 권한이 거부되었습니다.' });
+        }
+      } catch (err) {
+        console.error('FCM 초기화 실패:', err);
+        setToken({ token: '', error: 'FCM 초기화 중 오류가 발생했습니다.' });
+      }
+    };
+
+    initializeFCM();
+  }, []);
+
+  return {
+    token: token.token,
+    tokenError: token.error,
+    message,
+    permission,
+    clearMessage: () => setMessage(null),
+  };
+};

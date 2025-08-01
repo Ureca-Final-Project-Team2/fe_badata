@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 
 import Providers from '@/app/_providers';
+import { FCMLoader } from '@/app/_components/FCMLoader';
 import { Toaster } from '@/shared/ui/Toaster';
 
 import './globals.css';
@@ -24,7 +25,6 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* PWA 필수 메타 태그 */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#3e9fdc" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -35,7 +35,7 @@ export default function RootLayout({
         <link rel="icon" href="/assets/logo-badata.png" sizes="192x192" />
       </head>
       <body className="antialiased">
-        {/* 외부 스크립트: 포트원, 아임포트, 카카오 SDK */}
+        {/* 외부 스크립트 */}
         <Script src="https://cdn.portone.io/v2/browser-sdk.js" strategy="beforeInteractive" />
         <Script src="https://cdn.iamport.kr/v1/iamport.js" strategy="beforeInteractive" />
         <Script
@@ -46,6 +46,7 @@ export default function RootLayout({
         />
         <Providers>
           <Toaster />
+          <FCMLoader /> 
           {children}
         </Providers>
       </body>
