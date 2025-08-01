@@ -7,6 +7,7 @@ import { useSellerSoldPostsCountQuery } from '@/entities/trade-post/model/querie
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
 import { useAllFollowingsQuery } from '@/entities/user/model/queries';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
+import { makeToast } from '@/shared/lib/makeToast';
 import UserAvatar from '@/shared/ui/UserAvatar';
 
 import type { ErrorCode } from '@/shared/config/errorCodes';
@@ -44,8 +45,6 @@ const UserProfileCard = ({
   const { data: soldPostsCount, isLoading: isLoadingSoldCount } =
     useSellerSoldPostsCountQuery(userId);
 
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const [localFollowingState, setLocalFollowingState] = useState<boolean | null>(null);
 
   // 현재 로그인한 사용자와 프로필 주인이 같은지 확인
@@ -61,29 +60,23 @@ const UserProfileCard = ({
   const displayTradeText = displayTradeCount >= 100 ? '100+' : displayTradeCount;
 
   const handleFollowClick = async () => {
+    const previousState = currentIsFollowing;
     try {
       await createFollowMutation.mutateAsync(userId);
-
-      // 현재 상태를 토글하여 즉시 UI 업데이트
-      setLocalFollowingState(!currentIsFollowing);
-
+      setLocalFollowingState(!previousState);
       onFollowClick?.();
     } catch (error: unknown) {
+      // 에러 발생 시 원래 상태로 복원
+      setLocalFollowingState(previousState);
       const errorObj = error as { code?: number };
       const errorCode = errorObj?.code as ErrorCode;
 
       if (errorCode && errorCode in ErrorMessageMap) {
-        setErrorMessage(ErrorMessageMap[errorCode]);
+        makeToast(ErrorMessageMap[errorCode], 'warning');
       } else {
-        setErrorMessage('팔로우/언팔로우에 실패했습니다.');
+        makeToast('팔로우/언팔로우에 실패했습니다.', 'warning');
       }
-      setShowErrorModal(true);
     }
-  };
-
-  const handleCloseErrorModal = () => {
-    setShowErrorModal(false);
-    setErrorMessage('');
   };
 
   const handleProfileClick = () => {
@@ -131,25 +124,6 @@ const UserProfileCard = ({
           </span>
         </div>
       </div>
-
-      {/* 에러 모달 */}
-      {showErrorModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-[var(--white)] rounded-lg p-6 max-w-sm w-full mx-4">
-            <h3 className="font-title-semibold mb-4">알림</h3>
-            <p className="text-[var(--gray-mid)] font-body-regular mb-6">{errorMessage}</p>
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={handleCloseErrorModal}
-                className="px-4 py-2 bg-[var(--main-5)] text-[var(--white)] rounded-md hover:bg-[var(--main-4)] font-label-medium"
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };
