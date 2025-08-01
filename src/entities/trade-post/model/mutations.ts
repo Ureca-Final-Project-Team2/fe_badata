@@ -46,7 +46,11 @@ export const useDeleteTradePostLikeMutation = () => {
     },
     onError: (error: HTTPError) => {
       console.error('좋아요 취소 실패', error);
-      makeToast('좋아요 취소에 실패했습니다.', 'warning');
+      if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
+        makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
+      } else {
+        makeToast('좋아요 취소에 실패했습니다.', 'warning');
+      }
     },
   });
 };
@@ -71,7 +75,11 @@ export const useDeleteTradePostLikeDetailMutation = () => {
     mutationFn: (postId: number) => deleteTradePostLike(postId),
     onError: (error: HTTPError) => {
       console.error('좋아요 취소 실패', error);
-      makeToast('좋아요 취소에 실패했습니다.', 'warning');
+      if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
+        makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
+      } else {
+        makeToast('좋아요 취소에 실패했습니다.', 'warning');
+      }
     },
   });
 };
