@@ -102,3 +102,37 @@ export interface ReportResponse {
 export interface SearchTrendsContent {
   trendingTopics: string[];
 }
+
+// 판매자 관련 타입들
+export interface UserInfoResponse {
+  nickName: string;
+  profileImage: string;
+  userId: number;
+}
+
+export interface FollowToggleResponse {
+  code: number;
+  message: string;
+}
+
+export interface SellerPostItem {
+  id: number;
+  title: string;
+  partner?: string;
+  price: number;
+  createdAt: string;
+  postImage: string;
+  postCategory: 'DATA' | 'GIFTICON';
+  gifticonCategory?: string;
+  deadLine: string;
+  mobileCarrier?: MobileCarrier;
+  likesCount: number;
+  isLiked: boolean;
+  capacity: number;
+}
+
+export interface SellerPostsContent {
+  item: SellerPostItem[];
+  nextCursor: number;
+  hasNext: boolean;
+}
