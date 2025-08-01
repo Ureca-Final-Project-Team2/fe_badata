@@ -88,8 +88,8 @@ const UserProfileCard = ({
 
   const handleProfileClick = () => {
     const searchParams = new URLSearchParams();
-    if (name) searchParams.append('name', name);
-    if (avatarSrc) searchParams.append('avatar', avatarSrc);
+    if (name) searchParams.append('name', encodeURIComponent(name));
+    if (avatarSrc) searchParams.append('avatar', encodeURIComponent(avatarSrc));
 
     const queryString = searchParams.toString();
     const url = queryString ? `/trade/seller/${userId}?${queryString}` : `/trade/seller/${userId}`;

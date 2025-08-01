@@ -17,8 +17,10 @@ export default async function Page({ params, searchParams }: SellerPageProps) {
   return (
     <SellerPage
       userId={parseInt(resolvedParams.userId, 10)}
-      sellerName={resolvedSearchParams.name || ''}
-      sellerAvatar={resolvedSearchParams.avatar || ''}
+      sellerName={resolvedSearchParams.name ? decodeURIComponent(resolvedSearchParams.name) : ''}
+      sellerAvatar={
+        resolvedSearchParams.avatar ? decodeURIComponent(resolvedSearchParams.avatar) : ''
+      }
     />
   );
 }
