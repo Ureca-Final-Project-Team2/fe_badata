@@ -25,6 +25,11 @@ export default function RentalHistoryPage() {
   const handleReviewClick = (reservationId: number) => {
     router.push(`${PATH.RENTAL.REGISTER_REVIEW}?reservationId=${reservationId}`);
   };
+  const statusMap = {
+    PENDING: '예약 중',
+    BURROWING: '대여 중',
+    COMPLETE: '반납 완료',
+  } as const;
 
   return (
     <BaseLayout
@@ -39,9 +44,12 @@ export default function RentalHistoryPage() {
           const dateObj = new Date(item.rentalStartDate);
           const date = format(dateObj, 'M.d', { locale: ko });
           const day = format(dateObj, 'eee', { locale: ko });
-          const status = item.reservationStatus === 'PENDING' ? '예약 중' : '반납 완료';
+          
+          const status = statusMap[item.reservationStatus];
           const price = item.price.toLocaleString('ko-KR') + '원';
-          const isReview = item.reservationStatus === 'COMPLETE';
+          const showReviewButton = item.reservationStatus === 'COMPLETE';
+          const hasWrittenReview = item.isReviewed;
+
           return (
             <div key={item.id} className={`relative mb-8${idx === 0 ? ' mt-4' : ''}`}>
               <div className="absolute -top-6 left-2 flex items-center gap-2">
@@ -51,13 +59,13 @@ export default function RentalHistoryPage() {
               <div className="border-2 border-[var(--gray-light)] rounded-2xl bg-white px-4 py-4 pt-6">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-body-xs-medium">{item.storeName}</span>
-                  {isReview && (
+                  {showReviewButton && (
                     <button
                       onClick={() => handleReviewClick(item.id)}
                       className="flex items-center gap-1 text-[var(--main-5)] font-title-regular cursor-pointer"
                     >
                       <Pencil size={16} />
-                      &nbsp;리뷰쓰기
+                      &nbsp;{hasWrittenReview ? '👀 리뷰보기' : '📝 리뷰쓰기'}
                     </button>
                   )}
                 </div>
