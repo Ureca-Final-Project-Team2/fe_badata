@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 
 import { getToken, onMessage } from 'firebase/messaging';
-import { toast } from 'sonner';
 
 import { fetchFcmToken } from '@/entities/auth/api/apis';
 import { messaging } from '@/shared/lib/firebase';
@@ -26,6 +25,7 @@ export const useFCM = () => {
   const [message, setMessage] = useState<FCMessage | null>(null);
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [isInitialized, setIsInitialized] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   const initializeFCM = async () => {
     // 서버 사이드에서 실행되지 않도록 확인
@@ -70,7 +70,7 @@ export const useFCM = () => {
             data: payload.data,
           };
           setMessage(newMessage);
-          toast.success(`알림 도착: ${payload.data?.title}\n${payload.data?.content}`);
+          setShowNotification(true);
         });
 
         setIsInitialized(true);
@@ -128,5 +128,7 @@ export const useFCM = () => {
     triggerFCMToken,
     sendFCMTokenToServer,
     clearMessage: () => setMessage(null),
+    showNotification,
+    setShowNotification,
   };
 };
