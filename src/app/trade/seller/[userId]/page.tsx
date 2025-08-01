@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+
 import SellerPage from '@/features/trade/seller/page/SellerPage';
 
 interface SellerPageProps {
@@ -14,9 +16,14 @@ export default async function Page({ params, searchParams }: SellerPageProps) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
 
+  const userId = parseInt(resolvedParams.userId, 10);
+  if (isNaN(userId)) {
+    notFound();
+  }
+
   return (
     <SellerPage
-      userId={parseInt(resolvedParams.userId, 10)}
+      userId={userId}
       sellerName={resolvedSearchParams.name ? decodeURIComponent(resolvedSearchParams.name) : ''}
       sellerAvatar={
         resolvedSearchParams.avatar ? decodeURIComponent(resolvedSearchParams.avatar) : ''
