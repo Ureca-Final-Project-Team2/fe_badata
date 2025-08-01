@@ -18,7 +18,11 @@ import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
 export default function MyPage() {
   const { data: coinData } = useUserCoinQuery();
-  const { data: userInfo } = useUserInfoQuery();
+  const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
+
+  // 모든 사용자 정보가 로딩된 후에만 프로필 카드 렌더링
+  const isProfileReady =
+    userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined;
 
   return (
     <div className="relative w-full min-h-screen bg-[var(--main-2)]">
@@ -29,11 +33,20 @@ export default function MyPage() {
       <main className="pt-[70px] pb-[70px] w-full max-w-[428px] mx-auto">
         <div className="w-full bg-[var(--main-1)] pb-16 relative">
           <div className="pt-4 flex justify-center">
-            <MyProfileCard
-              name={userInfo?.nickName ?? '사용자'}
-              days={userInfo?.days ?? 0}
-              avatarSrc={userInfo?.profileImage ?? ICONS.ETC.SHELL.src.toString()}
-            />
+            {isProfileReady ? (
+              <MyProfileCard
+                name={userInfo.nickName}
+                days={userInfo.days}
+                avatarSrc={userInfo.profileImage}
+              />
+            ) : (
+              <MyProfileCard
+                name="로딩 중..."
+                days={0}
+                avatarSrc={ICONS.ETC.SHELL.src.toString()}
+                isLoading={isUserInfoLoading}
+              />
+            )}
           </div>
           <div className="relative px-4 pt-4 mb-4">
             <DataUsageCardSection />
@@ -71,7 +84,7 @@ export default function MyPage() {
       <div className="bg-[var(--white)] fixed bottom-0 left-0 right-0 z-50 max-w-[428px] mx-auto">
         <BottomNav />
       </div>
-      
+
       {/* SOS Drawer 추가 */}
       <SosDrawer />
     </div>

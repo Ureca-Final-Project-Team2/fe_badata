@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
 import { useUserTradePostsQuery } from '@/widgets/trade/post-detail/model/queries';
 import SellerPostCard from '@/widgets/trade/ui/SellerPostCard';
@@ -20,6 +22,7 @@ export const TradeDetailSellerSection = ({
   isFollowing,
   onFollowChange,
 }: TradeDetailSellerSectionProps) => {
+  const router = useRouter();
   const { data, isLoading, error } = useUserTradePostsQuery(sellerId);
   const { toggleLike, getCachedLikeState } = useTradePostLikeHooks();
 
@@ -32,6 +35,13 @@ export const TradeDetailSellerSection = ({
       ...post,
       isLiked: cachedLikeState,
     };
+  };
+
+  // 상품 상세페이지로 이동하는 함수
+  const handleCardClick = (post: AllPost) => {
+    const detailPath =
+      post.postCategory === 'DATA' ? `/trade/data/${post.id}` : `/trade/gifticon/${post.id}`;
+    router.push(detailPath);
   };
 
   return (
@@ -71,6 +81,7 @@ export const TradeDetailSellerSection = ({
                   likeCount={item.likesCount}
                   isLiked={updatedPost.isLiked}
                   onLikeChange={() => toggleLike(updatedPost)}
+                  onClick={() => handleCardClick(item)}
                 />
               );
             })}
