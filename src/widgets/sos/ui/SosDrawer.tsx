@@ -5,17 +5,15 @@ import { DataUsageWidgetContainer } from '@/widgets/data-usage/ui/DataUsageWidge
 import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 import { SosModal } from '@/widgets/sos/ui/SosModal';
 
+import { SosNotificationHandler } from './SosNotificationHandler';
+
 export function SosDrawer() {
   const { isDrawerOpen, closeDrawer } = useSosDrawer();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSosConfirm = () => {
-    // SOS 요청 성공 시 추가 처리
-    console.log('SOS 요청이 완료되었습니다.');
-  };
-
   return (
     <>
+         <SosNotificationHandler />
       <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} className="bg-white">
         <div className="w-full flex flex-col items-center px-4 pt-6 pb-28">
           <button 
@@ -48,7 +46,6 @@ export function SosDrawer() {
       <SosModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={handleSosConfirm}
       />
     </>
   );

@@ -1,36 +1,30 @@
 'use client';
 
-import { useCreateSosRequest } from '@/widgets/sos/model/mutations';
-import { useSosWebSocket } from '@/widgets/sos/model/useSosWebSocket';
+import { useSosRequestMutation } from '../model/queries';
+import { useSosStore } from '../model/sosStore';
 
 interface SosModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm?: () => void;
 }
 
-export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
-  const { mutate: createSosRequest, isPending } = useCreateSosRequest();
-  const { sendSosRequest } = useSosWebSocket();
+export function SosModal({ isOpen, onClose }: SosModalProps) {
+  const setSosId = useSosStore((s) => s.setSosId);
+  const { mutate: sendSosRequest, isPending } = useSosRequestMutation();
 
   const handleConfirm = () => {
-    createSosRequest(undefined, {
-      onSuccess: (data) => {
-        console.log('SOS 요청이 성공적으로 생성되었습니다:', data);
-        
-        // WebSocket을 통해 다른 사용자들에게 실시간 알림 전송
-        if (data.content?.sosId) {
-          sendSosRequest(data.content.sosId);
-        }
-        
-        onConfirm?.();
-        onClose();
+    if (isPending) return;
+
+    sendSosRequest(undefined, {
+      onSuccess: (content) => {
+        setSosId(content.sosId); 
       },
-      onError: () => {
-        // TODO: 토스트 메시지나 에러 모달로 사용자에게 알림 표시
-        alert('SOS 요청 생성에 실패했습니다. 다시 시도해주세요.');
+      onError: (error) => {
+        console.error('❌ SOS 요청 실패:', error);
       },
     });
+
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -43,9 +37,10 @@ export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
           <h2 className="font-title-semibold mb-2 text-black">SOS 요청</h2>
           <p className="font-body-regular text-gray-600 mb-6">
             데이터가 부족하신가요?
-            <br />다른 사용자들에게 SOS 요청을 보내시겠습니까?
+            <br />
+            다른 사용자들에게 SOS 요청을 보내시겠습니까?
           </p>
-          
+
           <div className="flex gap-3">
             <button
               onClick={onClose}
@@ -56,8 +51,8 @@ export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
             </button>
             <button
               onClick={handleConfirm}
+              className="flex-1 py-2 px-4 bg-[var(--main-4)] text-white rounded-lg hover:bg-[var(--main-5)] transition-colors font-body-medium disabled:opacity-50"
               disabled={isPending}
-              className="flex-1 py-2 px-4 bg-[var(--main-4)] text-white rounded-lg hover:bg-[var(--main-5)] disabled:opacity-50 transition-colors font-body-medium"
             >
               {isPending ? '요청 중...' : 'SOS 요청'}
             </button>
@@ -66,4 +61,4 @@ export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
       </div>
     </div>
   );
-} 
+}

@@ -7,6 +7,9 @@ interface SosState {
   openDrawer: () => void;
   closeDrawer: () => void;
   toggleDrawer: () => void;
+
+  sosId: number | null;
+  setSosId: (id: number) => void;
 }
 
 export const useSosStore = create<SosState>((set) => ({
@@ -14,4 +17,7 @@ export const useSosStore = create<SosState>((set) => ({
   openDrawer: () => set({ isDrawerOpen: true }),
   closeDrawer: () => set({ isDrawerOpen: false }),
   toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
+
+  sosId: null,
+  setSosId: (id: number) => set({ sosId: id }),
 }));
