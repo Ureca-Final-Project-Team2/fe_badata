@@ -3,6 +3,8 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import { getTradePosts, tradePostApis } from '@/entities/trade-post/api/apis';
 import { useAllFollowingsQuery } from '@/entities/user/model/queries';
 import { getTradePostDetail } from '@/features/trade/data/detail/api/apis';
+import { ErrorCode, ErrorMessageMap } from '@/shared/config/errorCodes';
+import { makeToast } from '@/shared/lib/makeToast';
 
 import type {
   DeadlinePost,
@@ -69,8 +71,8 @@ export const useFollowToggleMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['user', 'followings'], exact: false });
       queryClient.invalidateQueries({ queryKey: ['user', 'all-followings'], exact: false });
     },
-    onError: (error) => {
-      console.error('팔로우 토글 실패:', error);
+    onError: () => {
+      makeToast(ErrorMessageMap[ErrorCode.FOLLOW_SELF_ERROR], 'warning');
     },
   });
 };
