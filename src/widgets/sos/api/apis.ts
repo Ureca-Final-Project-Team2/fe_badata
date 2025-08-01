@@ -1,13 +1,16 @@
+import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { SosRequestResponse, SosRespondResponse } from '@/widgets/sos/lib/types';
+import type { SosRequestResponse, SosRespondResponse } from '../lib/types';
 
 // SOS 요청 생성
-export const createSosRequest = async (): Promise<SosRequestResponse> => {
-  return await axiosInstance.post('/api/v1/sos/request');
+export const requestSos = async (): Promise<SosRequestResponse> => {
+  const res = await axiosInstance.post(END_POINTS.SOS.REQUEST);
+  return res.data;
 };
 
-// SOS 요청에 응답
-export const respondToSosRequest = async (sosId: number): Promise<SosRespondResponse> => {
-  return await axiosInstance.post(`/api/v1/sos/${sosId}/respond`);
-}; 
+// SOS 응답 처리 (쿼리 파라미터 전달)
+export const respondToSos = async (sosId: number): Promise<SosRespondResponse> => {
+  const res = await axiosInstance.post(`${END_POINTS.SOS.RESPOND}?sosId=${sosId}`);
+  return res.data;
+};

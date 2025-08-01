@@ -1,45 +1,18 @@
+// SOS 요청 응답 타입
 export interface SosRequestResponse {
-  code: number;
+  code: number; 
   message: string | null;
   content: {
     sosId: number;
   };
 }
 
+// SOS 응답 응답 타입
 export interface SosRespondResponse {
   code: number;
-  message: string | null;
+  message: string;
   content: {
     sosId: number;
     isSuccess: boolean;
   };
 }
-
-export interface SosRequest {
-  sosId: number;
-}
-
-export interface SosRespond {
-  sosId: number;
-  isSuccess: boolean;
-}
-
-// 실시간 알림 관련 타입들
-export interface SosNotification {
-  type: 'SOS_REQUEST' | 'SOS_RESPONSE';
-  sosId: number;
-  requesterName?: string;
-  requesterId?: number;
-  message?: string;
-  timestamp: string;
-}
-
-export type SosWebSocketMessage = 
-  | {
-      type: 'SOS_REQUEST' | 'SOS_RESPONSE';
-      data: SosNotification;
-    }
-  | {
-      type: 'CONNECT' | 'DISCONNECT';
-      userId: number;
-    };

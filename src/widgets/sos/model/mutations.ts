@@ -1,31 +1,29 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { createSosRequest, respondToSosRequest } from '@/widgets/sos/api/apis';
+import { requestSos, respondToSos } from '../api/apis';
 
-// SOS 요청 생성 mutation
-export function useCreateSosRequest() {
+// SOS 요청 mutation
+export const useCreateSosRequest = () => {
   return useMutation({
-    mutationFn: createSosRequest,
+    mutationFn: requestSos,
     onSuccess: (data) => {
-      // SOS 요청 성공 시 필요한 처리
-      console.log('SOS 요청이 성공적으로 생성되었습니다:', data);
+      console.log('✅ SOS 요청 성공:', data);
     },
     onError: (error) => {
-      console.error('SOS 요청 생성 중 오류가 발생했습니다:', error);
+      console.error('❌ SOS 요청 실패:', error);
     },
   });
-}
+};
 
-// SOS 요청에 응답하는 mutation
-export function useRespondToSosRequest() {
+// SOS 응답 mutation
+export const useRespondToSosMutation = () => {
   return useMutation({
-    mutationFn: ({ sosId }: { sosId: number }) => respondToSosRequest(sosId),
+    mutationFn: respondToSos,
     onSuccess: (data) => {
-      // SOS 응답 성공 시 필요한 처리
-      console.log('SOS 응답이 성공적으로 처리되었습니다:', data);
+      console.log('✅ SOS 응답 성공:', data);
     },
     onError: (error) => {
-      console.error('SOS 응답 처리 중 오류가 발생했습니다:', error);
+      console.error('❌ SOS 응답 실패:', error);
     },
   });
-} 
+};
