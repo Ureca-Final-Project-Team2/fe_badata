@@ -65,6 +65,9 @@ export const useFollowToggleMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['seller', 'info', userId] });
       queryClient.invalidateQueries({ queryKey: ['followers'], exact: false });
       queryClient.invalidateQueries({ queryKey: ['followings'], exact: false });
+      // user 레벨의 팔로잉 쿼리들도 무효화
+      queryClient.invalidateQueries({ queryKey: ['user', 'followings'], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['user', 'all-followings'], exact: false });
     },
     onError: (error) => {
       console.error('팔로우 토글 실패:', error);
