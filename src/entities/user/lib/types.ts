@@ -63,3 +63,8 @@ export interface CoinResponse {
 export interface PostCountResponse {
   postCount: number;
 }
+
+export interface FollowToggleResponse {
+  code: number;
+  message: string;
+}

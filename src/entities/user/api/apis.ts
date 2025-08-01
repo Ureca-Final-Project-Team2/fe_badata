@@ -4,6 +4,7 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 import type {
   CoinResponse,
   FollowingsContent,
+  FollowToggleResponse,
   PostCountResponse,
   PurchaseResponse,
   SalesContent,
@@ -86,5 +87,13 @@ export const userApis = {
       params: { tradeType },
     });
     return response.postCount ?? 0;
+  },
+
+  // 팔로우 토글 API
+  postFollowToggle: async (userId: number): Promise<FollowToggleResponse> => {
+    const response: FollowToggleResponse = await axiosInstance.post(
+      END_POINTS.USER.FOLLOW_TOGGLE(userId),
+    );
+    return response;
   },
 };
