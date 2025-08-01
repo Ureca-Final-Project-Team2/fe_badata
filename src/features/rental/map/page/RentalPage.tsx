@@ -20,8 +20,8 @@ import { ListViewButton } from '@/features/rental/map/ui/ListViewButton';
 import { LocationDisplay } from '@/features/rental/map/ui/LocationDisplay';
 import { MapSection } from '@/features/rental/map/ui/MapSection';
 import RentalFilterContent from '@/features/rental/map/ui/RentalFilterContent';
+import { RentalSortFilter } from '@/features/rental/map/ui/RentalSortFilter';
 import { SearchPosHeader } from '@/features/rental/map/ui/SearchPosHeader';
-import { SortDrawer } from '@/features/rental/map/ui/SortDrawer';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
@@ -328,7 +328,7 @@ export default function RentalPage() {
           onSubmit={handleFilterSubmit}
         />
       </FilterDrawer>
-      <SortDrawer
+      <RentalSortFilter
         isOpen={isSortDrawerOpen}
         onClose={() => setIsSortDrawerOpen(false)}
         onSortSelect={handleSortSelect}
