@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -55,6 +55,11 @@ const UserProfileCard = ({
     followings?.content?.item?.some((user) => user.userId === userId) ?? false;
   const currentIsFollowing =
     localFollowingState !== null ? localFollowingState : isFollowingFromQuery;
+
+  // 쿼리 데이터가 변경될 때 로컬 상태 리셋
+  useEffect(() => {
+    setLocalFollowingState(null);
+  }, [isFollowingFromQuery]);
 
   const displayTradeCount = soldPostsCount ?? 0;
   const displayTradeText = displayTradeCount >= 100 ? '100+' : displayTradeCount;
