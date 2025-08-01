@@ -6,12 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useAuthStore } from '@/entities/auth/model/authStore';
-import {
-  useFollowToggleMutation,
-  useSellerFollowStatusQuery,
-  useSellerPostsQuery,
-} from '@/entities/trade-post/model/queries';
+import { useSellerPostsQuery } from '@/entities/trade-post/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -31,30 +26,14 @@ interface SellerPageProps {
 export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerPageProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const currentUser = useAuthStore((s) => s.user);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
   const observerRef = useRef<HTMLDivElement>(null);
   const loadingStartTime = useRef<number>(0);
 
-  // 현재 로그인한 사용자와 판매자가 같은지 확인
-  const isOwnProfile = currentUser?.userId === userId;
-
-  // 팔로우 토글 뮤테이션
-  const followToggleMutation = useFollowToggleMutation();
-
-  // 판매자의 팔로우 상태 확인
-  const { isFollowing } = useSellerFollowStatusQuery(userId);
-
   // 판매자의 거래 게시물 조회 (올바른 API 사용)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
     useSellerPostsQuery(userId, isCompleted, undefined, 30);
-
-  // 팔로우/언팔로우 핸들러
-  const handleFollowToggle = () => {
-    if (isOwnProfile) return;
-    followToggleMutation.mutate(userId);
-  };
 
   // Switch 토글 핸들러
   const handleSwitchToggle = (checked: boolean) => {
@@ -110,20 +89,12 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
       <div className="w-full max-w-[428px]">
         <div className="flex flex-col items-center mt-8">
           {sellerName && sellerAvatar ? (
-            <UserProfileCard
-              userId={userId}
-              name={sellerName}
-              avatarSrc={sellerAvatar}
-              isFollowing={isFollowing}
-              onFollowClick={handleFollowToggle}
-            />
+            <UserProfileCard userId={userId} name={sellerName} avatarSrc={sellerAvatar} />
           ) : (
             <UserProfileCard
               userId={userId}
               name={sellerName || '로딩 중...'}
               avatarSrc={sellerAvatar || ICONS.ETC.SHELL.src.toString()}
-              isFollowing={false}
-              onFollowClick={handleFollowToggle}
             />
           )}
         </div>
