@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
 import { useAllFollowingsQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
@@ -33,6 +35,7 @@ const UserProfileCard = ({
   onFollowClick,
   className = '',
 }: UserProfileCardProps) => {
+  const router = useRouter();
   const createFollowMutation = useCreateFollowMutation();
 
   const { data: followings, isLoading: isLoadingFollowings } = useAllFollowingsQuery();
@@ -71,9 +74,22 @@ const UserProfileCard = ({
     setErrorMessage('');
   };
 
+  const handleProfileClick = () => {
+    const searchParams = new URLSearchParams();
+    if (name) searchParams.append('name', name);
+    if (avatarSrc) searchParams.append('avatar', avatarSrc);
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `/trade/seller/${userId}?${queryString}` : `/trade/seller/${userId}`;
+    router.push(url);
+  };
+
   return (
     <>
-      <div className={`flex items-center w-[380px] h-[58px] ${className}`}>
+      <div
+        className={`flex items-center w-[380px] h-[58px] ${className} cursor-pointer`}
+        onClick={handleProfileClick}
+      >
         <UserAvatar src={avatarSrc} size="md" className="flex-shrink-0" />
         <div className="flex flex-col justify-center ml-4 flex-1">
           <div className="flex items-center justify-between">
@@ -83,7 +99,10 @@ const UserProfileCard = ({
               className={`w-[78px] h-[26px] rounded-[3px] text-white font-label-semibold flex items-center justify-center
                 ${currentIsFollowing ? 'bg-[var(--gray-dark)]' : 'bg-[var(--main-5)]'}
               `}
-              onClick={handleFollowClick}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFollowClick();
+              }}
               disabled={createFollowMutation.isPending || isLoadingFollowings}
             >
               {createFollowMutation.isPending || isLoadingFollowings
@@ -101,7 +120,7 @@ const UserProfileCard = ({
 
       {/* 에러 모달 */}
       {showErrorModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-[var(--black)/50] flex items-center justify-center z-50">
           <div className="bg-[var(--white)] rounded-lg p-6 max-w-sm w-full mx-4">
             <h3 className="font-title-semibold mb-4">알림</h3>
             <p className="text-[var(--gray-mid)] font-body-regular mb-6">{errorMessage}</p>
