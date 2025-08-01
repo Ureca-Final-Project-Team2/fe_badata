@@ -118,14 +118,14 @@ export interface FollowToggleResponse {
 export interface SellerPostItem {
   id: number;
   title: string;
-  partner: string;
+  partner?: string;
   price: number;
   createdAt: string;
   postImage: string;
   postCategory: 'DATA' | 'GIFTICON';
-  gifticonCategory: string;
+  gifticonCategory?: string;
   deadLine: string;
-  mobileCarrier: string;
+  mobileCarrier?: MobileCarrier;
   likesCount: number;
   isLiked: boolean;
   capacity: number;
