@@ -5,8 +5,7 @@ import { useEffect, useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
-const VAPID_KEY =
-  'BA1aWgnW0pgIgDVHAV2iloP2ujHvGsm18OLS2x1LcnisFhAP2_vPHDBz6yOmR0a1XGWUmvU8f9NtUaOnDR_7MmI';
+const VAPID_KEY = process.env.NEXT_PUBLIC_VAPID_KEY;
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_APIKEY,
