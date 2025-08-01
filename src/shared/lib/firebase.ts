@@ -1,24 +1,17 @@
 import { initializeApp } from 'firebase/app';
-import { getMessaging } from 'firebase/messaging';
-
-import type { Messaging } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_APIKEY,
-  authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
-  projectId: process.env.NEXT_PUBLIC_PROJECTID,
-  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
+  apiKey: 'AIzaSyBySuNvoDxAYIKSC6Cwuj1jRcKZv5fTshM',
+  authDomain: 'badata-174aa.firebaseapp.com',
+  projectId: 'badata-174aa',
+  storageBucket: 'badata-174aa.firebasestorage.app',
+  messagingSenderId: '1043735944676',
+  appId: '1:1043735944676:web:19b9712ddcf94b60d9bbf1',
+  measurementId: 'G-C098SZY5NP',
 };
 
 const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
 
-let messaging: Messaging | null = null;
-
-if (typeof window !== 'undefined') {
-  messaging = getMessaging(app);
-}
-
-export { messaging };
+export { getToken, messaging, onMessage };

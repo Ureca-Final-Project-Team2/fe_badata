@@ -15,11 +15,17 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
   // data payload에서 값 꺼내기
-  const notificationTitle = payload.data && payload.data.title ? payload.data.title : 'BADATA 알림';
+  const notificationTitle = payload.data && payload.data.title ? payload.data.title : 'IXI 알림';
   const notificationOptions = {
     body: payload.data && payload.data.content ? payload.data.content : '새로운 소식이 있습니다!',
-    icon: '/logo-badata.png',
+    icon: '/ixi-u.png',
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+self.addEventListener('notificationclick', function (event) {
+  event.notification.close();
+  const url = event.notification.data?.url || '/';
+  event.waitUntil(clients.openWindow(url));
 });

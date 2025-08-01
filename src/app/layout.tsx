@@ -9,6 +9,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: '1인의 바다, 모두의 데이터',
   description: '1인의 바다, 모두의 데이터',
+  manifest: '/manifest.json',
 };
 
 export const viewport: Viewport = {

@@ -6,7 +6,8 @@ import { useEffect } from 'react';
 import { useFCM } from '@/shared/hooks/useFCM';
 
 export const FCMLoader = () => {
-  const { token, tokenError, message } = useFCM();
+  const { token, tokenError, message, permission, isInitialized } = useFCM();
+
   useEffect(() => {
     if (token) {
       if (process.env.NODE_ENV === 'development') {

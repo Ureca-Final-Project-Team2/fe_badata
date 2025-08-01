@@ -2,23 +2,13 @@
 
 import { useEffect, useState } from 'react';
 
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getToken, onMessage } from 'firebase/messaging';
 import { toast } from 'sonner';
 
 import { fetchFcmToken } from '@/entities/auth/api/apis';
+import { messaging } from '@/shared/lib/firebase';
 
 const VAPID_KEY = process.env.NEXT_PUBLIC_VAPID_KEY;
-
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_APIKEY,
-  authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
-  projectId: process.env.NEXT_PUBLIC_PROJECTID,
-  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
-};
 
 interface FCMToken {
   token: string;
@@ -51,9 +41,6 @@ export const useFCM = () => {
       if (permissionResult === 'granted') {
         console.log('Service Worker 등록 중...');
         const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-
-        const app = initializeApp(firebaseConfig);
-        const messaging = getMessaging(app);
 
         if (!messaging) {
           console.error('messaging 초기화 실패:', messaging);
