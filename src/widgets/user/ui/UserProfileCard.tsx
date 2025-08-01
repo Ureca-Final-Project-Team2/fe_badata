@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useSellerSoldPostsCountQuery } from '@/entities/trade-post/model/queries';
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
 import { useAllFollowingsQuery } from '@/entities/user/model/queries';
@@ -32,12 +33,12 @@ const UserProfileCard = ({
   userId,
   name,
   avatarSrc,
-  isFollowing = false,
   onFollowClick,
   className = '',
 }: UserProfileCardProps) => {
   const router = useRouter();
   const createFollowMutation = useCreateFollowMutation();
+  const currentUser = useAuthStore((s) => s.user);
 
   const { data: followings, isLoading: isLoadingFollowings } = useAllFollowingsQuery();
   const { data: soldPostsCount, isLoading: isLoadingSoldCount } =
@@ -45,19 +46,28 @@ const UserProfileCard = ({
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [localFollowingState, setLocalFollowingState] = useState<boolean | null>(null);
 
+  // 현재 로그인한 사용자와 프로필 주인이 같은지 확인
+  const isOwnProfile = currentUser?.userId === userId;
+
+  // 팔로잉 상태 계산: 로컬 상태 > 쿼리 데이터 > props 순서로 우선순위
+  const isFollowingFromQuery =
+    followings?.content?.item?.some((user) => user.userId === userId) ?? false;
   const currentIsFollowing =
-    followings?.content?.item?.some((user) => user.userId === userId) ?? isFollowing;
+    localFollowingState !== null ? localFollowingState : isFollowingFromQuery;
 
   const displayTradeCount = soldPostsCount ?? 0;
 
   const handleFollowClick = async () => {
     try {
       await createFollowMutation.mutateAsync(userId);
+
+      // 현재 상태를 토글하여 즉시 UI 업데이트
+      setLocalFollowingState(!currentIsFollowing);
+
       onFollowClick?.();
     } catch (error: unknown) {
-      console.error('팔로우/언팔로우 실패:', error);
-
       const errorObj = error as { code?: number };
       const errorCode = errorObj?.code as ErrorCode;
 
@@ -95,23 +105,25 @@ const UserProfileCard = ({
         <div className="flex flex-col justify-center ml-4 flex-1">
           <div className="flex items-center justify-between">
             <span className="text-[var(--black)] font-body-semibold leading-none">{name}</span>
-            <button
-              type="button"
-              className={`w-[78px] h-[26px] rounded-[3px] text-white font-label-semibold flex items-center justify-center
-                ${currentIsFollowing ? 'bg-[var(--gray-dark)]' : 'bg-[var(--main-5)]'}
-              `}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleFollowClick();
-              }}
-              disabled={createFollowMutation.isPending || isLoadingFollowings}
-            >
-              {createFollowMutation.isPending || isLoadingFollowings
-                ? '처리중...'
-                : currentIsFollowing
-                  ? '팔로잉'
-                  : '팔로우'}
-            </button>
+            {!isOwnProfile && (
+              <button
+                type="button"
+                className={`w-[78px] h-[26px] rounded-[3px] text-white font-label-semibold flex items-center justify-center
+                  ${currentIsFollowing ? 'bg-[var(--gray-dark)]' : 'bg-[var(--main-5)]'}
+                `}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFollowClick();
+                }}
+                disabled={createFollowMutation.isPending || isLoadingFollowings}
+              >
+                {createFollowMutation.isPending || isLoadingFollowings
+                  ? '처리중...'
+                  : currentIsFollowing
+                    ? '팔로잉'
+                    : '팔로우'}
+              </button>
+            )}
           </div>
           <span className="text-[var(--black)] font-small-regular leading-none mt-2">
             거래완료 {isLoadingSoldCount ? '로딩중...' : displayTradeCount}

@@ -28,10 +28,8 @@ export const userApis = {
     if (cursor !== undefined) params.append('cursor', cursor.toString());
     params.append('size', size.toString());
 
-    const response: ApiResponse<FollowingsContent> = await axiosInstance.get(
-      `${END_POINTS.MYPAGE.FOLLOWINGS}?${params}`,
-    );
-    return response;
+    const response = await axiosInstance.get(`${END_POINTS.MYPAGE.FOLLOWINGS}?${params}`);
+    return response.data;
   },
 
   getSales: async (

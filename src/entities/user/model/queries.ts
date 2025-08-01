@@ -34,14 +34,18 @@ export const useAllFollowingsQuery = () => {
       }> = [];
       let cursor: number | undefined;
       let hasNext = true;
+      let loopCount = 0;
 
-      while (hasNext) {
+      while (hasNext && loopCount < 10) {
+        // 무한 루프 방지
         const response = await userApis.getFollowings(cursor, 100); // 최대 100개씩 가져오기
+
         const items = response.content?.item || [];
         allItems = [...allItems, ...items];
 
         hasNext = response.content?.hasNext || false;
         cursor = response.content?.nextCursor;
+        loopCount++;
       }
 
       return {
@@ -148,7 +152,7 @@ export const useUserInfoQuery = () => {
   });
 };
 
-// 마이페이지 총 구매, 판매 내역 조회 
+// 마이페이지 총 구매, 판매 내역 조회
 export const useUserPostCountQuery = (tradeType: 'SALE' | 'PURCHASE', enabled: boolean = true) => {
   return useQuery<number>({
     queryKey: ['userPostCount', tradeType],
@@ -157,4 +161,3 @@ export const useUserPostCountQuery = (tradeType: 'SALE' | 'PURCHASE', enabled: b
     staleTime: 1000 * 60 * 5, // optional
   });
 };
-
