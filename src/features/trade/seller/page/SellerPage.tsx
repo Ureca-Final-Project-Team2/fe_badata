@@ -139,7 +139,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
         <div className="pb-[96px]">
           {/* 로딩 상태 */}
           {(isLoading || showSkeleton) && (
-            <div className="px-4">
+            <div>
               <div className="grid grid-cols-2 gap-4">
                 {Array.from({ length: 6 }).map((_, index) => (
                   <TradePostCardSkeleton key={index} />
