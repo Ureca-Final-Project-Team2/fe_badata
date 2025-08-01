@@ -152,7 +152,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
           {isError && (
             <div className="text-center py-8 text-[var(--red)]">
               <p>판매 내역을 불러오는데 실패했습니다.</p>
-              <p className="text-sm mt-2">{error?.message}</p>
+              <p className="font-caption-regular mt-2">{error?.message}</p>
             </div>
           )}
 
