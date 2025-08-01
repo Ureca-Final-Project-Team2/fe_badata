@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getToken, onMessage, getMessaging } from 'firebase/messaging';
+
 import { initializeApp } from 'firebase/app';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
 const VAPID_KEY =
   'BA1aWgnW0pgIgDVHAV2iloP2ujHvGsm18OLS2x1LcnisFhAP2_vPHDBz6yOmR0a1XGWUmvU8f9NtUaOnDR_7MmI';
