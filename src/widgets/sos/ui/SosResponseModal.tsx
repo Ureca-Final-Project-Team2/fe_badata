@@ -3,7 +3,6 @@
 import { toast } from 'sonner';
 
 import { useRespondToSosRequest } from '@/widgets/sos/model/mutations';
-import { useSosWebSocket } from '@/widgets/sos/model/useSosWebSocket';
 
 interface SosResponseModalProps {
   isOpen: boolean;
@@ -14,15 +13,12 @@ interface SosResponseModalProps {
 
 export function SosResponseModal({ isOpen, onClose, sosId, requesterName }: SosResponseModalProps) {
   const { mutate: respondToSosRequest, isPending } = useRespondToSosRequest();
-  const { sendSosResponse } = useSosWebSocket();
 
   const handleRespond = (isSuccess: boolean) => {
     respondToSosRequest(
       { sosId },
       {
         onSuccess: () => {         
-          // WebSocket을 통해 응답 알림 전송
-          sendSosResponse(sosId, isSuccess);
           
           onClose();
           // 성공/실패에 따른 추가 처리 (토스트 메시지)
