@@ -14,8 +14,6 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
-
   // data payload에서 값 꺼내기
   const notificationTitle = payload.data && payload.data.title ? payload.data.title : 'BADATA 알림';
   const notificationOptions = {

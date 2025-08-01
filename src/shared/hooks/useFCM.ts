@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { toast } from 'sonner';
 
 const VAPID_KEY = process.env.NEXT_PUBLIC_VAPID_KEY;
 
@@ -44,7 +45,6 @@ export const useFCM = () => {
 
         if (permissionResult === 'granted') {
           const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-          console.log('ServiceWorker 등록 완료:', registration);
 
           const app = initializeApp(firebaseConfig);
           const messaging = getMessaging(app);
@@ -55,30 +55,25 @@ export const useFCM = () => {
             return;
           }
 
-          console.log('messaging 초기화 성공:', messaging);
-
           const currentToken = await getToken(messaging, {
             vapidKey: VAPID_KEY,
             serviceWorkerRegistration: registration,
           });
 
           if (currentToken) {
-            console.log('FCM Token:', currentToken);
             setToken({ token: currentToken });
           } else {
-            console.warn('FCM 토큰 없음');
             setToken({ token: '', error: '토큰을 가져올 수 없습니다.' });
           }
 
           const unsubscribe = onMessage(messaging, (payload) => {
-            console.log('Foreground 알림 수신:', payload);
             const newMessage = {
               title: payload.data?.title,
               body: payload.data?.content,
               data: payload.data,
             };
             setMessage(newMessage);
-            alert(`알림 도착: ${payload.data?.title}\n${payload.data?.content}`);
+            toast.success(`알림 도착: ${payload.data?.title}\n${payload.data?.content}`);
           });
 
           return () => unsubscribe();
