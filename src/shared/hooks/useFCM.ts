@@ -1,21 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken } from 'firebase/messaging';
+import { getToken, messaging, onMessage } from '@/shared/lib/firebase'; // ✅ 여기만 import
 
 const VAPID_KEY = process.env.NEXT_PUBLIC_VAPID_KEY;
-
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_APIKEY,
-  authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
-  projectId: process.env.NEXT_PUBLIC_PROJECTID,
-  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
-};
 
 interface FCMToken {
   token: string;
@@ -33,17 +22,29 @@ export const useFCM = () => {
   const [message, setMessage] = useState<FCMessage | null>(null);
   const [permission, setPermission] = useState<NotificationPermission>('default');
 
-  // ✅ 직접 호출해서 토큰 받아올 수 있는 함수
+  useEffect(() => {
+    const unsubscribe = onMessage(messaging, (payload) => {
+      console.log('[포그라운드 메시지 수신]', payload);
+      const { title, content } = payload.data || {};
+      setMessage({
+        title: title || '알림',
+        body: content || '새로운 메시지가 도착했습니다!',
+        data: payload.data,
+      });
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const triggerFCMToken = async (): Promise<string | null> => {
     try {
       const permissionResult = await Notification.requestPermission();
       setPermission(permissionResult);
-
       if (permissionResult !== 'granted') return null;
 
       const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-      const app = initializeApp(firebaseConfig);
-      const messaging = getMessaging(app);
 
       const currentToken = await getToken(messaging, {
         vapidKey: VAPID_KEY,
@@ -69,6 +70,6 @@ export const useFCM = () => {
     message,
     permission,
     clearMessage: () => setMessage(null),
-    triggerFCMToken, // ✅ export
+    triggerFCMToken,
   };
 };

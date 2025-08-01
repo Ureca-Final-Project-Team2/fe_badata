@@ -17,13 +17,13 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(function (payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
 
-  // data payload에서 값 꺼내기
   const notificationTitle = payload.data && payload.data.title ? payload.data.title : 'BADATA 알림';
+
   const notificationOptions = {
-    body: payload.data && payload.data.content ? payload.data.content : '새로운 소식이 있습니다!',
+    body: payload.data?.content || '새로운 소식이 있습니다!',
     icon: '/assets/logo-badata.png',
     badge: '/assets/logo-badata.png',
-    tag: 'badata-notification',
+    tag: `badata-bg-${Date.now()}`,
     requireInteraction: true,
     data: {
       url: payload.data?.click_action ?? '/',
@@ -45,9 +45,9 @@ self.addEventListener('push', (event) => {
     const title = payload.data?.title || 'BADATA 알림';
     const options = {
       body: payload.data?.content || '새로운 알림이 도착했습니다.',
-      icon: '/assets/logo-badata.png', // 반드시 /assets/... 형태의 절대경로로 지정!
-      badge: '/assets/logo-badata.png', // 필요시
-      tag: 'badata-tag',
+      icon: '/assets/logo-badata.png',
+      badge: '/assets/logo-badata.png',
+      tag: `badata-push-${Date.now()}`,
       requireInteraction: true,
       actions: [
         {
