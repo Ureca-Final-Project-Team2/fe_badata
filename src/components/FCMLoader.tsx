@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+
 import { useFCM } from '@/shared/hooks/useFCM';
 
 export const FCMLoader = () => {
