@@ -1,48 +1,19 @@
-'use client';
 
-import { useEffect } from 'react';
+// import { useToast } from '@/shared/ui/Toast/useToast';
 
-import { useSosNotificationStore } from '@/widgets/sos/model/sosNotificationStore';
-import { useSosWebSocket } from '@/widgets/sos/model/useSosWebSocket';
-import { SosResponseModal } from '@/widgets/sos/ui/SosResponseModal';
+// import { useSseSosListener } from '../model/useSseSosListener';
 
-export function SosNotificationHandler() {
-  const { currentSosRequest, isResponseModalOpen, setCurrentSosRequest, openResponseModal, closeResponseModal, clearSosRequest } = useSosNotificationStore();
-  
-  const { isConnected } = useSosWebSocket({
-    onSosRequest: (notification) => {
-      console.log('실시간 SOS 요청을 받았습니다:', notification);
-      setCurrentSosRequest(notification);
-      openResponseModal();
-    },
-    onSosResponse: (notification) => {
-      console.log('실시간 SOS 응답을 받았습니다:', notification);
-      // 필요시 응답 처리 (토스트 메시지 등)
-    },
-  });
+// export const SosNotificationHandler = () => {
+//   const showToast = useToast();
 
-  const handleResponseModalClose = () => {
-    closeResponseModal();
-    clearSosRequest();
-  };
+//   useSseSosListener((message) => {
+//     showToast({
+//       type: 'info',
+//       message: `🚨 새로운 SOS 요청이 도착했습니다!`,
+//       duration: 5000,
+//     });
+//   });
 
-  // WebSocket 연결 상태 표시 (개발용)
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('SOS WebSocket 연결 상태:', isConnected ? '연결됨' : '연결 안됨');
-    }
-  }, [isConnected]);
-
-  return (
-    <>
-      {currentSosRequest && (
-        <SosResponseModal
-          isOpen={isResponseModalOpen}
-          onClose={handleResponseModalClose}
-          sosId={currentSosRequest.sosId}
-          requesterName={currentSosRequest.requesterName}
-        />
-      )}
-    </>
-  );
-} 
+//   return null;
+// };
+// 이 컴포넌트는 AppLayout 또는 _app.tsx 상단에 무조건 mount되게 처리
