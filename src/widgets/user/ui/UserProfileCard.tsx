@@ -120,7 +120,7 @@ const UserProfileCard = ({
 
       {/* 에러 모달 */}
       {showErrorModal && (
-        <div className="fixed inset-0 bg-[var(--black)/50] flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-[var(--white)] rounded-lg p-6 max-w-sm w-full mx-4">
             <h3 className="font-title-semibold mb-4">알림</h3>
             <p className="text-[var(--gray-mid)] font-body-regular mb-6">{errorMessage}</p>
