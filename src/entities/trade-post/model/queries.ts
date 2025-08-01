@@ -114,12 +114,10 @@ export const useSellerSoldPostsCountQuery = (userId: number) => {
   return useQuery({
     queryKey: ['seller', 'sold-count', userId],
     queryFn: async () => {
-      // 충분히 큰 size로 설정하여 모든 판매 완료 게시물을 가져옴
-      console.log('판매완료 게시물 조회 시작 - userId:', userId);
-      const response = await tradePostApis.getSellerPosts(userId, true, undefined, 10000);
-      console.log('판매완료 게시물 응답:', response);
-      console.log('판매완료 게시물 개수:', response.item?.length || 0);
-      return response.item?.length || 0;
+      const response = await tradePostApis.getSellerPosts(userId, true, undefined, 100);
+      const count = response.item?.length || 0;
+      // 100개 이상이면 100 반환 (UI에서 "100+"로 표시)
+      return count >= 100 ? 100 : count;
     },
     enabled: !!userId,
     staleTime: 5 * 60 * 1000,

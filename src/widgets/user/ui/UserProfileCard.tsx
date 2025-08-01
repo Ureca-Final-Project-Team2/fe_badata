@@ -58,6 +58,7 @@ const UserProfileCard = ({
     localFollowingState !== null ? localFollowingState : isFollowingFromQuery;
 
   const displayTradeCount = soldPostsCount ?? 0;
+  const displayTradeText = displayTradeCount >= 100 ? '100+' : displayTradeCount;
 
   const handleFollowClick = async () => {
     try {
@@ -126,7 +127,7 @@ const UserProfileCard = ({
             )}
           </div>
           <span className="text-[var(--black)] font-small-regular leading-none mt-2">
-            거래완료 {isLoadingSoldCount ? '로딩중...' : displayTradeCount}
+            거래완료 {isLoadingSoldCount ? '로딩중...' : displayTradeText}
           </span>
         </div>
       </div>
