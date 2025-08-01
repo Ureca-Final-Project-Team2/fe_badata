@@ -15,10 +15,8 @@ import type {
 
 // 게시물 목록 조회
 export const getTradePosts = async (): Promise<DeadlinePost[]> => {
-  const content: { postsResponse: DeadlinePost[] } = await axiosInstance.get(
-    END_POINTS.TRADES.LIST,
-  );
-  return content.postsResponse ?? [];
+  const content: { item: DeadlinePost[] } = await axiosInstance.get(END_POINTS.TRADES.LIST);
+  return content.item ?? [];
 };
 
 // 게시물 삭제
