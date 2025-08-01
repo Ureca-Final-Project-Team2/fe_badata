@@ -6,6 +6,7 @@ import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 import { SosModal } from '@/widgets/sos/ui/SosModal';
 
 import { SosNotificationHandler } from './SosNotificationHandler';
+import { SosRespondModal } from './SosRespondModal';
 
 export function SosDrawer() {
   const { isDrawerOpen, closeDrawer } = useSosDrawer();
@@ -13,10 +14,9 @@ export function SosDrawer() {
 
   return (
     <>
-         <SosNotificationHandler />
       <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} className="bg-white">
         <div className="w-full flex flex-col items-center px-4 pt-6 pb-28">
-          <button 
+          <button
             onClick={() => setIsModalOpen(true)}
             className="w-full rounded-xl bg-[var(--main-1)] text-[var(--main-5)] font-body-medium py-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--main-2)] transition-colors"
           >
@@ -43,10 +43,9 @@ export function SosDrawer() {
         </div>
       </Drawer>
 
-      <SosModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <SosModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <SosNotificationHandler />
+      <SosRespondModal />
     </>
   );
 }

@@ -31,15 +31,24 @@ export const useSseSosListener = (onMessage: (data: SseNotification) => void) =>
 
             chunk.split('\n').forEach((line) => {
               if (line.startsWith('data:')) {
+                const rawData = line.replace(/^data:\s*/, '');
+
+                // JSON 형식이 아닐 경우 무시
+                if (!rawData.startsWith('{')) {
+                  console.info('📝 일반 메시지:', rawData);
+                  return;
+                }
+
                 try {
-                  const json = JSON.parse(line.replace(/^data:\s*/, ''));
+                  const json = JSON.parse(rawData);
                   console.log('📡 SSE 수신:', json);
                   onMessage(json);
                 } catch {
-                  console.error('❌ JSON 파싱 실패:', line);
+                  console.error('❌ JSON 파싱 실패:', rawData);
                 }
               }
             });
+
           }
         };
 

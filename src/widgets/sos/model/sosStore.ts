@@ -9,15 +9,24 @@ interface SosState {
   toggleDrawer: () => void;
 
   sosId: number | null;
+  isRespondModalOpen: boolean;
   setSosId: (id: number) => void;
+  openRespondModal: () => void;
+  closeRespondModal: () => void;
 }
 
 export const useSosStore = create<SosState>((set) => ({
   isDrawerOpen: false,
   openDrawer: () => set({ isDrawerOpen: true }),
   closeDrawer: () => set({ isDrawerOpen: false }),
-  toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
+  toggleDrawer: () =>
+    set((state: SosState) => ({
+      isDrawerOpen: !state.isDrawerOpen,
+    })),
 
   sosId: null,
+  isRespondModalOpen: false,
   setSosId: (id: number) => set({ sosId: id }),
+  openRespondModal: () => set({ isRespondModalOpen: true }),
+  closeRespondModal: () => set({ isRespondModalOpen: false }),
 }));
