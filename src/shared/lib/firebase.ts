@@ -1,5 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getMessaging, Messaging } from 'firebase/messaging';
+import { getMessaging } from 'firebase/messaging';
+
+import type { Messaging } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_APIKEY,
