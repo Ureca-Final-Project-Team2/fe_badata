@@ -1,12 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { toast } from 'sonner';
-
-import { fetchFcmToken } from '@/entities/auth/api/apis';
+import { getMessaging, getToken } from 'firebase/messaging';
 
 const VAPID_KEY = process.env.NEXT_PUBLIC_VAPID_KEY;
 
@@ -36,67 +33,35 @@ export const useFCM = () => {
   const [message, setMessage] = useState<FCMessage | null>(null);
   const [permission, setPermission] = useState<NotificationPermission>('default');
 
-  useEffect(() => {
-    const initializeFCM = async () => {
-      if (typeof window === 'undefined') return;
+  // ✅ 직접 호출해서 토큰 받아올 수 있는 함수
+  const triggerFCMToken = async (): Promise<string | null> => {
+    try {
+      const permissionResult = await Notification.requestPermission();
+      setPermission(permissionResult);
 
-      try {
-        const permissionResult = await Notification.requestPermission();
-        setPermission(permissionResult);
+      if (permissionResult !== 'granted') return null;
 
-        if (permissionResult === 'granted') {
-          const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      const app = initializeApp(firebaseConfig);
+      const messaging = getMessaging(app);
 
-          const app = initializeApp(firebaseConfig);
-          const messaging = getMessaging(app);
+      const currentToken = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: registration,
+      });
 
-          if (!messaging) {
-            console.error('messaging 초기화 실패:', messaging);
-            setToken({ token: '', error: 'messaging을 초기화할 수 없습니다.' });
-            return;
-          }
-
-          const currentToken = await getToken(messaging, {
-            vapidKey: VAPID_KEY,
-            serviceWorkerRegistration: registration,
-          });
-
-          if (currentToken) {
-            console.log('[✅ FCM 토큰 발급 완료]', currentToken);
-            setToken({ token: currentToken });
-
-            // ✅ FCM 토큰을 서버에 전송
-            try {
-              await fetchFcmToken(currentToken);
-            } catch (err) {
-              console.error('[ FCM 토큰 서버 전송 실패]', err);
-            }
-          } else {
-            setToken({ token: '', error: '토큰을 가져올 수 없습니다.' });
-          }
-
-          const unsubscribe = onMessage(messaging, (payload) => {
-            const newMessage = {
-              title: payload.data?.title,
-              body: payload.data?.content,
-              data: payload.data,
-            };
-            setMessage(newMessage);
-            toast.success(`알림 도착: ${payload.data?.title}\n${payload.data?.content}`);
-          });
-
-          return () => unsubscribe();
-        } else {
-          setToken({ token: '', error: '알림 권한이 거부되었습니다.' });
-        }
-      } catch (err) {
-        console.error('FCM 초기화 실패:', err);
-        setToken({ token: '', error: 'FCM 초기화 중 오류가 발생했습니다.' });
+      if (currentToken) {
+        setToken({ token: currentToken });
+        return currentToken;
+      } else {
+        setToken({ token: '', error: '토큰을 가져올 수 없습니다.' });
+        return null;
       }
-    };
-
-    initializeFCM();
-  }, []);
+    } catch (err) {
+      console.error('FCM 토큰 발급 실패:', err);
+      return null;
+    }
+  };
 
   return {
     token: token.token,
@@ -104,5 +69,6 @@ export const useFCM = () => {
     message,
     permission,
     clearMessage: () => setMessage(null),
+    triggerFCMToken, // ✅ export
   };
 };
