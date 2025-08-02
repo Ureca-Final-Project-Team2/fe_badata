@@ -67,3 +67,20 @@ export interface CoinResponse {
 export interface PostCountResponse {
   postCount: number;
 }
+
+export interface PurchasedGifticonDetail {
+  sellerId: number;
+  nickname: string;
+  id: number;
+  title: string;
+  comment: string;
+  price: number;
+  deadLine: string;
+  boughtAt: string;
+  partner: string;
+}
+
+export interface PurchasedGifticonImage {
+  postImage: string;
+  couponNumber: string;
+}
