@@ -1,5 +1,13 @@
+// src/shared/lib/firebase.ts
 import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import {
+  getToken as getFirebaseToken,
+  getMessaging,
+  isSupported,
+  onMessage as onFirebaseMessage,
+} from 'firebase/messaging';
+
+import type { Messaging } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBySuNvoDxAYIKSC6Cwuj1jRcKZv5fTshM',
@@ -12,6 +20,17 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
 
-export { getToken, messaging, onMessage };
+let messaging: Messaging | null = null;
+
+const initMessaging = async (): Promise<Messaging | null> => {
+  if (typeof window !== 'undefined' && (await isSupported())) {
+    if (!messaging) {
+      messaging = getMessaging(app);
+    }
+    return messaging;
+  }
+  return null;
+};
+
+export { getFirebaseToken, initMessaging, onFirebaseMessage };
