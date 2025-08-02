@@ -18,7 +18,7 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       user: null,
       login: (token, user) => {
-        // localStorage에 accessToken 별도 저장
+        // localStorage에 accessToken 저장
         localStorage.setItem('accessToken', token);
         set({ isLoggedIn: true, accessToken: token, user });
       },

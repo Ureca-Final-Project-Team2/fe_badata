@@ -18,3 +18,11 @@ export const fetchKakaoAuth = async (code: string): Promise<KakaoAuthResponse> =
     content: response.data.content,
   };
 };
+
+export const fetchFcmToken = async (fcmToken: string) => {
+  const response = await axiosInstance.post(END_POINTS.USER.FCM_TOKEN, {
+    fcmToken,
+  });
+
+  return response;
+};

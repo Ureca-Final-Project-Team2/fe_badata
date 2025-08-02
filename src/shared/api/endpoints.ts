@@ -29,6 +29,7 @@ export const END_POINTS = {
     INFO: '/api/v1/users/info',
     FOLLOW_TOGGLE: (userId: number) => `/api/v1/users/${userId}/follows`,
     SALES: '/api/v1/users/sales',
+    FCM_TOKEN: '/api/v1/fcm-token',
   },
   STORES: {
     ALLSTORE: (storeId: number) => `/api/v1/stores/${storeId}/devices`,
