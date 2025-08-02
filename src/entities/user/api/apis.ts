@@ -6,9 +6,11 @@ import type {
   FollowingsContent,
   FollowToggleResponse,
   PostCountResponse,
+  PurchasedGifticonDetail,
+  PurchasedGifticonImage,
   PurchaseResponse,
   SalesContent,
-  UserInfoResponse
+  UserInfoResponse,
 } from '@/entities/user/lib/types';
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 import type { UserTradePostsResponse } from '@/widgets/trade/post-detail/lib/types';
@@ -90,10 +92,23 @@ export const userApis = {
     return response.data;
   },
   getUserPostCount: async (tradeType: 'SALE' | 'PURCHASE'): Promise<number> => {
-    const response: PostCountResponse = await axiosInstance.get(
-      END_POINTS.MYPAGE.POST_COUNT,
-      { params: { tradeType } }
-    );
+    const response: PostCountResponse = await axiosInstance.get(END_POINTS.MYPAGE.POST_COUNT, {
+      params: { tradeType },
+    });
     return response.postCount ?? 0;
+  },
+
+  getPurchasedGifticonDetail: async (gifticonId: string): Promise<PurchasedGifticonDetail> => {
+    const response: PurchasedGifticonDetail = await axiosInstance.get(
+      END_POINTS.MYPAGE.PURCHASED_GIFTICON_DETAIL(gifticonId),
+    );
+    return response;
+  },
+
+  getPurchasedGifticonImage: async (gifticonId: string): Promise<PurchasedGifticonImage> => {
+    const response: PurchasedGifticonImage = await axiosInstance.get(
+      END_POINTS.MYPAGE.PURCHASED_GIFTICON_IMAGE(gifticonId),
+    );
+    return response;
   },
 };

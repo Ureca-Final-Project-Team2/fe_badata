@@ -6,6 +6,8 @@ import type {
   CoinResponse,
   FollowingsContent,
   PurchaseResponse,
+  PurchasedGifticonDetail,
+  PurchasedGifticonImage,
   SalesContent,
   UserInfoResponse,
 } from '@/entities/user/lib/types';
@@ -148,7 +150,7 @@ export const useUserInfoQuery = () => {
   });
 };
 
-// 마이페이지 총 구매, 판매 내역 조회 
+// 마이페이지 총 구매, 판매 내역 조회
 export const useUserPostCountQuery = (tradeType: 'SALE' | 'PURCHASE', enabled: boolean = true) => {
   return useQuery<number>({
     queryKey: ['userPostCount', tradeType],
@@ -158,3 +160,22 @@ export const useUserPostCountQuery = (tradeType: 'SALE' | 'PURCHASE', enabled: b
   });
 };
 
+// 구매한 기프티콘 상세 정보 조회 훅
+export const usePurchasedGifticonDetailQuery = (gifticonId: string) => {
+  return useQuery<PurchasedGifticonDetail>({
+    queryKey: ['user', 'purchased-gifticon-detail', gifticonId],
+    queryFn: () => userApis.getPurchasedGifticonDetail(gifticonId),
+    enabled: !!gifticonId,
+    staleTime: 5 * 60 * 1000, // 5분
+  });
+};
+
+// 구매한 기프티콘 이미지 조회 훅
+export const usePurchasedGifticonImageQuery = (gifticonId: string) => {
+  return useQuery<PurchasedGifticonImage>({
+    queryKey: ['user', 'purchased-gifticon-image', gifticonId],
+    queryFn: () => userApis.getPurchasedGifticonImage(gifticonId),
+    enabled: !!gifticonId,
+    staleTime: 5 * 60 * 1000, // 5분
+  });
+};
