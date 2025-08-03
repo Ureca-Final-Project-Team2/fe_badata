@@ -36,7 +36,7 @@ export const DragBottomSheet = ({
 }: ExtendedDragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
   const [currentY, setCurrentY] = useState(0);
-  const [lastOpenState, setLastOpenState] = useState(false); // 이전 open 상태를 추적
+  const lastOpenRef = useRef(false); // useRef로 이전 상태 추적
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [animatedItems, setAnimatedItems] = useState<Set<string>>(new Set());
   const [lastStoreCount, setLastStoreCount] = useState(0);
@@ -84,7 +84,7 @@ export const DragBottomSheet = ({
     collapsedY,
     open,
     currentY,
-    lastOpenState,
+    lastOpenRef: lastOpenRef.current,
   });
 
   useLayoutEffect(() => {
@@ -104,7 +104,7 @@ export const DragBottomSheet = ({
       middleY,
       collapsedY,
       currentY,
-      lastOpenState,
+      lastOpenRef: lastOpenRef.current,
     });
 
     if (windowHeight === 0) {
@@ -113,8 +113,9 @@ export const DragBottomSheet = ({
     }
 
     // open 상태가 변경되었을 때만 애니메이션 실행
-    if (open !== lastOpenState) {
-      setLastOpenState(open || false);
+    if (open !== lastOpenRef.current) {
+      console.log('🔍 open 상태 변경 감지:', { open, lastOpen: lastOpenRef.current });
+      lastOpenRef.current = open || false;
 
       if (open) {
         // 목록보기 버튼을 클릭했을 때 expanded 상태로 열림
@@ -146,7 +147,7 @@ export const DragBottomSheet = ({
         });
       }
     }
-  }, [open, controls, windowHeight, expandedY, lastOpenState]);
+  }, [open, controls, windowHeight, expandedY]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
     console.log('🔍 handleDragEnd 실행:', info.point.y, 'middleY:', middleY);
