@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale/ko';
-import { Pencil } from 'lucide-react';
 
 import { useRentalHistoryQuery } from '@/features/mypage/rental-history/model/queries';
 import { PATH } from '@/shared/config/path';
@@ -16,15 +15,21 @@ import type { RentalHistoryItem } from '@/features/mypage/rental-history/lib/typ
 export default function RentalHistoryPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useRentalHistoryQuery();
+
   if (isLoading) return <div>로딩 중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
   if (!data || !Array.isArray(data.item)) return <div>대여 내역을 불러올 수 없습니다.</div>;
 
   const rentalHistoryData = data.item;
 
-  const handleReviewClick = (reservationId: number) => {
-    router.push(`${PATH.RENTAL.REGISTER_REVIEW}?reservationId=${reservationId}`);
+  const handleReviewClick = (reservationId: number, storeId: number, hasWrittenReview: boolean) => {
+    if (hasWrittenReview) {
+      router.push(`/store/${storeId}/reviews`);
+    } else {
+      router.push(`${PATH.RENTAL.REGISTER_REVIEW}?reservationId=${reservationId}&mode=register`);
+    }
   };
+
   const statusMap = {
     PENDING: '예약 중',
     BURROWING: '대여 중',
@@ -44,11 +49,10 @@ export default function RentalHistoryPage() {
           const dateObj = new Date(item.rentalStartDate);
           const date = format(dateObj, 'M.d', { locale: ko });
           const day = format(dateObj, 'eee', { locale: ko });
-          
+
           const status = statusMap[item.reservationStatus];
           const price = item.price.toLocaleString('ko-KR') + '원';
           const showReviewButton = item.reservationStatus === 'COMPLETE';
-          const hasWrittenReview = item.isReviewed;
 
           return (
             <div key={item.id} className={`relative mb-8${idx === 0 ? ' mt-4' : ''}`}>
@@ -63,11 +67,20 @@ export default function RentalHistoryPage() {
                   </span>
                   {showReviewButton && (
                     <button
-                      onClick={() => handleReviewClick(item.id)}
-                      className="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-[var(--main-5)] font-title-regular cursor-pointer"
+                      onClick={() => handleReviewClick(item.id, item.storeId, item.isReviewed)}
+                      className="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-[var(--main-5)] font-title-regular cursor-pointer ml-auto"
                     >
-                      <Pencil size={16} />
-                      {hasWrittenReview ? '👀 리뷰보기' : '리뷰쓰기'}
+                      {item.isReviewed ? (
+                        <>
+                          <span className="text-[16px]">👀</span>
+                          리뷰보기
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-[16px]">🖊️</span>
+                          리뷰쓰기
+                        </>
+                      )}
                     </button>
                   )}
                 </div>
