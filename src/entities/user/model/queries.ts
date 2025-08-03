@@ -189,9 +189,7 @@ export const usePurchaseReportMutation = () => {
     { postId: number; comment: string }
   >({
     mutationFn: ({ postId, comment }) => userApis.postPurchaseReport(postId, { comment }),
-    onSuccess: () => {
-      // 성공 시 필요한 처리 (예: 토스트 메시지, 캐시 무효화 등)
-    },
+    onSuccess: () => {},
     onError: (error) => {
       console.error('구매 신고 제출 실패:', error);
     },
