@@ -3,11 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from '@/features/rental/map/hooks/useLocationHooks';
 
 // 사용자 위치 관리를 위한 커스텀 훅
-export const useUserLocation = (
-  selectedLat: string | null,
-  selectedLng: string | null,
-  hasProcessedUrlParams: boolean,
-) => {
+export const useUserLocation = () => {
   const [userLocation, setUserLocation] = useState({
     lat: null as number | null,
     lng: null as number | null,
@@ -24,22 +20,9 @@ export const useUserLocation = (
   // URL 파라미터 처리 상태 추적
   const urlParamsProcessedRef = useRef(false);
 
-  // URL 파라미터 처리
+  // 사용자 위치 가져오기 (URL 파라미터와 관계없이 항상 실제 사용자 위치 사용)
   useEffect(() => {
-    if (selectedLat && selectedLng && !hasProcessedUrlParams && !urlParamsProcessedRef.current) {
-      const lat = parseFloat(selectedLat);
-      const lng = parseFloat(selectedLng);
-
-      if (!isNaN(lat) && !isNaN(lng)) {
-        setUserLocation({ lat, lng });
-        urlParamsProcessedRef.current = true;
-      }
-    }
-  }, [selectedLat, selectedLng, hasProcessedUrlParams]);
-
-  // 사용자 위치 가져오기 (URL 파라미터가 없을 때만)
-  useEffect(() => {
-    if (!selectedLat && !selectedLng && !hasProcessedUrlParams && !urlParamsProcessedRef.current) {
+    if (!urlParamsProcessedRef.current) {
       if (locationData) {
         setUserLocation({
           lat: locationData.lat,
@@ -73,7 +56,7 @@ export const useUserLocation = (
         );
       }
     }
-  }, [locationData, selectedLat, selectedLng, hasProcessedUrlParams]);
+  }, [locationData]);
 
   return {
     userLocation,

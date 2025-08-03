@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { CenterScrollSwiper } from '@/entities/scroll';
 import { useDrawerState } from '@/features/rental/map/hooks/useDrawerStaterHooks';
@@ -12,6 +12,7 @@ import {
 } from '@/features/rental/map/hooks/useStoreListHooks';
 import { useUrlParams } from '@/features/rental/map/hooks/useUrlParamsrHooks';
 import { useUserLocation } from '@/features/rental/map/hooks/useUserLocationrHooks';
+import { createPlaceMarker } from '@/features/rental/map/lib/placeMarker';
 import { filterDevices } from '@/features/rental/map/model/filtereDevices';
 import { CurrentLocationButton } from '@/features/rental/map/ui/CurrentLocationButton';
 import DeviceCard from '@/features/rental/map/ui/DeviceCard';
@@ -32,15 +33,35 @@ export default function RentalPage() {
   const {
     selectedLat,
     selectedLng,
-    selectedAddress,
     selectedPlaceName,
     hasProcessedUrlParams,
     setHasProcessedUrlParams,
     clearUrlParams,
   } = useUrlParams();
 
+  // URL 파라미터 값을 저장
+  const [savedUrlParams, setSavedUrlParams] = useState<{
+    lat: string | null;
+    lng: string | null;
+    placeName: string | null;
+  } | null>(null);
+
+  // 장소 마커 처리 상태 추적
+  const placeMarkerProcessedRef = useRef(false);
+
+  // URL 파라미터가 있으면 저장
+  useEffect(() => {
+    if (selectedLat && selectedLng && selectedPlaceName && !hasProcessedUrlParams) {
+      setSavedUrlParams({
+        lat: selectedLat,
+        lng: selectedLng,
+        placeName: selectedPlaceName,
+      });
+    }
+  }, [selectedLat, selectedLng, selectedPlaceName, hasProcessedUrlParams]);
+
   const { userLocation, setUserLocation, userAddress, locationLoading, locationError } =
-    useUserLocation(selectedLat || null, selectedLng || null, hasProcessedUrlParams);
+    useUserLocation();
 
   const {
     isDrawerOpen,
@@ -78,6 +99,9 @@ export default function RentalPage() {
     }
     return new Set();
   });
+
+  // 장소 마커 상태 관리
+  const [placeMarker, setPlaceMarker] = useState<kakao.maps.CustomOverlay | null>(null);
 
   const { selectedStore, selectedStoreId, handleMapClick, dispatchSelectedStore } =
     useSelectedStore(mapInstance);
@@ -130,13 +154,12 @@ export default function RentalPage() {
     [dispatchSelectedStore, mapInstance, expandedMarkers],
   );
 
-  // URL 파라미터 처리 완료 표시
+  // URL 파라미터 처리 완료 표시 (장소 마커 생성 후에만)
   useEffect(() => {
-    if (selectedLat && selectedLng && !hasProcessedUrlParams) {
-      setHasProcessedUrlParams(true);
+    if (selectedLat && selectedLng && hasProcessedUrlParams) {
       clearUrlParams();
     }
-  }, [selectedLat, selectedLng, hasProcessedUrlParams, setHasProcessedUrlParams, clearUrlParams]);
+  }, [selectedLat, selectedLng, hasProcessedUrlParams, clearUrlParams]);
 
   // 확장된 마커 상태를 localStorage에 저장
   useEffect(() => {
@@ -191,7 +214,16 @@ export default function RentalPage() {
 
   // 지도 클릭 핸들러
   const handleMapClickWrapper = useCallback(async () => {
-    console.log('🔍 지도 클릭됨');
+    console.log('📍 지도 클릭됨');
+
+    // 장소 마커 제거
+    if (placeMarker) {
+      placeMarker.setMap(null);
+      setPlaceMarker(null);
+    }
+
+    // 장소 마커 처리 상태 리셋
+    placeMarkerProcessedRef.current = false;
 
     // 모든 마커 축소
     setExpandedMarkers(new Set());
@@ -218,55 +250,94 @@ export default function RentalPage() {
     }
 
     await handleMapClick();
-  }, [handleMapClick, mapInstance]);
+  }, [handleMapClick, mapInstance, placeMarker]);
 
   // 지도 준비 완료 시 호출되는 콜백
   const handleMapReady = useCallback(
     (map: kakao.maps.Map) => {
       setMapInstance(map);
 
-      // URL 파라미터가 있으면 선택된 위치에 마커 생성 (일회성)
-      if (selectedLat && selectedLng && !hasProcessedUrlParams) {
-        const lat = parseFloat(selectedLat);
-        const lng = parseFloat(selectedLng);
+      console.log('📍 handleMapReady 호출:', {
+        selectedLat,
+        selectedLng,
+        selectedPlaceName,
+        hasProcessedUrlParams,
+        savedUrlParams,
+        placeMarkerProcessed: placeMarkerProcessedRef.current,
+      });
+
+      // 이미 처리된 경우 무시
+      if (placeMarkerProcessedRef.current) {
+        console.log('📍 이미 처리된 상태, 무시');
+        return;
+      }
+
+      // 기존 장소 마커 제거
+      if (placeMarker) {
+        placeMarker.setMap(null);
+        setPlaceMarker(null);
+      }
+
+      // URL 파라미터가 있으면 선택된 위치에 장소 마커 생성
+      const paramsToUse = savedUrlParams || {
+        lat: selectedLat,
+        lng: selectedLng,
+        placeName: selectedPlaceName,
+      };
+
+      if (paramsToUse.lat && paramsToUse.lng && paramsToUse.placeName) {
+        console.log('📍 장소 마커 생성 조건 만족');
+        const lat = parseFloat(paramsToUse.lat);
+        const lng = parseFloat(paramsToUse.lng);
 
         if (!isNaN(lat) && !isNaN(lng)) {
           const newPosition = new window.kakao.maps.LatLng(lat, lng);
 
-          // 선택된 위치 마커 생성
-          const marker = new window.kakao.maps.Marker({
-            position: newPosition,
-            map: map,
+          // 카메라를 선택된 위치로 이동 (줌 레벨 4)
+          map.setCenter(newPosition);
+          map.setLevel(4);
+
+          // 장소 마커 생성
+          const newPlaceMarker = createPlaceMarker(map, newPosition, paramsToUse.placeName, () => {
+            // 장소 마커 클릭 시 아무것도 하지 않음 (이미 선택된 상태)
+            console.log('📍 장소 마커 클릭:', paramsToUse.placeName);
           });
 
-          // 인포윈도우 생성
-          const infowindow = new window.kakao.maps.InfoWindow({
-            content: `
-              <div style="padding: 10px; text-align: center; min-width: 150px;">
-                <div style="font-weight: bold; margin-bottom: 5px;">${selectedPlaceName || '선택된 위치'}</div>
-                <div style="font-size: 12px; color: #666;">${selectedAddress || ''}</div>
-              </div>
-            `,
-          });
-
-          // 마커 클릭 시 인포윈도우 표시
-          window.kakao.maps.event.addListener(marker, 'click', () => {
-            infowindow.open(map, marker);
-          });
-
-          // 인포윈도우 자동 표시
-          infowindow.open(map, marker);
+          console.log('📍 RentalPage에서 장소 마커 생성 완료:', paramsToUse.placeName);
+          setPlaceMarker(newPlaceMarker);
+          setHasProcessedUrlParams(true); // 장소 마커 생성 후에 처리 완료 표시
+          placeMarkerProcessedRef.current = true; // 처리 완료 표시
         }
+      } else {
+        console.log('📍 장소 마커 생성 조건 불만족:', {
+          hasSelectedLat: !!paramsToUse.lat,
+          hasSelectedLng: !!paramsToUse.lng,
+          hasSelectedPlaceName: !!paramsToUse.placeName,
+        });
+        // 조건이 불만족해도 처리 완료 표시
+        placeMarkerProcessedRef.current = true;
       }
     },
-    [selectedLat, selectedLng, selectedAddress, selectedPlaceName, hasProcessedUrlParams],
+    [savedUrlParams, setHasProcessedUrlParams],
   );
 
   // 스토어 리스트 훅
   const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error, fetchNextPage } =
     useStoreListWithInfiniteScroll({
-      centerLat: userLocation.lat ?? 0,
-      centerLng: userLocation.lng ?? 0,
+      centerLat: (() => {
+        // 검색 위치가 있으면 검색 위치, 없으면 사용자 위치
+        if (selectedLat && selectedLng && !hasProcessedUrlParams) {
+          return parseFloat(selectedLat);
+        }
+        return userLocation.lat ?? 0;
+      })(),
+      centerLng: (() => {
+        // 검색 위치가 있으면 검색 위치, 없으면 사용자 위치
+        if (selectedLat && selectedLng && !hasProcessedUrlParams) {
+          return parseFloat(selectedLng);
+        }
+        return userLocation.lng ?? 0;
+      })(),
       sort: [currentSort],
       enabled:
         userLocation.lat !== null &&
@@ -370,19 +441,30 @@ export default function RentalPage() {
         error={locationError}
       />
       <div className="w-full h-[calc(100vh-190px)]">
-        <MapSection
-          filterState={filterState}
-          initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
-          initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
-          onStoreMarkerClick={handleMarkerClick}
-          onMapClick={handleMapClickWrapper}
-          onMapReady={handleMapReady}
-          hasUrlParams={!!(selectedLat && selectedLng && !hasProcessedUrlParams)}
-          selectedStoreId={selectedStoreId}
-          userLat={userLocation.lat ?? undefined}
-          userLng={userLocation.lng ?? undefined}
-          expandedMarkers={expandedMarkers}
-        />
+        {(() => {
+          const hasUrlParamsValue = !!(selectedLat && selectedLng && !hasProcessedUrlParams);
+          console.log('📍 RentalPage hasUrlParams 계산:', {
+            selectedLat,
+            selectedLng,
+            hasProcessedUrlParams,
+            hasUrlParamsValue,
+          });
+          return (
+            <MapSection
+              filterState={filterState}
+              initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
+              initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
+              onStoreMarkerClick={handleMarkerClick}
+              onMapClick={handleMapClickWrapper}
+              onMapReady={handleMapReady}
+              hasUrlParams={hasUrlParamsValue}
+              selectedStoreId={selectedStoreId}
+              userLat={userLocation.lat ?? undefined}
+              userLng={userLocation.lng ?? undefined}
+              expandedMarkers={expandedMarkers}
+            />
+          );
+        })()}
       </div>
       <DrawerSection
         storeList={storeList}

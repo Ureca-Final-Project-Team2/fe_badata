@@ -40,7 +40,7 @@ export function MapSection({
   userLng,
   expandedMarkers,
 }: MapSectionProps) {
-  const { mapRef, map } = useKakaoMapHooks(initialLat, initialLng);
+  const { mapRef, map } = useKakaoMapHooks(initialLat, initialLng, userLat, userLng);
   const { stores } = useFetchStoresHooks(map, filterState);
 
   // ✅ 줌 레벨 변경 통합 관리 (근본적 해결)

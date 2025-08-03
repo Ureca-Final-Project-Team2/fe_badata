@@ -7,6 +7,8 @@ export const createCurrentLocationMarker = (
   userLat?: number,
   userLng?: number,
 ): kakao.maps.CustomOverlay => {
+  console.log('📍 현재 위치 마커 생성:', { userLat, userLng });
+
   // 마커 컨테이너 생성
   const markerContainer = document.createElement('div');
   markerContainer.className = 'current-location-marker';
