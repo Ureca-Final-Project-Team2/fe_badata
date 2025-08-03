@@ -1,10 +1,12 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import { useSearchParams } from 'next/navigation';
 
 import PurchasedGifticonDetailPage from '@/features/mypage/purchase-history/gifticon-detail/page/PurchasedGifticonDetailPage';
 
-export default function Page() {
+function GifticonDetailContent() {
   const searchParams = useSearchParams();
   const encodedGifticonId = searchParams.get('id');
 
@@ -19,4 +21,18 @@ export default function Page() {
   const gifticonId = decodeURIComponent(encodedGifticonId);
 
   return <PurchasedGifticonDetailPage gifticonId={gifticonId} />;
+}
+
+export default function Page() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--main-3)]"></div>
+        </div>
+      }
+    >
+      <GifticonDetailContent />
+    </Suspense>
+  );
 }
