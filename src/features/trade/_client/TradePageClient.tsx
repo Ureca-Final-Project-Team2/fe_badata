@@ -98,9 +98,10 @@ export default function TradePageClient() {
         <>
           <TradeDeadlineBanner />
           <TradeTrendingRanking />
+          <SectionDivider size="full" thickness="thick" />
         </>
       )}
-      <SectionDivider size="full" thickness="thick" />
+
       <TradeList
         title={currentTitle}
         items={filteredPosts}
