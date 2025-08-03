@@ -14,10 +14,10 @@ import {
 import PurchasedGifticonDetailSkeleton from '@/features/mypage/purchase-history/gifticon-detail/ui/PurchasedGifticonDetailSkeleton';
 import { BRAND_MAPPING } from '@/shared/config/brandMapping';
 import { ICONS } from '@/shared/config/iconPath';
-import { downloadImage } from '@/shared/lib/downloadImage';
 import { formatDate, formatDateTime } from '@/shared/lib/formatDate';
 import { getPartnerDefaultImage } from '@/shared/lib/getPartnerDefaultImage';
 import { makeToast } from '@/shared/lib/makeToast';
+import { downloadImage } from '@/shared/lib/proxyImageDownload';
 import { isKoreanBrandName } from '@/shared/lib/typeGuards';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -76,31 +76,14 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
     }
   };
 
-  const handleDownloadImage = async () => {
+  const handleDownloadImage = () => {
     if (gifticonImage?.postImage && gifticonDetail) {
-      await downloadImage(
+      downloadImage(
         gifticonImage.postImage,
         `${gifticonDetail.title}_쿠폰.png`,
-        gifticonDetail.title,
-        (method) => {
-          switch (method) {
-            case 'blob':
-              makeToast('쿠폰 이미지가 다운로드되었습니다.', 'success');
-              break;
-            case 'share':
-              makeToast('공유 메뉴가 열렸습니다. 갤러리에 저장을 선택하세요.', 'success');
-              break;
-            case 'newTab':
-              makeToast('새 탭에서 이미지가 열렸습니다. 이미지를 길게 눌러 저장하세요.', 'success');
-              break;
-            case 'direct':
-              makeToast('쿠폰 이미지 다운로드가 시작되었습니다.', 'success');
-              break;
-          }
-        },
-        () => {
-          makeToast('쿠폰 이미지 다운로드에 실패했습니다.', 'warning');
-        },
+        () => makeToast('쿠폰 이미지가 다운로드되었습니다.', 'success'),
+        () => makeToast('새 탭에서 이미지가 열렸습니다. 이미지를 길게 눌러 저장하세요.', 'success'),
+        (error) => makeToast(error, 'warning'),
       );
     }
   };
@@ -214,7 +197,7 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
             className="w-full bg-[var(--main-5)] text-[var(--white)] font-body-semibold py-3 rounded-[10px] mb-3 flex items-center justify-center gap-2"
           >
             <ScanBarcode size={22} className="flex-shrink-0" />
-            쿠폰 보기
+            기프티콘 보기
           </button>
 
           {/* 첫 열어본 날짜 정보 */}
@@ -305,13 +288,14 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
                   <div className="absolute inset-0 bg-[var(--black)]/50 flex items-center justify-center">
                     <div className="rounded-[15px] p-6 mx-4 text-center max-w-sm">
                       <div className="w-12 h-12 bg-[var(--red)] rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span className="font-body-semibold">⚠️</span>
+                        <span className="font-body-semibold leading-none">⚠️</span>
                       </div>
                       <h3 className="text-[var(--black)] font-body-semibold mb-2">
-                        쿠폰 보기 전 주의사항
+                        기프티콘 열람 및 다운로드 전 안내
                       </h3>
                       <p className="text-[var(--black)] font-label-regular mb-4 text-center">
-                        쿠폰을 열어보시면 재판매 위험이 있으니 신중하게 확인해주세요.
+                        기프티콘 이미지를 열람하거나 다운로드하실 경우 재판매 및 부정 사용 위험이
+                        발생할 수 있습니다. 신중하게 확인해주세요.
                       </p>
                       <div className="flex gap-2">
                         <button
@@ -350,7 +334,7 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
               onClick={handleCopyCouponNumber}
               className="w-full bg-[var(--main-5)] text-[var(--white)] font-body-semibold py-3 rounded-[10px]"
             >
-              복사하기
+              바코드 번호 복사
             </button>
             <button
               onClick={handleDownloadImage}
