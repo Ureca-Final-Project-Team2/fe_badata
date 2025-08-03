@@ -1,12 +1,16 @@
 'use client';
 
+import { useRef } from 'react';
+
 import { useRouter, useSearchParams } from 'next/navigation';
+
+import { useInView } from 'framer-motion';
 
 import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
 import { DeadlineFlatTab } from '@/features/trade/deadline/ui/DeadlineFlatTab';
 import { DeadlineList } from '@/features/trade/deadline/ui/DeadlineList';
 import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
-import { useTradeDeadlineQuery } from '@/features/trade/model/queries';
+import { useTradeDeadlineInfiniteQuery } from '@/features/trade/model/queries';
 import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
 import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
 import { PATH } from '@/shared/config/path';
@@ -25,7 +29,10 @@ export default function DeadlinePageClient() {
   const searchParams = useSearchParams();
   const page = searchParams?.get('page') ?? 'all';
 
-  const { deadlinePosts: posts, isLoading } = useTradeDeadlineQuery();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTradeDeadlineInfiniteQuery();
+
+  const allPosts = data.pages.flatMap((page) => page.item);
+
   const { sortOption, setSortOption, isSortDrawerOpen, openDrawer, closeDrawer } = useSortStateHook<
     'latest' | 'popular'
   >('latest');
@@ -48,7 +55,7 @@ export default function DeadlinePageClient() {
     submitGifticonFilter,
   } = useGifticonFilterHooks();
 
-  const filteredPosts = (posts ?? [])
+  const filteredPosts = allPosts
     .filter((p) => {
       if (page === 'all') return true;
       if (page === 'data') {
@@ -75,6 +82,13 @@ export default function DeadlinePageClient() {
 
   const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortOption)?.label ?? '최신순';
 
+  const loadMoreRef = useRef(null);
+  const isInView = useInView(loadMoreRef);
+
+  if (isInView && hasNextPage && !isFetchingNextPage) {
+    fetchNextPage();
+  }
+
   const handleCardClick = (item: DeadlinePost) => {
     const path =
       item.postCategory === 'DATA'
@@ -88,7 +102,7 @@ export default function DeadlinePageClient() {
       <DeadlineFlatTab className="my-4" />
       <DeadlineList
         items={filteredPosts}
-        isLoading={isLoading}
+        isLoading={false}
         sortLabel={currentSortLabel}
         onSortClick={openDrawer}
         onItemClick={handleCardClick}

@@ -10,8 +10,10 @@ import { AutoSwiper } from '@/shared/ui/AutoSwiper';
 
 export function TradeDeadlineBanner() {
   const router = useRouter();
-  const { deadlinePosts, isLoading } = useTradeDeadlineQuery();
+  const { data, isLoading } = useTradeDeadlineQuery();
   const { toggleLike, isItemLoading } = useTradePostLikeHooks();
+
+  const deadlinePosts = data?.item ?? [];
 
   if (isLoading) {
     return <div className="py-4 text-center text-[var(--gray)]">로딩 중...</div>;
