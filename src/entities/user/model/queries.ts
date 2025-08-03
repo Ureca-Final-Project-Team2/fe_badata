@@ -1,10 +1,11 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 import { userApis } from '@/entities/user/api/apis';
 
 import type {
   CoinResponse,
   FollowingsContent,
+  PurchaseReportResponse,
   PurchaseResponse,
   PurchasedGifticonDetail,
   PurchasedGifticonImage,
@@ -177,5 +178,22 @@ export const usePurchasedGifticonImageQuery = (gifticonId: string) => {
     queryFn: () => userApis.getPurchasedGifticonImage(gifticonId),
     enabled: !!gifticonId,
     staleTime: 5 * 60 * 1000, // 5분
+  });
+};
+
+// 구매 신고 제출 훅
+export const usePurchaseReportMutation = () => {
+  return useMutation<
+    ApiResponse<PurchaseReportResponse>,
+    Error,
+    { postId: number; comment: string }
+  >({
+    mutationFn: ({ postId, comment }) => userApis.postPurchaseReport(postId, { comment }),
+    onSuccess: () => {
+      // 성공 시 필요한 처리 (예: 토스트 메시지, 캐시 무효화 등)
+    },
+    onError: (error) => {
+      console.error('구매 신고 제출 실패:', error);
+    },
   });
 };
