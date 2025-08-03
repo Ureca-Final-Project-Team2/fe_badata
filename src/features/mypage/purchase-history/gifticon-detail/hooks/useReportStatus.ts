@@ -10,22 +10,38 @@ interface UseReportStatusProps {
 }
 
 export const useReportStatus = ({ gifticonId, onSuccess, onError }: UseReportStatusProps) => {
+  // 입력 검증
+  if (!gifticonId || typeof gifticonId !== 'string' || !/^\d+$/.test(gifticonId)) {
+    throw new Error('Invalid gifticonId: must be a numeric string');
+  }
   const [isReported, setIsReported] = useState(() => {
     // localStorage에서 신고 상태 확인
     if (typeof window !== 'undefined') {
-      const reportedItems = JSON.parse(localStorage.getItem('reportedItems') || '[]');
-      return reportedItems.includes(gifticonId);
+      try {
+        const reportedItems = JSON.parse(localStorage.getItem('reportedItems') || '[]');
+        return Array.isArray(reportedItems) && reportedItems.includes(gifticonId);
+      } catch (error) {
+        console.error('Failed to parse reportedItems from localStorage:', error);
+        return false;
+      }
     }
     return false;
   });
 
   const saveReportStatus = () => {
-    const reportedItems = JSON.parse(localStorage.getItem('reportedItems') || '[]');
-    if (!reportedItems.includes(gifticonId)) {
-      reportedItems.push(gifticonId);
-      localStorage.setItem('reportedItems', JSON.stringify(reportedItems));
+    try {
+      const reportedItems = JSON.parse(localStorage.getItem('reportedItems') || '[]');
+      if (!Array.isArray(reportedItems)) {
+        localStorage.setItem('reportedItems', JSON.stringify([gifticonId]));
+      } else if (!reportedItems.includes(gifticonId)) {
+        reportedItems.push(gifticonId);
+        localStorage.setItem('reportedItems', JSON.stringify(reportedItems));
+      }
+      setIsReported(true);
+    } catch (error) {
+      console.error('Failed to save report status to localStorage:', error);
+      setIsReported(true);
     }
-    setIsReported(true);
   };
 
   const handleReportSuccess = () => {
@@ -35,7 +51,12 @@ export const useReportStatus = ({ gifticonId, onSuccess, onError }: UseReportSta
   };
 
   const handleReportError = (error: Error) => {
-    console.error('신고 제출 실패:', error);
+    // 프로덕션에서는 제한된 로깅
+    if (process.env.NODE_ENV === 'development') {
+      console.error('신고 제출 실패:', error);
+    } else {
+      console.error('신고 제출 실패');
+    }
 
     // 이미 신고한 경우
     if (error.message?.includes(ErrorMessageMap[ErrorCode.REPORT_ALREADY_SUBMITTED])) {
