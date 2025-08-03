@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 
 import Providers from '@/app/_providers';
-import { FCMLoader } from '@/components/FCMLoader';
+import FCMLoader from '@/components/FCMLoader';
 import { Toaster } from '@/shared/ui/Toaster';
 
 import './globals.css';
@@ -10,6 +10,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: '1인의 바다, 모두의 데이터',
   description: '1인의 바다, 모두의 데이터',
+  manifest: '/manifest.json',
 };
 
 export const viewport: Viewport = {
