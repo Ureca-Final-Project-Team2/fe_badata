@@ -5,13 +5,19 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import { ScanBarcode } from 'lucide-react';
+
 import {
   usePurchasedGifticonDetailQuery,
   usePurchasedGifticonImageQuery,
 } from '@/entities/user/model/queries';
+import PurchasedGifticonDetailSkeleton from '@/features/mypage/purchase-history/gifticon-detail/ui/PurchasedGifticonDetailSkeleton';
 import { BRAND_MAPPING } from '@/shared/config/brandMapping';
 import { ICONS } from '@/shared/config/iconPath';
+import { downloadImage } from '@/shared/lib/downloadImage';
+import { formatDate, formatDateTime } from '@/shared/lib/formatDate';
 import { getPartnerDefaultImage } from '@/shared/lib/getPartnerDefaultImage';
+import { makeToast } from '@/shared/lib/makeToast';
 import { isKoreanBrandName } from '@/shared/lib/typeGuards';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -27,6 +33,8 @@ interface Props {
 export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
   const router = useRouter();
   const [showCouponModal, setShowCouponModal] = useState(false);
+  const [showWarning, setShowWarning] = useState(true);
+  const [firstViewedAt, setFirstViewedAt] = useState<string | null>(null);
 
   const {
     data: gifticonDetail,
@@ -42,46 +50,63 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
     setShowCouponModal(true);
   };
 
+  const handleConfirmViewCoupon = () => {
+    // 첫 열어본 날짜가 없으면 현재 시간으로 설정
+    if (!firstViewedAt) {
+      const now = new Date().toISOString();
+      setFirstViewedAt(now);
+    }
+    setShowWarning(false);
+  };
+
   const handleSupportInquiry = () => {
     // TODO: 문의 접수 페이지로 이동
     console.log('문의 접수 클릭');
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString)
-      .toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      })
-      .replace(/\./g, '.')
-      .replace(/\s/g, '');
+  const handleCopyCouponNumber = async () => {
+    if (gifticonImage?.couponNumber) {
+      try {
+        await navigator.clipboard.writeText(gifticonImage.couponNumber);
+        makeToast('쿠폰 번호가 복사되었습니다.', 'success');
+      } catch (error) {
+        console.error('클립보드 복사 실패:', error);
+        makeToast('쿠폰 번호 복사에 실패했습니다.', 'warning');
+      }
+    }
+  };
+
+  const handleDownloadImage = async () => {
+    if (gifticonImage?.postImage && gifticonDetail) {
+      await downloadImage(
+        gifticonImage.postImage,
+        `${gifticonDetail.title}_쿠폰.png`,
+        gifticonDetail.title,
+        (method) => {
+          switch (method) {
+            case 'blob':
+              makeToast('쿠폰 이미지가 다운로드되었습니다.', 'success');
+              break;
+            case 'share':
+              makeToast('공유 메뉴가 열렸습니다. 갤러리에 저장을 선택하세요.', 'success');
+              break;
+            case 'newTab':
+              makeToast('새 탭에서 이미지가 열렸습니다. 이미지를 길게 눌러 저장하세요.', 'success');
+              break;
+            case 'direct':
+              makeToast('쿠폰 이미지 다운로드가 시작되었습니다.', 'success');
+              break;
+          }
+        },
+        () => {
+          makeToast('쿠폰 이미지 다운로드에 실패했습니다.', 'warning');
+        },
+      );
+    }
   };
 
   if (isLoading) {
-    return (
-      <BaseLayout
-        header={<PageHeader title="나의 기프티콘" onBack={() => router.back()} />}
-        showBottomNav
-        paddingX={false}
-        className="bg-[var(--main-2)]"
-      >
-        <div className="animate-pulse">
-          <div className="w-full h-[400px] bg-[var(--gray-light)]" />
-          <div className="relative -mt-[50px] bg-[var(--white)] rounded-t-[50px] shadow-[0_-4px_8px_-1px_rgba(0,0,0,0.1)]">
-            <div className="px-6 pt-7">
-              <div className="h-4 bg-[var(--gray-light)] rounded mb-3 w-20" />
-              <div className="h-6 bg-[var(--gray-light)] rounded mb-4" />
-              <div className="space-y-3">
-                <div className="h-4 bg-[var(--gray-light)] rounded" />
-                <div className="h-4 bg-[var(--gray-light)] rounded" />
-                <div className="h-4 bg-[var(--gray-light)] rounded" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </BaseLayout>
-    );
+    return <PurchasedGifticonDetailSkeleton />;
   }
 
   if (isError || !gifticonDetail) {
@@ -122,7 +147,7 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
         />
       </div>
 
-      {/* 통합 정보 카드 - 이미지 위로 50px 겹침 */}
+      {/* 통합 정보 카드 */}
       <div className="relative -mt-[50px] bg-[var(--white)] rounded-t-[50px] shadow-[0_-4px_8px_-1px_rgba(0,0,0,0.1)] min-h-[calc(100vh-400px)]">
         {/* 상품 정보 섹션 */}
         <div className="px-6 pt-7">
@@ -186,15 +211,18 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
           {/* 쿠폰 보기 버튼 */}
           <button
             onClick={handleViewCoupon}
-            className="w-full bg-[var(--main-5)] text-[var(--white)] font-body-semibold py-3 rounded-[10px] mb-3"
+            className="w-full bg-[var(--main-5)] text-[var(--white)] font-body-semibold py-3 rounded-[10px] mb-3 flex items-center justify-center gap-2"
           >
-            쿠폰보기
+            <ScanBarcode size={22} className="flex-shrink-0" />
+            쿠폰 보기
           </button>
 
           {/* 첫 열어본 날짜 정보 */}
-          <p className="text-[var(--gray-mid)] font-label-regular text-center mb-6">
-            {formatDate(gifticonDetail.boughtAt)}에 처음 열어본 쿠폰이에요
-          </p>
+          {firstViewedAt && (
+            <p className="bg-[var(--gray-light)] rounded-[10px] text-[var(--gray-dark)] font-caption-regular text-center mb-6">
+              {formatDateTime(firstViewedAt)}에 처음 열어본 쿠폰이에요
+            </p>
+          )}
         </div>
 
         {/* 문의 섹션 */}
@@ -217,10 +245,20 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
 
           {/* 유의사항 */}
           <div>
-            <h2 className="text-[var(--black)] font-body-bold mb-3">유의 사항</h2>
-            <p className="text-[var(--gray-dark)] font-body-regular text-sm leading-relaxed">
-              {gifticonDetail.comment ||
-                '상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명 상세설명'}
+            <h2 className="text-[var(--black)] font-label-semibold mb-3">유의 사항</h2>
+            <p className="text-[var(--gray-dark)] font-label-regular leading-relaxed mb-3">
+              일부 매장에서는 기프티콘 사용이 불가능 할 수 있습니다.
+            </p>
+            <p className="text-[var(--gray-dark)] font-label-regular leading-relaxed mb-3">
+              가격 인상 전 발행된 쿠폰이라고 하더라도 동일한 제품으로 교환 시 추가금이 발생할 수
+              있습니다.
+            </p>
+            <p className="text-[var(--gray-dark)] font-label-regular leading-relaxed mb-3">
+              반드시 동일 제품으로만 교환하셔야 하며, 앱이나 키오스크가 아닌 매장 직원을 통해
+              포스기에서 직접 결제만 가능합니다.
+            </p>
+            <p className="text-[var(--gray-dark)] font-label-regular leading-relaxed mb-3">
+              품목형의 상품인 경우 매장측으로 문의 후 구매하시기 바랍니다.
             </p>
           </div>
         </div>
@@ -231,7 +269,7 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
         <div className="p-4">
           {/* 모달 헤더 */}
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-[var(--black)] font-body-bold text-lg">쿠폰</h2>
+            <h2 className="text-[var(--black)] font-body-semibold">쿠폰</h2>
             <button
               onClick={() => setShowCouponModal(false)}
               className="text-[var(--gray-mid)] hover:text-[var(--black)]"
@@ -247,29 +285,58 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
           ) : (
             <div className="space-y-4">
               {/* 기프티콘 이미지 */}
-              <div className="w-full h-64 rounded-[15px] overflow-hidden bg-[var(--gray-light)] relative">
-                <Image
+              <div className="w-full h-[400px] rounded-[15px] overflow-hidden bg-[var(--gray-light)] relative">
+                <img
                   src={
                     gifticonImage?.postImage ||
                     getPartnerDefaultImage(gifticonDetail.partner as KoreanBrandName)
                   }
                   alt={gifticonDetail.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 400px"
-                  className="object-cover"
+                  className={`w-full h-full object-cover ${showWarning ? 'blur-md' : ''}`}
                   onError={(e) => {
                     e.currentTarget.src = getPartnerDefaultImage(
                       gifticonDetail.partner as KoreanBrandName,
                     );
                   }}
                 />
+
+                {/* 경고 오버레이 */}
+                {showWarning && (
+                  <div className="absolute inset-0 bg-[var(--black)]/50 flex items-center justify-center">
+                    <div className="rounded-[15px] p-6 mx-4 text-center max-w-sm">
+                      <div className="w-12 h-12 bg-[var(--red)] rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span className="font-body-semibold">⚠️</span>
+                      </div>
+                      <h3 className="text-[var(--black)] font-body-semibold mb-2">
+                        쿠폰 보기 전 주의사항
+                      </h3>
+                      <p className="text-[var(--black)] font-label-regular mb-4 text-center">
+                        쿠폰을 열어보시면 재판매 위험이 있으니 신중하게 확인해주세요.
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setShowCouponModal(false)}
+                          className="flex-1 bg-[var(--gray-light)] text-[var(--gray-dark)] font-body-semibold py-2 rounded-[8px]"
+                        >
+                          취소
+                        </button>
+                        <button
+                          onClick={handleConfirmViewCoupon}
+                          className="flex-1 bg-[var(--red)] text-[var(--white)] font-body-semibold py-2 rounded-[8px]"
+                        >
+                          확인
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* 쿠폰 번호 */}
-              {gifticonImage?.couponNumber && (
+              {gifticonImage?.couponNumber && !showWarning && (
                 <div className="text-center">
-                  <p className="text-[var(--gray-dark)] font-body-regular mb-2">쿠폰 번호</p>
-                  <p className="text-[var(--black)] font-body-bold text-lg">
+                  <p className="text-[var(--gray-dark)] font-label-regular">쿠폰 번호</p>
+                  <p className="text-[var(--black)] font-label-semibold">
                     {gifticonImage.couponNumber}
                   </p>
                 </div>
@@ -277,6 +344,22 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
             </div>
           )}
         </div>
+        {!showWarning && (
+          <div className="p-4 space-y-3">
+            <button
+              onClick={handleCopyCouponNumber}
+              className="w-full bg-[var(--main-5)] text-[var(--white)] font-body-semibold py-3 rounded-[10px]"
+            >
+              복사하기
+            </button>
+            <button
+              onClick={handleDownloadImage}
+              className="w-full bg-[var(--white)] text-[var(--main-5)] font-body-semibold py-3 rounded-[10px] border border-[var(--main-5)]"
+            >
+              이미지 다운로드
+            </button>
+          </div>
+        )}
       </Modal>
     </BaseLayout>
   );
