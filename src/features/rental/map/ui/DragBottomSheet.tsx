@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import { motion, useAnimation, useMotionValue } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { ArrowUpDown } from 'lucide-react';
 
 import { StoreCard } from '@/features/rental/map/ui/StoreCard';
@@ -35,6 +35,8 @@ export const DragBottomSheet = ({
   currentSort = 'distance,asc',
 }: ExtendedDragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
+  const [lastOpenState, setLastOpenState] = useState(false); // 이전 open 상태를 추적
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [animatedItems, setAnimatedItems] = useState<Set<string>>(new Set());
   const [lastStoreCount, setLastStoreCount] = useState(0);
@@ -73,59 +75,101 @@ export const DragBottomSheet = ({
   const middleY = windowHeight > 0 ? windowHeight * 0.5 : 0; // 중간 높이
   const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 접힌 높이 (80% 아래)
 
-  // 초기 상태는 collapsed로 설정
-  const y = useMotionValue(collapsedY);
   const controls = useAnimation();
+
+  console.log('🔍 DragBottomSheet 렌더링:', {
+    windowHeight,
+    expandedY,
+    middleY,
+    collapsedY,
+    open,
+    currentY,
+    lastOpenState,
+  });
 
   useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
       const height = window.innerHeight;
+      console.log('🔍 useLayoutEffect windowHeight 설정:', height);
       setWindowHeight(height);
-
-      // 초기 상태는 항상 완전히 숨김 (windowHeight로 설정)
-      y.set(windowHeight);
+      setCurrentY(height); // 초기값을 windowHeight로 설정
     }
-  }, [y, windowHeight]);
+  }, []);
 
   useEffect(() => {
-    if (windowHeight === 0) return;
+    console.log('🔍 useEffect 실행:', {
+      windowHeight,
+      open,
+      expandedY,
+      middleY,
+      collapsedY,
+      currentY,
+      lastOpenState,
+    });
 
-    if (open) {
-      // 목록보기 버튼을 클릭했을 때 expanded 상태로 열림
-      const targetY = expandedY;
-      controls.start({
-        y: targetY,
-        transition: {
-          type: 'spring',
-          stiffness: 300,
-          damping: 30,
-        },
-      });
-    } else {
-      // 목록보기 버튼을 클릭하지 않았을 때는 완전히 숨김
-      const targetY = windowHeight;
-      controls.start({
-        y: targetY,
-        transition: {
-          type: 'spring',
-          stiffness: 300,
-          damping: 30,
-        },
-      });
+    if (windowHeight === 0) {
+      console.log('🔍 windowHeight가 0이므로 return');
+      return;
     }
-  }, [open, controls, windowHeight, expandedY]);
+
+    // open 상태가 변경되었을 때만 애니메이션 실행
+    if (open !== lastOpenState) {
+      setLastOpenState(open || false);
+
+      if (open) {
+        // 목록보기 버튼을 클릭했을 때 expanded 상태로 열림
+        const targetY = expandedY;
+        console.log('🔍 DragBottomSheet 열기:', targetY);
+
+        setCurrentY(targetY);
+        controls.start({
+          y: targetY,
+          transition: {
+            type: 'spring',
+            stiffness: 300,
+            damping: 30,
+          },
+        });
+      } else {
+        // 목록보기 버튼을 클릭하지 않았을 때는 완전히 숨김
+        const targetY = windowHeight;
+        console.log('🔍 DragBottomSheet 닫기:', targetY);
+
+        setCurrentY(targetY);
+        controls.start({
+          y: targetY,
+          transition: {
+            type: 'spring',
+            stiffness: 300,
+            damping: 30,
+          },
+        });
+      }
+    }
+  }, [open, controls, windowHeight, expandedY, lastOpenState]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
+    console.log('🔍 handleDragEnd 실행:', info.point.y, 'middleY:', middleY);
+
     if (info.point.y < middleY) {
       // 위쪽으로 드래그하면 expanded 상태
-      controls.start({ y: expandedY });
+      console.log('🔍 expanded 상태로 이동');
+      const targetY = expandedY;
+      setCurrentY(targetY);
+      controls.start({ y: targetY });
     } else if (info.point.y > middleY + 80) {
       // 아래쪽으로 드래그하면 완전히 닫힘
-      controls.start({ y: windowHeight });
+      console.log('🔍 완전히 닫힘');
+      const targetY = windowHeight;
+      setCurrentY(targetY);
+      controls.start({ y: targetY });
       onClose?.();
     } else {
       // 중간 영역이면 middle 상태
-      controls.start({ y: middleY });
+      console.log('🔍 middle 상태로 이동');
+      const targetY = middleY;
+      setCurrentY(targetY);
+      controls.start({ y: targetY });
     }
   };
 
@@ -163,14 +207,14 @@ export const DragBottomSheet = ({
   return (
     <motion.div
       drag="y"
-      dragConstraints={{ top: expandedY, bottom: windowHeight }}
-      dragElastic={0.2}
+      dragConstraints={{ top: 0, bottom: windowHeight }}
+      dragElastic={0.1}
       onDragEnd={handleDragEnd}
       initial={false}
       animate={controls}
       style={{
-        y,
-        height: `calc(${windowHeight}px - ${y.get()}px)`,
+        y: currentY,
+        height: `calc(${windowHeight}px - ${currentY}px)`,
         minHeight: '200px', // 최소 높이 설정
       }}
       className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
