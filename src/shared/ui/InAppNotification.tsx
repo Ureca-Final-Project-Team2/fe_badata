@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import Image from 'next/image';
-
 import { ICONS } from '@/shared/config/iconPath';
 
 interface InAppNotificationProps {
@@ -41,17 +39,14 @@ export const InAppNotification = ({
         {/* BADATA 로고 아이콘 */}
         <div className="w-8 h-8 flex items-center justify-center">
           {!imageError ? (
-            <Image
+            <img
               src={ICONS.LOGO.BADATA}
               alt="BADATA"
-              width={24}
-              height={24}
               className="w-6 h-6 object-contain"
               onError={() => {
                 console.error('로고 이미지 로드 실패');
                 setImageError(true);
               }}
-              priority
             />
           ) : (
             <div className="w-6 h-6 bg-[var(--main-4)] rounded-full flex items-center justify-center">
