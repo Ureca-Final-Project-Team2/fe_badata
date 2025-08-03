@@ -72,7 +72,7 @@ export const DragBottomSheet = ({
 
   // windowHeight가 설정된 후에 계산하도록 수정
   const expandedY = windowHeight > 0 ? 60 : 0; // header 높이
-  const middleY = windowHeight > 0 ? windowHeight * 0.5 : 0; // 중간 높이
+  const middleY = windowHeight > 0 ? windowHeight * 0.3 : 0; // 중간 높이를 30%로 조정
   const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 접힌 높이 (80% 아래)
 
   const controls = useAnimation();
@@ -152,21 +152,21 @@ export const DragBottomSheet = ({
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
     console.log('🔍 handleDragEnd 실행:', info.point.y, 'middleY:', middleY);
 
-    if (info.point.y < middleY) {
+    if (info.point.y < middleY - 50) {
       // 위쪽으로 드래그하면 expanded 상태
       console.log('🔍 expanded 상태로 이동');
       const targetY = expandedY;
       setCurrentY(targetY);
       controls.start({ y: targetY });
-    } else if (info.point.y > middleY + 80) {
-      // 아래쪽으로 드래그하면 완전히 닫힘
+    } else if (info.point.y > middleY + 160) {
+      // 아래쪽으로 많이 드래그하면 완전히 닫힘
       console.log('🔍 완전히 닫힘');
       const targetY = windowHeight;
       setCurrentY(targetY);
       controls.start({ y: targetY });
       onClose?.();
     } else {
-      // 중간 영역이면 middle 상태
+      // 중간 영역이면 middle 상태 (중간에서 멈춤)
       console.log('🔍 middle 상태로 이동');
       const targetY = middleY;
       setCurrentY(targetY);
