@@ -96,8 +96,8 @@ export default function TradePageClient() {
       <TradeSearchInput />
       {page === 'all' && (
         <>
-          <TradeDeadlineBanner />
           <TradeTrendingRanking />
+          <TradeDeadlineBanner />
           <SectionDivider size="full" thickness="thick" />
         </>
       )}

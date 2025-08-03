@@ -14,9 +14,5 @@ export const getTradeDeadlinePosts = async (cursor?: number): Promise<DeadlinePo
 };
 
 export const getTradeTrendingPosts = async (): Promise<PostItem[]> => {
-  const content: { postsResponse: PostItem[] } = await axiosInstance.get(
-    END_POINTS.TRADES.TRENDING,
-  );
-
-  return content.postsResponse ?? [];
+  return await axiosInstance.get(END_POINTS.TRADES.TRENDING);
 };
