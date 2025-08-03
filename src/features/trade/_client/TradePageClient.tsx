@@ -14,9 +14,10 @@ import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilter
 import { TradeDeadlineBanner } from '@/features/trade/ui/TradeDeadlineBanner';
 import { TradeFlatTab } from '@/features/trade/ui/TradeFlatTab';
 import { TradeList } from '@/features/trade/ui/TradeList';
-import { TradeTrendingBanner } from '@/features/trade/ui/TradeTrendingBanner';
+import { TradeTrendingRanking } from '@/features/trade/ui/TradeTrendingRanking';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
+import { SectionDivider } from '@/shared/ui/SectionDivider';
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
@@ -74,6 +75,9 @@ export default function TradePageClient() {
         : b.likesCount - a.likesCount,
     );
 
+  const currentTitle =
+    page === 'data' ? '데이터 게시물' : page === 'gifticon' ? '기프티콘 게시물' : '전체 게시물';
+
   const handleCardClick = (post: (typeof filteredPosts)[number]) => {
     const path =
       post.postCategory === 'DATA'
@@ -85,6 +89,7 @@ export default function TradePageClient() {
   const loadMoreRef = useRef(null);
   const isInView = useInView(loadMoreRef);
   if (isInView && hasNextPage && !isFetchingNextPage) fetchNextPage();
+
   return (
     <>
       <TradeFlatTab basePath="/trade" />
@@ -92,10 +97,12 @@ export default function TradePageClient() {
       {page === 'all' && (
         <>
           <TradeDeadlineBanner />
-          <TradeTrendingBanner />
+          <TradeTrendingRanking />
         </>
       )}
+      <SectionDivider size="full" thickness="thick" />
       <TradeList
+        title={currentTitle}
         items={filteredPosts}
         isLoading={false}
         sortLabel={sortOption === 'latest' ? '최신순' : '인기순'}
