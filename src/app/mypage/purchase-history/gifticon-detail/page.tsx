@@ -18,7 +18,21 @@ function GifticonDetailContent() {
     );
   }
 
-  const gifticonId = decodeURIComponent(encodedGifticonId);
+  // 안전한 디코딩 및 검증
+  let gifticonId: string;
+  try {
+    gifticonId = decodeURIComponent(encodedGifticonId);
+    // 숫자만 허용하는 검증
+    if (!/^\d+$/.test(gifticonId)) {
+      throw new Error('Invalid gifticon ID format');
+    }
+  } catch {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-[var(--red)]">잘못된 기프티콘 ID입니다.</p>
+      </div>
+    );
+  }
 
   return <PurchasedGifticonDetailPage gifticonId={gifticonId} />;
 }
