@@ -24,7 +24,20 @@ export const useCurrentLocationMarker = (
         isMapReadyRef.current = true;
       }
 
-      // 검색 파라미터가 없을 때만 현재 위치 마커 생성
+      // 지도 클릭 이벤트 추가
+      if (onMapClick) {
+        window.kakao.maps.event.addListener(map, 'click', () => {
+          onMapClick();
+        });
+      }
+
+      onMapReady(map);
+    }
+  }, [map, onMapReady, onMapClick, isMapReadyRef]);
+
+  // 사용자 위치가 로드되고 검색 파라미터가 없을 때만 마커 생성
+  useEffect(() => {
+    if (map && userLat && userLng) {
       if (!hasUrlParams) {
         console.log('📍 현재 위치 마커 생성 시작');
         // 기존 마커가 있다면 제거
@@ -37,27 +50,12 @@ export const useCurrentLocationMarker = (
         currentLocationMarkerRef.current = createCurrentLocationMarker(map, userLat, userLng);
       } else {
         console.log('📍 검색 파라미터가 있으므로 현재 위치 마커 생성하지 않음');
+        // 기존 마커가 있다면 제거
+        if (currentLocationMarkerRef.current) {
+          currentLocationMarkerRef.current.setMap(null);
+          currentLocationMarkerRef.current = null;
+        }
       }
-
-      // 지도 클릭 이벤트 추가
-      if (onMapClick) {
-        window.kakao.maps.event.addListener(map, 'click', () => {
-          onMapClick();
-        });
-      }
-
-      onMapReady(map);
-    }
-  }, [map, onMapReady, onMapClick, hasUrlParams, isMapReadyRef, userLat, userLng]);
-
-  // 사용자 위치가 변경될 때 마커 위치 업데이트 (검색 파라미터가 없을 때만)
-  useEffect(() => {
-    if (map && currentLocationMarkerRef.current && userLat && userLng && !hasUrlParams) {
-      // 기존 마커 제거
-      currentLocationMarkerRef.current.setMap(null);
-
-      // 새로운 위치에 마커 생성
-      currentLocationMarkerRef.current = createCurrentLocationMarker(map, userLat, userLng);
     }
   }, [map, userLat, userLng, hasUrlParams]);
 
