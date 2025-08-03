@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -7,6 +7,14 @@ export const useUrlParams = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [hasProcessedUrlParams, setHasProcessedUrlParams] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // URL 파라미터 로딩 상태 관리
+  useEffect(() => {
+    if (searchParams) {
+      setIsLoading(false);
+    }
+  }, [searchParams]);
 
   const selectedLat = !hasProcessedUrlParams ? searchParams?.get('lat') : null;
   const selectedLng = !hasProcessedUrlParams ? searchParams?.get('lng') : null;
@@ -30,5 +38,6 @@ export const useUrlParams = () => {
     hasProcessedUrlParams,
     setHasProcessedUrlParams,
     clearUrlParams,
+    isLoading,
   };
 };

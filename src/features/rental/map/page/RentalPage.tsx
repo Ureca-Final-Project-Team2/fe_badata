@@ -26,6 +26,7 @@ import { SearchPosHeader } from '@/features/rental/map/ui/SearchPosHeader';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
+import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
 
 import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 
@@ -37,9 +38,38 @@ export default function RentalPage() {
     hasProcessedUrlParams,
     setHasProcessedUrlParams,
     clearUrlParams,
+    isLoading: urlParamsLoading,
   } = useUrlParams();
 
-  // URL 파라미터 값을 저장
+  // URL 파라미터 값을 별도로 저장 (헤더용)
+  const [savedUrlParamsForHeader, setSavedUrlParamsForHeader] = useState<{
+    lat: string | null;
+    lng: string | null;
+    placeName: string | null;
+  } | null>(null);
+
+  // URL 파라미터가 있는지 확인 (로딩 중이 아닐 때만)
+  const hasUrlParams =
+    !urlParamsLoading &&
+    (!!(selectedLat && selectedLng && selectedPlaceName) ||
+      !!(
+        savedUrlParamsForHeader?.lat &&
+        savedUrlParamsForHeader?.lng &&
+        savedUrlParamsForHeader?.placeName
+      ));
+
+  // URL 파라미터 값을 저장 (헤더용)
+  useEffect(() => {
+    if (selectedLat && selectedLng && selectedPlaceName && !hasProcessedUrlParams) {
+      setSavedUrlParamsForHeader({
+        lat: selectedLat,
+        lng: selectedLng,
+        placeName: selectedPlaceName,
+      });
+    }
+  }, [selectedLat, selectedLng, selectedPlaceName, hasProcessedUrlParams]);
+
+  // URL 파라미터 값을 저장 (마커용)
   const [savedUrlParams, setSavedUrlParams] = useState<{
     lat: string | null;
     lng: string | null;
@@ -412,21 +442,34 @@ export default function RentalPage() {
     <BaseLayout
       centered
       paddingX={false}
-      showHeader
+      showHeader={!urlParamsLoading} // 로딩 중이 아닐 때만 헤더 표시
       showBottomNav
       header={
-        <div className="max-w-[428px] px-4 pt-4 z-30">
-          <div className="flex flex-row items-center gap-4">
-            <div className="flex-1 min-w-0 max-w-[calc(100%-40px)]">
-              <SearchPosHeader search="" setSearch={() => {}} onSubmit={() => {}} />
-            </div>
-            <FilterIcon
-              alt="필터 아이콘"
-              className="w-8 h-8 flex-shrink-0 cursor-pointer"
-              onClick={() => setFilterDrawerOpen(true)}
-            />
+        urlParamsLoading ? (
+          // 로딩 중일 때는 빈 헤더 (스피너는 메인 영역에 표시)
+          <div className="w-full h-[70px] flex items-center justify-center bg-white">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
           </div>
-        </div>
+        ) : hasUrlParams ? (
+          // URL 파라미터가 있을 때 Header_Detail 사용
+          <Header_Detail
+            title={savedUrlParamsForHeader?.placeName || selectedPlaceName || '검색 위치'}
+          />
+        ) : (
+          // URL 파라미터가 없을 때 기존 헤더 사용
+          <div className="max-w-[428px] px-4 pt-4 z-30">
+            <div className="flex flex-row items-center gap-4">
+              <div className="flex-1 min-w-0 max-w-[calc(100%-40px)]">
+                <SearchPosHeader search="" setSearch={() => {}} onSubmit={() => {}} />
+              </div>
+              <FilterIcon
+                alt="필터 아이콘"
+                className="w-8 h-8 flex-shrink-0 cursor-pointer"
+                onClick={() => setFilterDrawerOpen(true)}
+              />
+            </div>
+          </div>
+        )
       }
       fab={
         <div className="flex items-center justify-between w-full px-4 relative z-50 gap-4">
@@ -437,7 +480,7 @@ export default function RentalPage() {
     >
       <LocationDisplay
         userAddress={userAddress}
-        isLoading={locationLoading}
+        isLoading={locationLoading || urlParamsLoading}
         error={locationError}
       />
       <div className="w-full h-[calc(100vh-190px)]">
