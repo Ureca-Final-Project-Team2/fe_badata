@@ -36,6 +36,14 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [showWarning, setShowWarning] = useState(true);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [isReported, setIsReported] = useState(() => {
+    // localStorage에서 신고 상태 확인
+    if (typeof window !== 'undefined') {
+      const reportedItems = JSON.parse(localStorage.getItem('reportedItems') || '[]');
+      return reportedItems.includes(gifticonId);
+    }
+    return false;
+  });
 
   const {
     data: gifticonDetail,
@@ -81,10 +89,33 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
         onSuccess: () => {
           makeToast('신고가 접수되었습니다.', 'success');
           setShowReportModal(false);
+          setIsReported(true);
+
+          // localStorage에 신고 상태 저장
+          const reportedItems = JSON.parse(localStorage.getItem('reportedItems') || '[]');
+          if (!reportedItems.includes(gifticonId)) {
+            reportedItems.push(gifticonId);
+            localStorage.setItem('reportedItems', JSON.stringify(reportedItems));
+          }
         },
         onError: (error) => {
           console.error('신고 제출 실패:', error);
-          makeToast('신고 제출에 실패했습니다. 잠시 후 다시 시도해주세요.', 'warning');
+
+          // 이미 신고한 경우
+          if (error.message?.includes('이미 신고한 게시글입니다')) {
+            makeToast('이미 신고 접수된 게시글입니다.', 'warning');
+            setShowReportModal(false);
+            setIsReported(true);
+
+            // localStorage에 신고 상태 저장
+            const reportedItems = JSON.parse(localStorage.getItem('reportedItems') || '[]');
+            if (!reportedItems.includes(gifticonId)) {
+              reportedItems.push(gifticonId);
+              localStorage.setItem('reportedItems', JSON.stringify(reportedItems));
+            }
+          } else {
+            makeToast('신고 제출에 실패했습니다. 잠시 후 다시 시도해주세요.', 'warning');
+          }
         },
       },
     );
@@ -222,12 +253,16 @@ export default function PurchasedGifticonDetailPage({ gifticonId }: Props) {
             <span className="text-[var(--black)] font-label-medium">
               해당 쿠폰 사용에 문제가 있으신가요?
             </span>
-            <button
-              onClick={handleSupportInquiry}
-              className="text-[var(--red)] font-label-semibold"
-            >
-              접수하기 &gt;
-            </button>
+            {isReported ? (
+              <span className="text-[var(--gray-mid)] font-label-semibold">신고 접수 완료</span>
+            ) : (
+              <button
+                onClick={handleSupportInquiry}
+                className="text-[var(--red)] font-label-semibold"
+              >
+                접수하기 &gt;
+              </button>
+            )}
           </div>
 
           <SectionDivider size="full" thickness="thickest" className="mb-6" />
