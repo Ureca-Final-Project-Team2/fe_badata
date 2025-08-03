@@ -82,20 +82,17 @@ export const DragBottomSheet = ({
       const height = window.innerHeight;
       setWindowHeight(height);
 
-      // open이 true이면, 최초 mount 시 expandedY로 초기화
-      if (open) {
-        const expandedY = 60;
-        y.set(expandedY); // 최초 위치 강제 설정
-      }
+      // 초기 상태는 항상 완전히 숨김 (windowHeight로 설정)
+      y.set(windowHeight);
     }
-  }, [open, y]);
+  }, [y, windowHeight]);
 
   useEffect(() => {
     if (windowHeight === 0) return;
 
-    // 데이터가 로딩 중이거나 빈 배열이면 Drawer를 열지 않음
-    if (isLoading || !storeList || storeList.length === 0) {
-      const targetY = collapsedY;
+    if (open) {
+      // 목록보기 버튼을 클릭했을 때 expanded 상태로 열림
+      const targetY = expandedY;
       controls.start({
         y: targetY,
         transition: {
@@ -104,33 +101,35 @@ export const DragBottomSheet = ({
           damping: 30,
         },
       });
-      return;
+    } else {
+      // 목록보기 버튼을 클릭하지 않았을 때는 완전히 숨김
+      const targetY = windowHeight;
+      controls.start({
+        y: targetY,
+        transition: {
+          type: 'spring',
+          stiffness: 300,
+          damping: 30,
+        },
+      });
     }
-
-    const targetY = open ? expandedY : collapsedY; // 목록보기 버튼 클릭 시 header까지 올라가도록
-
-    // 애니메이션으로 부드럽게 이동
-    controls.start({
-      y: targetY,
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        damping: 30,
-      },
-    });
-  }, [open, controls, windowHeight, expandedY, collapsedY, isLoading, storeList]);
+  }, [open, controls, windowHeight, expandedY]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
     if (info.point.y < middleY) {
+      // 위쪽으로 드래그하면 expanded 상태
       controls.start({ y: expandedY });
     } else if (info.point.y > middleY + 80) {
-      controls.start({ y: collapsedY });
+      // 아래쪽으로 드래그하면 완전히 닫힘
+      controls.start({ y: windowHeight });
       onClose?.();
     } else {
+      // 중간 영역이면 middle 상태
       controls.start({ y: middleY });
     }
   };
 
+  // 데이터가 로딩 중이거나 빈 배열이어도 항상 렌더링
   if (windowHeight === 0) {
     // windowHeight가 0일 때도 렌더링하되, 높이는 0으로 설정
     return (
@@ -141,10 +140,7 @@ export const DragBottomSheet = ({
     );
   }
 
-  // 데이터가 로딩 중이거나 빈 배열이면 Drawer를 렌더링하지 않음
-  if (isLoading || !storeList || storeList.length === 0) {
-    return null;
-  }
+  // 데이터가 로딩 중이거나 빈 배열이어도 항상 렌더링
 
   const handleSortClick = () => {
     onSortClick?.();
@@ -167,7 +163,7 @@ export const DragBottomSheet = ({
   return (
     <motion.div
       drag="y"
-      dragConstraints={{ top: expandedY, bottom: collapsedY }}
+      dragConstraints={{ top: expandedY, bottom: windowHeight }}
       dragElastic={0.2}
       onDragEnd={handleDragEnd}
       initial={false}
@@ -199,15 +195,13 @@ export const DragBottomSheet = ({
         className="flex-1 mb-35 overflow-y-auto custom-scrollbar"
       >
         {isLoading ? (
-          <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
-            <div className="text-center text-[var(--gray-dark)] animate-pulse">
-              <div className="loading-spinner mr-2"></div>
-              스토어 목록을 불러오는 중...
-            </div>
+          <div className="flex flex-col items-center justify-center gap-3 px-4 pt-8 pb-6 min-h-[200px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <div className="text-center text-[var(--gray-dark)]">스토어 목록을 불러오는 중...</div>
           </div>
         ) : isError ? (
-          <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
-            <div className="text-center text-[var(--red-main)] animate-fade-in">
+          <div className="flex flex-col items-center justify-center gap-3 px-4 pt-8 pb-6 min-h-[200px]">
+            <div className="text-center text-[var(--red-main)]">
               에러가 발생했습니다: {error?.message || '알 수 없는 오류'}
             </div>
           </div>
@@ -238,7 +232,8 @@ export const DragBottomSheet = ({
             {/* 무한 스크롤 로딩 인디케이터 */}
             {isFetchingNextPage && (
               <div className="text-center text-[var(--gray-dark)] py-4 animate-fade-in">
-                <div className="loading-spinner mr-2"></div>더 많은 스토어를 불러오는 중...
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                더 많은 스토어를 불러오는 중...
               </div>
             )}
             {/* 더 이상 데이터가 없을 때 */}
@@ -249,10 +244,8 @@ export const DragBottomSheet = ({
             )}
           </div>
         ) : (
-          <div className="flex flex-col gap-3 px-4 pt-3 pb-6">
-            <div className="text-center text-[var(--gray-dark)] animate-fade-in">
-              표시할 스토어가 없습니다.
-            </div>
+          <div className="flex flex-col items-center justify-center gap-3 px-4 pt-8 pb-6 min-h-[200px]">
+            <div className="text-center text-[var(--gray-dark)]">표시할 스토어가 없습니다.</div>
             {children}
           </div>
         )}
