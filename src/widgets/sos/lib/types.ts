@@ -17,6 +17,6 @@ export interface SosRespondResponse {
 
 export interface SseNotification {
   sosId: number;
-  type: 'REQUEST' | 'RESPOND'; // 백엔드가 type 넘기는 구조면
+  type: 'REQUEST' | 'RESPOND'; 
   isSuccess?: boolean; // 응답 시에만
 }
