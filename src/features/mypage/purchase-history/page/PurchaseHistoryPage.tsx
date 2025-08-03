@@ -219,7 +219,7 @@ export default function PurchaseHistoryPage() {
                     const detailPath =
                       item.postCategory === 'DATA'
                         ? `/trade/data/${item.postId}`
-                        : `/mypage/purchase-history/gifticon/${item.postId}`;
+                        : `/mypage/purchase-history/gifticon-detail?id=${encodeURIComponent(item.postId)}`;
                     router.push(detailPath);
                   }}
                 />
