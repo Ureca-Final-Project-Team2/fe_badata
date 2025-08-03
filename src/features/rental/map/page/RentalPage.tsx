@@ -471,7 +471,7 @@ export default function RentalPage() {
           </div>
         )
       }
-      fab={
+      headerfab={
         <div className="flex items-center justify-between w-full px-4 relative z-50 gap-4">
           <CurrentLocationButton className="cursor-pointer" onClick={handleCurrentLocation} />
           <ListViewButton className="cursor-pointer" onClick={handleListView} />
