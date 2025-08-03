@@ -75,5 +75,6 @@ export const END_POINTS = {
     PURCHASED_GIFTICON_DETAIL: (gifticonId: string) => `/api/v1/trades/purchases/${gifticonId}`,
     PURCHASED_GIFTICON_IMAGE: (gifticonId: string) =>
       `/api/v1/trades/purchases/${gifticonId}/image`,
+    PURCHASE_REPORT: (postId: number) => `/api/v1/trades/${postId}/reports/purchases`,
   },
 } as const;
