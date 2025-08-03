@@ -57,15 +57,17 @@ export default function RentalHistoryPage() {
                 <span className="font-body-xs-medium text-[var(--gray-mid)]">{day}</span>
               </div>
               <div className="border-2 border-[var(--gray-light)] rounded-2xl bg-white px-4 py-4 pt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-body-xs-medium">{item.storeName}</span>
+                <div className="flex flex-wrap items-center justify-between gap-y-1 mb-2">
+                  <span className="font-body-xs-medium max-w-[calc(100%-100px)] break-words">
+                    {item.storeName}
+                  </span>
                   {showReviewButton && (
                     <button
                       onClick={() => handleReviewClick(item.id)}
-                      className="flex items-center gap-1 text-[var(--main-5)] font-title-regular cursor-pointer"
+                      className="flex-shrink-0 whitespace-nowrap flex items-center gap-1 text-[var(--main-5)] font-title-regular cursor-pointer"
                     >
                       <Pencil size={16} />
-                      &nbsp;{hasWrittenReview ? '👀 리뷰보기' : '📝 리뷰쓰기'}
+                      {hasWrittenReview ? '👀 리뷰보기' : '리뷰쓰기'}
                     </button>
                   )}
                 </div>
