@@ -438,6 +438,18 @@ export default function RentalPage() {
     dispatchSelectedStore,
   ]);
 
+  // hasUrlParamsValue를 useMemo로 최적화
+  const hasUrlParamsValue = useMemo(() => {
+    const value = !!(selectedLat && selectedLng && !hasProcessedUrlParams);
+    console.log('📍 RentalPage hasUrlParams 계산:', {
+      selectedLat,
+      selectedLng,
+      hasProcessedUrlParams,
+      hasUrlParamsValue: value,
+    });
+    return value;
+  }, [selectedLat, selectedLng, hasProcessedUrlParams]);
+
   return (
     <BaseLayout
       centered
@@ -485,13 +497,6 @@ export default function RentalPage() {
       />
       <div className="w-full h-[calc(100vh-190px)]">
         {(() => {
-          const hasUrlParamsValue = !!(selectedLat && selectedLng && !hasProcessedUrlParams);
-          console.log('📍 RentalPage hasUrlParams 계산:', {
-            selectedLat,
-            selectedLng,
-            hasProcessedUrlParams,
-            hasUrlParamsValue,
-          });
           return (
             <MapSection
               filterState={filterState}
