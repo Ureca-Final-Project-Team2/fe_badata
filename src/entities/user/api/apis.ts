@@ -5,6 +5,11 @@ import type {
   CoinResponse,
   FollowingsContent,
   FollowToggleResponse,
+  PostCountResponse,
+  PurchasedGifticonDetail,
+  PurchasedGifticonImage,
+  PurchaseReportRequest,
+  PurchaseReportResponse,
   PurchaseResponse,
   SalesContent,
   UserInfoResponse,
@@ -86,6 +91,34 @@ export const userApis = {
 
   getCoin: async (): Promise<ApiResponse<CoinResponse>> => {
     const response = await axiosInstance.get(END_POINTS.MYPAGE.COIN);
+    return response.data;
+  },
+  getUserPostCount: async (tradeType: 'SALE' | 'PURCHASE'): Promise<number> => {
+    const response: PostCountResponse = await axiosInstance.get(END_POINTS.MYPAGE.POST_COUNT, {
+      params: { tradeType },
+    });
+    return response.postCount ?? 0;
+  },
+
+  getPurchasedGifticonDetail: async (gifticonId: string): Promise<PurchasedGifticonDetail> => {
+    const response: PurchasedGifticonDetail = await axiosInstance.get(
+      END_POINTS.MYPAGE.PURCHASED_GIFTICON_DETAIL(gifticonId),
+    );
+    return response;
+  },
+
+  getPurchasedGifticonImage: async (gifticonId: string): Promise<PurchasedGifticonImage> => {
+    const response: PurchasedGifticonImage = await axiosInstance.get(
+      END_POINTS.MYPAGE.PURCHASED_GIFTICON_IMAGE(gifticonId),
+    );
+    return response;
+  },
+
+  postPurchaseReport: async (
+    postId: number,
+    data: PurchaseReportRequest,
+  ): Promise<ApiResponse<PurchaseReportResponse>> => {
+    const response = await axiosInstance.post(END_POINTS.MYPAGE.PURCHASE_REPORT(postId), data);
     return response.data;
   },
 };

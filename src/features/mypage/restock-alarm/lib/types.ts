@@ -4,6 +4,8 @@ export interface RestockAlarmItem {
   price: number;
   deviceName: string;
   is5G: boolean;
+  storeName: string; 
+  desiredCount: number; 
 }
 
 export interface RestockAlarmResponse {
@@ -14,4 +16,4 @@ export interface RestockAlarmResponse {
     nextCursor: number;
     hasNext: boolean;
   };
-} 
+}

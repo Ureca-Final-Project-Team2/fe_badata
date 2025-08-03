@@ -1,3 +1,5 @@
+import { isMobileCarrier } from '@/shared/lib/typeGuards';
+
 import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
 
 interface MobileCarrierSelectProps {
@@ -7,6 +9,16 @@ interface MobileCarrierSelectProps {
 }
 
 export function MobileCarrierSelect({ value, onChange, required }: MobileCarrierSelectProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = e.target.value;
+    if (isMobileCarrier(newValue)) {
+      onChange(newValue);
+    } else {
+      console.error('Invalid mobile carrier value:', newValue);
+      onChange('UPLUS');
+    }
+  };
+
   return (
     <div className="w-full">
       <label className="text-[14px] text-[var(--gray-dark)] font-medium mb-1 inline-block">
@@ -15,7 +27,7 @@ export function MobileCarrierSelect({ value, onChange, required }: MobileCarrier
       <select
         className="w-full h-[45px] border border-[var(--gray-light)] rounded-[12px] px-4 text-[16px] focus:outline-none"
         value={value}
-        onChange={(e) => onChange(e.target.value as MobileCarrier)}
+        onChange={handleChange}
         required={required}
       >
         <option value="UPLUS">UPLUS</option>

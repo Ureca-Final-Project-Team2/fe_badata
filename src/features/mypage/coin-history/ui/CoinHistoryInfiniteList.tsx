@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { calculateBalanceHistory } from '@/features/mypage/coin-history/lib/utils';
-import { useUserCoinHistoryInfiniteQuery, useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
+import { useUserCoinHistoryInfiniteQuery } from '@/features/mypage/coin-history/model/queries';
 import { CoinHistoryItem } from '@/features/mypage/coin-history/ui/CoinHistoryItem';
 
 export function CoinHistoryInfiniteList() {
-  const { data: userCoinData } = useUserCoinQuery();
   const {
     data,
     isLoading,
@@ -70,21 +68,17 @@ export function CoinHistoryInfiniteList() {
     );
   }
 
-  // 유틸리티 함수를 사용하여 잔액 계산
-  const itemsWithCalculatedBalance = calculateBalanceHistory(allItems, userCoinData?.coin || 0);
-
   return (
     <div className="space-y-3">
-      {itemsWithCalculatedBalance.map((item, index) => {
-        // 마지막 아이템에 ref 추가
-        if (index === itemsWithCalculatedBalance.length - 1) {
+      {allItems.map((item, index) => {
+        if (index === allItems.length - 1) {
           return (
             <div key={item.id} ref={lastElementRef}>
-              <CoinHistoryItem item={item} calculatedBalance={item.calculatedBalance} />
+              <CoinHistoryItem item={item} />
             </div>
           );
         }
-        return <CoinHistoryItem key={item.id} item={item} calculatedBalance={item.calculatedBalance} />;
+        return <CoinHistoryItem key={item.id} item={item} />;
       })}
       {isFetchingNextPage && (
         <div className="text-center py-4">
@@ -93,4 +87,4 @@ export function CoinHistoryInfiniteList() {
       )}
     </div>
   );
-} 
+};

@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
+import { getCarrierDefaultImage } from '@/shared/lib/getCarrierDefaultImage';
 import { useShareHooks } from '@/shared/model/useShareHooks';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -67,7 +68,7 @@ export default function DataDetailPage({ postUserId, post, postType, sellerName 
         <Image
           src={
             !post.postImage || post.postImage === '' || post.postImage === 'no image'
-              ? '/assets/trade-detail.jpg'
+              ? getCarrierDefaultImage(post.mobileCarrier || 'UPLUS')
               : post.postImage
           }
           alt="thumbnail"

@@ -29,6 +29,7 @@ export const END_POINTS = {
     INFO: '/api/v1/users/info',
     FOLLOW_TOGGLE: (userId: number) => `/api/v1/users/${userId}/follows`,
     SALES: '/api/v1/users/sales',
+    FCM_TOKEN: '/api/v1/fcm-token',
   },
   STORES: {
     ALLSTORE: (storeId: number) => `/api/v1/stores/${storeId}/devices`,
@@ -57,6 +58,7 @@ export const END_POINTS = {
     COIN: '/api/v1/users/coin',
     COIN_HISTORY: '/api/v1/users/coin/history',
     DATA_USAGE: '/api/v1/users/data',
+    POST_COUNT: '/api/v1/users/post/count',
     FOLLOWINGS: '/api/v1/users/follows',
     FOLLOWERS: '/api/v1/users/follows',
     DELETE_FOLLOW: (followId: number) => `/api/v1/users/follows/${followId}`,
@@ -67,8 +69,13 @@ export const END_POINTS = {
     LIKE_TRADE_POST: '/api/v1/users/likes/posts',
     RESTOCK_ALARM: '/api/v1/users/restock',
     SOS_HISTORY: '/api/v1/users/sos',
+    REPORT_TOTAL_COUNT: '/api/v1/users/report/totalCount',
     REPORT_LIST: '/api/v1/users/reports',
     REPORT_INFO: (reportId: number) => `/api/v1/users/${reportId}/report/info`,
     NOTIFICATION: '/api/v1/users/notification',
+    PURCHASED_GIFTICON_DETAIL: (gifticonId: string) => `/api/v1/trades/purchases/${gifticonId}`,
+    PURCHASED_GIFTICON_IMAGE: (gifticonId: string) =>
+      `/api/v1/trades/purchases/${gifticonId}/image`,
+    PURCHASE_REPORT: (postId: number) => `/api/v1/trades/${postId}/reports/purchases`,
   },
 } as const;

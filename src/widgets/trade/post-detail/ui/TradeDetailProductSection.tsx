@@ -2,7 +2,9 @@
 
 import Image from 'next/image';
 
+import { BRAND_MAPPING } from '@/shared/config/brandMapping';
 import { ICONS } from '@/shared/config/iconPath';
+import { isDataBrandName, isKoreanBrandName } from '@/shared/lib/typeGuards';
 
 interface TradeDetailProductSectionProps {
   postType: 'GIFTICON' | 'DATA';
@@ -25,8 +27,13 @@ export const TradeDetailProductSection = ({
   description,
   capacity,
 }: TradeDetailProductSectionProps) => {
-  const brandKey = brand === 'KT' || brand === 'UPLUS' || brand === 'SKT' ? brand : null;
-  const brandImageSrc = brandKey ? ICONS.TRADE.BRAND_LOGO[brandKey] : null;
+  // 브랜드 이미지 경로
+  const brandImageSrc =
+    brand && isDataBrandName(brand)
+      ? ICONS.TRADE.BRAND_LOGO[brand]
+      : brand && isKoreanBrandName(brand)
+        ? ICONS.GIFTICON.BRAND_LOGO[BRAND_MAPPING[brand]]
+        : null;
 
   return (
     <>
@@ -34,21 +41,41 @@ export const TradeDetailProductSection = ({
       <div className="mb-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--white)] border border-[var(--gray)] rounded-full">
           {brandImageSrc ? (
-            <div className="w-4 h-4">
+            <div className="h-6 flex items-center justify-center">
               <Image
                 src={brandImageSrc}
                 alt={brand || '브랜드'}
-                width={16}
-                height={16}
-                className="object-contain"
+                width={0}
+                height={24}
+                className="h-6 w-auto object-contain rounded-full"
               />
             </div>
           ) : (
-            <div className="w-4 h-4 flex items-center justify-center">
-              <span className="font-small-medium text-[var(--gray-dark)]">?</span>
+            <div className="h-6 flex items-center justify-center">
+              {postType === 'DATA' ? (
+                <div className="h-6 flex items-center justify-center bg-[var(--gray-light)] rounded-full">
+                  <Image
+                    src={ICONS.TRADE.BRAND_LOGO.DATA_DEFAULT}
+                    alt="데이터 기본"
+                    width={0}
+                    height={24}
+                    className="h-6 w-auto object-contain rounded-sm"
+                  />
+                </div>
+              ) : (
+                <div className="h-6 flex items-center justify-center">
+                  <Image
+                    src={ICONS.GIFTICON.BRAND_LOGO.GIFTICON_DEFAULT}
+                    alt="기프티콘 기본"
+                    width={0}
+                    height={24}
+                    className="h-6 w-auto object-contain rounded-sm"
+                  />
+                </div>
+              )}
             </div>
           )}
-          <span className="font-label-regular text-[var(--black)]">{brand}</span>
+          <span className="font-label-regular text-[var(--black)] flex items-center">{brand}</span>
         </div>
       </div>
 

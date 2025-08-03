@@ -1,19 +1,51 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { postReview } from '@/features/rental/store/register-review/api/apis';
+import {
+  deleteReview,
+  postReview,
+  updateReview,
+} from '@/features/rental/store/register-review/api/apis';
+import { ErrorMessageMap } from '@/shared/config/errorCodes';
+import { HTTPError } from '@/shared/lib/HTTPError';
+import { makeToast } from '@/shared/lib/makeToast';
+import { queryClient } from '@/shared/lib/queryClient';
 
 import type {
   PostReviewRequest,
-  PostReviewResponse,
+  UpdateReviewRequest,
 } from '@/features/rental/store/register-review/lib/types';
-
-interface PostReviewVariables {
-  reservationId: number;
-  reviewData: Omit<PostReviewRequest, 'reservationId'>;
-}
+import type { ErrorCode } from '@/shared/config/errorCodes';
 
 export const usePostReviewMutation = () => {
-  return useMutation<PostReviewResponse, Error, PostReviewVariables>({
-    mutationFn: ({ reservationId, reviewData }) => postReview(reservationId, reviewData),
+  return useMutation({
+    mutationFn: ({
+      reservationId,
+      reviewData,
+    }: {
+      reservationId: number;
+      reviewData: PostReviewRequest;
+    }) => postReview(reservationId, reviewData),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['review'] }),
+  });
+};
+
+export const useUpdateReviewMutation = () => {
+  return useMutation({
+    mutationFn: ({ reviewId, reviewData }: { reviewId: number; reviewData: UpdateReviewRequest }) =>
+      updateReview(reviewId, reviewData),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['review'] }),
+  });
+};
+
+export const useDeleteReviewMutation = () => {
+  return useMutation({
+    mutationFn: deleteReview,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['review'] }),
+    onError: (error) => {
+      if (error instanceof HTTPError) {
+        const errorMessage = ErrorMessageMap[error.code as ErrorCode] ?? error.message;
+        makeToast(errorMessage, 'warning');
+      }
+    },
   });
 };
