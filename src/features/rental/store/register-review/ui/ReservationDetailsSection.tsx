@@ -1,4 +1,3 @@
-import Image from 'next/image';
 
 import type { ReservationDetails } from '@/features/rental/store/register-review/lib/types';
 
@@ -18,7 +17,7 @@ export default function ReservationDetailsSection({
       <div className="flex items-start justify-between mb-4 pt-6">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-[var(--gray)] rounded-lg relative overflow-hidden">
-            <Image
+            <img
               src={reservationDetails.storeImageUrl}
               width={48}
               height={48}
