@@ -2,13 +2,12 @@ import { useMutation } from '@tanstack/react-query';
 
 import { respondToSos, sendSosRequest } from '../api/apis';
 
-import type { SosRequestResponse, SosRespondResponse } from '../lib/types';
+import type { SosRespondResponse } from '../lib/types';
 
-export const useSosRequestMutation = () => {
-  return useMutation<SosRequestResponse['content'], Error>({
+export const useSosRequestMutation = () =>
+  useMutation<{ sosId: number }, Error, void>({
     mutationFn: sendSosRequest,
   });
-};
 
 export const useSosRespondMutation = () => {
   return useMutation<SosRespondResponse['content'], Error, number>({

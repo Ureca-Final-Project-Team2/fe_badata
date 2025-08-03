@@ -3,6 +3,8 @@
 import { useSosRequestMutation } from '../model/queries';
 import { useSosStore } from '../model/sosStore';
 
+import { makeCustomToast } from './makeCustomToast'; // ✅ 추가
+
 interface SosModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -16,11 +18,20 @@ export function SosModal({ isOpen, onClose }: SosModalProps) {
     if (isPending) return;
 
     sendSosRequest(undefined, {
-      onSuccess: (content) => {
-        setSosId(content.sosId); 
+      onSuccess: (response) => {
+        console.log('✅ SOS 요청 응답:', response);
+        setSosId(response.sosId);
+        makeCustomToast('🚨 SOS 요청이 전송되었습니다!', 'success', {
+          position: 'top-center',
+          duration: 4000,
+        });
       },
       onError: (error) => {
         console.error('❌ SOS 요청 실패:', error);
+        makeCustomToast('❌ SOS 요청에 실패했어요.', 'warning', {
+          position: 'top-center',
+          duration: 4000,
+        });
       },
     });
 

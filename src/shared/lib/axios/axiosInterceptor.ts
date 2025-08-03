@@ -32,7 +32,9 @@ instance.interceptors.response.use(
         response.config.url?.includes(END_POINTS.MYPAGE.COIN) ||
         response.config.url?.includes(END_POINTS.MYPAGE.COIN_HISTORY) ||
         response.config.url?.includes(END_POINTS.MYPAGE.PURCHASES_HISTORY) ||
-        response.config.url?.includes(END_POINTS.POSITION.POSITION)
+        response.config.url?.includes(END_POINTS.POSITION.POSITION) ||
+        response.config.url?.includes(END_POINTS.SOS.REQUEST) ||
+        response.config.url?.includes(END_POINTS.SOS.RESPOND)
       ) {
         return response;
       }
