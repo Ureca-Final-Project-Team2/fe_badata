@@ -15,13 +15,6 @@ export function TradeDeadlineBanner() {
 
   const deadlinePosts = data?.item ?? [];
 
-  if (isLoading) {
-    return <div className="py-4 text-center text-[var(--gray)]">로딩 중...</div>;
-  }
-  if (!deadlinePosts || deadlinePosts.length === 0) {
-    return <div className="py-4 text-center text-[var(--gray)]">게시물이 없습니다.</div>;
-  }
-
   const handleLikeToggle = (postId: number) => {
     const item = deadlinePosts.find((post) => post.id === postId);
     if (item) {
@@ -50,31 +43,36 @@ export function TradeDeadlineBanner() {
           onClick={() => router.push(PATH.TRADE.DEADLINE)}
         />
       </div>
-
-      <AutoSwiper
-        items={deadlinePosts.slice(0, 10)}
-        getKey={(item) => item.id}
-        autoPlayDelay={2000}
-        slidesPerView={1}
-        spaceBetween={120}
-      >
-        {(item) => (
-          <BannerItem
-            key={item.id}
-            id={item.id}
-            imageUrl={item.postImage}
-            partner={item.partner}
-            mobileCarrier={item.mobileCarrier}
-            price={item.price}
-            title={item.title}
-            likeCount={item.likesCount}
-            isLiked={item.isLiked}
-            onLikeToggle={handleLikeToggle}
-            isLikeLoading={isItemLoading(item.id)}
-            onCardClick={handleCardClick}
-          />
-        )}
-      </AutoSwiper>
+      {isLoading ? (
+        <div className="py-4 text-center text-[var(--gray)]">로딩 중...</div>
+      ) : deadlinePosts.length === 0 ? (
+        <div className="py-4 text-center text-[var(--gray)]">마감임박 게시물이 없습니다.</div>
+      ) : (
+        <AutoSwiper
+          items={deadlinePosts.slice(0, 10)}
+          getKey={(item) => item.id}
+          autoPlayDelay={2000}
+          slidesPerView={1}
+          spaceBetween={120}
+        >
+          {(item) => (
+            <BannerItem
+              key={item.id}
+              id={item.id}
+              imageUrl={item.postImage}
+              partner={item.partner}
+              mobileCarrier={item.mobileCarrier}
+              price={item.price}
+              title={item.title}
+              likeCount={item.likesCount}
+              isLiked={item.isLiked}
+              onLikeToggle={handleLikeToggle}
+              isLikeLoading={isItemLoading(item.id)}
+              onCardClick={handleCardClick}
+            />
+          )}
+        </AutoSwiper>
+      )}
     </section>
   );
 }
