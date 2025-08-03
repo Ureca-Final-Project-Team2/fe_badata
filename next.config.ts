@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 
+import withPWA from '@ducanh2912/next-pwa';
 import path from 'path';
 
 const nextConfig: NextConfig = {
@@ -37,4 +38,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPWA({
+  ...nextConfig,
+  dest: 'public',
+});
