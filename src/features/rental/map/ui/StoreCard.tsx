@@ -1,5 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
+import { PATH } from '@/shared/config/path';
 import { useStoreLikeToggle } from '@/shared/hooks/useStoreLikeToggle';
 import { formatDistanceString } from '@/shared/lib/format/distanceUtils';
 import { ImageBox } from '@/shared/ui/ImageBox';
@@ -20,6 +23,8 @@ export function StoreCard({
   showDistance = true,
   disableToast = false,
 }: StoreCardProps & { showDistance?: boolean; disableToast?: boolean }) {
+  const router = useRouter();
+
   const {
     isLoading: isLikeLoading,
     shouldShowLikeActive,
@@ -33,9 +38,14 @@ export function StoreCard({
 
   const operatingStatus = storeDetail.isOpening ? '영업 중' : '영업 종료';
 
+  const handleCardClick = () => {
+    router.push(PATH.RENTAL.STORE_DETAIL.replace(':storeId', store.id.toString()));
+  };
+
   return (
     <div
-      className={`w-[380px] bg-white rounded-[16px] p-3 flex gap-3 shadow-sm relative items-start ${className ?? ''}`}
+      className={`w-[380px] bg-white rounded-[16px] p-3 flex gap-3 shadow-sm relative items-start cursor-pointer hover:shadow-md transition-shadow ${className ?? ''}`}
+      onClick={handleCardClick}
     >
       {/* 왼쪽: 스토어 이미지 */}
       <ImageBox
@@ -69,7 +79,13 @@ export function StoreCard({
         </div>
       </div>
       {/* 오른쪽 상단 좋아요 버튼 */}
-      <div className="absolute right-3 top-3">
+      <div
+        className="absolute right-3 top-3"
+        onClick={(e) => {
+          e.stopPropagation(); // 카드 클릭 이벤트 전파 방지
+          handleLikeToggle();
+        }}
+      >
         <StoreLikeButton
           isLiked={shouldShowLikeActive}
           isLoading={isLikeLoading}
