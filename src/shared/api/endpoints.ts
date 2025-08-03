@@ -73,5 +73,9 @@ export const END_POINTS = {
     REPORT_LIST: '/api/v1/users/reports',
     REPORT_INFO: (reportId: number) => `/api/v1/users/${reportId}/report/info`,
     NOTIFICATION: '/api/v1/users/notification',
+    PURCHASED_GIFTICON_DETAIL: (gifticonId: string) => `/api/v1/trades/purchases/${gifticonId}`,
+    PURCHASED_GIFTICON_IMAGE: (gifticonId: string) =>
+      `/api/v1/trades/purchases/${gifticonId}/image`,
+    PURCHASE_REPORT: (postId: number) => `/api/v1/trades/${postId}/reports/purchases`,
   },
 } as const;
