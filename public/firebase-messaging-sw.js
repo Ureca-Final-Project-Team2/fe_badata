@@ -15,7 +15,10 @@ const messaging = firebase.messaging();
 
 // Firebase FCM 백그라운드 메시지 처리
 messaging.onBackgroundMessage(function (payload) {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  // 포그라운드 메시지인지 확인 (앱이 닫혀있을 때 포그라운드 메시지가 백그라운드로 표시되는 것 방지)
+  if (payload.data?.messageType === 'foreground' || payload.data?.isForeground === 'true') {
+    return;
+  }
 
   const notificationTitle = payload.data && payload.data.title ? payload.data.title : 'BADATA 알림';
 
@@ -23,32 +26,47 @@ messaging.onBackgroundMessage(function (payload) {
     body: payload.data?.content || '새로운 소식이 있습니다!',
     icon: '/assets/logo-badata.png',
     badge: '/assets/logo-badata.png',
-    tag: `badata-bg-${Date.now()}`,
+    tag: 'badata-notification', // 고정 태그로 중복 방지
     requireInteraction: true,
     data: {
       url: payload.data?.click_action ?? '/',
     },
+    actions: [
+      {
+        action: 'open',
+        title: '열기',
+      },
+    ],
   };
 
-  console.log('FCM 알림 표시:', notificationTitle, notificationOptions);
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 // 일반적인 푸시 이벤트 처리 (백그라운드 알림용)
 self.addEventListener('push', (event) => {
-  console.log('푸시 이벤트 수신:', event);
-
   if (event.data) {
     const payload = event.data.json();
-    console.log('푸시 데이터:', payload);
+
+    // FCM에서 온 메시지는 onBackgroundMessage에서 처리되므로 건너뛰기
+    if (payload.from?.includes('fcm')) {
+      return;
+    }
+
+    // 포그라운드 메시지인지 확인
+    if (payload.data?.messageType === 'foreground' || payload.data?.isForeground === 'true') {
+      return;
+    }
 
     const title = payload.data?.title || 'BADATA 알림';
     const options = {
       body: payload.data?.content || '새로운 알림이 도착했습니다.',
       icon: '/assets/logo-badata.png',
       badge: '/assets/logo-badata.png',
-      tag: `badata-push-${Date.now()}`,
+      tag: 'badata-notification', // 고정 태그로 중복 방지
       requireInteraction: true,
+      data: {
+        url: payload.data?.click_action ?? '/',
+      },
       actions: [
         {
           action: 'open',
@@ -63,9 +81,9 @@ self.addEventListener('push', (event) => {
 });
 
 self.addEventListener('notificationclick', function (event) {
-  console.log('알림 클릭됨:', event);
-
   event.notification.close();
+
+  const targetUrl = event.notification.data?.url || '/';
 
   // 알림 클릭 시 앱으로 이동
   event.waitUntil(
@@ -73,11 +91,12 @@ self.addEventListener('notificationclick', function (event) {
       // 이미 열린 탭이 있으면 포커스
       for (const client of clientList) {
         if (client.url.includes(self.location.origin)) {
+          client.navigate(targetUrl);
           return client.focus();
         }
       }
       // 열린 탭이 없으면 새 탭에서 열기
-      return clients.openWindow('/');
+      return clients.openWindow(targetUrl);
     }),
   );
 });

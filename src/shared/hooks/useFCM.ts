@@ -32,7 +32,6 @@ export const useFCM = () => {
       });
 
       if (currentToken) {
-        console.log('✅ FCM 토큰 발급 성공:', currentToken);
         setToken(currentToken);
         return currentToken;
       } else {
@@ -47,6 +46,7 @@ export const useFCM = () => {
   };
 
   useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
     const setupMessaging = async () => {
       const messaging = await initMessaging();
       if (!messaging) {
@@ -54,22 +54,24 @@ export const useFCM = () => {
         return;
       }
 
-      console.log('✅ FCM onMessage 등록 시작');
-      const unsubscribe = onFirebaseMessage(messaging, (payload) => {
-        console.log('📩 포그라운드 메시지 수신:', payload);
+      unsubscribe = onFirebaseMessage(messaging, (payload) => {
         setMessage({
           title: payload.notification?.title ?? payload.data?.title ?? '알림',
           body: payload.notification?.body ?? payload.data?.content ?? '',
         });
         setShowNotification(true); // ✅ 알림 표시
       });
-
-      return () => unsubscribe();
     };
 
     setupMessaging();
     setPermission(Notification.permission);
     setIsInitialized(true);
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   return {
