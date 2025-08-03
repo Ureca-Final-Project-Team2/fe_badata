@@ -63,14 +63,42 @@ export default function RentalPage() {
   } = useFilterState();
 
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
+  // 확장된 마커들의 ID를 Set으로 관리
+  const [expandedMarkers, setExpandedMarkers] = useState<Set<number>>(() => {
+    // 초기화 시 localStorage에서 복원
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('expanded-markers');
+      if (saved) {
+        try {
+          return new Set(JSON.parse(saved));
+        } catch (error) {
+          console.error('확장된 마커 상태 복원 실패:', error);
+        }
+      }
+    }
+    return new Set();
+  });
 
   const { selectedStore, selectedStoreId, handleMapClick, dispatchSelectedStore } =
     useSelectedStore(mapInstance);
 
-  // 마커 클릭 핸들러 수정 - 하단 스와이퍼로 표시
+  // 마커 클릭 핸들러 수정 - 하단 스와이퍼로 표시 및 확장 상태 관리
   const handleMarkerClick = useCallback(
     async (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
+      console.log('🔍 RentalPage 마커 클릭 핸들러:', { storeId, devices: devices.length });
+
       if (devices.length > 0 && storeId) {
+        // 마커 확장/축소 토글
+        const newExpanded = new Set(expandedMarkers);
+        if (newExpanded.has(storeId)) {
+          newExpanded.delete(storeId); // 이미 확장된 상태면 축소
+        } else {
+          // 다른 모든 마커는 축소하고 현재 마커만 확장 (single selection)
+          newExpanded.clear();
+          newExpanded.add(storeId);
+        }
+        setExpandedMarkers(newExpanded);
+
         // 선택된 스토어 정보 업데이트
         dispatchSelectedStore({
           type: 'SELECT_STORE',
@@ -78,9 +106,28 @@ export default function RentalPage() {
           storeId: storeId,
           storeDetail: storeDetail,
         });
+
+        // 마커 캐시에서 선택 상태 업데이트
+        if (mapInstance) {
+          try {
+            const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
+            const cache = markerCaches.get(mapInstance);
+            if (cache) {
+              // 모든 마커를 먼저 비선택 상태로 변경
+              cache.clearAllSelections();
+
+              // 새로 선택된 마커만 선택 상태로 변경
+              if (newExpanded.has(storeId)) {
+                cache.updateMarkerSelection(storeId, true);
+              }
+            }
+          } catch (error) {
+            console.error('마커 선택 업데이트 실패:', error);
+          }
+        }
       }
     },
-    [dispatchSelectedStore],
+    [dispatchSelectedStore, mapInstance, expandedMarkers],
   );
 
   // URL 파라미터 처리 완료 표시
@@ -90,6 +137,13 @@ export default function RentalPage() {
       clearUrlParams();
     }
   }, [selectedLat, selectedLng, hasProcessedUrlParams, setHasProcessedUrlParams, clearUrlParams]);
+
+  // 확장된 마커 상태를 localStorage에 저장
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('expanded-markers', JSON.stringify(Array.from(expandedMarkers)));
+    }
+  }, [expandedMarkers]);
 
   // 현재 위치로 이동하는 함수
   const handleCurrentLocation = useCallback(() => {
@@ -137,8 +191,34 @@ export default function RentalPage() {
 
   // 지도 클릭 핸들러
   const handleMapClickWrapper = useCallback(async () => {
+    console.log('🔍 지도 클릭됨');
+
+    // 모든 마커 축소
+    setExpandedMarkers(new Set());
+
+    // 마커 캐시에서 모든 선택 상태 해제
+    if (mapInstance) {
+      try {
+        const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
+        const cache = markerCaches.get(mapInstance);
+        if (cache) {
+          // 모든 마커의 선택 상태 해제
+          cache.markers.forEach((markerData) => {
+            if (
+              markerData.isSelected &&
+              markerData.marker instanceof window.kakao.maps.CustomOverlay
+            ) {
+              cache.updateMarkerSelection(markerData.storeId, false);
+            }
+          });
+        }
+      } catch (error) {
+        console.error('마커 선택 해제 실패:', error);
+      }
+    }
+
     await handleMapClick();
-  }, [handleMapClick]);
+  }, [handleMapClick, mapInstance]);
 
   // 지도 준비 완료 시 호출되는 콜백
   const handleMapReady = useCallback(
@@ -301,6 +381,7 @@ export default function RentalPage() {
           selectedStoreId={selectedStoreId}
           userLat={userLocation.lat ?? undefined}
           userLng={userLocation.lng ?? undefined}
+          expandedMarkers={expandedMarkers}
         />
       </div>
       <DrawerSection

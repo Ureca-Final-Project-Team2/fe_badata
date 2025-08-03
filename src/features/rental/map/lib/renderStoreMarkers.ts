@@ -86,6 +86,7 @@ export const debouncedRenderMarkers = debounce(
       storeId?: number,
     ) => void,
     selectedStoreId?: number | null,
+    expandedMarkers?: Set<number>,
   ) => {
     if (!map || !window.kakao) {
       return;
@@ -126,12 +127,21 @@ export const debouncedRenderMarkers = debounce(
     // 3. 기존 마커들 업데이트 (속성 변경 시)
     updateExistingMarkers(cache, storesToUpdate);
 
-    // 4. 선택된 마커 상태 업데이트
+    // 4. 확장된 마커 상태 업데이트
+    if (expandedMarkers) {
+      expandedMarkers.forEach((storeId) => {
+        if (cache.hasMarker(storeId)) {
+          cache.updateMarkerSelection(storeId, true);
+        }
+      });
+    }
+
+    // 5. 선택된 마커 상태 업데이트
     if (selectedStoreId) {
       cache.updateMarkerSelection(selectedStoreId, true);
     }
 
-    // 5. 마커 업데이트 콜백 등록
+    // 6. 마커 업데이트 콜백 등록
     await registerMarkerCallbacks(stores, cache);
   },
   300,
@@ -147,9 +157,17 @@ export const renderStoreMarkers = async (
     storeId?: number,
   ) => void,
   selectedStoreId?: number | null,
+  expandedMarkers?: Set<number>,
 ): Promise<void> => {
   if (!map || !window.kakao) {
     return;
   }
-  debouncedRenderMarkers(map, stores, filterParams, onStoreMarkerClick, selectedStoreId);
+  debouncedRenderMarkers(
+    map,
+    stores,
+    filterParams,
+    onStoreMarkerClick,
+    selectedStoreId,
+    expandedMarkers,
+  );
 };

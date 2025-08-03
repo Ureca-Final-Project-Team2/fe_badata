@@ -16,6 +16,7 @@ export const useMarkerRendering = (
     storeId?: number,
   ) => void,
   selectedStoreId?: number | null,
+  expandedMarkers?: Set<number>,
 ) => {
   const lastStoresRef = useRef<Store[]>([]);
   const lastFilterStateRef = useRef<RentalFilterState>(filterState);
@@ -25,8 +26,15 @@ export const useMarkerRendering = (
     if (!map) {
       return;
     }
-    debouncedRenderMarkers(map, stores, filterState, onStoreMarkerClick, selectedStoreId);
-  }, [map, stores, filterState, onStoreMarkerClick, selectedStoreId]);
+    debouncedRenderMarkers(
+      map,
+      stores,
+      filterState,
+      onStoreMarkerClick,
+      selectedStoreId,
+      expandedMarkers,
+    );
+  }, [map, stores, filterState, onStoreMarkerClick, selectedStoreId, expandedMarkers]);
 
   // stores나 filterState가 변경되었을 때만 마커 렌더링
   const shouldRenderMarkers = useMemo(() => {

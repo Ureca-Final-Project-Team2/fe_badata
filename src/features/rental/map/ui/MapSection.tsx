@@ -24,6 +24,7 @@ export interface MapSectionProps {
   selectedStoreId?: number | null;
   userLat?: number;
   userLng?: number;
+  expandedMarkers?: Set<number>; // 확장된 마커들의 ID Set
 }
 
 export function MapSection({
@@ -37,6 +38,7 @@ export function MapSection({
   selectedStoreId,
   userLat,
   userLng,
+  expandedMarkers,
 }: MapSectionProps) {
   const { mapRef, map } = useKakaoMapHooks(initialLat, initialLng);
   const { stores } = useFetchStoresHooks(map, filterState);
@@ -50,6 +52,7 @@ export function MapSection({
     filterState,
     onStoreMarkerClick,
     selectedStoreId,
+    expandedMarkers,
   );
 
   useCurrentLocationMarker(

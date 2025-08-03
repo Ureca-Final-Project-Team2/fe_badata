@@ -35,6 +35,7 @@ export class MarkerCache {
       isLiked: boolean;
       isCluster: boolean;
       isSelected: boolean;
+      storeName?: string; // 가맹점명 추가
     }
   >();
 
@@ -65,6 +66,7 @@ export class MarkerCache {
       isLiked: boolean;
       isCluster: boolean;
       isSelected: boolean;
+      storeName?: string; // 가맹점명 추가
     },
   ): void {
     this.markers.set(this.getMarkerKey(storeId), {
@@ -123,7 +125,7 @@ export class MarkerCache {
             isLiked || markerData.isLiked,
             false,
             newDeviceCount,
-            isCluster || markerData.isCluster,
+            markerData.storeName, // 가맹점명 전달
           );
         } else {
           // 기존 마커인 경우 이미지 업데이트
@@ -150,9 +152,26 @@ export class MarkerCache {
         markerData.isLiked,
         isSelected,
         markerData.deviceCount,
-        markerData.isCluster,
+        markerData.storeName, // 가맹점명 전달
       );
+      markerData.isSelected = isSelected;
     }
+  }
+
+  // 모든 마커의 선택 상태 해제
+  clearAllSelections(): void {
+    this.markers.forEach((markerData) => {
+      if (markerData.isSelected && markerData.marker instanceof window.kakao.maps.CustomOverlay) {
+        updateDropletMarker(
+          markerData.marker,
+          markerData.isLiked,
+          false, // 선택 해제
+          markerData.deviceCount,
+          markerData.storeName, // 가맹점명 전달
+        );
+        markerData.isSelected = false;
+      }
+    });
   }
 
   // 모든 마커 제거

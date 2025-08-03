@@ -102,10 +102,10 @@ export const createStoreMarker = async (
       }
     };
 
-    // 현재 선택된 마커인지 확인 (전역 상태에서 가져오기)
-    const isCurrentlySelected =
-      typeof window !== 'undefined' && localStorage.getItem('selected-store-id')
-        ? JSON.parse(localStorage.getItem('selected-store-id') || 'null') === store.id
+    // 확장된 마커 상태 확인 (expandedMarkers Set에서 확인)
+    const isExpanded =
+      typeof window !== 'undefined' && localStorage.getItem('expanded-markers')
+        ? JSON.parse(localStorage.getItem('expanded-markers') || '[]').includes(store.id)
         : false;
 
     let marker: kakao.maps.Marker | kakao.maps.CustomOverlay;
@@ -123,10 +123,10 @@ export const createStoreMarker = async (
         position,
         store.id,
         isLiked,
-        isCurrentlySelected,
+        isExpanded, // 확장 상태 사용
         handleMarkerClick,
         totalLeftCount,
-        isCluster,
+        store.name, // 가맹점명 전달
       );
     }
 
@@ -142,7 +142,8 @@ export const createStoreMarker = async (
         deviceCount: totalLeftCount,
         isLiked: isLiked,
         isCluster: store.isCluster || false,
-        isSelected: isCurrentlySelected,
+        isSelected: isExpanded, // 확장 상태로 설정
+        storeName: store.name, // 가맹점명 저장
       });
     }
 
