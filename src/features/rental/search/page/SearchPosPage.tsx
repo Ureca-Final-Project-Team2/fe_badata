@@ -13,7 +13,6 @@ import { useGetAddressHistoryInfinite } from '@/features/rental/search/hook/useG
 import { useSearchPlaces } from '@/features/rental/search/hook/useSearchPlacesHooks';
 import useThrottledScroll from '@/features/rental/search/hook/useThrottledScrollHooks';
 import AddressHistoryList from '@/features/rental/search/ui/AddressHistoryList';
-import CurrentLocationButton from '@/features/rental/search/ui/CurrentLocationButton';
 import SearchInputField from '@/features/rental/search/ui/SearchInputField';
 import SearchResults from '@/features/rental/search/ui/SearchResults';
 import { isLoggedIn } from '@/features/rental/search/utils/auth/isLoggedIn';
@@ -156,12 +155,6 @@ export default function SearchPosPage() {
     [setKeyword, queryClient, sort],
   );
 
-  // 현재 위치 클릭 핸들러
-  const handleCurrentLocation = useCallback(() => {
-    console.log('현재 위치로 찾기');
-    // TODO: 현재 위치 기반 검색 로직 구현
-  }, []);
-
   // 주소 삭제 핸들러
   const handleDeleteAddress = useCallback(
     (addressId: number, e: React.MouseEvent) => {
@@ -249,8 +242,6 @@ export default function SearchPosPage() {
           ) : (
             // 검색어가 없을 때 - 현재 위치 버튼과 최근 검색 주소 표시
             <>
-              <CurrentLocationButton onClick={handleCurrentLocation} />
-
               {/* 최근 검색 주소 제목 */}
               {hasAddressHistory && (
                 <h2 className="font-small-medium text-[var(--black)] mb-4">최근 검색 주소</h2>
