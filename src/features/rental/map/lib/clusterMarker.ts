@@ -6,7 +6,6 @@ export const createClusterMarker = (
   map: kakao.maps.Map,
   position: kakao.maps.LatLng,
   totalLeftCount: number,
-  zoomLevel: number,
 ): kakao.maps.CustomOverlay => {
   console.log('🔍 줌 레벨 4 이상 - 바다 파동 클러스터 마커 생성 시작');
 
@@ -181,15 +180,20 @@ export const createClusterMarker = (
     );
 
     // 클러스터 클릭 시 줌인
+    const currentZoomLevel = map.getLevel();
+    const targetZoomLevel = Math.max(2, currentZoomLevel - 2); // 더 확실한 줌인
+
     map.setCenter(position);
-    map.setLevel(zoomLevel - 1);
+    map.setLevel(targetZoomLevel);
 
     console.log('🔍 클러스터 클릭 후 지도 이동:', {
       center: {
         lat: position.getLat(),
         lng: position.getLng(),
       },
-      newZoomLevel: zoomLevel - 1,
+      currentZoomLevel,
+      targetZoomLevel,
+      zoomLevelChanged: targetZoomLevel !== currentZoomLevel,
     });
   });
 

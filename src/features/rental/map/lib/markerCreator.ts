@@ -113,7 +113,7 @@ export const createStoreMarker = async (
     // 줌 레벨에 따라 다른 마커 생성
     if (zoomLevel >= 4) {
       // 클러스터 마커 생성
-      marker = createClusterMarker(store, map, position, totalLeftCount, zoomLevel);
+      marker = createClusterMarker(store, map, position, totalLeftCount);
     } else {
       console.log('🔍 줌 레벨 3 이하 - 물방울 마커 생성 시작');
 
