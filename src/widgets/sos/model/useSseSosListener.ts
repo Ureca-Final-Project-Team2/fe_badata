@@ -2,75 +2,68 @@ import { useEffect } from 'react';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 
-export const useSseSosListener = (onMessage: (data: string) => void) => {
+export function useSseSosListener(onMessage: (data: string) => void) {
   useEffect(() => {
-    const token = useAuthStore.getState().accessToken;
+    let isCancelled = false;
     const controller = new AbortController();
 
-    console.log('🔗 SSE 연결 시도 중...', { token: token ? '있음' : '없음' });
+    const connect = async () => {
+      const token = useAuthStore.getState().accessToken;
 
-    fetch('https://api.badata.store/sse/subscribe', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'text/event-stream',
-      },
-      signal: controller.signal,
-    })
-      .then((response) => {
-        console.log('✅ SSE 연결 성공:', response.status, response.statusText);
-        
-        if (!response.ok) {
-          throw new Error(`SSE 연결 실패: ${response.status} ${response.statusText}`);
+      if (!token) {
+        console.warn('❌ [SSE] accessToken 없음. 연결 시도 중단');
+        return;
+      }
+
+      try {
+        const res = await fetch('https://api.badata.store/sse/subscribe', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'text/event-stream',
+          },
+          signal: controller.signal,
+        });
+
+        if (!res.ok || !res.body) {
+          console.error(`❌ [SSE] 연결 실패. 상태 코드: ${res.status}`);
+          return;
         }
 
-        const reader = response.body?.getReader();
-        const decoder = new TextDecoder('utf-8');
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
 
-        const read = async () => {
-          try {
-            while (true) {
-              const { done, value } = await reader!.read();
-              if (done) {
-                console.log('📡 SSE 스트림 종료');
-                break;
-              }
+        while (!isCancelled) {
+          const { value, done } = await reader.read();
+          if (done || !value) break;
 
-              const chunk = decoder.decode(value, { stream: true });
-              console.log('📦 SSE 청크 수신:', chunk);
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n').filter((line) => line.trim().startsWith('data:'));
 
-              chunk.split('\n').forEach((line) => {
-                if (line.startsWith('data:')) {
-                  const data = line.replace(/^data:\s*/, '').trim();
-                  if (data) {
-                    console.log('📨 SSE 메시지 전달:', data);
-                    onMessage(data);
-                  }
-                }
-              });
-            }
-          } catch (err) {
-            if (err instanceof DOMException && err.name === 'AbortError') {
-              console.log('ℹ️ SSE 연결이 정상적으로 중단되었습니다 (AbortController)');
-            } else {
-              console.error('❌ SSE 수신 중 오류 발생:', err);
-            }
+          for (const line of lines) {
+            const clean = line.replace(/^data:\s*/, '').trim();
+            onMessage(clean);
           }
-        };
-
-        read();
-      })
-      .catch((err) => {
-        if (err instanceof DOMException && err.name === 'AbortError') {
-          console.log('ℹ️ SSE 연결이 사용자 요청으로 중단됨');
-        } else {
-          console.error('❌ SSE 연결 실패:', err);
         }
-      });
+      } catch (error) {
+        if (!isCancelled) {
+          console.error('❌ [SSE] 연결 중 오류 발생:', error);
+          setTimeout(() => {
+            if (!isCancelled) {
+              console.log('🔁 [SSE] 재연결 시도');
+              connect();
+            }
+          }, 3000); // 3초 후 재시도
+        }
+      }
+    };
+
+    connect();
 
     return () => {
-      console.log('🔌 SSE 연결 해제');
+      isCancelled = true;
       controller.abort();
+      console.log('🧹 [SSE] 연결 종료 및 정리 완료');
     };
   }, [onMessage]);
-};
+}
