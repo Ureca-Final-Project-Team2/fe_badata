@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useUserInfoQuery } from '@/entities/user/model/queries';
 import { useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
 import { AlarmSettingSection } from '@/features/mypage/ui/AlarmSettingSection';
-import { DataUsageCardSection } from '@/features/mypage/ui/DataUsageCardSection';
+import DataUsageCardSection from '@/features/mypage/ui/DataUsageCardSection';
 import { RentalSection } from '@/features/mypage/ui/RentalSection';
 import { ReportStatusSection } from '@/features/mypage/ui/ReportStatusSection';
 import { SosSection } from '@/features/mypage/ui/SosSection';
