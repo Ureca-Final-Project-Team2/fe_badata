@@ -14,7 +14,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 // 배포된 사이트의 실제 도메인
-const SITE_URL = 'https://badata.vercel.app';
+const SITE_URL = 'https://www.badata.store/';
 
 // Firebase FCM 백그라운드 메시지 처리
 messaging.onBackgroundMessage(function (payload) {
