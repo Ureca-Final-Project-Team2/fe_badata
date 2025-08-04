@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -29,7 +29,8 @@ export default function DeadlinePageClient() {
   const searchParams = useSearchParams();
   const page = searchParams?.get('page') ?? 'all';
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTradeDeadlineInfiniteQuery();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useTradeDeadlineInfiniteQuery();
 
   const allPosts = data.pages.flatMap((page) => page.item);
 
@@ -85,9 +86,11 @@ export default function DeadlinePageClient() {
   const loadMoreRef = useRef(null);
   const isInView = useInView(loadMoreRef);
 
-  if (isInView && hasNextPage && !isFetchingNextPage) {
-    fetchNextPage();
-  }
+  useEffect(() => {
+    if (isInView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [isInView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleCardClick = (item: DeadlinePost) => {
     const path =
@@ -102,7 +105,7 @@ export default function DeadlinePageClient() {
       <DeadlineFlatTab className="my-4" />
       <DeadlineList
         items={filteredPosts}
-        isLoading={false}
+        isLoading={isLoading}
         sortLabel={currentSortLabel}
         onSortClick={openDrawer}
         onItemClick={handleCardClick}

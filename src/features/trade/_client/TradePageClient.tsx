@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -88,7 +88,12 @@ export default function TradePageClient() {
 
   const loadMoreRef = useRef(null);
   const isInView = useInView(loadMoreRef);
-  if (isInView && hasNextPage && !isFetchingNextPage) fetchNextPage();
+
+  useEffect(() => {
+    if (isInView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [isInView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <>
