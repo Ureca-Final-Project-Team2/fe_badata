@@ -21,6 +21,8 @@ import { SectionDivider } from '@/shared/ui/SectionDivider';
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
+import TradeRecommendPostsSection from '../ui/TradeRecommendPostsSection';
+
 export default function TradePageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -101,6 +103,7 @@ export default function TradePageClient() {
       <TradeSearchInput />
       {page === 'all' && (
         <>
+          <TradeRecommendPostsSection />
           <TradeTrendingRanking />
           <TradeDeadlineBanner />
           <SectionDivider size="full" thickness="thick" />
