@@ -1,0 +1,41 @@
+'use client';
+
+interface OnboardingBackgroundProps {
+  children: React.ReactNode;
+}
+
+export function OnboardingBackground({ children }: OnboardingBackgroundProps) {
+  return (
+    <div className="min-h-screen bg-white relative overflow-hidden">
+      {/* 배경 원형 요소들 */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* 상단 왼쪽 원형들 */}
+        <div className="absolute -top-20 -left-20 w-40 h-40 bg-blue-100 rounded-full opacity-60" />
+        <div className="absolute top-10 left-10 w-16 h-16 bg-blue-100 rounded-full opacity-60" />
+
+        {/* 하단 오른쪽 원형 */}
+        <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-blue-100 rounded-full opacity-60" />
+
+        {/* 분리된 원형 애니메이션 */}
+        {/* 큰 원 (334x334) - main-1 색상 */}
+        <div className="absolute inset-0 flex justify-center" style={{ top: '170px' }}>
+          <div
+            className="w-[334px] h-[334px] rounded-full concentric-circle-large"
+            style={{ backgroundColor: 'var(--main-1)' }}
+          />
+        </div>
+
+        {/* 작은 원 (234x234) - main-2 색상 */}
+        <div className="absolute inset-0 flex justify-center" style={{ top: '220px' }}>
+          <div
+            className="w-[234px] h-[234px] rounded-full concentric-circle-small"
+            style={{ backgroundColor: 'var(--main-2)' }}
+          />
+        </div>
+      </div>
+
+      {/* 메인 콘텐츠 */}
+      <div className="relative z-10">{children}</div>
+    </div>
+  );
+}
