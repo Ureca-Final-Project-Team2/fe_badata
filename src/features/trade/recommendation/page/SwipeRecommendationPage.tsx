@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
+import { useSwipeRecommendationState } from '@/features/trade/recommendation/model/useSwipeRecommendationState';
 import OceanBackground from '@/features/trade/recommendation/ui/OceanBackground';
 import { ProgressBar } from '@/features/trade/recommendation/ui/ProgressBar';
 import StatsCard from '@/features/trade/recommendation/ui/StatsCard';
@@ -12,8 +13,6 @@ import SwiperCard from '@/features/trade/recommendation/ui/SwiperCard';
 import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header } from '@/shared/ui/Header';
-
-import { useSwipeRecommendationState } from '../model/useSwipeRecommendationState';
 
 export default function SwipeRecommendationPage() {
   const router = useRouter();
