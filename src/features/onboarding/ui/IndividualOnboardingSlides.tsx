@@ -2,17 +2,13 @@
 
 import { useState } from 'react';
 
-import { Slide1, Slide2, Slide3, Slide4, Slide5, Slide6 } from './slides';
+import { Slide1, Slide2, Slide3, Slide4, Slide5, Slide6 } from '@/features/onboarding/ui/slides';
 
 interface IndividualOnboardingSlidesProps {
   onComplete: () => void;
-  onSkip: () => void;
 }
 
-export function IndividualOnboardingSlides({
-  onComplete,
-  onSkip,
-}: IndividualOnboardingSlidesProps) {
+export function IndividualOnboardingSlides({ onComplete }: IndividualOnboardingSlidesProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const handleNext = () => {
@@ -30,7 +26,8 @@ export function IndividualOnboardingSlides({
   };
 
   const handleSkip = () => {
-    onSkip();
+    // 건너뛰기 시 위치 권한 페이지로 이동
+    onComplete();
   };
 
   const renderSlide = () => {

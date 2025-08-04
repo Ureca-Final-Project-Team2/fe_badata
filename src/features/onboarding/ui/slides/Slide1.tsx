@@ -1,6 +1,6 @@
 'use client';
 
-import { OnboardingBackground } from './OnboardingBackground';
+import { OnboardingBackground } from '@/features/onboarding/ui/slides/OnboardingBackground';
 
 interface Slide1Props {
   onNext: () => void;
@@ -14,6 +14,7 @@ export function Slide1({ onNext, onSkip }: Slide1Props) {
         {/* 헤더 */}
         <div className="flex justify-between items-center p-6">
           <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--main-5)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />

@@ -2,22 +2,21 @@
 
 import { OnboardingBackground } from '@/features/onboarding/ui/slides/OnboardingBackground';
 
-interface Slide2Props {
+interface WelcomePageProps {
   onNext: () => void;
-  onPrevious: () => void;
   onSkip: () => void;
 }
 
-export function Slide2({ onNext, onPrevious, onSkip }: Slide2Props) {
+export function WelcomePage({ onNext, onSkip }: WelcomePageProps) {
   return (
     <OnboardingBackground>
       <div className="flex flex-col">
         {/* 헤더 */}
         <div className="flex justify-between items-center p-6">
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
-            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--main-5)]" />
+            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
+            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
@@ -33,40 +32,40 @@ export function Slide2({ onNext, onPrevious, onSkip }: Slide2Props) {
 
         {/* 슬라이드 내용 */}
         <div className="flex-1 flex flex-col items-center px-8 text-center">
-          {/* 이미지 - 동심원 중심에 위치 */}
-          <div className="w-96 h-90 flex items-center justify-center mt-14">
-            <img
-              src="/assets/onboarding/onboarding-slide-2.svg"
-              alt="SOS 기능"
-              className="max-w-full max-h-full object-contain"
-            />
+          {/* 환영 아이콘 또는 이미지 */}
+          <div className="w-32 h-32 bg-[var(--main-5)] rounded-full flex items-center justify-center mt-20 mb-8">
+            <svg
+              className="w-16 h-16 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              />
+            </svg>
           </div>
 
           {/* 제목 */}
-          <h1 className="font-title-bold text-[var(--black)] mb-4 mt-20">급하게 필요할 땐, SOS!</h1>
+          <h1 className="font-title-bold text-[var(--black)] mb-6 text-2xl">
+            바다타에 오신 분들 환영합니다
+          </h1>
 
           {/* 설명 */}
-          <p className="font-label-medium text-[var(--gray-dark)] mb-12 leading-relaxed">
-            급한 상황에서 데이터 SOS 요청을 할 수 있어요
-            <br />
-            바다타 유저들이 도와드릴거에요
+          <p className="font-label-medium text-[var(--gray-dark)] mb-12 leading-relaxed text-lg">
+            간단하게 바다타에 대해 알아볼까요?
           </p>
 
-          {/* 네비게이션 버튼 */}
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={onPrevious}
-              className="px-6 py-3 text-[var(--gray-dark)] font-label-medium hover:text-[var(--black)] transition-colors"
-            >
-              이전
-            </button>
-            <button
-              onClick={onNext}
-              className="px-8 py-3 bg-[var(--main-5)] text-[var(--white)] rounded-full font-label-medium hover:bg-[var(--main-4)] transition-colors"
-            >
-              다음
-            </button>
-          </div>
+          {/* 시작하기 버튼 */}
+          <button
+            onClick={onNext}
+            className="px-12 py-4 bg-[var(--main-5)] text-[var(--white)] rounded-full font-label-medium hover:bg-[var(--main-4)] transition-colors text-lg"
+          >
+            시작하기
+          </button>
         </div>
 
         {/* 스와이프 힌트 */}

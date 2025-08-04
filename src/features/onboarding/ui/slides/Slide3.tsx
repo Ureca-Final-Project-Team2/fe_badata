@@ -1,6 +1,6 @@
 'use client';
 
-import { OnboardingBackground } from './OnboardingBackground';
+import { OnboardingBackground } from '@/features/onboarding/ui/slides/OnboardingBackground';
 
 interface Slide3Props {
   onNext: () => void;
@@ -15,6 +15,7 @@ export function Slide3({ onNext, onPrevious, onSkip }: Slide3Props) {
         {/* 헤더 */}
         <div className="flex justify-between items-center p-6">
           <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
             <div className="w-2 h-2 rounded-full bg-[var(--main-5)]" />
@@ -66,7 +67,7 @@ export function Slide3({ onNext, onPrevious, onSkip }: Slide3Props) {
           </div>
 
           {/* 제목 */}
-          <h1 className="font-title-bold text-[var(--black)] mb-4 mt-8">
+          <h1 className="font-title-bold text-[var(--black)] mb-4 mt-20">
             기프티콘 거래도 쉽고 안전하게
           </h1>
 
