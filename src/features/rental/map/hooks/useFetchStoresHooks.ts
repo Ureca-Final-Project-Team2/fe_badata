@@ -37,7 +37,6 @@ export const useFetchStoresHooks = (
       const swLatLng = bounds.getSouthWest();
       const neLatLng = bounds.getNorthEast();
       const zoomLevel = map.getLevel();
-      const center = map.getCenter();
 
       // 지도가 유효한 데이터를 가지고 있는지 확인
       if (!bounds || !swLatLng || !neLatLng || zoomLevel === undefined) {
