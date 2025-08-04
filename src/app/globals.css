@@ -207,6 +207,11 @@ body {
     font-weight: var(--font-semibold);
   }
   /* title */
+  .font-title-bold {
+    font-family: var(--font-sans);
+    font-size: var(--font-title-size);
+    font-weight: var(--font-bold);
+  }
   .font-title-semibold {
     font-family: var(--font-sans);
     font-size: var(--font-title-size);
