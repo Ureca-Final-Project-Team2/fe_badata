@@ -6,12 +6,19 @@ export interface SosRequestResponse {
   };
 }
 
+export interface SosRespondRequest {
+  sosId: number;
+  isAccepted: boolean;
+  dataAmount?: number; // 수락 시 전달할 데이터 양 (MB 단위)
+}
+
 export interface SosRespondResponse {
   code: number;
   message: string;
   content: {
     sosId: number;
     isSuccess: boolean;
+    transferredData?: number; // 실제 전달된 데이터 양
   };
 }
 

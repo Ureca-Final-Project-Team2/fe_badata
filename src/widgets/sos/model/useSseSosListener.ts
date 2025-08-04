@@ -7,6 +7,8 @@ export const useSseSosListener = (onMessage: (data: string) => void) => {
     const token = useAuthStore.getState().accessToken;
     const controller = new AbortController();
 
+    console.log('🔗 SSE 연결 시도 중...', { token: token ? '있음' : '없음' });
+
     fetch('https://api.badata.store/sse/subscribe', {
       method: 'GET',
       headers: {
@@ -16,6 +18,12 @@ export const useSseSosListener = (onMessage: (data: string) => void) => {
       signal: controller.signal,
     })
       .then((response) => {
+        console.log('✅ SSE 연결 성공:', response.status, response.statusText);
+        
+        if (!response.ok) {
+          throw new Error(`SSE 연결 실패: ${response.status} ${response.statusText}`);
+        }
+
         const reader = response.body?.getReader();
         const decoder = new TextDecoder('utf-8');
 
@@ -23,14 +31,21 @@ export const useSseSosListener = (onMessage: (data: string) => void) => {
           try {
             while (true) {
               const { done, value } = await reader!.read();
-              if (done) break;
+              if (done) {
+                console.log('📡 SSE 스트림 종료');
+                break;
+              }
 
               const chunk = decoder.decode(value, { stream: true });
+              console.log('📦 SSE 청크 수신:', chunk);
 
               chunk.split('\n').forEach((line) => {
                 if (line.startsWith('data:')) {
                   const data = line.replace(/^data:\s*/, '').trim();
-                  onMessage(data);
+                  if (data) {
+                    console.log('📨 SSE 메시지 전달:', data);
+                    onMessage(data);
+                  }
                 }
               });
             }
@@ -53,6 +68,9 @@ export const useSseSosListener = (onMessage: (data: string) => void) => {
         }
       });
 
-    return () => controller.abort();
+    return () => {
+      console.log('🔌 SSE 연결 해제');
+      controller.abort();
+    };
   }, [onMessage]);
 };

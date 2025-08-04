@@ -5,9 +5,6 @@ import { DataUsageWidgetContainer } from '@/widgets/data-usage/ui/DataUsageWidge
 import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 import { SosModal } from '@/widgets/sos/ui/SosModal';
 
-import { SosNotificationHandler } from './SosNotificationHandler';
-import { SosRespondModal } from './SosRespondModal';
-
 export function SosDrawer() {
   const { isDrawerOpen, closeDrawer } = useSosDrawer();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,8 +41,6 @@ export function SosDrawer() {
       </Drawer>
 
       <SosModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <SosNotificationHandler />
-      <SosRespondModal />
     </>
   );
 }

@@ -9,8 +9,10 @@ interface SosState {
   toggleDrawer: () => void;
 
   sosId: number | null;
+  lastRequestedSosId: number | null;
   isRespondModalOpen: boolean;
   setSosId: (id: number) => void;
+  setLastRequestedSosId: (id: number) => void;
   openRespondModal: () => void;
   closeRespondModal: () => void;
 }
@@ -25,8 +27,10 @@ export const useSosStore = create<SosState>((set) => ({
     })),
 
   sosId: null,
+  lastRequestedSosId: null,
   isRespondModalOpen: false,
   setSosId: (id: number) => set({ sosId: id }),
+  setLastRequestedSosId: (id: number) => set({ lastRequestedSosId: id }),
   openRespondModal: () => set({ isRespondModalOpen: true }),
   closeRespondModal: () => set({ isRespondModalOpen: false }),
 }));

@@ -12,6 +12,7 @@ interface SosModalProps {
 
 export function SosModal({ isOpen, onClose }: SosModalProps) {
   const setSosId = useSosStore((s) => s.setSosId);
+  const setLastRequestedSosId = useSosStore((s) => s.setLastRequestedSosId);
   const { mutate: sendSosRequest, isPending } = useSosRequestMutation();
 
   const handleConfirm = () => {
@@ -21,6 +22,11 @@ export function SosModal({ isOpen, onClose }: SosModalProps) {
       onSuccess: (response) => {
         console.log('✅ SOS 요청 응답:', response);
         setSosId(response.sosId);
+        setLastRequestedSosId(Date.now()); // 현재 시간을 lastRequestedSosId로 설정
+        
+        // localStorage에도 저장 (더 안정적인 구분을 위해)
+        localStorage.setItem('lastSosRequestTime', Date.now().toString());
+        
         makeCustomToast('🚨 SOS 요청이 전송되었습니다!', 'success', {
           position: 'top-center',
           duration: 4000,
