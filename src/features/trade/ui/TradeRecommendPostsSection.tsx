@@ -15,7 +15,7 @@ export default function TradeRecommendPostsSection() {
           <h3 className="font-body-semibold pb-4 px-1 flex items-center gap-2">{`${user?.name}님이 좋아하실 만한 게시물 💙`}</h3>
           <div
             className="relative w-full h-[160px] p-6 rounded-3xl bg-gradient-to-br from-[var(--main-5)] via-[var(--main-4)] to-[var(--main-3)] overflow-hidden cursor-pointer group hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl"
-            onClick={() => router.push(PATH.ROOT)}
+            onClick={() => router.push(PATH.RECOMMEND)}
           >
             {/* 배경 효과 */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16" />
@@ -48,7 +48,7 @@ export default function TradeRecommendPostsSection() {
           </h3>
           <div
             className="relative w-full h-[160px] p-6 rounded-3xl bg-gradient-to-br from-[var(--main-5)] via-[var(--main-4)] to-[var(--main-3)] overflow-hidden cursor-pointer group hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl"
-            onClick={() => router.push(PATH.MYPAGE.LIKE_POST)}
+            onClick={() => router.push(PATH.LANDING)}
           >
             {/* 배경 효과 */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16" />
