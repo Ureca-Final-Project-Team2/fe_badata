@@ -1,8 +1,11 @@
 export interface RentalHistoryItem {
   id: number;
+  storeId: number;
   storeName: string;
   rentalStartDate: string;
+  rentalEndDate: string;
   price: number;
+  isReviewed: boolean;
   reservationStatus: 'PENDING' | 'COMPLETE';
 }
 
