@@ -8,6 +8,7 @@ import {
   updateDataPost,
   updateGifticonPost,
 } from '@/entities/trade-post/api/apis';
+import { ErrorCode, ErrorMessageMap } from '@/shared/config/errorCodes';
 import { makeToast } from '@/shared/lib/makeToast';
 import { queryClient } from '@/shared/lib/queryClient';
 
@@ -18,6 +19,7 @@ import type {
   ReportRequest,
   UpdatePostResponse,
 } from '@/entities/trade-post/lib/types';
+import type { HTTPError } from '@/shared/lib/HTTPError';
 
 export const usePostTradePostLikeMutation = () => {
   return useMutation({
@@ -25,8 +27,13 @@ export const usePostTradePostLikeMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
     },
-    onError: (error) => {
+    onError: (error: HTTPError) => {
       console.error('좋아요 처리 실패', error);
+      if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
+        makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
+      } else {
+        makeToast('좋아요 처리에 실패했습니다.', 'warning');
+      }
     },
   });
 };
@@ -37,8 +44,13 @@ export const useDeleteTradePostLikeMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
     },
-    onError: (error) => {
+    onError: (error: HTTPError) => {
       console.error('좋아요 취소 실패', error);
+      if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
+        makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
+      } else {
+        makeToast('좋아요 취소에 실패했습니다.', 'warning');
+      }
     },
   });
 };
@@ -47,8 +59,13 @@ export const useDeleteTradePostLikeMutation = () => {
 export const usePostTradePostLikeDetailMutation = () => {
   return useMutation({
     mutationFn: (postId: number) => postTradePostLike(postId),
-    onError: (error) => {
+    onError: (error: HTTPError) => {
       console.error('좋아요 처리 실패', error);
+      if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
+        makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
+      } else {
+        makeToast('좋아요 처리에 실패했습니다.', 'warning');
+      }
     },
   });
 };
@@ -56,8 +73,13 @@ export const usePostTradePostLikeDetailMutation = () => {
 export const useDeleteTradePostLikeDetailMutation = () => {
   return useMutation({
     mutationFn: (postId: number) => deleteTradePostLike(postId),
-    onError: (error) => {
+    onError: (error: HTTPError) => {
       console.error('좋아요 취소 실패', error);
+      if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
+        makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
+      } else {
+        makeToast('좋아요 취소에 실패했습니다.', 'warning');
+      }
     },
   });
 };
