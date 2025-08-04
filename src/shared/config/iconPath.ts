@@ -114,7 +114,7 @@ export const ICONS = {
       CU: '/assets/gifticon/lifestyle/CU_Logo.png',
 
       // 패션/뷰티
-      OLIVEYOUNG: '/assets/gifticon/fashion-beauty/OliveYoung_Logo.png',
+      OLIVEYOUNG: '/assets/gifticon/fashion-beauty/OliveYoung_Logo.svg',
       SPAO: '/assets/gifticon/fashion-beauty/SPAO_Logo.png',
 
       // 키즈
