@@ -62,10 +62,9 @@ export function BaseLayout({
           </div>
         )}
 
-        {/* 전역 SOS Drawer */}
+        {/* 전역 SOS 컴포넌트들 */}
         <SosDrawer />
         <SosNotificationHandler />
-        {children}
       </div>
     </div>
   );
