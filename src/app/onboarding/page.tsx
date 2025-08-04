@@ -8,9 +8,10 @@ import { IndividualOnboardingSlides } from '@/features/onboarding/ui/IndividualO
 import { IntroVideo } from '@/features/onboarding/ui/IntroVideo';
 import { LocationPermission } from '@/features/onboarding/ui/LocationPermission';
 import { LoginChoice } from '@/features/onboarding/ui/LoginChoice';
+import { WelcomePage } from '@/features/onboarding/ui/WelcomePage';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 
-type OnboardingStep = 'intro' | 'slides' | 'location' | 'login-choice';
+type OnboardingStep = 'intro' | 'welcome' | 'slides' | 'location' | 'login-choice';
 
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('intro');
@@ -32,15 +33,14 @@ export default function OnboardingPage() {
 
   return (
     <BaseLayout header={null} paddingX={false} showBottomNav={false} showHeader={false}>
-      {currentStep === 'intro' && (
-        <IntroVideo onComplete={() => handleNextStep('slides')} onSkip={handleSkip} />
+      {currentStep === 'intro' && <IntroVideo onComplete={() => handleNextStep('welcome')} />}
+
+      {currentStep === 'welcome' && (
+        <WelcomePage onNext={() => handleNextStep('slides')} onSkip={handleSkip} />
       )}
 
       {currentStep === 'slides' && (
-        <IndividualOnboardingSlides
-          onComplete={() => handleNextStep('location')}
-          onSkip={handleSkip}
-        />
+        <IndividualOnboardingSlides onComplete={() => handleNextStep('location')} />
       )}
 
       {currentStep === 'location' && (
