@@ -3,7 +3,6 @@
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { getDataUsage } from '@/widgets/data-usage/api/apis';
 
-import { getLatestSosId } from '../api/apis';
 import { useSosRespondMutation } from '../model/queries';
 import { useSosStore } from '../model/sosStore';
 import { useSseSosListener } from '../model/useSseSosListener';
@@ -20,6 +19,14 @@ export const SosNotificationHandler = () => {
   // 데이터 전달 처리 함수
   const handleDataTransfer = async (sosId: number, isAccepted: boolean) => {
     try {
+      // 🔍 디버깅: 토큰 상태 확인
+      const currentToken = useAuthStore.getState().accessToken;
+      console.log('🔑 현재 토큰 상태:', {
+        hasToken: !!currentToken,
+        tokenLength: currentToken?.length,
+        tokenPreview: currentToken ? `${currentToken.substring(0, 20)}...` : '없음'
+      });
+
       if (isAccepted) {
         // 수락 시: 데이터 사용량 확인 후 100MB 전달
         const dataUsage = await getDataUsage();
@@ -109,62 +116,30 @@ export const SosNotificationHandler = () => {
       
       console.log('✅ SOS 제공자로 인식됨 - 알림 표시');
       
-      // 최신 SOS ID를 API로 가져오기 시도
-      getLatestSosId()
-        .then((latestSosId) => {
-          console.log('📦 최신 SOS ID 조회 성공:', latestSosId);
-          setSosId(latestSosId);
-          
-          makeCustomToast('🚨 누군가 SOS 요청했어요!\n내 데이터를 나눠주어 도와주시겠습니까?', 'warning', {
-            position: 'top-center',
-            duration: 10000,
-            actions: [
-              {
-                label: '수락 (100MB)',
-                onClick: () => {
-                  console.log('✅ 수락 버튼 클릭됨, sosId:', latestSosId);
-                  handleDataTransfer(latestSosId, true);
-                },
-              },
-              {
-                label: '거절',
-                onClick: () => {
-                  console.log('🚫 거절 버튼 클릭됨, sosId:', latestSosId);
-                  handleDataTransfer(latestSosId, false);
-                },
-              },
-            ],
-          });
-        })
-        .catch((error) => {
-          console.error('❌ 최신 SOS ID 조회 실패:', error);
-          
-          // Fallback: 임시 SOS ID 사용 (실제로는 서버에서 JSON으로 보내야 함)
-          console.log('🔄 Fallback: 임시 SOS ID 사용');
-          const tempSosId = Date.now(); // 임시로 현재 시간을 SOS ID로 사용
-          setSosId(tempSosId);
-          
-          makeCustomToast('🚨 누군가 SOS 요청했어요!\n내 데이터를 나눠주어 도와주시겠습니까?', 'warning', {
-            position: 'top-center',
-            duration: 10000,
-            actions: [
-              {
-                label: '수락 (100MB)',
-                onClick: () => {
-                  console.log('✅ 수락 버튼 클릭됨, tempSosId:', tempSosId);
-                  handleDataTransfer(tempSosId, true);
-                },
-              },
-              {
-                label: '거절',
-                onClick: () => {
-                  console.log('🚫 거절 버튼 클릭됨, tempSosId:', tempSosId);
-                  handleDataTransfer(tempSosId, false);
-                },
-              },
-            ],
-          });
-        });
+      // 임시 SOS ID 사용 (서버에서 JSON으로 보내지 않으므로)
+      const tempSosId = Date.now(); // 임시로 현재 시간을 SOS ID로 사용
+      setSosId(tempSosId);
+      
+      makeCustomToast('🚨 누군가 SOS 요청했어요!\n내 데이터를 나눠주어 도와주시겠습니까?', 'warning', {
+        position: 'top-center',
+        duration: 10000,
+        actions: [
+          {
+            label: '수락 (100MB)',
+            onClick: () => {
+              console.log('✅ 수락 버튼 클릭됨, tempSosId:', tempSosId);
+              handleDataTransfer(tempSosId, true);
+            },
+          },
+          {
+            label: '거절',
+            onClick: () => {
+              console.log('🚫 거절 버튼 클릭됨, tempSosId:', tempSosId);
+              handleDataTransfer(tempSosId, false);
+            },
+          },
+        ],
+      });
       
       return;
     }
