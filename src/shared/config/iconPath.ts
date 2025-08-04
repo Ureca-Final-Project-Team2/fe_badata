@@ -61,7 +61,7 @@ export const ICONS = {
 
       // OTT/뮤직
       YOUTUBE_PREMIUM: '/assets/gifticon/ott-music/YouTube_Logo.png',
-      CGV: '/assets/gifticon/ott-music/CGV_Logo.png',
+      CGV: '/assets/gifticon/ott-music/CGV_Logo.jpg',
       EMOTICON_PLUS: '/assets/gifticon/ott-music/Emoticon_Logo.png',
       NETFLIX: '/assets/gifticon/ott-music/NEFLIX_Logo.png',
       GENIE_MUSIC: '/assets/gifticon/ott-music/Genie_Logo.png',
