@@ -84,8 +84,13 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col items-center justify-center px-8 text-center">
       {/* 아이콘 */}
-      <div className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center mb-8">
-        <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="w-24 h-24 bg-[var(--main-5)] rounded-full flex items-center justify-center mb-8">
+        <svg
+          className="w-12 h-12 text-[var(--white)]"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -102,11 +107,11 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
       </div>
 
       {/* 제목 */}
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">위치 정보가 필요합니다</h1>
+      <h1 className="font-title-bold text-[var(--black)] mb-4">위치 정보가 필요합니다</h1>
 
       {/* 설명 */}
-      <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-        주변 매장과 사용자를 찾기 위해
+      <p className="font-label-medium text-[var(--gray-dark)] mb-8 leading-relaxed">
+        주변 매장을 찾기 위해
         <br />
         위치 정보 접근 권한이 필요합니다
       </p>
@@ -116,13 +121,13 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
         <div className="space-y-4">
           <button
             onClick={requestLocationPermission}
-            className="w-full px-8 py-4 bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 transition-colors"
+            className="w-full px-8 py-4 bg-[var(--main-5)] rounded-full text-[var(--white)] font-label-medium hover:bg-[var(--main-4)] transition-colors"
           >
             위치 권한 허용하기
           </button>
           <button
             onClick={handleSkip}
-            className="w-full px-8 py-4 text-gray-600 hover:text-gray-800 transition-colors"
+            className="w-full px-8 py-4 text-[var(--gray-dark)] font-label-medium hover:text-[var(--black)] transition-colors"
           >
             나중에 설정하기
           </button>
@@ -132,25 +137,27 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
       {permissionStatus === 'requesting' && (
         <div className="space-y-4">
           <div className="flex items-center justify-center space-x-2">
-            <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
+            <div className="w-4 h-4 bg-[var(--main-5)] rounded-full animate-bounce"></div>
             <div
-              className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"
+              className="w-4 h-4 bg-[var(--main-5)] rounded-full animate-bounce"
               style={{ animationDelay: '0.1s' }}
             ></div>
             <div
-              className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"
+              className="w-4 h-4 bg-[var(--main-5)] rounded-full animate-bounce"
               style={{ animationDelay: '0.2s' }}
             ></div>
           </div>
-          <p className="text-gray-600">위치 권한을 요청하고 있습니다...</p>
+          <p className="font-label-medium text-[var(--gray-dark)]">
+            위치 권한을 요청하고 있습니다...
+          </p>
         </div>
       )}
 
       {permissionStatus === 'granted' && (
         <div className="space-y-4">
-          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 bg-[var(--green)] rounded-full flex items-center justify-center mx-auto">
             <svg
-              className="w-8 h-8 text-white"
+              className="w-8 h-8 text-[var(--white)]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -163,15 +170,15 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
               />
             </svg>
           </div>
-          <p className="text-green-600 font-medium">위치 권한이 허용되었습니다!</p>
+          <p className="font-label-medium text-[var(--green)]">위치 권한이 허용되었습니다!</p>
         </div>
       )}
 
       {permissionStatus === 'denied' && (
         <div className="space-y-4">
-          <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 bg-[var(--red)] rounded-full flex items-center justify-center mx-auto">
             <svg
-              className="w-8 h-8 text-white"
+              className="w-8 h-8 text-[var(--white)]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -184,17 +191,17 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
               />
             </svg>
           </div>
-          {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+          {error && <p className="font-label-medium text-[var(--red)] mb-4">{error}</p>}
           <div className="space-y-2">
             <button
               onClick={handleRetry}
-              className="w-full px-8 py-4 bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 transition-colors"
+              className="w-full px-8 py-4 bg-[var(--main-5)] rounded-full text-[var(--white)] font-label-medium hover:bg-[var(--main-4)] transition-colors"
             >
               다시 시도하기
             </button>
             <button
               onClick={handleSkip}
-              className="w-full px-8 py-4 text-gray-600 hover:text-gray-800 transition-colors"
+              className="w-full px-8 py-4 text-[var(--gray-dark)] font-label-medium hover:text-[var(--black)] transition-colors"
             >
               나중에 설정하기
             </button>
@@ -203,9 +210,9 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
       )}
 
       {/* 추가 정보 */}
-      <div className="mt-8 p-4 bg-white/50 rounded-lg">
-        <p className="text-sm text-gray-600">
-          위치 정보는 매장 검색과 사용자 매칭에만 사용되며,
+      <div className="mt-8 p-4 bg-[var(--white)]/50 rounded-lg">
+        <p className="font-caption-medium text-[var(--gray-dark)]">
+          위치 정보는 대여 매장 검색에서만 사용되며,
           <br />
           개인정보 보호를 위해 안전하게 관리됩니다.
         </p>
