@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   usePatchRecommendVectorMutation,
@@ -21,51 +21,57 @@ export function useSwipeRecommendationState() {
   const { mutate: likePost } = usePostRecommendLikeMutation();
   const { mutate: updateRecommendVector } = usePatchRecommendVectorMutation();
 
-  // 초기 데이터 반영
-  if (fetchedPosts && cards.length === 0 && !isFinished) {
-    setCards(fetchedPosts);
-    setTotalCards((prev) => (isStart ? fetchedPosts.length : prev + fetchedPosts.length));
-  }
+  useEffect(() => {
+    if (fetchedPosts && cards.length === 0 && !isFinished) {
+      setCards(fetchedPosts);
+      setTotalCards((prev) => (isStart ? fetchedPosts.length : prev + fetchedPosts.length));
+    }
+  }, [fetchedPosts, cards.length, isFinished, isStart]);
 
   const handleSwipe = useCallback(
-    (postId: number) => (liked: boolean) => {
+    (postId: number, liked: boolean) => {
       setAnimatingCardId(postId);
+
       setTimeout(() => {
         if (liked) {
           setLikedCount((prev) => prev + 1);
           likePost(postId);
         }
-        const updatedCards = cards.filter((card) => card.id !== postId);
-        setCards(updatedCards);
-        setAnimatingCardId(null);
 
-        if (updatedCards.length === 0 && totalCards > 0) {
-          updateRecommendVector();
-          setIsFinished(true);
-        }
+        setCards((prevCards) => {
+          const updatedCards = prevCards.filter((card) => card.id !== postId);
+
+          if (updatedCards.length === 0 && totalCards > 0) {
+            updateRecommendVector();
+            setIsFinished(true);
+          }
+
+          return updatedCards;
+        });
+
+        setAnimatingCardId(null);
       }, 300);
     },
-    [cards, totalCards, likePost, updateRecommendVector],
+    [totalCards, likePost, updateRecommendVector],
   );
 
-  const handleNewRecommendation = () => {
+  const handleNewRecommendation = useCallback(() => {
     setLikedCount(0);
     setTotalCards(0);
     setCards([]);
     setIsStart(true);
     setIsFinished(false);
     queryClient.invalidateQueries({ queryKey: ['recommendPosts', true] });
-  };
+  }, []);
 
-  const handleContinueRecommendation = () => {
+  const handleContinueRecommendation = useCallback(() => {
     setCards([]);
     setTotalCards(0);
     setLikedCount(0);
     setIsStart(false);
     setIsFinished(false);
-    queryClient.removeQueries({ queryKey: ['recommendPosts'] });
     queryClient.invalidateQueries({ queryKey: ['recommendPosts', false] });
-  };
+  }, []);
 
   return {
     cards,

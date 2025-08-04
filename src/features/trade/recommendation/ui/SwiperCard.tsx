@@ -17,10 +17,13 @@ type SwipeDirection = 'left' | 'right' | null;
 
 interface SwiperCardProps {
   post: RecommendPost;
-  onSwipeRequest: (liked: boolean) => void;
+  onSwipe: (postId: number, liked: boolean) => void;
   isTop: boolean;
   isAnimating: boolean;
 }
+
+const SWIPE_THRESHOLD = 150;
+const SWIPE_INDICATOR_THRESHOLD = 50;
 
 function SwipeLabel({
   visible,
@@ -46,10 +49,7 @@ function SwipeLabel({
   );
 }
 
-const SWIPE_THRESHOLD = 150;
-const SWIPE_INDICATOR_THRESHOLD = 50;
-
-export default function SwiperCard({ post, onSwipeRequest, isTop, isAnimating }: SwiperCardProps) {
+export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: SwiperCardProps) {
   const [direction, setDirection] = useState<SwipeDirection>(null);
   const x = useMotionValue(0);
   const controls = useAnimation();
@@ -88,22 +88,22 @@ export default function SwiperCard({ post, onSwipeRequest, isTop, isAnimating }:
       if (offsetX > SWIPE_THRESHOLD) {
         setDirection('right');
         await controls.start({ x: 1000, opacity: 0 });
-        onSwipeRequest(true);
+        onSwipe(post.id, true);
       } else if (offsetX < -SWIPE_THRESHOLD) {
         setDirection('left');
         await controls.start({ x: -1000, opacity: 0 });
-        onSwipeRequest(false);
+        onSwipe(post.id, false);
       } else {
         setDirection(null);
         controls.start({ x: 0 });
       }
     },
-    [isTop, controls, onSwipeRequest],
+    [isTop, controls, onSwipe, post.id],
   );
 
   return (
     <motion.div
-      className="relative w-full h-full bg-white rounded-2xl border border-[var(--gray)] shadow-xl overflow-hidden"
+      className="relative w-full max-w-[380px] mx-auto h-full bg-white rounded-2xl border border-[var(--gray)] shadow-xl overflow-hidden"
       style={{ x, rotate }}
       drag={isTop && !isAnimating ? 'x' : false}
       dragConstraints={{ left: 0, right: 0 }}
@@ -116,16 +116,11 @@ export default function SwiperCard({ post, onSwipeRequest, isTop, isAnimating }:
     >
       {/* 스와이프 배경 */}
       <motion.div
-        className="absolute inset-0 z-10 pointer-events-none"
-        animate={{
-          background:
-            direction === 'left'
-              ? 'linear-gradient(to left, hsl(from var(--red) h s l / 0.4), transparent)'
-              : direction === 'right'
-                ? 'linear-gradient(to right, hsl(from var(--green) h s l / 0.4), transparent)'
-                : 'transparent',
-        }}
-        transition={{ duration: 0.3 }}
+        className={`absolute inset-0 z-10 pointer-events-none transition-opacity duration-300
+          ${direction === 'left' ? 'bg-gradient-to-l from-[var(--red)/40] to-transparent opacity-100' : ''}
+          ${direction === 'right' ? 'bg-gradient-to-r from-[var(--green)/40] to-transparent opacity-100' : ''}
+          ${direction === null ? 'opacity-0' : ''}
+        `}
       />
 
       {/* 스와이프 라벨 */}
@@ -147,15 +142,22 @@ export default function SwiperCard({ post, onSwipeRequest, isTop, isAnimating }:
       </div>
 
       {/* 이미지 */}
-      <div className="relative w-full aspect-[4/3]">
-        <Image src={brandImageSrc} alt={post.title} fill className="object-cover" />
+      <div className="relative w-full aspect-[1.2] pointer-events-none">
+        <Image
+          src={brandImageSrc}
+          alt={post.title}
+          fill
+          unoptimized
+          priority={isTop}
+          className="object-cover"
+        />
         <div className="absolute top-2 left-2 px-3 py-1 bg-[var(--main-2)] text-[var(--main-5)] font-small-medium rounded-full border border-[var(--main-4)]">
           {formatDeadline(post.deadLine)}
         </div>
       </div>
 
       {/* 콘텐츠 */}
-      <div className="flex flex-col justify-between flex-1 p-4 bg-white">
+      <div className="flex flex-col justify-between flex-1 p-5 bg-white">
         <div>
           <div className="flex justify-between items-center mb-1">
             <h2 className="font-body-semibold text-[var(--black)] line-clamp-2">{post.title}</h2>

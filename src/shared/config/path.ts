@@ -23,5 +23,6 @@ export const PATH = {
     LIKE_STORE: '/mypage/like-store',
     FOLLOWER: '/mypage/follower',
     FOLLOWING: '/mypage/following',
+    LIKE_POST: '/mypage/like-trade-post',
   },
 } as const;

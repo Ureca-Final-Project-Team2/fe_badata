@@ -9,6 +9,7 @@ import OceanBackground from '@/features/trade/recommendation/ui/OceanBackground'
 import { ProgressBar } from '@/features/trade/recommendation/ui/ProgressBar';
 import StatsCard from '@/features/trade/recommendation/ui/StatsCard';
 import SwiperCard from '@/features/trade/recommendation/ui/SwiperCard';
+import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header } from '@/shared/ui/Header';
 
@@ -30,8 +31,8 @@ export default function SwipeRecommendationPage() {
     handleContinueRecommendation,
   } = useSwipeRecommendationState();
 
-  const handleGoHome = () => router.push('/trade');
-  const handleGoToLikedPosts = () => router.push('/mypage/like-trade-post');
+  const handleGoHome = () => router.push(PATH.TRADE.MAIN);
+  const handleGoToLikedPosts = () => router.push(PATH.MYPAGE.LIKE_POST);
 
   return (
     <BaseLayout header={<Header />} showHeader={true} paddingX={false}>
@@ -83,7 +84,6 @@ export default function SwipeRecommendationPage() {
             </div>
           ) : cards.length === 0 ? (
             <div className="flex flex-col items-center gap-8 w-full">
-              {' '}
               <div className="text-6xl mb-4">😴</div>
               <p className="text-white/90 font-label-medium text-center">추천할 상품이 없어요</p>
               <motion.button
@@ -114,7 +114,7 @@ export default function SwipeRecommendationPage() {
                   >
                     <SwiperCard
                       post={post}
-                      onSwipeRequest={handleSwipe(post.id)}
+                      onSwipe={handleSwipe}
                       isTop={isTopCard}
                       isAnimating={isAnimating}
                     />
