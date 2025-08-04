@@ -17,6 +17,7 @@ import mySos from '@/shared/icons/sos-siren.png';
 import tradeBuy from '@/shared/icons/trade-buy-list.png';
 import tradeCell from '@/shared/icons/trade-cell-list.png';
 import tradeLike from '@/shared/icons/trade-like-list.png';
+import whale from '@/shared/icons/whale.png';
 
 export const ICONS = {
   LOGO: {
@@ -44,6 +45,9 @@ export const ICONS = {
     RENTAL_NOTIFICATION: rentalNotification,
     MYSOS: mySos,
     NOTIFICATION: notification,
+  },
+  SOS: {
+    WHALE: whale,
   },
   TRADE: {
     BRAND_LOGO: {
