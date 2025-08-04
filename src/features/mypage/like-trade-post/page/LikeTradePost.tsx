@@ -32,22 +32,20 @@ export default function LikeTradePostPage() {
         <div className="py-4 text-center text-[var(--gray)]">게시물이 없습니다.</div>
       ) : (
         <>
-          <div className="px-4 pt-4 pb-[96px]">
-            <div className="grid grid-cols-2 gap-4">
-              {likeTradePostItems.map((item) => (
-                <TradePostCard
-                  key={item.postId}
-                  imageUrl={item.postImage}
-                  title={item.title}
-                  partner={item.partner}
-                  price={item.price}
-                  likeCount={item.postLikes}
-                  isLiked={true}
-                  hasDday={false}
-                  dday={0}
-                />
-              ))}
-            </div>
+          <div className="grid grid-cols-2 gap-5 mt-4">
+            {likeTradePostItems.map((item) => (
+              <TradePostCard
+                key={item.postId}
+                imageUrl={item.postImage}
+                title={item.title}
+                partner={item.partner}
+                price={item.price}
+                likeCount={item.postLikes}
+                isLiked={true}
+                hasDday={false}
+                dday={0}
+              />
+            ))}
           </div>
 
           {hasNext && (
