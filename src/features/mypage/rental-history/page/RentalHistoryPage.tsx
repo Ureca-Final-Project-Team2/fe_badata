@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale/ko';
+import { differenceInCalendarDays, format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 import { useRentalHistoryQuery } from '@/features/mypage/rental-history/model/queries';
 import { PATH } from '@/shared/config/path';
@@ -24,7 +24,7 @@ export default function RentalHistoryPage() {
 
   const handleReviewClick = (reservationId: number, storeId: number, hasWrittenReview: boolean) => {
     if (hasWrittenReview) {
-      router.push(`/store/${storeId}/reviews`);
+      router.push(`/rental/${storeId}`);
     } else {
       router.push(`${PATH.RENTAL.REGISTER_REVIEW}?reservationId=${reservationId}&mode=register`);
     }
@@ -41,28 +41,33 @@ export default function RentalHistoryPage() {
       header={<PageHeader title="공유기 대여 내역" onBack={() => router.back()} />}
       showBottomNav
     >
-      <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-4 pb-[84px]">
+      <div className="flex-1 overflow-y-auto max-w-[428px] mx-auto pt-4">
         {rentalHistoryData.length === 0 && (
           <div className="text-center text-gray-400 mt-10">대여 내역이 없습니다.</div>
         )}
         {rentalHistoryData.map((item: RentalHistoryItem, idx: number) => {
-          const dateObj = new Date(item.rentalStartDate);
-          const date = format(dateObj, 'M.d', { locale: ko });
-          const day = format(dateObj, 'eee', { locale: ko });
+          const startDate = new Date(item.rentalStartDate);
+          const endDate = new Date(item.rentalEndDate);
+
+          const days = differenceInCalendarDays(endDate, startDate) + 1;
+          const dateRangeText = `${format(startDate, 'yyyy.MM.dd', { locale: ko })} ~ ${format(endDate, 'MM.dd', { locale: ko })}`;
 
           const status = statusMap[item.reservationStatus];
           const price = item.price.toLocaleString('ko-KR') + '원';
           const showReviewButton = item.reservationStatus === 'COMPLETE';
 
           return (
-            <div key={item.id} className={`relative mb-8${idx === 0 ? ' mt-6' : ''}`}>
-              <div className="absolute -top-6 left-2 flex items-center gap-2">
-                <span className="font-body-xs-medium">{date}</span>
-                <span className="font-body-xs-medium text-[var(--gray-mid)]">{day}</span>
+            <div key={item.id} className={`relative mb-10${idx === 0 ? ' mt-6' : ''}`}>
+              <div className="absolute -top-6 left-4 right-4 flex justify-between items-center">
+                <span className="font-body-xs-medium">{dateRangeText}</span>
+                <span className="font-body-xs-medium flex items-center gap-1 text-[var(--gray-mid)]">
+                  📅 대여 기간 {days}일
+                </span>
               </div>
+
               <div className="border border-[var(--gray)] rounded-xl bg-white px-4 py-4 pt-6">
                 <div className="flex flex-wrap items-center justify-between gap-y-1 mb-2">
-                  <span className="font-body-xs-medium max-w-[calc(100%-100px)] break-words">
+                  <span className="font-body-xs-medium max-w-[calc(100%-100px)] truncate">
                     {item.storeName}
                   </span>
                   {showReviewButton && (

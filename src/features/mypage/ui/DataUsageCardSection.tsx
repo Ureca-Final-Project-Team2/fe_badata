@@ -81,7 +81,7 @@ const DataUsageCardSection = () => {
               strokeWidth="26"
               strokeLinecap="round"
               strokeDasharray={`${(percentage / 100) * 408.4} 408.4`}
-              className="transition-all duration-2000 ease-out"
+              className="transition-all duration-[2000ms] ease-out"
               style={{
                 strokeDashoffset: animationStarted ? 0 : 408.4,
                 transform: 'rotate(-90deg)',
@@ -129,7 +129,7 @@ const DataUsageCardSection = () => {
 
             {/* 파도 애니메이션 영역 */}
             <div
-              className={`absolute bottom-0 left-0 right-0 transition-all duration-2500 ease-out ${animationStarted ? '' : 'translate-y-full'}`}
+              className={`absolute bottom-0 left-0 right-0 transition-all duration-[2500ms] ease-out ${animationStarted ? '' : 'translate-y-full'}`}
               style={{ height: `${waveHeight}%` }}
             >
               {/* 파도 레이어 1 (가장 뒤 - main-2 색상) */}
