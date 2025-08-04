@@ -16,7 +16,7 @@ export default function RankingItem({ rank, imageUrl, title, onCardClick }: Rank
       <div className="relative w-full h-full overflow-hidden rounded-xl">
         <Image
           src={imageUrl}
-          alt={title}
+          alt={`${rank}위 - ${title}`}
           fill
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
         />

@@ -82,7 +82,7 @@ const BannerItem = ({
         </div>
         <Image
           src={getSafeImageUrl(imageUrl)}
-          alt={`${rank}위 - ${title}`}
+          alt={title || '이미지'}
           width={125}
           height={125}
           className="w-[125px] h-[125px] object-cover rounded-[15px] bg-[var(--gray-light)]"
