@@ -34,10 +34,7 @@ export function Slide3({ onNext, onPrevious, onSkip }: Slide3Props) {
         {/* 슬라이드 내용 */}
         <div className="flex-1 flex flex-col items-center px-8 text-center">
           {/* 이미지들 - 동심원 중심에 배치 */}
-          <div
-            className="relative w-96 h-96 flex items-center justify-center"
-            style={{ marginTop: '30px' }}
-          >
+          <div className="relative w-96 h-96 flex items-center justify-center mt-8">
             {/* 아이스크림 (왼쪽 하단) */}
             <div className="absolute bottom-1 left-3 w-50 h-50">
               <img
