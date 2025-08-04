@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
+import { useAuthStore } from '@/entities/auth/model/authStore';
+import { useSellerSoldPostsCountQuery } from '@/entities/trade-post/model/queries';
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
-import { useAllFollowingsQuery, useUserSoldPostsCountQuery } from '@/entities/user/model/queries';
+import { useAllFollowingsQuery } from '@/entities/user/model/queries';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
+import { makeToast } from '@/shared/lib/makeToast';
 import UserAvatar from '@/shared/ui/UserAvatar';
 
 import type { ErrorCode } from '@/shared/config/errorCodes';
@@ -29,94 +34,101 @@ const UserProfileCard = ({
   userId,
   name,
   avatarSrc,
-  isFollowing = false,
   onFollowClick,
   className = '',
 }: UserProfileCardProps) => {
+  const router = useRouter();
   const createFollowMutation = useCreateFollowMutation();
+  const currentUser = useAuthStore((s) => s.user);
 
   const { data: followings, isLoading: isLoadingFollowings } = useAllFollowingsQuery();
   const { data: soldPostsCount, isLoading: isLoadingSoldCount } =
-    useUserSoldPostsCountQuery(userId);
+    useSellerSoldPostsCountQuery(userId);
 
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [localFollowingState, setLocalFollowingState] = useState<boolean | null>(null);
 
+  // 현재 로그인한 사용자와 프로필 주인이 같은지 확인
+  const isOwnProfile = currentUser?.userId === userId;
+
+  // 팔로잉 상태 계산: 로컬 상태 > 쿼리 데이터 > props 순서로 우선순위
+  const isFollowingFromQuery =
+    followings?.content?.item?.some((user) => user.userId === userId) ?? false;
   const currentIsFollowing =
-    followings?.content?.item?.some((user) => user.userId === userId) ?? isFollowing;
+    localFollowingState !== null ? localFollowingState : isFollowingFromQuery;
+
+  // 쿼리 데이터가 변경될 때 로컬 상태 리셋
+  useEffect(() => {
+    setLocalFollowingState(null);
+  }, [isFollowingFromQuery]);
 
   const displayTradeCount = soldPostsCount ?? 0;
+  const displayTradeText = displayTradeCount >= 100 ? '100+' : displayTradeCount;
 
   const handleFollowClick = async () => {
+    const previousState = currentIsFollowing;
     try {
       await createFollowMutation.mutateAsync(userId);
+      setLocalFollowingState(!previousState);
       onFollowClick?.();
     } catch (error: unknown) {
-      console.error('팔로우/언팔로우 실패:', error);
-
+      // 에러 발생 시 원래 상태로 복원
+      setLocalFollowingState(previousState);
       const errorObj = error as { code?: number };
       const errorCode = errorObj?.code as ErrorCode;
 
       if (errorCode && errorCode in ErrorMessageMap) {
-        setErrorMessage(ErrorMessageMap[errorCode]);
+        makeToast(ErrorMessageMap[errorCode], 'warning');
       } else {
-        setErrorMessage('팔로우/언팔로우에 실패했습니다.');
+        makeToast('팔로우/언팔로우에 실패했습니다.', 'warning');
       }
-      setShowErrorModal(true);
     }
   };
 
-  const handleCloseErrorModal = () => {
-    setShowErrorModal(false);
-    setErrorMessage('');
+  const handleProfileClick = () => {
+    const searchParams = new URLSearchParams();
+    if (name) searchParams.append('name', encodeURIComponent(name));
+    if (avatarSrc) searchParams.append('avatar', encodeURIComponent(avatarSrc));
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `/trade/seller/${userId}?${queryString}` : `/trade/seller/${userId}`;
+    router.push(url);
   };
 
   return (
     <>
-      <div className={`flex items-center w-[380px] h-[58px] ${className}`}>
+      <div
+        className={`flex items-center w-[380px] h-[58px] ${className} cursor-pointer`}
+        onClick={handleProfileClick}
+      >
         <UserAvatar src={avatarSrc} size="md" className="flex-shrink-0" />
         <div className="flex flex-col justify-center ml-4 flex-1">
           <div className="flex items-center justify-between">
             <span className="text-[var(--black)] font-body-semibold leading-none">{name}</span>
-            <button
-              type="button"
-              className={`w-[78px] h-[26px] rounded-[3px] text-white font-label-semibold flex items-center justify-center
-                ${currentIsFollowing ? 'bg-[var(--gray-dark)]' : 'bg-[var(--main-5)]'}
-              `}
-              onClick={handleFollowClick}
-              disabled={createFollowMutation.isPending || isLoadingFollowings}
-            >
-              {createFollowMutation.isPending || isLoadingFollowings
-                ? '처리중...'
-                : currentIsFollowing
-                  ? '팔로잉'
-                  : '팔로우'}
-            </button>
+            {!isOwnProfile && (
+              <button
+                type="button"
+                className={`w-[78px] h-[26px] rounded-[3px] text-white font-label-semibold flex items-center justify-center
+                  ${currentIsFollowing ? 'bg-[var(--gray-dark)]' : 'bg-[var(--main-5)]'}
+                `}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFollowClick();
+                }}
+                disabled={createFollowMutation.isPending || isLoadingFollowings}
+              >
+                {createFollowMutation.isPending || isLoadingFollowings
+                  ? '처리중...'
+                  : currentIsFollowing
+                    ? '팔로잉'
+                    : '팔로우'}
+              </button>
+            )}
           </div>
           <span className="text-[var(--black)] font-small-regular leading-none mt-2">
-            거래완료 {isLoadingSoldCount ? '로딩중...' : displayTradeCount}
+            거래완료 {isLoadingSoldCount ? '로딩중...' : displayTradeText}
           </span>
         </div>
       </div>
-
-      {/* 에러 모달 */}
-      {showErrorModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-[var(--white)] rounded-lg p-6 max-w-sm w-full mx-4">
-            <h3 className="font-title-semibold mb-4">알림</h3>
-            <p className="text-[var(--gray-mid)] font-body-regular mb-6">{errorMessage}</p>
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={handleCloseErrorModal}
-                className="px-4 py-2 bg-[var(--main-5)] text-[var(--white)] rounded-md hover:bg-[var(--main-4)] font-label-medium"
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

@@ -5,12 +5,15 @@ import type {
   DataUpdateRequest,
   DeadlinePost,
   DeletePostResponse,
+  FollowToggleResponse,
   GifticonUpdateRequest,
   LikeContent,
   ReportRequest,
   ReportResponse,
   SearchTrendsContent,
+  SellerPostsContent,
   UpdatePostResponse,
+  UserInfoResponse,
 } from '@/entities/trade-post/lib/types';
 
 // 게시물 목록 조회
@@ -78,4 +81,44 @@ export const reportTradePost = async (
 export const getSearchTrends = async (): Promise<string[]> => {
   const response: SearchTrendsContent = await axiosInstance.get(END_POINTS.TRADES.SEARCH_TRENDS);
   return response.trendingTopics ?? [];
+};
+
+// 판매자 관련 API들
+export const tradePostApis = {
+  // 판매자 정보 조회 API
+  getSellerInfo: async (userId: number): Promise<UserInfoResponse> => {
+    const response: UserInfoResponse = await axiosInstance.get(`${END_POINTS.USER.INFO}/${userId}`);
+    return response;
+  },
+
+  // 판매자의 거래 게시물 조회 API
+  getSellerPosts: async (
+    userId: number,
+    isSold: boolean,
+    cursor?: number,
+    size: number = 30,
+  ): Promise<SellerPostsContent> => {
+    const params = new URLSearchParams();
+    if (cursor !== undefined) params.append('cursor', cursor.toString());
+    params.append('size', size.toString());
+
+    const url = `${END_POINTS.TRADES.SELLER_POSTS(userId, isSold)}?${params}`;
+
+    try {
+      const response = await axiosInstance.get(url);
+      const responseData = response.data || response;
+      return responseData;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
+  },
+
+  // 팔로우 토글 API
+  postFollowToggle: async (userId: number): Promise<FollowToggleResponse> => {
+    const response: FollowToggleResponse = await axiosInstance.post(
+      END_POINTS.USER.FOLLOW_TOGGLE(userId),
+    );
+    return response;
+  },
 };

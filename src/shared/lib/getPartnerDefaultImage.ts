@@ -75,7 +75,7 @@ export function getPartnerDefaultImage(partner: KoreanBrandName): string {
 
     // 식품
     case '폴 바셋':
-      return '/assets/gifticon/food/bg/PaulBassett_bg.png';
+      return '/assets/gifticon/food/bg/PaulBassette_bg.png';
     case '요기요':
       return '/assets/gifticon/food/bg/Yogiyo_bg.png';
     case 'CJ더마켓':
