@@ -6,7 +6,7 @@ interface OnboardingBackgroundProps {
 
 export function OnboardingBackground({ children }: OnboardingBackgroundProps) {
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--white)] relative overflow-hidden">
       {/* 배경 원형 요소들 */}
       <div className="absolute inset-0 pointer-events-none">
         {/* 상단 왼쪽 원형들 */}
@@ -19,18 +19,12 @@ export function OnboardingBackground({ children }: OnboardingBackgroundProps) {
         {/* 분리된 원형 애니메이션 */}
         {/* 큰 원 (334x334) - main-1 색상 */}
         <div className="absolute inset-0 flex justify-center" style={{ top: '170px' }}>
-          <div
-            className="w-[334px] h-[334px] rounded-full concentric-circle-large"
-            style={{ backgroundColor: 'var(--main-1)' }}
-          />
+          <div className="w-[334px] h-[334px] rounded-full concentric-circle-large bg-[var(--main-2)]" />
         </div>
 
         {/* 작은 원 (234x234) - main-2 색상 */}
         <div className="absolute inset-0 flex justify-center" style={{ top: '220px' }}>
-          <div
-            className="w-[234px] h-[234px] rounded-full concentric-circle-small"
-            style={{ backgroundColor: 'var(--main-2)' }}
-          />
+          <div className="w-[234px] h-[234px] rounded-full concentric-circle-small bg-[var(--main-4)]" />
         </div>
       </div>
 
