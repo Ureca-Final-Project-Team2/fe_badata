@@ -25,30 +25,6 @@ interface SwiperCardProps {
 const SWIPE_THRESHOLD = 150;
 const SWIPE_INDICATOR_THRESHOLD = 50;
 
-function SwipeLabel({
-  visible,
-  position,
-  color,
-  text,
-  rotate,
-}: {
-  visible: boolean;
-  position: string;
-  color: string;
-  text: string;
-  rotate: number;
-}) {
-  return (
-    <motion.div
-      className={`absolute ${position} px-4 py-2 rounded-xl border-4 border-[var(--${color})] bg-transparent backdrop-blur-sm`}
-      animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.8, rotate: visible ? rotate : 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <span className={`text-[var(--${color})] font-head-bold`}>{text}</span>
-    </motion.div>
-  );
-}
-
 export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: SwiperCardProps) {
   const [direction, setDirection] = useState<SwipeDirection>(null);
   const x = useMotionValue(0);
@@ -103,7 +79,7 @@ export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: Swiper
 
   return (
     <motion.div
-      className="relative w-full max-w-[380px] mx-auto h-full bg-white rounded-2xl border border-[var(--gray)] shadow-xl overflow-hidden"
+      className="relative w-full max-w-[380px] mx-auto h-full bg-white rounded-3xl border border-[var(--gray)] overflow-hidden"
       style={{ x, rotate }}
       drag={isTop && !isAnimating ? 'x' : false}
       dragConstraints={{ left: 0, right: 0 }}
@@ -112,37 +88,52 @@ export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: Swiper
       onDragEnd={handleCardSwipeEnd}
       animate={controls}
       transition={{ duration: 0.3 }}
-      whileTap={{ scale: 1.02 }}
+      whileTap={{ scale: isTop ? 1.02 : 1 }}
     >
       {/* 스와이프 배경 */}
       <motion.div
-        className={`absolute inset-0 z-10 pointer-events-none transition-opacity duration-300
-          ${direction === 'left' ? 'bg-gradient-to-l from-[var(--red)/40] to-transparent opacity-100' : ''}
-          ${direction === 'right' ? 'bg-gradient-to-r from-[var(--green)/40] to-transparent opacity-100' : ''}
-          ${direction === null ? 'opacity-0' : ''}
-        `}
+        className="absolute inset-0 z-10 pointer-events-none rounded-3xl"
+        animate={{
+          background:
+            direction === 'left'
+              ? 'linear-gradient(45deg, rgba(239, 68, 68, 0.4), rgba(231, 163, 163, 0.1), transparent)'
+              : direction === 'right'
+                ? 'linear-gradient(-45deg, rgba(34, 197, 94, 0.4), rgba(34, 197, 94, 0.1), transparent)'
+                : 'transparent',
+        }}
+        transition={{ duration: 0.3 }}
       />
 
-      {/* 스와이프 라벨 */}
       <div className="absolute inset-0 pointer-events-none z-50">
-        <SwipeLabel
-          visible={direction === 'left'}
-          position="top-12 right-8"
-          color="red"
-          text="삭제"
-          rotate={-10}
-        />
-        <SwipeLabel
-          visible={direction === 'right'}
-          position="top-12 left-8"
-          color="green"
-          text="저장"
-          rotate={10}
-        />
+        {/* 삭제 라벨 - 왼쪽으로 스와이프 시 */}
+        <motion.div
+          className="absolute top-16 right-6 px-4 py-2 rounded-2xl bg-[var(--red)]/90 backdrop-blur-md shadow-lg"
+          animate={{
+            opacity: direction === 'left' ? 1 : 0,
+            scale: direction === 'left' ? 1 : 0.8,
+            rotate: direction === 'left' ? -12 : 0,
+            y: direction === 'left' ? 0 : 10,
+          }}
+        >
+          <span className="text-white font-head-bold text-lg flex items-center gap-1">삭제</span>
+        </motion.div>
+
+        {/* 저장 라벨 - 오른쪽으로 스와이프 시 */}
+        <motion.div
+          className="absolute top-16 left-6 px-4 py-2 rounded-2xl bg-[var(--green)]/90 backdrop-blur-md shadow-lg"
+          animate={{
+            opacity: direction === 'right' ? 1 : 0,
+            scale: direction === 'right' ? 1 : 0.8,
+            rotate: direction === 'right' ? 12 : 0,
+            y: direction === 'right' ? 0 : 10,
+          }}
+        >
+          <span className="text-white font-head-bold text-lg flex items-center gap-1">저장</span>
+        </motion.div>
       </div>
 
       {/* 이미지 */}
-      <div className="relative w-full aspect-[1.2] pointer-events-none">
+      <div className="relative w-full aspect-[4/3] pointer-events-none overflow-hidden">
         <Image
           src={brandImageSrc}
           alt={post.title}
@@ -151,28 +142,46 @@ export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: Swiper
           priority={isTop}
           className="object-cover"
         />
-        <div className="absolute top-2 left-2 px-3 py-1 bg-[var(--main-2)] text-[var(--main-5)] font-small-medium rounded-full border border-[var(--main-4)]">
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+
+        {/* 마감일 배지 */}
+        <div className="absolute top-3 left-3 px-3 py-1 text-white font-label-semibold rounded-full shadow-lg bg-[var(--main-5)]">
           {formatDeadline(post.deadLine)}
+        </div>
+
+        {/* 카테고리 배지 */}
+        <div className="absolute top-3 right-3 px-3 py-1 bg-black/50 text-white font-caption-medium rounded-lg backdrop-blur-sm">
+          {post.postCategory}
         </div>
       </div>
 
-      {/* 콘텐츠 */}
-      <div className="flex flex-col justify-between flex-1 p-5 bg-white">
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <h2 className="font-body-semibold text-[var(--black)] line-clamp-2">{post.title}</h2>
-            <span className="font-caption-medium text-[var(--gray)]">{post.postCategory}</span>
+      {/* 콘텐츠 섹션 */}
+      <div className="flex flex-col justify-between flex-1 p-6 bg-white">
+        <div className="space-y-3">
+          <div className="flex justify-between items-start">
+            <h2 className="font-body-semibold text-[var(--black)] line-clamp-2 flex-1 leading-tight">
+              {post.title}
+            </h2>
           </div>
-          <div className="font-caption-medium text-[var(--gray-mid)]">{brand}</div>
-          {post.postCategory === 'DATA' && (
-            <div className="font-caption-medium text-[var(--gray-mid)]">{post.capacity}GB</div>
-          )}
+
+          <div className="space-y-1">
+            <div className="font-label-medium text-[var(--dark-gray)] flex items-center">
+              {brand}
+            </div>
+            {post.postCategory === 'DATA' && (
+              <div className="font-caption-medium text-[var(--dark-gray)] flex items-center gap-2">
+                {post.capacity}GB
+              </div>
+            )}
+          </div>
         </div>
-        <div className="text-right mt-3">
-          <span className="text-[var(--main-5)] font-body-semibold">
+
+        <div className="flex items-end justify-end gap-1">
+          <span className="text-[var(--main-5)] font-title-semibold">
             {post.price.toLocaleString()}
           </span>
-          <span className="text-caption-medium text-[var(--gray)] ml-1">원</span>
+          <span className="text-body-medium text-[var(--black)] mb-1">원</span>
         </div>
       </div>
     </motion.div>
