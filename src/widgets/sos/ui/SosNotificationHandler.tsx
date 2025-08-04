@@ -11,7 +11,7 @@ export const SosNotificationHandler = () => {
   
   useSseSosListener((rawData: string) => {
     const clean = rawData.replace(/^data:\s*/, '').trim();
-
+    console.log('📡 SSE 수신 원본:', rawData);
     console.log('📡 SSE 수신 clean:', clean);
 
     // 예외 문자열 필터링
@@ -23,6 +23,10 @@ export const SosNotificationHandler = () => {
     if (clean === 'SSE 연결 성공') {
       console.log('ℹ️ 서버 연결 확인 메시지 무시됨');
       return;
+    }
+    
+    if (!rawData.includes('{')) {
+      console.warn('⚠️ JSON 형식 아님:', rawData);
     }
 
     try {
