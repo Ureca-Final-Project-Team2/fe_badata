@@ -1,5 +1,8 @@
 import type { Store } from '@/features/rental/map/lib/types';
 
+// 클러스터 클릭 플래그 (전역 변수)
+let isClusterClickActive = false;
+
 // 바다 파동 클러스터 마커 생성 함수
 export const createClusterMarker = (
   store: Store,
@@ -169,7 +172,14 @@ export const createClusterMarker = (
 
   // 클러스터 마커 클릭 핸들러
   clusterMarkerContainer.addEventListener('click', (e) => {
+    console.log('🔍 클러스터 마커 클릭 이벤트 발생!');
     e.stopPropagation();
+    e.preventDefault();
+
+    // 클러스터 클릭 플래그를 즉시 설정
+    isClusterClickActive = true;
+    console.log('🔍 클러스터 클릭 플래그 즉시 설정됨:', isClusterClickActive);
+
     console.log(
       '🔍 바다 파동 클러스터 마커 클릭:',
       store.id,
@@ -195,6 +205,12 @@ export const createClusterMarker = (
       targetZoomLevel,
       zoomLevelChanged: targetZoomLevel !== currentZoomLevel,
     });
+
+    // 15초 후 플래그 해제
+    setTimeout(() => {
+      isClusterClickActive = false;
+      console.log('🔍 클러스터 클릭 플래그 해제됨');
+    }, 15000);
   });
 
   // 커스텀 오버레이로 클러스터 마커 생성
@@ -220,3 +236,6 @@ export const createClusterMarker = (
 
   return marker;
 };
+
+// 클러스터 클릭 플래그 확인 함수
+export const getClusterClickActive = () => isClusterClickActive;

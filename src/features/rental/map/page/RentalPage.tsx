@@ -12,6 +12,7 @@ import {
 } from '@/features/rental/map/hooks/useStoreListHooks';
 import { useUrlParams } from '@/features/rental/map/hooks/useUrlParamsrHooks';
 import { useUserLocation } from '@/features/rental/map/hooks/useUserLocationrHooks';
+import { getClusterClickActive } from '@/features/rental/map/lib/clusterMarker';
 import { createPlaceMarker } from '@/features/rental/map/lib/placeMarker';
 import { filterDevices } from '@/features/rental/map/model/filtereDevices';
 import { CurrentLocationButton } from '@/features/rental/map/ui/CurrentLocationButton';
@@ -317,27 +318,38 @@ export default function RentalPage() {
 
       if (paramsToUse.lat && paramsToUse.lng && paramsToUse.placeName) {
         console.log('📍 장소 마커 생성 조건 만족');
-        const lat = parseFloat(paramsToUse.lat);
-        const lng = parseFloat(paramsToUse.lng);
 
-        if (!isNaN(lat) && !isNaN(lng)) {
-          const newPosition = new window.kakao.maps.LatLng(lat, lng);
+        // 👉 클러스터 클릭 플래그가 true면 장소 마커는 생성하되 카메라 이동은 하지 않음
+        const isClusterClick = getClusterClickActive();
+        if (!isClusterClick) {
+          const lat = parseFloat(paramsToUse.lat);
+          const lng = parseFloat(paramsToUse.lng);
 
-          // 카메라를 선택된 위치로 이동 (줌 레벨 4)
-          map.setCenter(newPosition);
-          map.setLevel(4);
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const newPosition = new window.kakao.maps.LatLng(lat, lng);
 
-          // 장소 마커 생성
-          const newPlaceMarker = createPlaceMarker(map, newPosition, paramsToUse.placeName, () => {
-            // 장소 마커 클릭 시 아무것도 하지 않음 (이미 선택된 상태)
-            console.log('📍 장소 마커 클릭:', paramsToUse.placeName);
-          });
+            // ✅ 검색 위치로 카메라 이동 (단, 클러스터 클릭이 아닐 경우에만)
+            map.setCenter(newPosition);
+            map.setLevel(4);
 
-          console.log('📍 RentalPage에서 장소 마커 생성 완료:', paramsToUse.placeName);
-          setPlaceMarker(newPlaceMarker);
-          setHasProcessedUrlParams(true); // 장소 마커 생성 후에 처리 완료 표시
-          placeMarkerProcessedRef.current = true; // 처리 완료 표시
+            const newPlaceMarker = createPlaceMarker(
+              map,
+              newPosition,
+              paramsToUse.placeName,
+              () => {
+                console.log('📍 장소 마커 클릭:', paramsToUse.placeName);
+              },
+            );
+
+            console.log('📍 RentalPage에서 장소 마커 생성 완료:', paramsToUse.placeName);
+            setPlaceMarker(newPlaceMarker);
+          }
+        } else {
+          console.log('📍 클러스터 클릭 중이므로 장소 카메라 이동 생략');
         }
+
+        setHasProcessedUrlParams(true); // 장소 마커 처리 완료
+        placeMarkerProcessedRef.current = true;
       } else {
         console.log('📍 장소 마커 생성 조건 불만족:', {
           hasSelectedLat: !!paramsToUse.lat,

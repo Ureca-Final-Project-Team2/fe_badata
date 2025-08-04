@@ -78,7 +78,6 @@ self.addEventListener('push', (event) => {
       ],
     };
 
-    console.log('푸시 알림 표시:', title, options);
     event.waitUntil(self.registration.showNotification(title, options));
   }
 });

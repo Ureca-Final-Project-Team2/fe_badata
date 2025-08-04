@@ -62,8 +62,6 @@ export const fetchStoreDevices = async (
   params: FetchStoreDevicesParams,
 ): Promise<StoreDevice[]> => {
   try {
-    console.log('🔍 fetchStoreDevices 호출:', { storeId, params });
-
     // 개별 스토어의 디바이스를 조회할 때는 STORES.ALLSTORE 엔드포인트 사용
     const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
       params: {
@@ -72,7 +70,6 @@ export const fetchStoreDevices = async (
       },
     });
 
-    console.log('🔍 fetchStoreDevices 응답:', response);
     return Array.isArray(response) ? response : [];
   } catch (error) {
     console.error(`스토어 ${storeId} 디바이스 조회 실패:`, error);

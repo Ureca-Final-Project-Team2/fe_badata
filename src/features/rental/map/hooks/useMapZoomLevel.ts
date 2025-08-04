@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { fetchStores } from '@/features/rental/map/api/apis';
+import { getClusterClickActive } from '@/features/rental/map/lib/clusterMarker';
 import { markerCaches } from '@/features/rental/map/lib/markerCache';
 import { debouncedRenderMarkers } from '@/features/rental/map/lib/renderStoreMarkers';
 
@@ -25,7 +26,25 @@ export const useMapZoomLevel = (
 
     const listener = async () => {
       const newZoom = map.getLevel();
-      console.log('🔍 줌 레벨 변경 감지 및 통합 처리 시작:', newZoom);
+      const currentCenter = map.getCenter();
+      const isClusterClick = getClusterClickActive();
+
+      console.log('🔍 줌 레벨 변경 감지 및 통합 처리 시작:', {
+        newZoom,
+        currentCenter: {
+          lat: currentCenter.getLat(),
+          lng: currentCenter.getLng(),
+        },
+        isClusterClick,
+      });
+
+      // 클러스터 클릭으로 인한 줌 변경이면 API 호출 건너뛰기
+      if (isClusterClick) {
+        console.log('🔍 클러스터 클릭으로 인한 줌 변경 - API 호출 건너뜀');
+        setZoomLevel(newZoom);
+        setZoomChanged(true);
+        return;
+      }
 
       setZoomLevel(newZoom);
       setZoomChanged(true);
