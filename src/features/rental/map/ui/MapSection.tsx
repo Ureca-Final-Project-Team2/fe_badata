@@ -1,10 +1,13 @@
 'use client';
 
+import { memo, useEffect, useMemo, useState } from 'react';
+
 import { useCurrentLocationMarker } from '@/features/rental/map/hooks/useCurrentLocationMarkerHooks';
 import { useFetchStoresHooks } from '@/features/rental/map/hooks/useFetchStoresHooks';
 import { useKakaoMapHooks } from '@/features/rental/map/hooks/useKakaoMapHooks';
 import { useMapZoomLevel } from '@/features/rental/map/hooks/useMapZoomLevel';
 import { useMarkerRendering } from '@/features/rental/map/hooks/useMarkerRenderingrHooks';
+import { Loading } from '@/shared/ui/Loading';
 
 import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 import type { RentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
@@ -27,7 +30,7 @@ export interface MapSectionProps {
   expandedMarkers?: Set<number>; // 확장된 마커들의 ID Set
 }
 
-export function MapSection({
+export const MapSection = memo(function MapSection({
   filterState,
   initialLat,
   initialLng,
@@ -40,7 +43,26 @@ export function MapSection({
   userLng,
   expandedMarkers,
 }: MapSectionProps) {
-  const { mapRef, map } = useKakaoMapHooks(initialLat, initialLng, userLat, userLng);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+
+  // 메모이제이션된 props로 불필요한 리렌더링 방지
+  const memoizedProps = useMemo(
+    () => ({
+      initialLat,
+      initialLng,
+      userLat,
+      userLng,
+    }),
+    [initialLat, initialLng, userLat, userLng],
+  );
+
+  const { mapRef, map } = useKakaoMapHooks(
+    memoizedProps.initialLat,
+    memoizedProps.initialLng,
+    memoizedProps.userLat,
+    memoizedProps.userLng,
+  );
+
   const { stores } = useFetchStoresHooks(map, filterState);
 
   // ✅ 줌 레벨 변경 통합 관리 (근본적 해결)
@@ -55,15 +77,45 @@ export function MapSection({
     expandedMarkers,
   );
 
+  // 지도가 준비되면 로딩 상태 해제
+  useEffect(() => {
+    if (map) {
+      console.log('📍 MapSection: 지도가 준비됨, 로딩 상태 해제');
+      setIsMapLoaded(true);
+    }
+  }, [map]);
+
   useCurrentLocationMarker(
     map,
     hasUrlParams,
     onMapClick,
-    onMapReady,
+    (mapInstance) => {
+      console.log('📍 MapSection 내부 onMapReady 호출됨');
+      onMapReady?.(mapInstance);
+    },
     isMapReadyRef,
-    userLat,
-    userLng,
+    memoizedProps.userLat,
+    memoizedProps.userLng,
   );
 
-  return <div ref={mapRef} className="w-full h-full" />;
-}
+  return (
+    <div className="relative w-full h-full">
+      <div
+        ref={mapRef}
+        className="w-full h-full"
+        style={{
+          // 레이아웃 시프트 방지를 위한 최소 높이 설정
+          minHeight: '400px',
+          // GPU 가속 활성화
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+        }}
+      />
+      {!isMapLoaded && (
+        <div className="absolute inset-0 bg-white flex items-center justify-center z-10">
+          <Loading size="lg" />
+        </div>
+      )}
+    </div>
+  );
+});

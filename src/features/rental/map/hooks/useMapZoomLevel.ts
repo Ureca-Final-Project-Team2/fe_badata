@@ -38,16 +38,14 @@ export const useMapZoomLevel = (
         isClusterClick,
       });
 
+      setZoomLevel(newZoom);
+      setZoomChanged(true);
+
       // 클러스터 클릭으로 인한 줌 변경이면 API 호출 건너뛰기
       if (isClusterClick) {
         console.log('🔍 클러스터 클릭으로 인한 줌 변경 - API 호출 건너뜀');
-        setZoomLevel(newZoom);
-        setZoomChanged(true);
         return;
       }
-
-      setZoomLevel(newZoom);
-      setZoomChanged(true);
 
       try {
         // 1. 캐시 클리어
@@ -64,7 +62,7 @@ export const useMapZoomLevel = (
         console.log('🌐 줌 변경으로 인한 직접 API 호출 시작');
 
         // 3. 직접 API 호출 (줌 레벨 반영)
-        const apiParams: any = {
+        const apiParams = {
           swLat: bounds.getSouthWest().getLat(),
           swLng: bounds.getSouthWest().getLng(),
           neLat: bounds.getNorthEast().getLat(),

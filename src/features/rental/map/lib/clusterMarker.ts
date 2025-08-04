@@ -10,6 +10,14 @@ export const createClusterMarker = (
   position: kakao.maps.LatLng,
   totalLeftCount: number,
 ): kakao.maps.CustomOverlay => {
+  const zoomLevel = map.getLevel();
+
+  // 줌 레벨 3 이하에서는 클러스터 마커를 생성하지 않음
+  if (zoomLevel < 4) {
+    console.log('🔍 줌 레벨 3 이하 - 클러스터 마커 생성 건너뜀');
+    throw new Error('줌 레벨 3 이하에서는 클러스터 마커를 생성할 수 없습니다.');
+  }
+
   console.log('🔍 줌 레벨 4 이상 - 바다 파동 클러스터 마커 생성 시작');
 
   // 값에 따른 색상과 크기 결정 (main 색상 사용)
@@ -191,7 +199,7 @@ export const createClusterMarker = (
 
     // 클러스터 클릭 시 줌인
     const currentZoomLevel = map.getLevel();
-    const targetZoomLevel = Math.max(2, currentZoomLevel - 2); // 더 확실한 줌인
+    const targetZoomLevel = Math.max(1, currentZoomLevel - 3); // 줌 레벨 1로 설정
 
     map.setCenter(position);
     map.setLevel(targetZoomLevel);
@@ -206,11 +214,15 @@ export const createClusterMarker = (
       zoomLevelChanged: targetZoomLevel !== currentZoomLevel,
     });
 
-    // 15초 후 플래그 해제
+    // 줌인 완료 후 API 호출을 위해 플래그 해제 (짧은 지연)
     setTimeout(() => {
       isClusterClickActive = false;
-      console.log('🔍 클러스터 클릭 플래그 해제됨');
-    }, 15000);
+      console.log('🔍 클러스터 클릭 플래그 해제됨 (API 호출 허용)');
+
+      // 줌 레벨을 다시 설정하여 이벤트 트리거
+      const currentLevel = map.getLevel();
+      map.setLevel(currentLevel);
+    }, 50); // 50ms 후 플래그 해제 (더 빠른 해제)
   });
 
   // 커스텀 오버레이로 클러스터 마커 생성

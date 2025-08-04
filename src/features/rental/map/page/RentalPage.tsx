@@ -283,19 +283,22 @@ export default function RentalPage() {
     await handleMapClick();
   }, [handleMapClick, mapInstance, placeMarker]);
 
-  // 지도 준비 완료 시 호출되는 콜백
+  // 지도 준비 완료 시 호출되는 콜백 (디바운싱 추가)
   const handleMapReady = useCallback(
     (map: kakao.maps.Map) => {
       setMapInstance(map);
 
-      console.log('📍 handleMapReady 호출:', {
-        selectedLat,
-        selectedLng,
-        selectedPlaceName,
-        hasProcessedUrlParams,
-        savedUrlParams,
-        placeMarkerProcessed: placeMarkerProcessedRef.current,
-      });
+      // 디바운싱된 로그 출력
+      const timeoutId = setTimeout(() => {
+        console.log('📍 handleMapReady 호출:', {
+          selectedLat,
+          selectedLng,
+          selectedPlaceName,
+          hasProcessedUrlParams,
+          savedUrlParams,
+          placeMarkerProcessed: placeMarkerProcessedRef.current,
+        });
+      }, 100);
 
       // 이미 처리된 경우 무시
       if (placeMarkerProcessedRef.current) {
@@ -359,13 +362,15 @@ export default function RentalPage() {
         // 조건이 불만족해도 처리 완료 표시
         placeMarkerProcessedRef.current = true;
       }
+
+      return () => clearTimeout(timeoutId);
     },
     [savedUrlParams, setHasProcessedUrlParams],
   );
 
-  // 스토어 리스트 훅
-  const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error, fetchNextPage } =
-    useStoreListWithInfiniteScroll({
+  // 메모이제이션된 스토어 리스트 props
+  const storeListProps = useMemo(
+    () => ({
       centerLat: (() => {
         // 검색 위치가 있으면 검색 위치, 없으면 사용자 위치
         if (selectedLat && selectedLng && !hasProcessedUrlParams) {
@@ -413,7 +418,26 @@ export default function RentalPage() {
       maxSupportConnection: filterState.maxSupportConnection
         ? [filterState.maxSupportConnection]
         : undefined,
-    });
+    }),
+    [
+      selectedLat,
+      selectedLng,
+      hasProcessedUrlParams,
+      userLocation.lat,
+      userLocation.lng,
+      currentSort,
+      filterState.star,
+      filterState.minPrice,
+      filterState.maxPrice,
+      filterState.dataAmount,
+      filterState.dataType,
+      filterState.maxSupportConnection,
+    ],
+  );
+
+  // 스토어 리스트 훅
+  const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error, fetchNextPage } =
+    useStoreListWithInfiniteScroll(storeListProps);
 
   // 메모이제이션된 데이터
   const storeList = useMemo(() => convertToStoreCardProps(stores), [stores]);
@@ -450,31 +474,36 @@ export default function RentalPage() {
     dispatchSelectedStore,
   ]);
 
-  // hasUrlParamsValue를 useMemo로 최적화
+  // hasUrlParamsValue를 useMemo로 최적화 (디바운싱 추가)
   const hasUrlParamsValue = useMemo(() => {
     const value = !!(selectedLat && selectedLng && !hasProcessedUrlParams);
-    console.log('📍 RentalPage hasUrlParams 계산:', {
-      selectedLat,
-      selectedLng,
-      hasProcessedUrlParams,
-      hasUrlParamsValue: value,
-    });
     return value;
   }, [selectedLat, selectedLng, hasProcessedUrlParams]);
+
+  // 디바운싱된 로그 출력 (개발 환경에서만)
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      const timeoutId = setTimeout(() => {
+        console.log('📍 RentalPage hasUrlParams 계산:', {
+          selectedLat,
+          selectedLng,
+          hasProcessedUrlParams,
+          hasUrlParamsValue,
+        });
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [selectedLat, selectedLng, hasProcessedUrlParams, hasUrlParamsValue]);
 
   return (
     <BaseLayout
       centered
       paddingX={false}
-      showHeader={!urlParamsLoading} // 로딩 중이 아닐 때만 헤더 표시
+      showHeader
       showBottomNav
       header={
-        urlParamsLoading ? (
-          // 로딩 중일 때는 빈 헤더 (스피너는 메인 영역에 표시)
-          <div className="w-full h-[70px] flex items-center justify-center bg-white">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-          </div>
-        ) : hasUrlParams ? (
+        hasUrlParams ? (
           // URL 파라미터가 있을 때 Header_Detail 사용
           <Header_Detail
             title={savedUrlParamsForHeader?.placeName || selectedPlaceName || '검색 위치'}
@@ -508,23 +537,19 @@ export default function RentalPage() {
         error={locationError}
       />
       <div className="w-full h-[calc(100vh-190px)]">
-        {(() => {
-          return (
-            <MapSection
-              filterState={filterState}
-              initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
-              initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
-              onStoreMarkerClick={handleMarkerClick}
-              onMapClick={handleMapClickWrapper}
-              onMapReady={handleMapReady}
-              hasUrlParams={hasUrlParamsValue}
-              selectedStoreId={selectedStoreId}
-              userLat={userLocation.lat ?? undefined}
-              userLng={userLocation.lng ?? undefined}
-              expandedMarkers={expandedMarkers}
-            />
-          );
-        })()}
+        <MapSection
+          filterState={filterState}
+          initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
+          initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
+          onStoreMarkerClick={handleMarkerClick}
+          onMapClick={handleMapClickWrapper}
+          onMapReady={handleMapReady}
+          hasUrlParams={hasUrlParamsValue}
+          selectedStoreId={selectedStoreId}
+          userLat={userLocation.lat ?? undefined}
+          userLng={userLocation.lng ?? undefined}
+          expandedMarkers={expandedMarkers}
+        />
       </div>
       <DrawerSection
         storeList={storeList}

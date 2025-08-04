@@ -25,7 +25,7 @@ export const createStoreMarker = async (
 
     // 줌 레벨 확인 (클러스터 마커인지 확인)
     const zoomLevel = map.getLevel();
-    const isCluster = zoomLevel >= 4 || store.isCluster;
+    const isCluster = zoomLevel >= 4 && (store.isCluster || store.leftDeviceCount > 1);
 
     console.log('🔍 마커 생성:', {
       storeId: store.id,
@@ -38,7 +38,7 @@ export const createStoreMarker = async (
     let totalLeftCount = 0;
 
     // 줌 레벨 4 이상(클러스터)인 경우에만 디바이스 정보 조회 생략
-    if (zoomLevel >= 4) {
+    if (zoomLevel >= 4 && isCluster) {
       // 클러스터 마커인 경우 store의 leftDeviceCount 사용
       totalLeftCount = store.leftDeviceCount;
       console.log('🔍 클러스터 - leftDeviceCount 사용:', totalLeftCount);
@@ -46,7 +46,6 @@ export const createStoreMarker = async (
       // 줌 레벨 3 이하인 경우 API 응답의 leftDeviceCount 사용
       totalLeftCount = store.leftDeviceCount;
       console.log('🔍 개별 가맹점 - API 응답 leftDeviceCount 사용:', totalLeftCount);
-
       // 디바이스 정보는 클릭 시에만 조회하도록 수정
       // 여기서는 디바이스 정보 조회를 하지 않음
     }
@@ -111,13 +110,32 @@ export const createStoreMarker = async (
     let marker: kakao.maps.Marker | kakao.maps.CustomOverlay;
 
     // 줌 레벨에 따라 다른 마커 생성
-    if (zoomLevel >= 4) {
-      // 클러스터 마커 생성
-      marker = createClusterMarker(store, map, position, totalLeftCount);
+    if (zoomLevel >= 4 && isCluster) {
+      // 클러스터 마커 생성 (줌 레벨 4 이상이고 클러스터인 경우)
+      console.log('🔍 클러스터 마커 생성 - 줌 레벨:', zoomLevel);
+      try {
+        marker = createClusterMarker(store, map, position, totalLeftCount);
+      } catch (error) {
+        console.log(
+          '🔍 클러스터 마커 생성 실패, 개별 마커로 대체:',
+          error instanceof Error ? error.message : 'Unknown error',
+        );
+        // 클러스터 마커 생성 실패 시 개별 마커 생성
+        marker = createDropletMarker(
+          map,
+          position,
+          store.id,
+          isLiked,
+          isExpanded,
+          handleMarkerClick,
+          totalLeftCount,
+          store.name,
+        );
+      }
     } else {
-      console.log('🔍 줌 레벨 3 이하 - 물방울 마커 생성 시작');
+      console.log('🔍 개별 마커 생성 - 줌 레벨:', zoomLevel);
 
-      // 줌 레벨 3 이하: 물방울 마커 생성
+      // 줌 레벨 3 이하 또는 개별 마커: 물방울 마커 생성
       marker = createDropletMarker(
         map,
         position,
@@ -148,7 +166,7 @@ export const createStoreMarker = async (
     }
 
     // 이벤트 리스너 설정 (물방울 마커인 경우에만)
-    if (zoomLevel < 4) {
+    if (zoomLevel < 4 || !isCluster) {
       setupMarkerEventListeners(
         marker as kakao.maps.CustomOverlay,
         infowindow,

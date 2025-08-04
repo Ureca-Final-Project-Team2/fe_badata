@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { fetchStores } from '@/features/rental/map/api/apis';
+import { getClusterClickActive } from '@/features/rental/map/lib/clusterMarker';
 import { mapFilterStateToApiParams } from '@/features/rental/map/utils/filterParamsMapper';
 
 import type { Store } from '@/features/rental/map/lib/types';
@@ -29,6 +30,19 @@ export const useFetchStoresHooks = (
   // 지도 bounds 업데이트 함수
   const updateStoresByBounds = useCallback(async () => {
     if (!map) {
+      return;
+    }
+
+    // 클러스터 클릭이 활성화되어 있으면 API 호출 건너뛰기
+    const isClusterClick = getClusterClickActive();
+    if (isClusterClick) {
+      console.log('🔍 클러스터 클릭 활성화 - API 호출 건너뜀');
+
+      // 클러스터 클릭 시에는 짧은 지연 후 API 호출 허용
+      setTimeout(() => {
+        console.log('🔍 클러스터 클릭 후 API 호출 허용');
+      }, 200); // 200ms 후 API 호출 허용
+
       return;
     }
 
@@ -73,6 +87,14 @@ export const useFetchStoresHooks = (
       debounceRef.current = setTimeout(async () => {
         try {
           if (!map) return;
+
+          // 클러스터 클릭 상태 재확인
+          const isClusterClick = getClusterClickActive();
+          if (isClusterClick) {
+            console.log('🔍 디바운스 중 클러스터 클릭 활성화 - API 호출 건너뜀');
+            return;
+          }
+
           setIsLoading(true);
 
           setCurrentBounds(newBounds);

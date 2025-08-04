@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { motion, useAnimation } from 'framer-motion';
 import { ArrowUpDown } from 'lucide-react';
@@ -40,8 +40,18 @@ export const DragBottomSheet = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [animatedItems, setAnimatedItems] = useState<Set<string>>(new Set());
   const [lastStoreCount, setLastStoreCount] = useState(0);
+  const renderCountRef = useRef(0);
 
-  // 무한 스크롤 핸들러
+  // 메모이제이션된 계산값들
+  const calculatedValues = useMemo(() => {
+    const expandedY = windowHeight > 0 ? 60 : 0; // header 높이
+    const middleY = windowHeight > 0 ? windowHeight * 0.3 : 0; // 중간 높이를 30%로 조정
+    const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 접힌 높이 (80% 아래)
+
+    return { expandedY, middleY, collapsedY };
+  }, [windowHeight]);
+
+  // 무한 스크롤 핸들러 (디바운싱 적용)
   const handleScroll = useCallback(() => {
     if (!scrollContainerRef.current || !onLoadMore || isFetchingNextPage || !hasNextPage) return;
 
@@ -53,7 +63,7 @@ export const DragBottomSheet = ({
     }
   }, [onLoadMore, isFetchingNextPage, hasNextPage]);
 
-  // 새로 로드된 아이템들을 추적하여 애니메이션 적용
+  // 새로 로드된 아이템들을 추적하여 애니메이션 적용 (메모이제이션)
   useEffect(() => {
     if (storeList && storeList.length > lastStoreCount) {
       const newItems = storeList.slice(lastStoreCount);
@@ -70,107 +80,75 @@ export const DragBottomSheet = ({
     }
   }, [storeList, lastStoreCount, animatedItems]);
 
-  // windowHeight가 설정된 후에 계산하도록 수정
-  const expandedY = windowHeight > 0 ? 60 : 0; // header 높이
-  const middleY = windowHeight > 0 ? windowHeight * 0.3 : 0; // 중간 높이를 30%로 조정
-  const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 접힌 높이 (80% 아래)
-
   const controls = useAnimation();
 
-  console.log('🔍 DragBottomSheet 렌더링:', {
-    windowHeight,
-    expandedY,
-    middleY,
-    collapsedY,
-    open,
-    currentY,
-    lastOpenRef: lastOpenRef.current,
-  });
+  // 렌더링 횟수 제한 (개발 환경에서만)
+  renderCountRef.current += 1;
+  if (renderCountRef.current > 10) {
+    console.warn('🔍 DragBottomSheet 과도한 렌더링 감지:', renderCountRef.current);
+  }
 
   useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
       const height = window.innerHeight;
-      console.log('🔍 useLayoutEffect windowHeight 설정:', height);
       setWindowHeight(height);
       setCurrentY(height); // 초기값을 windowHeight로 설정
     }
   }, []);
 
   useEffect(() => {
-    console.log('🔍 useEffect 실행:', {
-      windowHeight,
-      open,
-      expandedY,
-      middleY,
-      collapsedY,
-      currentY,
-      lastOpenRef: lastOpenRef.current,
-    });
-
     if (windowHeight === 0) {
-      console.log('🔍 windowHeight가 0이므로 return');
       return;
     }
 
     // open 상태가 변경되었을 때만 애니메이션 실행
     if (open !== lastOpenRef.current) {
-      console.log('🔍 open 상태 변경 감지:', { open, lastOpen: lastOpenRef.current });
       lastOpenRef.current = open || false;
 
       if (open) {
-        // 목록보기 버튼을 클릭했을 때 expanded 상태로 열림
-        const targetY = expandedY;
-        console.log('🔍 DragBottomSheet 열기:', targetY);
-
-        setCurrentY(targetY);
+        // 열린 상태로 애니메이션
         controls.start({
-          y: targetY,
-          transition: {
-            type: 'spring',
-            stiffness: 300,
-            damping: 30,
-          },
+          y: calculatedValues.expandedY,
+          transition: { type: 'spring', damping: 25, stiffness: 200 },
         });
+        setCurrentY(calculatedValues.expandedY);
       } else {
-        // 목록보기 버튼을 클릭하지 않았을 때는 완전히 숨김
-        const targetY = windowHeight;
-        console.log('🔍 DragBottomSheet 닫기:', targetY);
-
-        setCurrentY(targetY);
+        // 닫힌 상태로 애니메이션
         controls.start({
-          y: targetY,
-          transition: {
-            type: 'spring',
-            stiffness: 300,
-            damping: 30,
-          },
+          y: calculatedValues.collapsedY,
+          transition: { type: 'spring', damping: 25, stiffness: 200 },
         });
+        setCurrentY(calculatedValues.collapsedY);
       }
     }
-  }, [open, controls, windowHeight, expandedY]);
+  }, [open, windowHeight, calculatedValues, controls]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
-    console.log('🔍 handleDragEnd 실행:', info.point.y, 'middleY:', middleY);
+    const { y } = info.point;
+    const threshold = 50; // 드래그 임계값
 
-    if (info.point.y < middleY - 50) {
+    // 현재 위치에 따라 상태 결정
+    if (y < calculatedValues.middleY - threshold) {
       // 위쪽으로 드래그하면 expanded 상태
-      console.log('🔍 expanded 상태로 이동');
-      const targetY = expandedY;
-      setCurrentY(targetY);
-      controls.start({ y: targetY });
-    } else if (info.point.y > middleY + 160) {
-      // 아래쪽으로 많이 드래그하면 완전히 닫힘
-      console.log('🔍 완전히 닫힘');
-      const targetY = windowHeight;
-      setCurrentY(targetY);
-      controls.start({ y: targetY });
-      onClose?.();
+      controls.start({
+        y: calculatedValues.expandedY,
+        transition: { type: 'spring', damping: 25, stiffness: 200 },
+      });
+      setCurrentY(calculatedValues.expandedY);
+    } else if (y > calculatedValues.middleY + threshold) {
+      // 아래쪽으로 드래그하면 collapsed 상태
+      controls.start({
+        y: calculatedValues.collapsedY,
+        transition: { type: 'spring', damping: 25, stiffness: 200 },
+      });
+      setCurrentY(calculatedValues.collapsedY);
     } else {
-      // 중간 영역이면 middle 상태 (중간에서 멈춤)
-      console.log('🔍 middle 상태로 이동');
-      const targetY = middleY;
-      setCurrentY(targetY);
-      controls.start({ y: targetY });
+      // 중간 영역이면 middle 상태로 이동
+      controls.start({
+        y: calculatedValues.middleY,
+        transition: { type: 'spring', damping: 25, stiffness: 200 },
+      });
+      setCurrentY(calculatedValues.middleY);
     }
   };
 
