@@ -41,7 +41,7 @@ export default function RentalHistoryPage() {
       header={<PageHeader title="공유기 대여 내역" onBack={() => router.back()} />}
       showBottomNav
     >
-      <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-4 pb-[84px] px-4">
+      <div className="w-full max-w-[428px] flex-1 overflow-y-auto pt-4 pb-[84px]">
         {rentalHistoryData.length === 0 && (
           <div className="text-center text-gray-400 mt-10">대여 내역이 없습니다.</div>
         )}
@@ -55,12 +55,12 @@ export default function RentalHistoryPage() {
           const showReviewButton = item.reservationStatus === 'COMPLETE';
 
           return (
-            <div key={item.id} className={`relative mb-8${idx === 0 ? ' mt-4' : ''}`}>
+            <div key={item.id} className={`relative mb-8${idx === 0 ? ' mt-6' : ''}`}>
               <div className="absolute -top-6 left-2 flex items-center gap-2">
                 <span className="font-body-xs-medium">{date}</span>
                 <span className="font-body-xs-medium text-[var(--gray-mid)]">{day}</span>
               </div>
-              <div className="border-2 border-[var(--gray-light)] rounded-2xl bg-white px-4 py-4 pt-6">
+              <div className="border border-[var(--gray)] rounded-xl bg-white px-4 py-4 pt-6">
                 <div className="flex flex-wrap items-center justify-between gap-y-1 mb-2">
                   <span className="font-body-xs-medium max-w-[calc(100%-100px)] break-words">
                     {item.storeName}

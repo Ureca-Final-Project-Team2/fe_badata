@@ -19,7 +19,7 @@ export function CoinHistoryItem({ item }: CoinHistoryItemProps) {
     <div className="space-y-1">
       <p className="font-small-regular text-[var(--gray-dark)] px-1">{displayDate}</p>
 
-      <div className="bg-[var(--white)] rounded-2xl border border-[var(--gray-light)] px-4 py-3 flex items-center justify-between">
+      <div className="bg-[var(--white)] rounded-xl border border-[var(--gray)] px-4 py-3 flex items-center justify-between">
         <span className="font-label-regular text-[var(--black)]">{sourceText}</span>
 
         <div className="flex flex-col items-end">
