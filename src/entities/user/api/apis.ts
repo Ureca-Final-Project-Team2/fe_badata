@@ -23,13 +23,6 @@ export const userApis = {
     return response;
   },
 
-  postFollowToggle: async (userId: number): Promise<FollowToggleResponse> => {
-    const response: FollowToggleResponse = await axiosInstance.post(
-      END_POINTS.USER.FOLLOW_TOGGLE(userId),
-    );
-    return response;
-  },
-
   getFollowings: async (
     cursor?: number,
     size: number = 10,
@@ -39,10 +32,8 @@ export const userApis = {
     if (cursor !== undefined) params.append('cursor', cursor.toString());
     params.append('size', size.toString());
 
-    const response: ApiResponse<FollowingsContent> = await axiosInstance.get(
-      `${END_POINTS.MYPAGE.FOLLOWINGS}?${params}`,
-    );
-    return response;
+    const response = await axiosInstance.get(`${END_POINTS.MYPAGE.FOLLOWINGS}?${params}`);
+    return response.data;
   },
 
   getSales: async (
@@ -98,6 +89,14 @@ export const userApis = {
       params: { tradeType },
     });
     return response.postCount ?? 0;
+  },
+
+  // 팔로우 토글 API
+  postFollowToggle: async (userId: number): Promise<FollowToggleResponse> => {
+    const response: FollowToggleResponse = await axiosInstance.post(
+      END_POINTS.USER.FOLLOW_TOGGLE(userId),
+    );
+    return response;
   },
 
   getPurchasedGifticonDetail: async (gifticonId: string): Promise<PurchasedGifticonDetail> => {
