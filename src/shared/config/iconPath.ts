@@ -30,7 +30,7 @@ export const ICONS = {
     LIKE_NONACTIVE: likeNonactive,
     BACKICON: backIcon,
     FILTERICON: filterIcon,
-    LIKE_ACTIVE_HAㄴLF: likeActiveHalf,
+    LIKE_ACTIVE_HALF: likeActiveHalf,
     SHELL: shell,
     SPINNER: '/assets/spinner.gif',
   },

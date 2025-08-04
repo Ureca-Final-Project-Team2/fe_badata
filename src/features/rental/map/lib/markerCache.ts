@@ -227,7 +227,7 @@ export class MarkerCache {
 }
 
 // 맵별 마커 캐시 관리
-export const markerCaches = new WeakMap<kakao.maps.Map, MarkerCache>();
+export const markerCaches = new Map<kakao.maps.Map, MarkerCache>();
 
 // 전역 마커 업데이트 이벤트 시스템
 type MarkerUpdateCallback = (storeId: number, isLiked: boolean) => void;

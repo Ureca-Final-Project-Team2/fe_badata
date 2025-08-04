@@ -387,10 +387,12 @@ export default function RentalPage() {
       })(),
       sort: [currentSort],
       enabled:
-        userLocation.lat !== null &&
-        userLocation.lng !== null &&
-        userLocation.lat !== 0 &&
-        userLocation.lng !== 0,
+        // 목록보기가 열려있거나, 사용자 위치가 유효한 경우에만 활성화
+        isDrawerOpen ||
+        (userLocation.lat !== null &&
+          userLocation.lng !== null &&
+          userLocation.lat !== 0 &&
+          userLocation.lng !== 0),
       reviewRating: filterState.star > 0 ? filterState.star : undefined,
       minPrice: filterState.minPrice && filterState.minPrice > 0 ? filterState.minPrice : undefined,
       maxPrice: filterState.maxPrice && filterState.maxPrice > 0 ? filterState.maxPrice : undefined,
@@ -432,12 +434,28 @@ export default function RentalPage() {
       filterState.dataAmount,
       filterState.dataType,
       filterState.maxSupportConnection,
+      isDrawerOpen,
     ],
   );
 
   // 스토어 리스트 훅
-  const { stores, isLoading, isFetchingNextPage, hasNextPage, isError, error, fetchNextPage } =
-    useStoreListWithInfiniteScroll(storeListProps);
+  const {
+    stores,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    isError,
+    error,
+    fetchNextPage,
+    refetch,
+  } = useStoreListWithInfiniteScroll(storeListProps);
+
+  // 목록보기가 열릴 때 데이터 새로고침
+  useEffect(() => {
+    if (isDrawerOpen && stores.length === 0) {
+      refetch();
+    }
+  }, [isDrawerOpen, stores.length, refetch]);
 
   // 메모이제이션된 데이터
   const storeList = useMemo(() => convertToStoreCardProps(stores), [stores]);
