@@ -67,6 +67,7 @@ export interface PostCountResponse {
 export interface FollowToggleResponse {
   code: number;
   message: string;
+}
 
 export interface PurchasedGifticonDetail {
   sellerId: number;
