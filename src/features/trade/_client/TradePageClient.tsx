@@ -14,14 +14,13 @@ import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilter
 import { TradeDeadlineBanner } from '@/features/trade/ui/TradeDeadlineBanner';
 import { TradeFlatTab } from '@/features/trade/ui/TradeFlatTab';
 import { TradeList } from '@/features/trade/ui/TradeList';
+import TradeRecommendPostsSection from '@/features/trade/ui/TradeRecommendPostsSection';
 import { TradeTrendingRanking } from '@/features/trade/ui/TradeTrendingRanking';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { SectionDivider } from '@/shared/ui/SectionDivider';
 import { TradeSearchInput } from '@/widgets/trade/search-input/ui/TradeSearchInput';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
-
-import TradeRecommendPostsSection from '../ui/TradeRecommendPostsSection';
 
 export default function TradePageClient() {
   const router = useRouter();

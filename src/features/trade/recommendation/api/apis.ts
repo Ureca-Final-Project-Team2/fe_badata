@@ -1,7 +1,10 @@
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-import type { RecommendLikeResponse, RecommendPost } from '../lib/types';
+import type {
+  RecommendLikeResponse,
+  RecommendPost,
+} from '@/features/trade/recommendation/lib/types';
 
 export const getRecommendPosts = async (isStart: boolean = false): Promise<RecommendPost[]> => {
   const data: { postsResponse: RecommendPost[] } = await axiosInstance.get(
