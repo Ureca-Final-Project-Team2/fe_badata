@@ -1,7 +1,6 @@
 import type { HTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 
-
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/shared/lib/cn';
