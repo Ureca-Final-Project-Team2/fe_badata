@@ -4,10 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 
 interface IntroVideoProps {
   onComplete: () => void;
-  onSkip: () => void;
 }
 
-export function IntroVideo({ onComplete, onSkip }: IntroVideoProps) {
+export function IntroVideo({ onComplete }: IntroVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSkipButton, setShowSkipButton] = useState(false);
@@ -100,7 +99,8 @@ export function IntroVideo({ onComplete, onSkip }: IntroVideoProps) {
   }, [onComplete, isPlaying]);
 
   const handleSkip = () => {
-    onSkip();
+    // 건너뛰기 시 위치 정보 허용 페이지로 이동
+    onComplete();
   };
 
   const handleVideoClick = async () => {
