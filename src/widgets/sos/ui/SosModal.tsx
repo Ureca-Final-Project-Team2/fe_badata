@@ -3,7 +3,7 @@
 import { useSosRequestMutation } from '../model/queries';
 import { useSosStore } from '../model/sosStore';
 
-import { makeCustomToast } from './makeCustomToast'; // ✅ 추가
+import { makeCustomToast } from './makeCustomToast';
 
 interface SosModalProps {
   isOpen: boolean;
@@ -20,7 +20,6 @@ export function SosModal({ isOpen, onClose }: SosModalProps) {
 
     sendSosRequest(undefined, {
       onSuccess: (response) => {
-        console.log('✅ SOS 요청 응답:', response);
         setSosId(response.sosId);
         setLastRequestedSosId(Date.now()); // 현재 시간을 lastRequestedSosId로 설정
         

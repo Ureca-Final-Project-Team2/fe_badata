@@ -20,9 +20,9 @@ interface CustomToastOptions {
 export const makeCustomToast = (
   message: string,
   variant: ToastVariant,
-  options?: CustomToastOptions,
+  options?: CustomToastOptions & { dismissAll?: boolean },
 ) => {
-  toast.dismiss();
+  if (options?.dismissAll) toast.dismiss();
 
   toast.custom(
     () => (

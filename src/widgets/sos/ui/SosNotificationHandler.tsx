@@ -1,5 +1,7 @@
 'use client';
 
+let lastSseMessage = '';
+
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { getDataUsage } from '@/widgets/data-usage/api/apis';
 
@@ -55,9 +57,29 @@ export const SosNotificationHandler = () => {
   useSseSosListener((rawData: string) => {
     const clean = rawData.replace(/^data:\s*/, '').trim();
 
+    // 중복 메시지 방지
+    if (clean === lastSseMessage) {
+      console.log('⚠️ 중복 메시지 → 무시됨:', clean);
+      return;
+    }
+    lastSseMessage = clean;
+
     // 문자열 메시지 예외 처리
     if (!clean.includes('{')) {
-      if (clean.includes('SOS')) {
+      console.log('⚠️ JSON 아님 → 문자열 메시지 분기 진입:', clean);
+
+      const { lastRequestedSosId } = useSosStore.getState();
+      const lastUserId = Number(localStorage.getItem('lastSosRequestTime') ?? '0');
+
+      // 현재 유저가 마지막 요청자라면 무시
+      if (Date.now() - lastUserId < 3000) {
+        console.log('ℹ️ 요청자 본인으로 추정됨 → 문자열 토스트 무시');
+        return;
+      }
+
+      if (/sos|요청|도움/i.test(clean)) {
+        console.log('🚨 SOS 문자열 포함 → 토스트 띄우기 시도');
+
         const tempSosId = Date.now();
         setSosId(tempSosId);
 
@@ -81,7 +103,7 @@ export const SosNotificationHandler = () => {
         );
       }
 
-      return; // ❗ 이 return은 if 블록 안에 있어야 함!
+      return;
     }
 
     // JSON 처리

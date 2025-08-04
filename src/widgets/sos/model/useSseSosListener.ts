@@ -6,18 +6,17 @@ export function useSseSosListener(onMessage: (data: string) => void) {
   useEffect(() => {
     let isCancelled = false;
     const controller = new AbortController();
+    const token = useAuthStore.getState().accessToken;
+
+    console.log('[SSE] 연결 시도 중...');
+    if (!token) {
+      console.warn('[SSE] accessToken 없음 → 연결 중단');
+      return;
+    }
 
     const connect = async () => {
-      const token = useAuthStore.getState().accessToken;
-
-      if (!token) {
-        console.warn('❌ [SSE] accessToken 없음. 연결 시도 중단');
-        return;
-      }
-
       try {
         const res = await fetch('https://api.badata.store/sse/subscribe', {
-          method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: 'text/event-stream',
@@ -25,12 +24,16 @@ export function useSseSosListener(onMessage: (data: string) => void) {
           signal: controller.signal,
         });
 
-        if (!res.ok || !res.body) {
-          console.error(`❌ [SSE] 연결 실패. 상태 코드: ${res.status}`);
+        console.log('[SSE] 응답 상태 코드:', res.status);
+
+        const reader = res.body?.getReader();
+        if (!reader) {
+          console.error('[SSE] reader 생성 실패!');
           return;
         }
 
-        const reader = res.body.getReader();
+        console.log('[SSE] 연결 성공!');
+
         const decoder = new TextDecoder();
 
         while (!isCancelled) {
@@ -38,23 +41,22 @@ export function useSseSosListener(onMessage: (data: string) => void) {
           if (done || !value) break;
 
           const chunk = decoder.decode(value, { stream: true });
+          console.log('📩 수신된 원시 chunk:', chunk); 
           const lines = chunk.split('\n').filter((line) => line.trim().startsWith('data:'));
-
           for (const line of lines) {
             const clean = line.replace(/^data:\s*/, '').trim();
+            console.log('📡 [SSE] 수신:', clean); // ✅ 이 로그로 확인됨
             onMessage(clean);
           }
         }
       } catch (error) {
-        if (!isCancelled) {
-          console.error('❌ [SSE] 연결 중 오류 발생:', error);
-          setTimeout(() => {
-            if (!isCancelled) {
-              console.log('🔁 [SSE] 재연결 시도');
-              connect();
-            }
-          }, 3000); // 3초 후 재시도
-        }
+        console.error('❌ [SSE] 연결 실패:', error);
+        setTimeout(() => {
+          if (!isCancelled) {
+            console.log('🔁 [SSE] 재연결 시도...');
+            connect();
+          }
+        }, 3000);
       }
     };
 
@@ -63,7 +65,7 @@ export function useSseSosListener(onMessage: (data: string) => void) {
     return () => {
       isCancelled = true;
       controller.abort();
-      console.log('🧹 [SSE] 연결 종료 및 정리 완료');
+      console.log('🧹 [SSE] 연결 종료');
     };
   }, [onMessage]);
 }
