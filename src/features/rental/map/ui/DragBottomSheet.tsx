@@ -22,7 +22,6 @@ interface ExtendedDragBottomSheetProps extends DragBottomSheetProps {
 
 export const DragBottomSheet = ({
   open,
-  onClose,
   children,
   storeList,
   isLoading = false,

@@ -1,5 +1,6 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
+
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { getAddressHistoryList } from '@/features/rental/search/api/apis';
 

@@ -5,7 +5,7 @@ import { getClusterClickActive } from '@/features/rental/map/lib/clusterMarker';
 import { markerCaches } from '@/features/rental/map/lib/markerCache';
 import { debouncedRenderMarkers } from '@/features/rental/map/lib/renderStoreMarkers';
 
-import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
+import type { FetchStoresParams, StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 import type { RentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
 
 export const useMapZoomLevel = (
@@ -62,19 +62,39 @@ export const useMapZoomLevel = (
         console.log('🌐 줌 변경으로 인한 직접 API 호출 시작');
 
         // 3. 직접 API 호출 (줌 레벨 반영)
-        const apiParams = {
+        const apiParams: FetchStoresParams = {
           swLat: bounds.getSouthWest().getLat(),
           swLng: bounds.getSouthWest().getLng(),
           neLat: bounds.getNorthEast().getLat(),
           neLng: bounds.getNorthEast().getLng(),
           zoomLevel: newZoom,
-          ...filterState,
+          // filterState에서 필요한 속성들만 추출하여 타입 변환
+          reviewRating: filterState.star > 0 ? filterState.star : undefined,
+          minPrice:
+            filterState.minPrice && filterState.minPrice > 0 ? filterState.minPrice : undefined,
+          maxPrice:
+            filterState.maxPrice && filterState.maxPrice > 0 ? filterState.maxPrice : undefined,
+          dataCapacity: filterState.dataAmount
+            ? filterState.dataAmount === '5GB'
+              ? [5]
+              : filterState.dataAmount === '10GB'
+                ? [10]
+                : filterState.dataAmount === '20GB'
+                  ? [20]
+                  : filterState.dataAmount === '무제한'
+                    ? [999]
+                    : undefined
+            : undefined,
+          is5G:
+            filterState.dataType === '5G'
+              ? true
+              : filterState.dataType === '4G/LTE'
+                ? false
+                : undefined,
+          maxSupportConnection: filterState.maxSupportConnection
+            ? [filterState.maxSupportConnection]
+            : undefined,
         };
-
-        // maxSupportConnection 배열 처리
-        if (apiParams.maxSupportConnection && !Array.isArray(apiParams.maxSupportConnection)) {
-          apiParams.maxSupportConnection = [apiParams.maxSupportConnection];
-        }
 
         const newStores = await fetchStores(apiParams);
 
