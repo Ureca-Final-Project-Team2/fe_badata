@@ -67,4 +67,29 @@ export interface PostCountResponse {
 export interface FollowToggleResponse {
   code: number;
   message: string;
+
+export interface PurchasedGifticonDetail {
+  sellerId: number;
+  nickname: string;
+  id: number;
+  title: string;
+  comment: string;
+  price: number;
+  deadLine: string;
+  boughtAt: string | null; // null일 수 있음
+  partner: string;
+  barcodeViewTime?: string; // 선택적 필드
+}
+
+export interface PurchasedGifticonImage {
+  postImage: string;
+  couponNumber: string;
+}
+
+export interface PurchaseReportRequest {
+  comment: string;
+}
+
+export interface PurchaseReportResponse {
+  reportId: number;
 }
