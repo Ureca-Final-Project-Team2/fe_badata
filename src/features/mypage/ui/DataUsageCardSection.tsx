@@ -2,7 +2,43 @@
 
 import { useEffect, useState } from 'react';
 
+import { motion } from 'framer-motion';
+
 import { useUserDataAmount } from '@/widgets/data-usage/model/queries';
+
+// Bubble 컴포넌트
+function Bubble({ delay = 0 }: { delay?: number }) {
+  const [size, setSize] = useState(0);
+  const [left, setLeft] = useState(0);
+
+  useEffect(() => {
+    setSize(2 + Math.random() * 4);
+    setLeft(20 + Math.random() * 60); // 20%~80% 범위로 제한
+  }, []);
+
+  return (
+    <motion.div
+      className="absolute bg-white/80 rounded-full pointer-events-none shadow-sm"
+      style={{
+        width: size,
+        height: size,
+        left: `${left}%`,
+        bottom: 0,
+      }}
+      animate={{
+        y: [0, -120],
+        opacity: [0, 1, 1, 0],
+        scale: [1, 1.2, 1],
+      }}
+      transition={{
+        duration: 4 + Math.random() * 2,
+        delay: delay,
+        repeat: Infinity,
+        ease: 'easeOut',
+      }}
+    />
+  );
+}
 
 const DataUsageCardSection = () => {
   const { data } = useUserDataAmount();
@@ -33,7 +69,7 @@ const DataUsageCardSection = () => {
               r="65"
               fill="none"
               stroke="url(#backgroundGradient)"
-              strokeWidth="18"
+              strokeWidth="26"
             />
             {/* 진행률 링 - 12시 방향부터 시작 */}
             <circle
@@ -42,7 +78,7 @@ const DataUsageCardSection = () => {
               r="65"
               fill="none"
               stroke="url(#progressGradient)"
-              strokeWidth="18"
+              strokeWidth="26"
               strokeLinecap="round"
               strokeDasharray={`${(percentage / 100) * 408.4} 408.4`}
               className="transition-all duration-2000 ease-out"
@@ -72,7 +108,7 @@ const DataUsageCardSection = () => {
         </div>
 
         {/* 내부 원형 컨테이너 (파도 영역) */}
-        <div className="absolute inset-[21px] rounded-full z-10">
+        <div className="absolute inset-[25px] rounded-full z-10">
           {/* 파도 영역만 overflow-hidden 적용 */}
           <div className="absolute inset-0 rounded-full overflow-hidden">
             {/* 배경 구름들과 별들 */}
@@ -100,18 +136,18 @@ const DataUsageCardSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-[#c6eaf8]/80 to-[#206e8d]/60">
                 <svg
                   className="absolute bottom-0 w-full h-6"
-                  viewBox="0 0 148 24"
+                  viewBox="0 0 110 24"
                   preserveAspectRatio="none"
                 >
                   <path
-                    d="M0,12 Q37,2 74,12 T148,12 L148,24 L0,24 Z"
+                    d="M0,12 Q27.5,2 55,12 T110,12 L110,24 L0,24 Z"
                     fill="currentColor"
                     className="text-[var(--main-2)]/70"
                   >
                     <animateTransform
                       attributeName="transform"
                       type="translate"
-                      values="0,0; -74,0; 0,0"
+                      values="0,0; -55,0; 0,0"
                       dur="4s"
                       repeatCount="indefinite"
                     />
@@ -123,18 +159,18 @@ const DataUsageCardSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-[#c6eaf8]/90 to-[#c6eaf8]/70">
                 <svg
                   className="absolute bottom-0 w-full h-5"
-                  viewBox="0 0 148 20"
+                  viewBox="0 0 110 20"
                   preserveAspectRatio="none"
                 >
                   <path
-                    d="M0,10 Q49,0 98,10 T196,10 L196,20 L0,20 Z"
+                    d="M0,10 Q36.7,0 73.3,10 T146.6,10 L146.6,20 L0,20 Z"
                     fill="currentColor"
                     className="text-[var(--main-2)]/80"
                   >
                     <animateTransform
                       attributeName="transform"
                       type="translate"
-                      values="0,0; -98,0; 0,0"
+                      values="0,0; -73.3,0; 0,0"
                       dur="3s"
                       repeatCount="indefinite"
                     />
@@ -146,18 +182,18 @@ const DataUsageCardSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-[#c6eaf8] to-[#c6eaf8]/80">
                 <svg
                   className="absolute bottom-0 w-full h-4"
-                  viewBox="0 0 148 16"
+                  viewBox="0 0 110 16"
                   preserveAspectRatio="none"
                 >
                   <path
-                    d="M0,8 Q74,0 148,8 L148,16 L0,16 Z"
+                    d="M0,8 Q55,0 110,8 L110,16 L0,16 Z"
                     fill="currentColor"
                     className="text-[var(--main-2)]/90"
                   >
                     <animateTransform
                       attributeName="transform"
                       type="translate"
-                      values="0,0; -148,0; 0,0"
+                      values="0,0; -110,0; 0,0"
                       dur="2.5s"
                       repeatCount="indefinite"
                     />
@@ -179,88 +215,19 @@ const DataUsageCardSection = () => {
           </div>
         </div>
 
-        {/* 물방울들 */}
-        <div className="absolute inset-[21px] z-20">
-          {/* 고래 물튀김 같은 물방울들 */}
-          {/* 큰 물방울들 */}
-          <div
-            className="absolute top-[15px] left-[20px] w-2.5 h-2.5 rounded-full animate-bounce"
-            style={{
-              background:
-                'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.8), var(--main-4) 40%, var(--main-5))',
-              boxShadow: `0 2px 4px color-mix(in srgb, var(--main-4) 30%, transparent)`,
-              animationDelay: '0s',
-              animationDuration: '2s',
-            }}
-          >
-            <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white/90 rounded-full blur-[0.5px]"></div>
+        {/* Bubble 컴포넌트들 - 파도 높이에 따라 조건부 렌더링 */}
+        {waveHeight > 15 && (
+          <div className="absolute inset-[25px] z-20 overflow-hidden rounded-full">
+            <Bubble delay={0} />
+            <Bubble delay={2} />
+            <Bubble delay={4} />
+            <Bubble delay={6} />
+            <Bubble delay={8} />
+            <Bubble delay={1.5} />
+            <Bubble delay={3.5} />
+            <Bubble delay={5.5} />
           </div>
-
-          <div
-            className="absolute top-[40px] right-[15px] w-2 h-2 rounded-full animate-bounce"
-            style={{
-              background:
-                'radial-gradient(circle at 25% 25%, rgba(255,255,255,0.7), var(--main-4) 50%, var(--main-5))',
-              boxShadow: `0 1px 3px color-mix(in srgb, var(--main-4) 40%, transparent)`,
-              animationDelay: '0.8s',
-              animationDuration: '2.5s',
-            }}
-          >
-            <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white/80 rounded-full blur-[0.3px]"></div>
-          </div>
-
-          {/* 중간 크기 물방울들 */}
-          <div
-            className="absolute top-[25px] left-[50px] w-1.5 h-1.5 rounded-full animate-bounce opacity-80"
-            style={{
-              background: `radial-gradient(circle at 30% 20%, rgba(255,255,255,0.6), var(--main-4))`,
-              boxShadow: `0 1px 2px color-mix(in srgb, var(--main-4) 30%, transparent)`,
-              animationDelay: '2.2s',
-              animationDuration: '1.8s',
-            }}
-          ></div>
-
-          <div
-            className="absolute top-[60px] right-[25px] w-1.5 h-1.5 rounded-full animate-bounce opacity-70"
-            style={{
-              background: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.5), var(--main-5))`,
-              boxShadow: `0 1px 2px color-mix(in srgb, var(--main-5) 40%, transparent)`,
-              animationDelay: '3s',
-              animationDuration: '2.2s',
-            }}
-          ></div>
-
-          {/* 작은 물방울들 */}
-          <div
-            className="absolute top-[50px] left-[35px] w-1 h-1 rounded-full animate-bounce opacity-60"
-            style={{
-              background: `var(--main-4)`,
-              boxShadow: `0 0 2px color-mix(in srgb, var(--main-4) 50%, transparent)`,
-              animationDelay: '1.8s',
-              animationDuration: '2.8s',
-            }}
-          ></div>
-
-          <div
-            className="absolute top-[20px] right-[40px] w-0.5 h-0.5 rounded-full animate-bounce opacity-40"
-            style={{
-              background: `var(--main-4)`,
-              animationDelay: '4s',
-              animationDuration: '1.5s',
-            }}
-          ></div>
-
-          {/* 반짝이는 효과 */}
-          <div
-            className="absolute top-[35px] left-[45px] w-1 h-1 rounded-full opacity-80 animate-ping"
-            style={{
-              background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), var(--main-4))`,
-              boxShadow: `0 0 6px color-mix(in srgb, var(--main-4) 80%, transparent)`,
-              animationDuration: '2s',
-              animationDelay: '0.5s',
-            }}
-          ></div>
-        </div>
+        )}
       </div>
     </div>
   );
