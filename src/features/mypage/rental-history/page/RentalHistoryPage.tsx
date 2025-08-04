@@ -24,7 +24,7 @@ export default function RentalHistoryPage() {
 
   const handleReviewClick = (reservationId: number, storeId: number, hasWrittenReview: boolean) => {
     if (hasWrittenReview) {
-      router.push(`/rental/${storeId}`);
+      router.push(PATH.RENTAL.STORE_DETAIL.replace(':storeId', String(storeId)));
     } else {
       router.push(`${PATH.RENTAL.REGISTER_REVIEW}?reservationId=${reservationId}&mode=register`);
     }
