@@ -26,7 +26,7 @@ export default function RankingItem({ rank, imageUrl, title, onCardClick }: Rank
         {rank}
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-[50%] bg-gradient-to-t from-[var(--black)]/70 via-[var(--black)]/30 to-transparent z-10 transition-opacity duration-300 group-hover:from-[var(--black)]/80" />
+      <div className="absolute bottom-0 left-0 right-0 h-[50%] bg-gradient-to-t from-[var(--main-5)]/70 via-[var(--main-5)]/30 to-transparent z-10 transition-opacity duration-300 group-hover:from-[var(--main-5)]/80" />
 
       <div className="absolute bottom-2 left-2 right-2 z-20 text-white font-label-semibold drop-shadow-md line-clamp-2 transition-transform duration-300 group-hover:translate-y-[-2px]">
         {title}
