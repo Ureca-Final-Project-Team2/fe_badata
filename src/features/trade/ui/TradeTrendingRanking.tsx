@@ -16,30 +16,6 @@ export function TradeTrendingRanking() {
   const router = useRouter();
   const { trendingPosts, isLoading } = useTradeTrendingQuery();
 
-  const handleGetPostImage = (postId: number) => {
-    const item = trendingPosts?.find((post) => post.id === postId);
-    if (!item) return;
-
-    if (item.partner) {
-      return getPartnerDefaultImage(item.partner as KoreanBrandName);
-    }
-
-    if (item.mobileCarrier) {
-      return getCarrierDefaultImage(item.mobileCarrier);
-    }
-  };
-
-  const handleCardClick = (postId: number) => {
-    const item = trendingPosts?.find((post) => post.id === postId);
-    if (!item) return;
-
-    const path =
-      item.postCategory === 'DATA'
-        ? PATH.TRADE.DATA_DETAIL.replace(':id', String(postId))
-        : PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(postId));
-    router.push(path);
-  };
-
   return (
     <section className="bg-white mb-6 ">
       <h2 className="font-body-semibold pb-2 px-1">실시간 핫한 게시물 🔥</h2>
@@ -53,9 +29,19 @@ export function TradeTrendingRanking() {
           {(item, index) => (
             <RankingItem
               rank={index + 1}
-              imageUrl={handleGetPostImage(item.id) ?? ICONS.LOGO.SAMPLE}
+              imageUrl={
+                (item.partner && getPartnerDefaultImage(item.partner as KoreanBrandName)) ||
+                (item.mobileCarrier && getCarrierDefaultImage(item.mobileCarrier)) ||
+                ICONS.LOGO.SAMPLE
+              }
               title={item.title}
-              onCardClick={() => handleCardClick(item.id)}
+              onCardClick={() => {
+                const path =
+                  item.postCategory === 'DATA'
+                    ? PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id))
+                    : PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(item.id));
+                router.push(path);
+              }}
             />
           )}
         </SwipeScroll>
