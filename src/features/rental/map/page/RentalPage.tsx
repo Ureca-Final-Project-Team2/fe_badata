@@ -244,44 +244,59 @@ export default function RentalPage() {
   }, [mapInstance, setUserLocation]);
 
   // 지도 클릭 핸들러
-  const handleMapClickWrapper = useCallback(async () => {
-    console.log('📍 지도 클릭됨');
-
-    // 장소 마커 제거
-    if (placeMarker) {
-      placeMarker.setMap(null);
-      setPlaceMarker(null);
-    }
-
-    // 장소 마커 처리 상태 리셋
-    placeMarkerProcessedRef.current = false;
-
-    // 모든 마커 축소
-    setExpandedMarkers(new Set());
-
-    // 마커 캐시에서 모든 선택 상태 해제
-    if (mapInstance) {
-      try {
-        const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
-        const cache = markerCaches.get(mapInstance);
-        if (cache) {
-          // 모든 마커의 선택 상태 해제
-          cache.markers.forEach((markerData) => {
-            if (
-              markerData.isSelected &&
-              markerData.marker instanceof window.kakao.maps.CustomOverlay
-            ) {
-              cache.updateMarkerSelection(markerData.storeId, false);
-            }
-          });
-        }
-      } catch (error) {
-        console.error('마커 선택 해제 실패:', error);
+  const handleMapClickWrapper = useCallback(
+    async (event?: MouseEvent) => {
+      // 마커 클릭으로 인한 지도 클릭인지 확인
+      if (
+        event &&
+        event.target &&
+        ((event.target as Element).closest('.droplet-marker') ||
+          (event.target as Element).closest('.cluster-marker') ||
+          (event.target as Element).closest('.kakao-maps-customoverlay'))
+      ) {
+        console.log('📍 마커 클릭으로 인한 지도 클릭 무시');
+        return;
       }
-    }
 
-    await handleMapClick();
-  }, [handleMapClick, mapInstance, placeMarker]);
+      console.log('📍 지도 클릭됨');
+
+      // 장소 마커 제거
+      if (placeMarker) {
+        placeMarker.setMap(null);
+        setPlaceMarker(null);
+      }
+
+      // 장소 마커 처리 상태 리셋
+      placeMarkerProcessedRef.current = false;
+
+      // 모든 마커 축소
+      setExpandedMarkers(new Set());
+
+      // 마커 캐시에서 모든 선택 상태 해제
+      if (mapInstance) {
+        try {
+          const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
+          const cache = markerCaches.get(mapInstance);
+          if (cache) {
+            // 모든 마커의 선택 상태 해제
+            cache.markers.forEach((markerData) => {
+              if (
+                markerData.isSelected &&
+                markerData.marker instanceof window.kakao.maps.CustomOverlay
+              ) {
+                cache.updateMarkerSelection(markerData.storeId, false);
+              }
+            });
+          }
+        } catch (error) {
+          console.error('마커 선택 해제 실패:', error);
+        }
+      }
+
+      await handleMapClick();
+    },
+    [handleMapClick, mapInstance, placeMarker],
+  );
 
   // 지도 준비 완료 시 호출되는 콜백 (디바운싱 추가)
   const handleMapReady = useCallback(

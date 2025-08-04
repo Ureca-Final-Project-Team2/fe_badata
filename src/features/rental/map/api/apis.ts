@@ -36,8 +36,8 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
     const mappedStores = stores.map((store: Record<string, unknown>) => {
       const isCluster = !store.name; // name이 null이면 클러스터
       const mappedStore = {
-        id: Number(store.id) || 0, // 명시적으로 숫자로 변환
-        name: (store.name as string) || `클러스터 ${store.id}`, // name이 null인 경우 클러스터 ID로 대체
+        id: Number(store.id) || 0,
+        name: (store.name as string) || (isCluster ? `클러스터 ${store.id}` : `스토어 ${store.id}`),
         latitude: Number(store.latitude) || 0,
         longititude: Number(store.longititude) || 0,
         leftDeviceCount: Number(store.leftDeviceCount) || 0,
@@ -46,6 +46,30 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
       };
       return mappedStore;
     });
+
+    // 줌 레벨에 따른 데이터 필터링
+    const zoomLevel = params.zoomLevel;
+    if (zoomLevel && zoomLevel <= 3) {
+      // 줌 레벨 3 이하에서는 클러스터 데이터를 완전히 제거
+      const filteredStores = mappedStores.filter((store) => !store.isCluster);
+      console.log('🔍 줌 레벨 3 이하 - 클러스터 데이터 필터링:', {
+        total: mappedStores.length,
+        filtered: filteredStores.length,
+        clusters: mappedStores.filter((s) => s.isCluster).length,
+        zoomLevel,
+      });
+      return filteredStores;
+    } else if (zoomLevel && zoomLevel >= 4) {
+      // 줌 레벨 4 이상에서는 개별 스토어 데이터를 제거하고 클러스터만 표시
+      const filteredStores = mappedStores.filter((store) => store.isCluster);
+      console.log('🔍 줌 레벨 4 이상 - 개별 스토어 데이터 필터링:', {
+        total: mappedStores.length,
+        filtered: filteredStores.length,
+        individual: mappedStores.filter((s) => !s.isCluster).length,
+        zoomLevel,
+      });
+      return filteredStores;
+    }
 
     return mappedStores;
   } catch (error) {

@@ -21,7 +21,7 @@ export interface MapSectionProps {
     storeDetail?: StoreDetail,
     storeId?: number,
   ) => void;
-  onMapClick?: () => void;
+  onMapClick?: (event?: MouseEvent) => void;
   onMapReady?: (map: kakao.maps.Map) => void;
   hasUrlParams?: boolean;
   selectedStoreId?: number | null;

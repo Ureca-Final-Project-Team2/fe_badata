@@ -6,7 +6,7 @@ import { createCurrentLocationMarker } from '@/features/rental/map/lib/currentLo
 export const useCurrentLocationMarker = (
   map: kakao.maps.Map | null,
   hasUrlParams: boolean,
-  onMapClick?: () => void,
+  onMapClick?: (event?: MouseEvent) => void,
   onMapReady?: (map: kakao.maps.Map) => void,
   isMapReadyRef?: React.MutableRefObject<boolean>,
   userLat?: number,
@@ -26,8 +26,8 @@ export const useCurrentLocationMarker = (
 
       // 지도 클릭 이벤트 추가
       if (onMapClick) {
-        window.kakao.maps.event.addListener(map, 'click', () => {
-          onMapClick();
+        window.kakao.maps.event.addListener(map, 'click', (event: MouseEvent) => {
+          onMapClick(event);
         });
       }
 

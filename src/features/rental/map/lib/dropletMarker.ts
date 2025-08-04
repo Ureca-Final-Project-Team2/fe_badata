@@ -56,15 +56,48 @@ export const createDropletMarker = (
 
   // 클릭 이벤트 추가
   if (onClick) {
+    console.log('💧 마커 클릭 이벤트 리스너 등록:', { storeId, storeName });
+
     markerContainer.addEventListener('click', (e) => {
-      e.stopPropagation(); // 이벤트 버블링 방지
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation(); // 이벤트 버블링 방지 및 다른 리스너 실행 방지
+
+      console.log('💧 물방울 마커 클릭됨:', {
+        storeId,
+        storeName,
+        deviceCount,
+        isLiked,
+        isSelected,
+      });
 
       try {
+        // 클릭 시 즉시 말풍선으로 변환
+        console.log('💧 마커 변환 시작 - 물방울 → 말풍선');
+        dropletElement.style.opacity = '0';
+        dropletElement.style.transform = 'translateX(-50%) scale(0.8)';
+        bubbleElement.style.opacity = '1';
+        bubbleElement.style.transform = 'translateX(-50%) scale(1)';
+        bubbleElement.style.pointerEvents = 'auto';
+        console.log('💧 마커 변환 완료');
+
+        // localStorage에 확장된 마커 상태 저장
+        const expandedMarkers = JSON.parse(localStorage.getItem('expanded-markers') || '[]');
+        if (!expandedMarkers.includes(storeId)) {
+          expandedMarkers.push(storeId);
+          localStorage.setItem('expanded-markers', JSON.stringify(expandedMarkers));
+          console.log('💧 확장된 마커 상태 저장:', storeId);
+        }
+
+        console.log('💧 onClick 함수 호출 시작');
         onClick();
+        console.log('💧 onClick 함수 호출 완료');
       } catch (error) {
         console.error('💧 onClick 함수 실행 중 오류:', error);
       }
     });
+  } else {
+    console.warn('💧 onClick 함수가 제공되지 않음 - storeId:', storeId);
   }
 
   // CustomOverlay 생성
