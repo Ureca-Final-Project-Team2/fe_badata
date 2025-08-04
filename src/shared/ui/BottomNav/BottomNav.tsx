@@ -51,12 +51,7 @@ export const BottomNav = () => {
   const router = useRouter();
 
   const getActiveIdx = () => {
-    return NAV_CONFIG.findIndex((item) => {
-      if (item.path === '/') {
-        return pathname === '/';
-      }
-      return pathname.startsWith(item.path);
-    });
+    return NAV_CONFIG.findIndex((item) => pathname.startsWith(item.path));
   };
   const activeIdx = getActiveIdx();
 

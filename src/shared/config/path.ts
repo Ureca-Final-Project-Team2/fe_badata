@@ -1,5 +1,4 @@
 export const PATH = {
-  ROOT: '/',
   RECOMMEND: '/recommend',
   LANDING: '/landing',
   TRADE: {
