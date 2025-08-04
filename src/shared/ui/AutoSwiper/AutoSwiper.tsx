@@ -40,7 +40,7 @@ export function AutoSwiper<T>({
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
-        speed={1000}
+        speed={2000}
         grabCursor={true}
       >
         {items.map((item, index) => (
