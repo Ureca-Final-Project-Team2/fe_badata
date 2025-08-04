@@ -1,0 +1,62 @@
+/* 온보딩 동심원 애니메이션 */
+@keyframes concentric-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.25;
+  }
+}
+
+@keyframes concentric-float {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-15px) scale(1.02);
+    opacity: 0.3;
+  }
+}
+
+@keyframes concentric-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.concentric-circle-large {
+  animation: concentric-pulse 4s ease-in-out infinite;
+}
+
+.concentric-circle-small {
+  animation: concentric-float 5s ease-in-out infinite;
+}
+
+.concentric-circle-rotate {
+  animation: concentric-rotate 20s linear infinite;
+}
+
+/* main-3과 main-5 색상 변수 */
+:root {
+  --main-1: #ade7ff; /* 프로젝트의 main-3 색상 */
+  --main-2: #3e9fdc; /* 프로젝트의 main-5 색상 */
+}
+
+/* c6eaf8 */
+/* ade7ff */
+/* 72c1f2 */
+/* 
+  --main-1: #edf7fb;
+  --main-2: #c6eaf8;
+  --main-3: #ade7ff;
+  --main-4: #72c1f2;
+  --main-5: #3e9fdc;
+  */

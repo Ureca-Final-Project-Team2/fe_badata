@@ -3,6 +3,7 @@
 @import '../shared/styles/radius.css';
 @import '../shared/styles/custom-scrollbar.css';
 @import '../shared/styles/list-animations.css';
+@import '../shared/styles/onboarding-animations.css';
 @import 'swiper/css';
 @import 'swiper/css/pagination';
 @import 'swiper/css/navigation';
@@ -285,8 +286,6 @@ body {
     font-size: var(--font-small-size);
     font-weight: var(--font-regular);
   }
-
-
 }
 
 @keyframes slideUpDrawer {
