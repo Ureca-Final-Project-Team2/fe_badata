@@ -2,98 +2,87 @@
 
 import { useEffect, useState } from 'react';
 
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { toast } from 'sonner';
+import { getToken } from 'firebase/messaging';
 
-const VAPID_KEY = process.env.NEXT_PUBLIC_VAPID_KEY;
+import { initMessaging, onFirebaseMessage } from '@/shared/lib/firebase';
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_APIKEY,
-  authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
-  projectId: process.env.NEXT_PUBLIC_PROJECTID,
-  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
-};
-
-interface FCMToken {
-  token: string;
-  error?: string;
-}
-
-interface FCMessage {
-  title?: string;
-  body?: string;
-  data?: Record<string, unknown>;
+interface MessagePayload {
+  title: string;
+  body: string;
 }
 
 export const useFCM = () => {
-  const [token, setToken] = useState<FCMToken>({ token: '' });
-  const [message, setMessage] = useState<FCMessage | null>(null);
-  const [permission, setPermission] = useState<NotificationPermission>('default');
+  const [token, setToken] = useState<string | null>(null);
+  const [tokenError, setTokenError] = useState<string | null>(null);
+  const [permission, setPermission] = useState<NotificationPermission>();
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [message, setMessage] = useState<MessagePayload | null>(null);
+  const [showNotification, setShowNotification] = useState(false);
+
+  const triggerFCMToken = async (): Promise<string | null> => {
+    const messaging = await initMessaging();
+    if (!messaging) {
+      console.warn('❌ FCM messaging 초기화 실패');
+      return null;
+    }
+
+    try {
+      const currentToken = await getToken(messaging, {
+        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+      });
+
+      if (currentToken) {
+        setToken(currentToken);
+        return currentToken;
+      } else {
+        setTokenError('토큰 없음');
+        return null;
+      }
+    } catch (err) {
+      console.error('❌ FCM 토큰 발급 중 오류 발생:', err);
+      setTokenError('토큰 발급 실패');
+      return null;
+    }
+  };
 
   useEffect(() => {
-    const initializeFCM = async () => {
-      // 서버 사이드에서 실행되지 않도록 확인
-      if (typeof window === 'undefined') return;
-
-      try {
-        const permissionResult = await Notification.requestPermission();
-        setPermission(permissionResult);
-
-        if (permissionResult === 'granted') {
-          const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-
-          const app = initializeApp(firebaseConfig);
-          const messaging = getMessaging(app);
-
-          if (!messaging) {
-            console.error('messaging 초기화 실패:', messaging);
-            setToken({ token: '', error: 'messaging을 초기화할 수 없습니다.' });
-            return;
-          }
-
-          const currentToken = await getToken(messaging, {
-            vapidKey: VAPID_KEY,
-            serviceWorkerRegistration: registration,
-          });
-
-          if (currentToken) {
-            setToken({ token: currentToken });
-          } else {
-            setToken({ token: '', error: '토큰을 가져올 수 없습니다.' });
-          }
-
-          const unsubscribe = onMessage(messaging, (payload) => {
-            const newMessage = {
-              title: payload.data?.title,
-              body: payload.data?.content,
-              data: payload.data,
-            };
-            setMessage(newMessage);
-            toast.success(`알림 도착: ${payload.data?.title}\n${payload.data?.content}`);
-          });
-
-          return () => unsubscribe();
-        } else {
-          setToken({ token: '', error: '알림 권한이 거부되었습니다.' });
-        }
-      } catch (err) {
-        console.error('FCM 초기화 실패:', err);
-        setToken({ token: '', error: 'FCM 초기화 중 오류가 발생했습니다.' });
+    let unsubscribe: (() => void) | undefined;
+    const setupMessaging = async () => {
+      const messaging = await initMessaging();
+      if (!messaging) {
+        console.warn('💥 FCM messaging not supported or unavailable');
+        return;
       }
+
+      unsubscribe = onFirebaseMessage(messaging, (payload) => {
+        setMessage({
+          title: payload.notification?.title ?? payload.data?.title ?? '알림',
+          body: payload.notification?.body ?? payload.data?.content ?? '',
+        });
+        setShowNotification(true); // ✅ 알림 표시
+      });
     };
 
-    initializeFCM();
+    setupMessaging();
+    setPermission(Notification.permission);
+    setIsInitialized(true);
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   return {
-    token: token.token,
-    tokenError: token.error,
+    token,
+    tokenError,
     message,
-    permission,
     clearMessage: () => setMessage(null),
+    permission,
+    isInitialized,
+    showNotification,
+    setShowNotification,
+    triggerFCMToken,
   };
 };

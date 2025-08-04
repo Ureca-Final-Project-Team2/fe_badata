@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import Image from 'next/image';
-
 import { ICONS } from '@/shared/config/iconPath';
 
 interface UserAvatarProps {
@@ -25,7 +23,7 @@ const sizeMap = {
   md: 'w-[58px] h-[58px]',
 };
 
-const DEFAULT_AVATAR = ICONS.ETC.SHELL;
+const DEFAULT_AVATAR = ICONS.ETC.SHELL.src;
 
 const UserAvatar = ({
   src,
@@ -34,7 +32,7 @@ const UserAvatar = ({
   className = '',
   isLoading = false,
 }: UserAvatarProps) => {
-  const [imgSrc, setImgSrc] = useState<typeof DEFAULT_AVATAR | string>(DEFAULT_AVATAR);
+  const [imgSrc, setImgSrc] = useState<string>(DEFAULT_AVATAR);
 
   // src가 변경될 때마다 imgSrc 업데이트
   useEffect(() => {
@@ -55,11 +53,9 @@ const UserAvatar = ({
   }
 
   return (
-    <Image
+    <img
       src={imgSrc}
       alt={alt}
-      width={size === 'lg' ? 70 : 58}
-      height={size === 'lg' ? 70 : 58}
       className={`rounded-full object-cover border border-[var(--gray)] bg-white ${sizeMap[size]} ${className}`}
       style={imgSrc === DEFAULT_AVATAR ? { padding: '12px' } : {}}
       onError={() => setImgSrc(DEFAULT_AVATAR)}

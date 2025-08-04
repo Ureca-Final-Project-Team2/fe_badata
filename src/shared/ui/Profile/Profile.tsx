@@ -1,8 +1,6 @@
 import type { HTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 
-import Image from 'next/image';
-
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/shared/lib/cn';
@@ -82,7 +80,7 @@ function Avatar({ name, avatar, size = 'md' }: AvatarProps) {
   const dimension = dimensionMap[safeSize];
 
   return avatar ? (
-    <Image
+    <img
       src={avatar}
       alt={`${name} avatar`}
       width={dimension}

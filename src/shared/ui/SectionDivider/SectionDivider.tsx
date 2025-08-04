@@ -22,6 +22,7 @@ const sectionDividerVariants = cva('border-t border-solid', {
       thin: 'border-t',
       medium: 'border-t-2',
       thick: 'border-t-4',
+      thickest: 'border-t-6',
     },
   },
   defaultVariants: {
