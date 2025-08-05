@@ -60,10 +60,14 @@ export default function SwipeTutorialOverlay({ onClose }: Props) {
         {/* 텍스트 */}
         <div className="space-y-2">
           <p className="font-body-medium">{title}</p>
-          <p
-            className="font-title-semibold text-[var(--main-5)]"
-            dangerouslySetInnerHTML={{ __html: highlight }}
-          />
+          <p className="font-title-semibold text-[var(--main-5)]">
+            {highlight.split('<br />').map((text, index, array) => (
+              <span key={index}>
+                {text}
+                {index < array.length - 1 && <br />}
+              </span>
+            ))}
+          </p>
           <p className="font-label-regular text-white/80">{sub}</p>
         </div>
 
