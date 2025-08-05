@@ -100,9 +100,9 @@ const DataUsageCardSection = () => {
               </linearGradient>
               {/* 진행률 그라데이션 */}
               <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#72c1f2" />
-                <stop offset="30%" stopColor="#3e9fdc" />
-                <stop offset="70%" stopColor="#c6eaf8" />
+                <stop offset="10%" stopColor="#72c1f2" />
+                <stop offset="60%" stopColor="#3e9fdc" />
+                <stop offset="90%" stopColor="#c6eaf8" />
                 <stop offset="100%" stopColor="#edf7fb" />
               </linearGradient>
             </defs>

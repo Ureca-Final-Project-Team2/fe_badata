@@ -1,4 +1,4 @@
-import LikeTradePostPage from '@/features/mypage/like-trade-post/page/LikeTradePost';
+import LikeTradePostPage from '@/features/mypage/like-trade-post/page/LikeTradePostPage';
 
 export const dynamic = 'force-dynamic';
 

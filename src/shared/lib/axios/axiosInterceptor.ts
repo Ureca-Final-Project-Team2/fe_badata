@@ -31,7 +31,7 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
   // Response Interceptor: 응답 처리 (401 에러 처리 제거)
   instance.interceptors.response.use(
     <T>(response: AxiosResponse<ApiResponse<T>>): T | AxiosResponse<ApiResponse<T>> => {
-      // 카카오 로그인 API와 특정 API들은 응답 전체를 반환
+      // 카카오 로그인 API와 팔로우 API, 이미지 검증 API, sales API, coin API, purchases API, 검색 API는 응답 전체를 반환
       if (
         response.config.url?.includes(END_POINTS.USER.LOGIN) ||
         response.config.url?.includes('/follows') ||
@@ -40,7 +40,8 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
         response.config.url?.includes(END_POINTS.MYPAGE.COIN) ||
         response.config.url?.includes(END_POINTS.MYPAGE.COIN_HISTORY) ||
         response.config.url?.includes(END_POINTS.MYPAGE.PURCHASES_HISTORY) ||
-        response.config.url?.includes(END_POINTS.POSITION.POSITION)
+        response.config.url?.includes(END_POINTS.POSITION.POSITION) ||
+        response.config.url?.includes('/trades/posts?query=')
       ) {
         return response;
       }

@@ -1,5 +1,5 @@
 export const PATH = {
-  ROOT: '/',
+  RECOMMEND: '/recommend',
   LANDING: '/landing',
   TRADE: {
     MAIN: '/trade',
@@ -25,5 +25,6 @@ export const PATH = {
     REPORT_HISTORY: '/mypage/report-history',
     FOLLOWER: '/mypage/follower',
     FOLLOWING: '/mypage/following',
+    LIKE_POST: '/mypage/like-trade-post',
   },
 } as const;

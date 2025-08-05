@@ -7,8 +7,10 @@ export const getSearchTradePosts = async (keyword: string): Promise<BasePost[]> 
   if (!keyword || keyword.trim() === '') {
     return [];
   }
-  const content: { postsResponse: BasePost[] } = await axiosInstance.get(
-    END_POINTS.TRADES.SEARCH(keyword),
-  );
-  return content.postsResponse ?? [];
+
+  const response = await axiosInstance.get(END_POINTS.TRADES.SEARCH(keyword));
+
+  const posts = response.data?.content?.item || [];
+
+  return posts;
 };

@@ -22,6 +22,8 @@ const removeCookie = (name: string) => {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
 };
 
+const TUTORIAL_KEY = 'recommendTutorial';
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -32,6 +34,11 @@ export const useAuthStore = create<AuthState>()(
         console.log('🔐 로그인 성공:', { token: token.substring(0, 20) + '...', user: user?.name });
         // localStorage에 accessToken 저장
         localStorage.setItem('accessToken', token);
+
+        if (localStorage.getItem(TUTORIAL_KEY) === null) {
+          localStorage.setItem(TUTORIAL_KEY, 'false');
+        }
+
         // 쿠키에도 저장 (미들웨어에서 접근 가능)
         setCookie(
           'auth-storage',
@@ -61,6 +68,7 @@ export const useAuthStore = create<AuthState>()(
         console.log('🔐 로그아웃');
         // localStorage에서 accessToken 삭제
         localStorage.removeItem('accessToken');
+        localStorage.removeItem(TUTORIAL_KEY);
         // 쿠키에서도 삭제
         removeCookie('auth-storage');
         set({ isLoggedIn: false, accessToken: null, user: null });
