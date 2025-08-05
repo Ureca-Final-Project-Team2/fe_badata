@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { userApis } from '@/entities/user/api/apis';
 
 import type {
@@ -147,9 +148,12 @@ export const useCoinQuery = () => {
 
 // 사용자 정보 조회 훅
 export const useUserInfoQuery = () => {
+  const { isLoggedIn } = useAuthStore();
+
   return useQuery<UserInfoResponse>({
     queryKey: ['user', 'info'],
     queryFn: userApis.getUserInfo,
+    enabled: isLoggedIn,
     staleTime: 5 * 60 * 1000, // 5분
     retry: 1,
   });

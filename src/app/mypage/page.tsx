@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserInfoQuery } from '@/entities/user/model/queries';
 import { useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
 import { AlarmSettingSection } from '@/features/mypage/ui/AlarmSettingSection';
@@ -16,15 +17,24 @@ import { Header } from '@/shared/ui/Header';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
 export default function MyPage() {
+  const { isLoggedIn } = useAuthStore();
   const { data: coinData } = useUserCoinQuery();
   const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
 
+  // 로그인하지 않은 경우 기본값 사용
+  const defaultUserInfo = {
+    nickName: '사용자',
+    profileImage: '',
+    days: 0,
+  };
+
   // 모든 사용자 정보가 로딩된 후에만 프로필 카드 렌더링
-  const isProfileReady =
-    userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined;
+  const isProfileReady = isLoggedIn
+    ? userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined
+    : true; // 로그인하지 않은 경우 항상 true
 
   return (
-    <BaseLayout header={<Header />}>
+    <BaseLayout header={<Header />} paddingX={false}>
       <div
         className="w-full bg-[var(--main-1)] pb-16 relative"
         style={{
@@ -35,19 +45,23 @@ export default function MyPage() {
         }}
       >
         <div className="pt-4 flex justify-center">
-          {isProfileReady ? (
-            <MyProfileCard
-              name={userInfo.nickName}
-              days={userInfo.days}
-              avatarSrc={userInfo.profileImage}
-            />
+          {isLoggedIn ? (
+            isProfileReady ? (
+              <MyProfileCard
+                name={userInfo?.nickName || '사용자'}
+                days={userInfo?.days || 0}
+                avatarSrc={userInfo?.profileImage || ''}
+              />
+            ) : (
+              <MyProfileCard
+                name="로딩 중..."
+                days={0}
+                avatarSrc={ICONS.ETC.SHELL.src.toString()}
+                isLoading={isUserInfoLoading}
+              />
+            )
           ) : (
-            <MyProfileCard
-              name="로딩 중..."
-              days={0}
-              avatarSrc={ICONS.ETC.SHELL.src.toString()}
-              isLoading={isUserInfoLoading}
-            />
+            <MyProfileCard name="사용자" days={0} avatarSrc="" />
           )}
         </div>
         <div className="relative px-4 pt-4 mb-4">
@@ -56,7 +70,7 @@ export default function MyPage() {
         <div className="absolute right-4 bottom-10 flex flex-col items-center">
           <div className="bg-[var(--white)] rounded-full px-3 py-1 shadow-md mb-2 min-w-[48px] text-center z-0">
             <span className="mb-2 font-body-semibold text-[var(--main-5)]">
-              {coinData?.coin ?? 0}
+              {isLoggedIn ? (coinData?.coin ?? 0) : 0}
             </span>
           </div>
           <a href="/mypage/coin-history" className="z-10">
