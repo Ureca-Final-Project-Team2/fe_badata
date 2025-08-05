@@ -43,7 +43,14 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="BADATA" />
         <link rel="apple-touch-icon" href="/assets/logo-badata.png" />
-        <link rel="icon" href="/assets/logo-badata.png" sizes="192x192" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        {/* Open Graph 메타 태그(카카오톡 사용) */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="1인의 바다, 모두의 데이터" />
+        <meta property="og:description" content="남는 데이터를 필요한 사람에게, BADATA" />
+        <meta property="og:image" content="https://badata.store/assets/og-image.png" />
+        <meta property="og:url" content="https://badata.store" />
 
         {/* 성능 최적화를 위한 preload */}
         <link rel="preload" href="https://dapi.kakao.com/v2/maps/sdk.js" as="script" />
