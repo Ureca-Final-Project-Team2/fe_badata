@@ -16,6 +16,13 @@ import { PageHeader } from '@/shared/ui/Header';
 
 import type { RestockAlarmItem } from '@/features/mypage/restock-alarm/lib/types';
 
+// 공통 메시지 컴포넌트
+const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-center py-8">
+    <p className="font-label-regular text-[var(--gray)]">{children}</p>
+  </div>
+);
+
 export default function RestockAlarmPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useRestockAlarmListQuery();
@@ -103,20 +110,19 @@ export default function RestockAlarmPage() {
         </span>
       </div>
 
-      {isLoading ? (
-        <div className="text-center py-8 text-[var(--gray-mid)] animate-pulse">
-          <div className="loading-spinner mr-2"></div>
-          불러오는 중...
-        </div>
-      ) : isError ? (
-        <div className="text-center py-8 text-[var(--red-main)] animate-fade-in">
-          데이터를 불러오지 못했습니다.
-        </div>
-      ) : filteredAlarms.length === 0 ? (
-        <div className="text-center py-8 text-[var(--gray-mid)] animate-fade-in">
-          알림 내역이 없습니다.
-        </div>
-      ) : (
+      {/* 로딩 상태 */}
+      {isLoading && <CenteredMessage>불러오는 중...</CenteredMessage>}
+
+      {/* 에러 상태 */}
+      {isError && <CenteredMessage>데이터를 불러오지 못했습니다.</CenteredMessage>}
+
+      {/* 빈 상태 */}
+      {!isLoading && !isError && filteredAlarms.length === 0 && (
+        <CenteredMessage>재입고 알림 내역이 없습니다.</CenteredMessage>
+      )}
+
+      {/* 데이터 표시 */}
+      {!isLoading && !isError && filteredAlarms.length > 0 && (
         <ul className="flex flex-col gap-4">
           {filteredAlarms.map((item, index) => {
             const isDeleting = deletingIds.has(item.id);
@@ -130,9 +136,7 @@ export default function RestockAlarmPage() {
                   isRemoving ? 'animate-slide-out-down' : `animate-slide-in-up ${staggerClass}`
                 }`}
                 style={{
-                  transform: isRemoving
-                    ? 'translateY(100%) scale(0.8)'
-                    : 'translateY(0) scale(1)',
+                  transform: isRemoving ? 'translateY(100%) scale(0.8)' : 'translateY(0) scale(1)',
                   opacity: isRemoving ? 0 : 1,
                   height: isRemoving ? '0' : 'auto',
                   marginBottom: isRemoving ? '0' : '16px',

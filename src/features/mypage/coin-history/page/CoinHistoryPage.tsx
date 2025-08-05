@@ -25,7 +25,7 @@ export default function CoinHistoryPage() {
       >
         <div className="p-5 space-y-6">
           <div className="bg-[var(--white)] rounded-xl p-8 text-center">
-            <p className="font-label-regular text-[var(--gray-dark)]">로딩 중...</p>
+            <p className="font-label-regular text-[var(--gray)]">로딩 중...</p>
           </div>
         </div>
       </BaseLayout>
@@ -40,7 +40,7 @@ export default function CoinHistoryPage() {
       >
         <div className="p-5 space-y-6">
           <div className="bg-[var(--white)] rounded-xl p-8 text-center">
-            <p className="font-label-regular text-[var(--gray-dark)]">
+            <p className="font-label-regular text-[var(--gray)]">
               코인 정보를 불러오지 못했습니다.
             </p>
           </div>
