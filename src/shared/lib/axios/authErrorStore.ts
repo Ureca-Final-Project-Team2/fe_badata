@@ -3,7 +3,14 @@ import { persist } from 'zustand/middleware';
 
 // API 요청 정보 저장 타입
 interface PendingApiRequest {
-  type: 'STORE_LIKE' | 'SOS_REQUEST' | 'POST_LIKE' | 'RESERVATION' | 'FOLLOW' | 'RESTOCK';
+  type:
+    | 'STORE_LIKE'
+    | 'SOS_REQUEST'
+    | 'POST_LIKE'
+    | 'RESERVATION'
+    | 'FOLLOW'
+    | 'RESTOCK'
+    | 'TRADE_POST';
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   data?: unknown;
@@ -13,7 +20,14 @@ interface PendingApiRequest {
 
 // openAuthModal에서 받는 타입 (timestamp 제외)
 interface AuthModalRequest {
-  type: 'STORE_LIKE' | 'SOS_REQUEST' | 'POST_LIKE' | 'RESERVATION' | 'FOLLOW' | 'RESTOCK';
+  type:
+    | 'STORE_LIKE'
+    | 'SOS_REQUEST'
+    | 'POST_LIKE'
+    | 'RESERVATION'
+    | 'FOLLOW'
+    | 'RESTOCK'
+    | 'TRADE_POST';
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   data?: unknown;
@@ -196,6 +210,20 @@ async function executeApiByType(request: PendingApiRequest) {
       break;
     }
 
+    case 'TRADE_POST': {
+      // URL에 따라 데이터 등록과 기프티콘 등록을 구분
+      if (url.includes('/gifticon')) {
+        // 기프티콘 등록 API 호출
+        const { postTradeGifticon } = await import('@/features/trade/register/gifticon/api/apis');
+        await postTradeGifticon(data as any);
+      } else {
+        // 데이터 등록 API 호출
+        const { postTradeData } = await import('@/features/trade/register/data/api/apis');
+        await postTradeData(data as any);
+      }
+      break;
+    }
+
     default:
       throw new Error(`Unknown request type: ${type}`);
   }
@@ -231,6 +259,7 @@ async function showSuccessToast(type: string) {
     RESERVATION: '예약이 완료되었습니다.',
     FOLLOW: '팔로우가 처리되었습니다.',
     RESTOCK: '재입고 알림이 설정되었습니다.',
+    TRADE_POST: '게시물이 성공적으로 등록되었습니다.',
   };
 
   const message = messages[type as keyof typeof messages] || '요청이 완료되었습니다.';
@@ -249,6 +278,7 @@ async function showErrorToast(type: string) {
     RESERVATION: '예약 중 오류가 발생했습니다.',
     FOLLOW: '팔로우 처리 중 오류가 발생했습니다.',
     RESTOCK: '재입고 알림 설정 중 오류가 발생했습니다.',
+    TRADE_POST: '게시물 등록 중 오류가 발생했습니다.',
   };
 
   const message = messages[type as keyof typeof messages] || '요청 처리 중 오류가 발생했습니다.';

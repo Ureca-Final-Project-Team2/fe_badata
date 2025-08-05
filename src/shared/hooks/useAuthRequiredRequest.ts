@@ -11,7 +11,14 @@ export const useAuthRequiredRequest = () => {
       requestFn: () => Promise<T>,
       url: string,
       requestData?: {
-        type: 'STORE_LIKE' | 'SOS_REQUEST' | 'POST_LIKE' | 'RESERVATION' | 'FOLLOW' | 'RESTOCK';
+        type:
+          | 'STORE_LIKE'
+          | 'SOS_REQUEST'
+          | 'POST_LIKE'
+          | 'RESERVATION'
+          | 'FOLLOW'
+          | 'RESTOCK'
+          | 'TRADE_POST';
         method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
         data?: unknown;
       },
@@ -45,7 +52,6 @@ export const useAuthRequiredRequest = () => {
                 url,
                 method: requestData?.method || 'POST',
                 data: requestData?.data,
-                timestamp: Date.now(),
               },
               onAuthModalClose,
             );
@@ -79,7 +85,14 @@ export const useAuthRequiredRequest = () => {
 // URL을 기반으로 API 타입을 추정하는 함수
 function determineApiType(
   url: string,
-): 'STORE_LIKE' | 'SOS_REQUEST' | 'POST_LIKE' | 'RESERVATION' | 'FOLLOW' | 'RESTOCK' {
+):
+  | 'STORE_LIKE'
+  | 'SOS_REQUEST'
+  | 'POST_LIKE'
+  | 'RESERVATION'
+  | 'FOLLOW'
+  | 'RESTOCK'
+  | 'TRADE_POST' {
   if (url.includes('/stores/') && url.includes('/like')) {
     return 'STORE_LIKE';
   }
@@ -97,6 +110,9 @@ function determineApiType(
   }
   if (url.includes('/restock')) {
     return 'RESTOCK';
+  }
+  if (url.includes('/trades/posts')) {
+    return 'TRADE_POST';
   }
 
   // 기본값

@@ -118,7 +118,7 @@ export function TradeGifticonRegisterForm() {
           onSuccess: (data) => {
             makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
             dispatch({ type: 'RESET' });
-            router.push(`${PATH.TRADE.MAIN}?page=gifticon`);
+            router.push(`${PATH.TRADE.MAIN}`);
             resolve(data);
           },
           onError: (error) => {
@@ -130,10 +130,19 @@ export function TradeGifticonRegisterForm() {
       });
 
     try {
-      await executeWithAuth(requestFn, '/api/v1/trades/posts/gifticon', () => {
-        // AuthModal이 닫힐 때 isSubmitting 상태 초기화
-        dispatch({ type: 'SET_SUBMITTING', value: false });
-      });
+      await executeWithAuth(
+        requestFn,
+        '/api/v1/trades/posts/gifticon',
+        {
+          type: 'TRADE_POST',
+          method: 'POST',
+          data: payload,
+        },
+        () => {
+          // AuthModal이 닫힐 때 isSubmitting 상태 초기화
+          dispatch({ type: 'SET_SUBMITTING', value: false });
+        },
+      );
     } catch (error) {
       // 에러는 이미 위에서 처리됨
       console.error('Gifticon registration failed:', error);

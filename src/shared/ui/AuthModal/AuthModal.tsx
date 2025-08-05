@@ -32,9 +32,11 @@ export const AuthModal = () => {
   };
 
   const handleKakaoLogin = () => {
-    // 원래 페이지 정보 저장 (API 엔드포인트가 아닌 현재 페이지 경로)
+    // 게시물 등록 페이지에서는 /trade로 리다이렉트, 그 외에는 현재 페이지 경로 사용
     const currentPath = window.location.pathname;
-    localStorage.setItem('redirectTo', currentPath);
+    const isRegisterPage = currentPath.includes('/trade/register');
+    const redirectPath = isRegisterPage ? '/trade' : currentPath;
+    localStorage.setItem('redirectTo', redirectPath);
 
     // 카카오 로그인 실행
     const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;

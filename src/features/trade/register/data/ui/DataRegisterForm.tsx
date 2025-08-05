@@ -39,7 +39,7 @@ export function TradeDataRegisterForm() {
           {
             onSuccess: (data) => {
               makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
-              router.push(`${PATH.TRADE.MAIN}?page=data`);
+              router.push(`${PATH.TRADE.MAIN}`);
               resolve(data);
             },
             onError: (error) => {
@@ -52,10 +52,26 @@ export function TradeDataRegisterForm() {
       });
 
     try {
-      await executeWithAuth(requestFn, '/api/v1/trades/posts/data', () => {
-        // AuthModal이 닫힐 때 isSubmitting 상태 초기화
-        dispatch({ type: 'SET_SUBMITTING', value: false });
-      });
+      await executeWithAuth(
+        requestFn,
+        '/api/v1/trades/posts/data',
+        {
+          type: 'TRADE_POST',
+          method: 'POST',
+          data: {
+            title,
+            mobileCarrier: state.form.mobileCarrier,
+            deadLine,
+            capacity: Number(capacity),
+            price: toRawPrice(price),
+            comment,
+          },
+        },
+        () => {
+          // AuthModal이 닫힐 때 isSubmitting 상태 초기화
+          dispatch({ type: 'SET_SUBMITTING', value: false });
+        },
+      );
     } catch (error) {
       // 에러는 이미 위에서 처리됨
       console.error('Data registration failed:', error);
