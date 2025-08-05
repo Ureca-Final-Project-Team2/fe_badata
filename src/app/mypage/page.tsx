@@ -31,7 +31,17 @@ export default function MyPage() {
       </div>
 
       <main className="pt-[70px] pb-[70px] w-full max-w-[428px] mx-auto">
-        <div className="w-full bg-[var(--main-1)] pb-16 relative">
+        <div
+          className="w-full bg-[var(--main-1)] pb-16 relative"
+          style={{
+            backgroundImage: `url(${ICONS.MYPAGE.BACKGROUND})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'bottom',
+            backgroundRepeat: 'no-repeat',
+            
+          }}
+        >
+          
           <div className="pt-4 flex justify-center">
             {isProfileReady ? (
               <MyProfileCard

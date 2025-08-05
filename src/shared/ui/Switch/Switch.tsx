@@ -37,7 +37,7 @@ export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwi
         )}
 
         {hasLabels && (
-          <div className="relative z-20 flex w-full h-full font-label-regular text-[var(--white)]">
+          <div className="relative z-20 flex w-full h-full font-label-regular text-[var(--gray-dark)]">
             <span
               className={cn(
                 'flex-1 flex items-center justify-center transition-opacity',
