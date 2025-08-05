@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import { AnimatePresence, motion } from 'framer-motion';
@@ -9,6 +11,7 @@ import { useSwipeRecommendationState } from '@/features/trade/recommendation/mod
 import { ProgressBar } from '@/features/trade/recommendation/ui/ProgressBar';
 import StatsCard from '@/features/trade/recommendation/ui/StatsCard';
 import SwiperCard from '@/features/trade/recommendation/ui/SwiperCard';
+import SwipeTutorialOverlay from '@/features/trade/recommendation/ui/SwipeTutorialOverlay';
 import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header } from '@/shared/ui/Header';
@@ -16,6 +19,7 @@ import { Header } from '@/shared/ui/Header';
 export default function SwipeRecommendationPage() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const {
     cards,
@@ -29,6 +33,14 @@ export default function SwipeRecommendationPage() {
     handleContinueRecommendation,
   } = useSwipeRecommendationState();
 
+  useEffect(() => {
+    const used = localStorage.getItem('recommendTutorial') === 'true';
+    if (!used) {
+      setShowTutorial(true);
+      localStorage.setItem('recommendTutorial', 'true');
+    }
+  }, []);
+
   const handleGoToTrade = () => router.push(PATH.TRADE.MAIN);
   const handleGoToLikedPosts = () => router.push(PATH.MYPAGE.LIKE_POST);
 
@@ -36,6 +48,7 @@ export default function SwipeRecommendationPage() {
     <BaseLayout header={<Header />} showHeader={true} paddingX={false}>
       {/* 배경 */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/40 z-10" />
+      {showTutorial && <SwipeTutorialOverlay onClose={() => setShowTutorial(false)} />}
       <div
         className="absolute inset-0 bg-cover bg-center z-0 scale-105"
         style={{
