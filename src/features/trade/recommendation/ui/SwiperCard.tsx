@@ -79,7 +79,7 @@ export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: Swiper
 
   return (
     <motion.div
-      className="relative w-full max-w-[380px] mx-auto h-full bg-white rounded-3xl border border-[var(--gray)] overflow-hidden"
+      className="relative w-full max-w-[360px] mx-auto h-full bg-white rounded-3xl border border-[var(--gray)] overflow-hidden"
       style={{ x, rotate }}
       drag={isTop && !isAnimating ? 'x' : false}
       dragConstraints={{ left: -300, right: 300 }}
@@ -115,7 +115,7 @@ export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: Swiper
             y: direction === 'left' ? 0 : 10,
           }}
         >
-          <span className="text-white font-head-bold text-lg flex items-center gap-1">삭제</span>
+          <span className="text-white font-head-bold flex items-center gap-1">삭제</span>
         </motion.div>
 
         {/* 저장 라벨 - 오른쪽으로 스와이프 시 */}
@@ -128,12 +128,12 @@ export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: Swiper
             y: direction === 'right' ? 0 : 10,
           }}
         >
-          <span className="text-white font-head-bold text-lg flex items-center gap-1">저장</span>
+          <span className="text-white font-head-bold flex items-center gap-1">저장</span>
         </motion.div>
       </div>
 
       {/* 이미지 */}
-      <div className="relative w-full aspect-[4/3] pointer-events-none overflow-hidden">
+      <div className="relative w-full max-w-[360px] aspect-[4/3] pointer-events-none overflow-hidden">
         <Image
           src={brandImageSrc}
           alt={post.title}
@@ -146,35 +146,64 @@ export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: Swiper
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
 
         {/* 마감일 배지 */}
-        <div className="absolute top-3 left-3 px-3 py-1 text-white font-label-semibold rounded-full shadow-lg bg-[var(--main-5)]">
+        <div className="absolute top-3 left-3 px-3 py-1 text-white font-label-semibold rounded-full shadow-lg bg-[var(--red)]/80">
           {formatDeadline(post.deadLine)}
-        </div>
-
-        {/* 카테고리 배지 */}
-        <div className="absolute top-3 right-3 px-3 py-1 bg-black/50 text-white font-caption-medium rounded-lg backdrop-blur-sm">
-          {post.postCategory}
         </div>
       </div>
 
       {/* 콘텐츠 섹션 */}
-      <div className="flex flex-col justify-between flex-1 p-6 bg-white">
+      <div className="flex flex-col justify-between flex-1 pt-6 px-6 bg-white">
         <div className="space-y-3">
-          <div className="flex justify-between items-start">
-            <h2 className="font-body-semibold text-[var(--black)] line-clamp-2 flex-1 leading-tight">
-              {post.title}
-            </h2>
-          </div>
-
           <div className="space-y-1">
-            <div className="font-label-medium text-[var(--dark-gray)] flex items-center">
-              {brand}
-            </div>
-            {post.postCategory === 'DATA' && (
-              <div className="font-caption-medium text-[var(--dark-gray)] flex items-center gap-2">
-                {post.capacity}GB
+            <div className="mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--white)] border border-[var(--gray)] rounded-full">
+                {brandImageSrc ? (
+                  <div className="h-6 flex items-center justify-center">
+                    <Image
+                      src={brandImageSrc}
+                      alt={brand || '브랜드'}
+                      width={0}
+                      height={24}
+                      className="h-6 w-auto object-contain rounded-full"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-6 flex items-center justify-center">
+                    {post.postCategory === 'DATA' ? (
+                      <div className="h-6 flex items-center justify-center bg-[var(--gray-light)] rounded-full">
+                        <Image
+                          src={ICONS.TRADE.BRAND_LOGO.DATA_DEFAULT}
+                          alt="데이터 기본"
+                          width={0}
+                          height={24}
+                          className="h-6 w-auto object-contain rounded-sm"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-6 flex items-center justify-center">
+                        <Image
+                          src={ICONS.GIFTICON.BRAND_LOGO.GIFTICON_DEFAULT}
+                          alt="기프티콘 기본"
+                          width={0}
+                          height={24}
+                          className="h-6 w-auto object-contain rounded-sm"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+                <span className="font-label-regular text-[var(--black)] flex items-center">
+                  {brand}
+                </span>
               </div>
-            )}
+            </div>
           </div>
+        </div>
+
+        <div className="flex justify-between items-start">
+          <h2 className="font-title-semibold text-[var(--black)] line-clamp-2 flex-1 leading-tight truncate">
+            {post.title}
+          </h2>
         </div>
 
         <div className="flex items-end justify-end gap-1">
