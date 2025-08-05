@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useLocationContext } from '@/shared/contexts/LocationContext';
+
 interface LocationPermissionProps {
   onComplete: () => void;
   onSkip: () => void;
@@ -12,6 +14,7 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
     'idle' | 'requesting' | 'granted' | 'denied'
   >('idle');
   const [error, setError] = useState<string>('');
+  const { setUserLocation } = useLocationContext();
 
   const requestLocationPermission = async () => {
     setPermissionStatus('requesting');
@@ -34,11 +37,17 @@ export function LocationPermission({ onComplete, onSkip }: LocationPermissionPro
         });
       });
 
-      // 권한이 승인되면 위치 정보를 저장 (선택사항)
+      // 권한이 승인되면 위치 정보를 Context를 통해 저장
       if (position) {
         const { latitude, longitude } = position.coords;
-        // 여기서 위치 정보를 로컬 스토리지나 상태 관리에 저장할 수 있습니다
-        localStorage.setItem('userLocation', JSON.stringify({ latitude, longitude }));
+        const locationData = {
+          latitude,
+          longitude,
+          timestamp: Date.now(),
+        };
+
+        // Context를 통해 위치 정보 저장
+        setUserLocation(locationData);
       }
 
       setPermissionStatus('granted');
