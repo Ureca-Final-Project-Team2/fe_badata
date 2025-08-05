@@ -166,11 +166,11 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
   }
 
   return (
-    <div className="relative min-h-screen bg-[var(--black)] flex items-center justify-center">
+    <div className="relative min-h-screen bg-[var(--black)] flex items-center justify-center overflow-hidden">
       {/* 동영상 */}
       <video
         ref={videoRef}
-        className="w-full h-full object-cover"
+        className="w-full max-h-[100vh] object-cover"
         onClick={handleVideoClick}
         playsInline
         muted
@@ -184,7 +184,7 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
       {showSkipButton && (
         <button
           onClick={handleSkip}
-          className="absolute top-8 right-4 px-4 py-2 bg-[var(--white)]/20 backdrop-blur-sm text-[var(--white)] rounded-full font-caption-medium hover:bg-[var(--white)]/30 transition-colors"
+          className="absolute top-8 right-4 px-4 py-2 bg-[var(--white)]/20 backdrop-blur-sm text-[var(--white)] rounded-full font-caption-medium hover:bg-[var(--white)]/30 transition-colors z-10"
         >
           건너뛰기
         </button>
@@ -194,7 +194,7 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
       {(!isPlaying || !isVideoReady) && (
         <button
           onClick={handleVideoClick}
-          className="absolute inset-0 flex items-center justify-center bg-[var(--black)]/50"
+          className="absolute inset-0 flex items-center justify-center bg-[var(--black)]/50 z-10"
         >
           <div className="w-16 h-16 bg-[var(--white)]/20 backdrop-blur-sm rounded-full flex items-center justify-center">
             {!isVideoReady ? (
@@ -213,7 +213,7 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
       )}
 
       {/* 로딩 인디케이터 */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
         <div className="flex space-x-1">
           <div className="w-2 h-2 bg-[var(--white)]/60 rounded-full animate-pulse"></div>
           <div
