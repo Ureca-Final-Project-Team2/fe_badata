@@ -65,14 +65,17 @@ export default function ReportHistoryPage() {
   const { data: reportInfo } = useReportInfoQuery(reportId ?? 0);
 
   const handlePostClick = (postId: number) => {
-    // mobileCarrier가 있으면 DATA로, 없으면 GIFTICON으로 추정
     const selectedPost = items.find((item) => item.postId === postId);
 
-    if (selectedPost?.mobileCarrier) {
-      // 통신사 정보가 있으면 데이터 상품으로 간주
+    // 둘 다 확인해서 더 정확하게 구분
+    const hasValidCarrier = selectedPost && isMobileCarrier(selectedPost.mobileCarrier);
+    const hasPartner = selectedPost?.partner !== null;
+
+    if (hasValidCarrier && hasPartner) {
+      // 통신사와 파트너 정보가 모두 있으면 데이터 상품
       router.push(PATH.TRADE.DATA_DETAIL.replace(':id', postId.toString()));
     } else {
-      // 통신사 정보가 없으면 기프티콘으로 간주
+      // 그 외의 경우는 기프티콘
       router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', postId.toString()));
     }
   };
