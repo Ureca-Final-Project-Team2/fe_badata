@@ -8,11 +8,13 @@ interface IndividualOnboardingSlidesProps {
   onComplete: () => void;
 }
 
+const TOTAL_SLIDES = 6; // Slide1~Slide6 = 6개 슬라이드
+
 export function IndividualOnboardingSlides({ onComplete }: IndividualOnboardingSlidesProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const handleNext = () => {
-    if (currentSlide < 5) {
+    if (currentSlide < TOTAL_SLIDES - 1) {
       setCurrentSlide(currentSlide + 1);
     } else {
       onComplete();
