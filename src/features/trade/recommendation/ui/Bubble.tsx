@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 
 import { motion } from 'framer-motion';
 
-interface BubbbleProps {
+interface BubbleProps {
   delay?: number;
 }
-export default function Bubble({ delay = 0 }: BubbbleProps) {
+export default function Bubble({ delay = 0 }: BubbleProps) {
   const [size, setSize] = useState(0);
   const [left, setLeft] = useState(0);
 
