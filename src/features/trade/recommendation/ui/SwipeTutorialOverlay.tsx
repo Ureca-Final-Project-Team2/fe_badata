@@ -59,19 +59,19 @@ export default function SwipeTutorialOverlay({ onClose }: Props) {
 
         {/* 텍스트 */}
         <div className="space-y-2">
-          <p className="text-lg font-body-medium">{title}</p>
+          <p className="font-body-medium">{title}</p>
           <p
-            className="text-2xl font-title-semibold text-[var(--main-5)]"
+            className="font-title-semibold text-[var(--main-5)]"
             dangerouslySetInnerHTML={{ __html: highlight }}
           />
-          <p className="text-sm text-white/80">{sub}</p>
+          <p className="font-label-regular text-white/80">{sub}</p>
         </div>
 
         {/* 버튼 */}
         <div className="mt-32 flex flex-col gap-3 w-full max-w-xs">
           <motion.button
             onClick={handleNext}
-            className="w-full py-3 rounded-full bg-white text-black font-label-medium shadow-md cursor-pointer"
+            className="w-full py-3 rounded-full bg-white text-[var(--black)] font-label-medium shadow-md cursor-pointer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -80,7 +80,7 @@ export default function SwipeTutorialOverlay({ onClose }: Props) {
 
           <motion.button
             onClick={onClose}
-            className="text-sm text-white/60 underline cursor-pointer"
+            className="font-caption-regular text-white/60 underline cursor-pointer"
             whileTap={{ scale: 0.96 }}
           >
             튜토리얼 건너뛰기
