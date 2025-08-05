@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { getClusterClickActive } from '@/features/rental/map/lib/clusterMarker';
 
 declare global {
   interface Window {
@@ -6,68 +8,43 @@ declare global {
   }
 }
 
-// 현재 위치 마커를 한 번만 생성하는 함수
-const createCurrentLocationMarker = (map: kakao.maps.Map): kakao.maps.Marker => {
-  console.log('📍 현재 위치 마커 생성 시작');
-
-  // 현재 위치 마커 생성
-  const currentLocationMarker = new window.kakao.maps.Marker({
-    map: map,
-    position: map.getCenter(), // 초기 위치는 지도 중심
-  });
-
-  console.log('📍 현재 위치 마커 생성 완료');
-
-  // 현재 위치로 이동하는 함수
-  const moveToCurrentLocation = () => {
-    console.log('📍 현재 위치로 이동 시도');
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          const currentPosition = new window.kakao.maps.LatLng(lat, lng);
-
-          console.log('📍 현재 위치 획득:', { lat, lng });
-
-          // 마커 위치 업데이트
-          currentLocationMarker.setPosition(currentPosition);
-
-          // 지도 중심을 현재 위치로 이동
-          map.setCenter(currentPosition);
-        },
-        (error) => {
-          console.error('❌ 현재 위치를 가져올 수 없습니다:', error);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        },
-      );
-    } else {
-      console.error('❌ 이 브라우저에서는 위치 정보를 지원하지 않습니다.');
-    }
-  };
-
-  // 초기 로드 시 현재 위치로 이동
-  moveToCurrentLocation();
-
-  // 현재 위치 마커 클릭 시 현재 위치로 다시 이동
-  window.kakao.maps.event.addListener(currentLocationMarker, 'click', () => {
-    moveToCurrentLocation();
-  });
-
-  return currentLocationMarker;
-};
-
-export const useKakaoMapHooks = () => {
+export const useKakaoMapHooks = (
+  initialLat?: number,
+  initialLng?: number,
+  userLat?: number,
+  userLng?: number,
+) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
-  const currentLocationMarkerRef = useRef<kakao.maps.Marker | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
+  const initializedRef = useRef(false);
+  const scriptLoadingRef = useRef(false);
 
-  useEffect(() => {
-    console.log('🗺️ 카카오맵 초기화 시작');
+  // 메모이제이션된 초기화 함수
+  const initializeMap = useCallback(() => {
+    if (!mapRef.current || initializedRef.current || scriptLoadingRef.current) {
+      return;
+    }
+
+    // 클러스터 클릭이 활성화되어 있으면 맵 재초기화 건너뛰기
+    const isClusterClick = getClusterClickActive();
+    if (isClusterClick) {
+      console.log('🔍 클러스터 클릭 활성화 - 맵 재초기화 건너뜀');
+      return;
+    }
+
+    // 검색 위치가 없고 사용자 위치도 없으면 초기화 지연
+    if (!initialLat && !initialLng && (!userLat || !userLng)) {
+      return;
+    }
+
+    scriptLoadingRef.current = true;
+
+    // 이미 로드된 스크립트가 있는지 확인
+    if (window.kakao && window.kakao.maps) {
+      createMap();
+      return;
+    }
 
     const script = document.createElement('script');
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false`;
@@ -75,30 +52,90 @@ export const useKakaoMapHooks = () => {
 
     script.onload = () => {
       window.kakao.maps.load(() => {
-        if (!mapRef.current) {
-          return;
-        }
-
-        const map = new window.kakao.maps.Map(mapRef.current, {
-          center: new window.kakao.maps.LatLng(35.1796, 129.0756), // 부산 좌표로 변경
-          level: 4,
-        });
-
-        setMap(map);
-
-        // 현재 위치 마커를 맵 생성 시 한 번만 생성
-        currentLocationMarkerRef.current = createCurrentLocationMarker(map);
-
-        console.log('✅ 맵 초기화 완료');
+        scriptLoadingRef.current = false;
+        createMap();
       });
     };
 
     script.onerror = () => {
-      console.error('❌ 카카오맵 스크립트 로드 실패');
+      console.error('카카오맵 스크립트 로드 실패');
+      scriptLoadingRef.current = false;
     };
 
     document.head.appendChild(script);
+  }, [initialLat, initialLng, userLat, userLng]);
+
+  // 맵 생성 함수
+  const createMap = useCallback(() => {
+    if (!mapRef.current || initializedRef.current) {
+      return;
+    }
+
+    // 클러스터 클릭 상태 재확인
+    const isClusterClick = getClusterClickActive();
+    if (isClusterClick) {
+      console.log('🔍 스크립트 로드 중 클러스터 클릭 활성화 - 맵 초기화 중단');
+      return;
+    }
+
+    // 초기 좌표 결정: 검색 위치 > 사용자 현재 위치 > 기본값
+    let initialCenter: kakao.maps.LatLng;
+
+    if (initialLat && initialLng && !isClusterClick) {
+      // 검색 위치가 있고 클러스터 클릭이 아닐 때만 검색 위치로 초기 카메라 설정
+      initialCenter = new window.kakao.maps.LatLng(initialLat, initialLng);
+    } else if (userLat && userLng) {
+      // 검색 위치가 없거나 클러스터 클릭이 활성화되어 있으면 사용자 위치로 초기 카메라 설정
+      initialCenter = new window.kakao.maps.LatLng(userLat, userLng);
+    } else {
+      // 둘 다 없으면 기본값 사용
+      initialCenter = new window.kakao.maps.LatLng(37.5665, 126.978);
+    }
+
+    const map = new window.kakao.maps.Map(mapRef.current!, {
+      center: initialCenter,
+      level: 4,
+    });
+
+    // 초기화 완료 표시
+    initializedRef.current = true;
+    setMap(map);
+    setIsMapReady(true);
+
+    // 성능 최적화를 위한 이벤트 리스너 등록 (로그 제거)
+    window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
+      // 줌 레벨 변경 시 필요한 작업만 수행
+    });
+
+    // bounds 변경 이벤트 리스너 등록 (로그 제거)
+    window.kakao.maps.event.addListener(map, 'bounds_changed', () => {
+      // bounds 변경 시 필요한 작업만 수행
+    });
+
+    // 지도 타일 로드 완료 이벤트 (로그 제거)
+    window.kakao.maps.event.addListener(map, 'tilesloaded', () => {
+      // 타일 로드 완료 시 필요한 작업만 수행
+    });
+  }, [initialLat, initialLng, userLat, userLng]);
+
+  useEffect(() => {
+    // 디바운스된 초기화 (성능 최적화)
+    const timeoutId = setTimeout(() => {
+      initializeMap();
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [initializeMap]);
+
+  // 클린업 함수
+  useEffect(() => {
+    return () => {
+      // 맵 인스턴스는 자동으로 정리됨
+      console.log('🗺️ 맵 훅 클린업 완료');
+    };
   }, []);
 
-  return { mapRef, map };
+  return { mapRef, map, isMapReady };
 };

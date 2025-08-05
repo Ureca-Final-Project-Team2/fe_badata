@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useLikedTradePosts } from '@/features/mypage/like-trade-post/model/queries';
+import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
@@ -23,6 +24,14 @@ export default function LikeTradePostPage() {
 
   const handleBack = () => router.back();
 
+  const handlePostClick = (postId: number, postCategory: 'GIFTICON' | 'DATA') => {
+    if (postCategory === 'DATA') {
+      router.push(PATH.TRADE.DATA_DETAIL.replace(':id', postId.toString()));
+    } else {
+      router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', postId.toString()));
+    }
+  };
+
   if (isLoading && !cursor) return <div>로딩중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
 
@@ -32,11 +41,14 @@ export default function LikeTradePostPage() {
         <div className="py-4 text-center text-[var(--gray)]">게시물이 없습니다.</div>
       ) : (
         <>
-          <div className="px-4 pt-4 pb-[96px]">
-            <div className="grid grid-cols-2 gap-4">
-              {likeTradePostItems.map((item) => (
+          <div className="grid grid-cols-2 gap-5 mt-4">
+            {likeTradePostItems.map((item) => (
+              <div
+                key={item.postId}
+                onClick={() => handlePostClick(item.postId, item.postCategory)}
+                className="cursor-pointer"
+              >
                 <TradePostCard
-                  key={item.postId}
                   imageUrl={item.postImage}
                   title={item.title}
                   partner={item.partner}
@@ -46,8 +58,8 @@ export default function LikeTradePostPage() {
                   hasDday={false}
                   dday={0}
                 />
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
 
           {hasNext && (

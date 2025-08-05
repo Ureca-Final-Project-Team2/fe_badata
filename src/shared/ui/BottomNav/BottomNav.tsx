@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 
-import { Home, ShoppingCart, User, Wifi, X } from 'lucide-react';
+import { ShoppingCart, ThumbsUp, User, Wifi, X } from 'lucide-react';
 
 import { PATH } from '@/shared/config/path';
 import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
@@ -11,7 +11,7 @@ import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 import { WAVE_CLIP_PATH } from './constants';
 
 const NAV_CONFIG = [
-  { label: '홈', path: PATH.ROOT, icon: Home },
+  { label: '추천', path: PATH.RECOMMEND, icon: ThumbsUp },
   { label: '거래', path: PATH.TRADE.MAIN, icon: ShoppingCart },
   { label: '대여', path: PATH.RENTAL.MAIN, icon: Wifi },
   { label: '마이', path: PATH.MYPAGE.MAIN, icon: User },
@@ -51,12 +51,7 @@ export const BottomNav = () => {
   const router = useRouter();
 
   const getActiveIdx = () => {
-    return NAV_CONFIG.findIndex((item) => {
-      if (item.path === '/') {
-        return pathname === '/';
-      }
-      return pathname.startsWith(item.path);
-    });
+    return NAV_CONFIG.findIndex((item) => pathname.startsWith(item.path));
   };
   const activeIdx = getActiveIdx();
 

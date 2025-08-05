@@ -15,6 +15,7 @@ export const END_POINTS = {
     REGISTER_DATA: '/api/v1/trades/posts/data',
     REGISTER_GIFTICON: '/api/v1/trades/posts/gifticon',
     USER_POST: (userId: number) => `/api/v1/trades/posts/${userId}`,
+    SELLER_POSTS: (userId: number, isSold: boolean) => `/api/v1/trades/posts/${userId}/${isSold}`,
     VERIFY_PAYMENT: (impUid: string, postId: number) =>
       `/api/v1/trades/order/payment/${encodeURIComponent(impUid)}/${encodeURIComponent(postId.toString())}`,
     CREATE_PAYMENT: (postId: number) => `/api/v1/trades/order/${postId}`,
@@ -22,6 +23,9 @@ export const END_POINTS = {
     REPORT: (postId: number) => `/api/v1/trades/${postId}/reports`,
     IMAGE: '/api/v1/trades/posts/image',
     TRENDING: '/api/v1/trades/posts/trending',
+    RECOMMEND: '/api/v1/trades/posts/recommend',
+    RECOMMEND_LIKE: (postId: number) => `/api/v1/trades/posts/recommend/likes/${postId}`,
+    RECOMMEND_VECTOR_UPDATE: '/api/v1/trades/posts/recommend/vector/update/all',
   },
   USER: {
     LOGIN: '/api/v1/auth/token/issue',

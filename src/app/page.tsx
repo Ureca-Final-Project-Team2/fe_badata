@@ -1,4 +1,4 @@
-'use client';
+import { redirect } from 'next/navigation';
 
 import { useEffect, useRef } from 'react';
 
@@ -34,4 +34,7 @@ export default function HomePage() {
       홈화면
     </BaseLayout>
   );
+
+export default function Home() {
+  redirect('/trade');
 }

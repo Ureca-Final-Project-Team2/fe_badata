@@ -45,6 +45,14 @@ export const useKakaoCallback = () => {
           // 기존 사용자의 경우 온보딩 완료 상태를 저장하고 홈으로 이동
           localStorage.setItem('onboarding-completed', 'true');
           router.replace('/');
+
+        // 리다이렉트 파라미터 확인
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
+        if (redirect) {
+          router.replace(redirect);
+        } else {
+          router.replace(content.newUser ? '/onboarding' : '/');
         }
       } catch (err) {
         console.error('카카오 로그인 실패', err);

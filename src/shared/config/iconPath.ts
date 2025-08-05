@@ -32,6 +32,7 @@ export const ICONS = {
     FILTERICON: filterIcon,
     LIKE_ACTIVE_HALF: likeActiveHalf,
     SHELL: shell,
+    SPINNER: '/assets/spinner.gif',
   },
   MYPAGE: {
     COIN: coin,
@@ -44,6 +45,7 @@ export const ICONS = {
     RENTAL_NOTIFICATION: rentalNotification,
     MYSOS: mySos,
     NOTIFICATION: notification,
+    BACKGROUND: '/assets/mypage_background.png'
   },
   TRADE: {
     BRAND_LOGO: {
@@ -61,7 +63,7 @@ export const ICONS = {
 
       // OTT/뮤직
       YOUTUBE_PREMIUM: '/assets/gifticon/ott-music/YouTube_Logo.png',
-      CGV: '/assets/gifticon/ott-music/CGV_Logo.png',
+      CGV: '/assets/gifticon/ott-music/CGV_Logo.jpg',
       EMOTICON_PLUS: '/assets/gifticon/ott-music/Emoticon_Logo.png',
       NETFLIX: '/assets/gifticon/ott-music/NEFLIX_Logo.png',
       GENIE_MUSIC: '/assets/gifticon/ott-music/Genie_Logo.png',
@@ -113,7 +115,7 @@ export const ICONS = {
       CU: '/assets/gifticon/lifestyle/CU_Logo.png',
 
       // 패션/뷰티
-      OLIVEYOUNG: '/assets/gifticon/fashion-beauty/OliveYoung_Logo.png',
+      OLIVEYOUNG: '/assets/gifticon/fashion-beauty/OliveYoung_Logo.svg',
       SPAO: '/assets/gifticon/fashion-beauty/SPAO_Logo.png',
 
       // 키즈

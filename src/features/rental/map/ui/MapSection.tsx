@@ -1,101 +1,121 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
+import { useCurrentLocationMarker } from '@/features/rental/map/hooks/useCurrentLocationMarkerHooks';
 import { useFetchStoresHooks } from '@/features/rental/map/hooks/useFetchStoresHooks';
 import { useKakaoMapHooks } from '@/features/rental/map/hooks/useKakaoMapHooks';
-import { renderStoreMarkers } from '@/features/rental/map/lib/renderStoreMarkers';
-import { debounce } from '@/features/rental/map/utils/debounceUtils';
+import { useMapZoomLevel } from '@/features/rental/map/hooks/useMapZoomLevel';
+import { useMarkerRendering } from '@/features/rental/map/hooks/useMarkerRenderingrHooks';
+import { Loading } from '@/shared/ui/Loading';
 
-import type { Store, StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
+import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 import type { RentalFilterState } from '@/features/rental/map/model/rentalFilterReducer';
 
-interface MapSectionProps {
+export interface MapSectionProps {
   filterState: RentalFilterState;
+  initialLat?: number;
+  initialLng?: number;
   onStoreMarkerClick?: (
     devices: StoreDevice[],
     storeDetail?: StoreDetail,
     storeId?: number,
   ) => void;
+  onMapClick?: (event?: MouseEvent) => void;
   onMapReady?: (map: kakao.maps.Map) => void;
+  hasUrlParams?: boolean;
+  selectedStoreId?: number | null;
+  userLat?: number;
+  userLng?: number;
+  expandedMarkers?: Set<number>; // 확장된 마커들의 ID Set
 }
 
-export const MapSection = ({ filterState, onStoreMarkerClick, onMapReady }: MapSectionProps) => {
-  const { mapRef, map } = useKakaoMapHooks();
-  const storesResult = useFetchStoresHooks(map, filterState);
-  const stores = storesResult.stores;
+export const MapSection = memo(function MapSection({
+  filterState,
+  initialLat,
+  initialLng,
+  onStoreMarkerClick,
+  onMapClick,
+  onMapReady,
+  hasUrlParams = false,
+  selectedStoreId,
+  userLat,
+  userLng,
+  expandedMarkers,
+}: MapSectionProps) {
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  const lastStoresRef = useRef<Store[]>([]);
-  const lastFilterStateRef = useRef<RentalFilterState>(filterState);
-  const isMapReadyRef = useRef(false);
-
-  // 디바운스된 마커 렌더링 함수
-  const debouncedRenderMarkers = useMemo(
-    () =>
-      debounce(
-        async (
-          map: kakao.maps.Map,
-          stores: Store[],
-          filterState: RentalFilterState,
-          onStoreMarkerClick?: (
-            devices: StoreDevice[],
-            storeDetail?: StoreDetail,
-            storeId?: number,
-          ) => void,
-        ) => {
-          console.log('🎨 마커 렌더링 시작:', { storesCount: stores.length });
-          await renderStoreMarkers(map, stores, filterState, onStoreMarkerClick);
-          console.log('✅ 마커 렌더링 완료');
-        },
-        200,
-      ),
-    [],
+  // 메모이제이션된 props로 불필요한 리렌더링 방지
+  const memoizedProps = useMemo(
+    () => ({
+      initialLat,
+      initialLng,
+      userLat,
+      userLng,
+    }),
+    [initialLat, initialLng, userLat, userLng],
   );
 
-  // 마커 렌더링 함수를 메모이제이션
-  const renderMarkers = useCallback(async () => {
-    if (!map) {
-      return;
-    }
+  const { mapRef, map } = useKakaoMapHooks(
+    memoizedProps.initialLat,
+    memoizedProps.initialLng,
+    memoizedProps.userLat,
+    memoizedProps.userLng,
+  );
 
-    debouncedRenderMarkers(map, stores, filterState, onStoreMarkerClick);
-  }, [map, stores, filterState, onStoreMarkerClick, debouncedRenderMarkers]);
+  const { stores } = useFetchStoresHooks(map, filterState);
 
-  // stores나 filterState가 변경되었을 때만 마커 렌더링
-  const shouldRenderMarkers = useMemo(() => {
-    const storesChanged = JSON.stringify(stores) !== JSON.stringify(lastStoresRef.current);
-    const filterChanged =
-      JSON.stringify(filterState) !== JSON.stringify(lastFilterStateRef.current);
+  // ✅ 줌 레벨 변경 통합 관리 (근본적 해결)
+  useMapZoomLevel(map, filterState, onStoreMarkerClick);
 
-    // 맵이 준비되지 않았으면 렌더링하지 않음
-    if (!isMapReadyRef.current) {
-      return false;
-    }
+  const { isMapReadyRef } = useMarkerRendering(
+    map,
+    stores,
+    filterState,
+    onStoreMarkerClick,
+    selectedStoreId,
+    expandedMarkers,
+  );
 
-    if (storesChanged || filterChanged) {
-      lastStoresRef.current = stores;
-      lastFilterStateRef.current = filterState;
-      return true;
-    }
-    return false;
-  }, [stores, filterState]);
-
-  // 마커 렌더링 효과
+  // 지도가 준비되면 로딩 상태 해제
   useEffect(() => {
-    if (shouldRenderMarkers) {
-      console.log('🎯 마커 렌더링 실행');
-      renderMarkers();
+    if (map) {
+      console.log('📍 MapSection: 지도가 준비됨, 로딩 상태 해제');
+      setIsMapLoaded(true);
     }
-  }, [shouldRenderMarkers, renderMarkers]);
+  }, [map]);
 
-  // 맵 준비 완료 시 콜백 호출 및 플래그 설정
-  useEffect(() => {
-    if (map && onMapReady) {
-      console.log('🗺️ 맵 준비 완료');
-      isMapReadyRef.current = true;
-      onMapReady(map);
-    }
-  }, [map, onMapReady]);
+  useCurrentLocationMarker(
+    map,
+    hasUrlParams,
+    onMapClick,
+    (mapInstance) => {
+      console.log('📍 MapSection 내부 onMapReady 호출됨');
+      onMapReady?.(mapInstance);
+    },
+    isMapReadyRef,
+    memoizedProps.userLat,
+    memoizedProps.userLng,
+  );
 
-  return <div ref={mapRef} className="w-full h-full" />;
-};
+  return (
+    <div className="relative w-full h-full">
+      <div
+        ref={mapRef}
+        className="w-full h-full"
+        style={{
+          // 레이아웃 시프트 방지를 위한 최소 높이 설정
+          minHeight: '400px',
+          // GPU 가속 활성화
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+        }}
+      />
+      {!isMapLoaded && (
+        <div className="absolute inset-0 bg-white flex items-center justify-center z-10">
+          <Loading size="lg" />
+        </div>
+      )}
+    </div>
+  );
+});

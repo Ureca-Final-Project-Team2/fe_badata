@@ -30,14 +30,14 @@ export function Switch({ checked, onCheckedChange, labels, ...props }: CustomSwi
           <div
             className={cn(
               'absolute top-0 left-0 h-full w-1/2 rounded-full transition-transform duration-200 ease-in-out',
-              'bg-[var(--main-1)]',
+              'bg-[var(--main-2)]',
               checked ? 'translate-x-full' : 'translate-x-0',
             )}
           />
         )}
 
         {hasLabels && (
-          <div className="relative z-20 flex w-full h-full font-label-regular text-[var(--white)]">
+          <div className="relative z-20 flex w-full h-full font-label-regular text-[var(--gray-dark)]">
             <span
               className={cn(
                 'flex-1 flex items-center justify-center transition-opacity',

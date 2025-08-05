@@ -13,6 +13,9 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// 동적으로 origin을 가져오는 방식
+const SITE_ORIGIN = self.location.origin; // 개발/스테이징/프로덕션 자동 적용
+
 // Firebase FCM 백그라운드 메시지 처리
 messaging.onBackgroundMessage(function (payload) {
   // 포그라운드 메시지인지 확인 (앱이 닫혀있을 때 포그라운드 메시지가 백그라운드로 표시되는 것 방지)
@@ -75,7 +78,6 @@ self.addEventListener('push', (event) => {
       ],
     };
 
-    console.log('푸시 알림 표시:', title, options);
     event.waitUntil(self.registration.showNotification(title, options));
   }
 });
@@ -85,18 +87,21 @@ self.addEventListener('notificationclick', function (event) {
 
   const targetUrl = event.notification.data?.url || '/';
 
+  // 전체 URL 생성 (상대 경로인 경우)
+  const fullUrl = targetUrl.startsWith('http') ? targetUrl : `${SITE_ORIGIN}${targetUrl}`;
+
   // 알림 클릭 시 앱으로 이동
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       // 이미 열린 탭이 있으면 포커스
       for (const client of clientList) {
-        if (client.url.includes(self.location.origin)) {
-          client.navigate(targetUrl);
+        if (client.url.includes(SITE_ORIGIN) || client.url.includes('localhost:3000')) {
+          client.navigate(fullUrl);
           return client.focus();
         }
       }
       // 열린 탭이 없으면 새 탭에서 열기
-      return clients.openWindow(targetUrl);
+      return clients.openWindow(fullUrl);
     }),
   );
 });

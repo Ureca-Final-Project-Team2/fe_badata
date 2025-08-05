@@ -11,11 +11,21 @@ export const metadata: Metadata = {
   title: '1인의 바다, 모두의 데이터',
   description: '1인의 바다, 모두의 데이터',
   manifest: '/manifest.json',
+  // 성능 최적화를 위한 메타데이터 추가
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'default',
+    'apple-mobile-web-app-title': 'BADATA',
+  },
 };
 
 export const viewport: Viewport = {
   width: '428',
   userScalable: false,
+  initialScale: 1,
+  maximumScale: 1,
+  minimumScale: 1,
 };
 
 export default function RootLayout({
@@ -34,16 +44,27 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="BADATA" />
         <link rel="apple-touch-icon" href="/assets/logo-badata.png" />
         <link rel="icon" href="/assets/logo-badata.png" sizes="192x192" />
+
+        {/* 성능 최적화를 위한 preload */}
+        <link rel="preload" href="https://dapi.kakao.com/v2/maps/sdk.js" as="script" />
+        <link rel="preload" href="https://cdn.portone.io/v2/browser-sdk.js" as="script" />
+        <link rel="preload" href="https://cdn.iamport.kr/v1/iamport.js" as="script" />
+        <link
+          rel="preload"
+          href="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
+          as="script"
+        />
       </head>
       <body className="antialiased">
-        {/* 외부 스크립트 */}
-        <Script src="https://cdn.portone.io/v2/browser-sdk.js" strategy="beforeInteractive" />
-        <Script src="https://cdn.iamport.kr/v1/iamport.js" strategy="beforeInteractive" />
+        {/* 외부 스크립트 - 성능 최적화 */}
+        <Script src="https://cdn.portone.io/v2/browser-sdk.js" strategy="lazyOnload" defer />
+        <Script src="https://cdn.iamport.kr/v1/iamport.js" strategy="lazyOnload" defer />
         <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
           integrity="sha384-dok87au0gKqJdxs7msEdBPNnKSRT+/mhTVzq+qOhcL464zXwvcrpjeWvyj1kCdq6"
           crossOrigin="anonymous"
-          strategy="beforeInteractive"
+          strategy="lazyOnload"
+          defer
         />
         <Providers>
           <Toaster />

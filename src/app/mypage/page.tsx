@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useUserInfoQuery } from '@/entities/user/model/queries';
 import { useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
 import { AlarmSettingSection } from '@/features/mypage/ui/AlarmSettingSection';
-import { DataUsageCardSection } from '@/features/mypage/ui/DataUsageCardSection';
+import DataUsageCardSection from '@/features/mypage/ui/DataUsageCardSection';
 import { RentalSection } from '@/features/mypage/ui/RentalSection';
 import { ReportStatusSection } from '@/features/mypage/ui/ReportStatusSection';
 import { SosSection } from '@/features/mypage/ui/SosSection';
@@ -31,7 +31,15 @@ export default function MyPage() {
       </div>
 
       <main className="pt-[70px] pb-[70px] w-full max-w-[428px] mx-auto">
-        <div className="w-full bg-[var(--main-1)] pb-16 relative">
+        <div
+          className="w-full bg-[var(--main-1)] pb-16 relative"
+          style={{
+            backgroundImage: `url(${ICONS.MYPAGE.BACKGROUND})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'bottom',
+            backgroundRepeat: 'no-repeat',
+          }}
+        >
           <div className="pt-4 flex justify-center">
             {isProfileReady ? (
               <MyProfileCard

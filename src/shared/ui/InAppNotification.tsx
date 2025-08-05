@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import Image from 'next/image';
-
 import { ICONS } from '@/shared/config/iconPath';
 
 interface InAppNotificationProps {
@@ -20,6 +18,7 @@ export const InAppNotification = ({
   onClose,
 }: InAppNotificationProps) => {
   const [isVisible, setIsVisible] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     if (duration > 0) {
@@ -39,7 +38,21 @@ export const InAppNotification = ({
       <div className="bg-[var(--black)] rounded-2xl px-4 py-3 flex items-center gap-5 shadow-lg">
         {/* BADATA 로고 아이콘 */}
         <div className="w-8 h-8 flex items-center justify-center">
-          <Image src={ICONS.LOGO.BADATA} alt="BADATA" width={24} height={24} className="w-6 h-6" />
+          {!imageError ? (
+            <img
+              src={ICONS.LOGO.BADATA}
+              alt="BADATA"
+              className="w-6 h-6 object-contain"
+              onError={() => {
+                console.error('로고 이미지 로드 실패');
+                setImageError(true);
+              }}
+            />
+          ) : (
+            <div className="w-6 h-6 bg-[var(--main-4)] rounded-full flex items-center justify-center">
+              <span className="text-[var(--black)] text-xs font-bold">B</span>
+            </div>
+          )}
         </div>
 
         {/* 텍스트 내용 */}

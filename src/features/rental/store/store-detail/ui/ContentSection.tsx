@@ -19,8 +19,8 @@ function ContentSection({ store }: ContentSectionProps) {
   return (
     <div className="flex flex-col w-full p-4 mb-4 gap-2">
       {/* 주소 섹션 */}
-      <div className="flex items-start gap-2 mb-2 font-label-regular">
-        <MapPin size={30} className="text-[var(--gray-dark)] mt-0.5" />
+      <div className="flex items-start gap-4 mb-2 font-label-regular">
+        <MapPin size={30} className="text-[var(--gray-dark)] mt-0.5 " />
         <span
           className="cursor-pointer transition-colors hover:text-[var(--main-5)] active:text-[var(--main-4)]"
           onClick={() => copyAddress(store.detailAddress)}
@@ -39,8 +39,8 @@ function ContentSection({ store }: ContentSectionProps) {
       </div>
 
       {/* 영업시간 섹션 */}
-      <div className="flex items-center gap-2 mb-2 font-label-regular">
-        <Clock9 size={20} className="text-[var(--gray-dark)]" />
+      <div className="flex items-center gap-4 mb-2 font-label-regular ml-0.5">
+        <Clock9 size={26} className="text-[var(--gray-dark)]" />
         <span className={color}>{status}</span>
         <span className="text-[var(--gray-dark)]">
           {' '}
@@ -49,8 +49,8 @@ function ContentSection({ store }: ContentSectionProps) {
       </div>
 
       {/* 전화번호 섹션 */}
-      <div className="flex items-center gap-2 mb-2 font-label-regular">
-        <PhoneIcon size={20} className="text-[var(--gray-dark)]" />
+      <div className="flex items-center gap-4 mb-2 font-label-regular ml-0.5">
+        <PhoneIcon size={26} className="text-[var(--gray-dark)]" />
         <a
           href={`tel:${store.phoneNumber}`}
           className="cursor-pointer transition-colors group hover:text-[var(--main-5)] active:text-[var(--main-4)]"
