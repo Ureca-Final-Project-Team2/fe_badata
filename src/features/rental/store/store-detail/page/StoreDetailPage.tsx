@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useSearchParams } from 'next/navigation';
+
 import { fetchStoreDetail } from '@/features/rental/map/api/apis';
 import ReservationPage from '@/features/rental/store/reservation/page/ReservationPage';
 import ReviewPage from '@/features/rental/store/review/page/ReviewPage';
@@ -31,9 +33,54 @@ interface StoreDetailPageProps {
 }
 
 export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
+  const searchParams = useSearchParams();
   const [tab, setTab] = useState<TabValue>(DEFAULT_TAB);
   const [storeDetail, setStoreDetail] = useState<StoreDetail>();
   const [isLoading, setIsLoading] = useState(true);
+  const [reservationDates, setReservationDates] = useState<{
+    startDate?: string;
+    endDate?: string;
+  }>({});
+
+  // URL 파라미터 처리
+  useEffect(() => {
+    if (!searchParams) return;
+
+    const urlTab = searchParams.get('tab');
+    const startDate = searchParams.get('startDate');
+    const endDate = searchParams.get('endDate');
+
+    console.log('URL 파라미터:', { urlTab, startDate, endDate });
+
+    // tab 파라미터가 있으면 해당 탭으로 설정
+    if (urlTab) {
+      // 'reservation'을 '예약'으로 매핑
+      const tabMapping: Record<string, TabValue> = {
+        reservation: '예약',
+        detail: '상세정보',
+        review: '리뷰',
+      };
+
+      const mappedTab = tabMapping[urlTab] || (urlTab as TabValue);
+
+      if (STORE_DETAIL_TABS.some((t) => t.value === mappedTab)) {
+        console.log('탭 설정:', mappedTab);
+        setTab(mappedTab);
+      } else {
+        console.log('유효하지 않은 탭:', urlTab);
+      }
+    } else {
+      console.log('tab 파라미터가 없음, 기본 탭 사용');
+    }
+
+    // 대여기간 정보가 있으면 저장
+    if (startDate && endDate) {
+      console.log('대여기간 설정:', { startDate, endDate });
+      setReservationDates({ startDate, endDate });
+    } else {
+      console.log('대여기간 정보 없음');
+    }
+  }, [searchParams]);
 
   // 가맹점 상세 정보 조회 함수 메모이제이션
   const loadStoreDetail = useCallback(async () => {
@@ -112,7 +159,19 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
 
         {/* 아래 컨텐츠는 패딩 적용 */}
         <div className={STORE_DETAIL_STYLES.PADDING_CONTAINER}>
-          {tab === '예약' && <ReservationPage storeId={storeId} />}
+          {tab === '예약' && (
+            <ReservationPage
+              storeId={storeId}
+              initialDateRange={
+                reservationDates.startDate && reservationDates.endDate
+                  ? {
+                      from: new Date(reservationDates.startDate + 'T00:00:00'),
+                      to: new Date(reservationDates.endDate + 'T00:00:00'),
+                    }
+                  : undefined
+              }
+            />
+          )}
           {tab === '상세정보' && (
             <>
               <InfoSection

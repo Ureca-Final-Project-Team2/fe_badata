@@ -6,7 +6,7 @@ export interface RentalHistoryItem {
   rentalEndDate: string;
   price: number;
   isReviewed: boolean;
-  reservationStatus: 'PENDING' | 'COMPLETE';
+  reservationStatus: 'PENDING' | 'BURROWING' | 'COMPLETE';
 }
 
 export interface RentalHistoryResponse {

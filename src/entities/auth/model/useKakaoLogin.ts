@@ -12,7 +12,10 @@ export const useKakaoLogin = () => {
       return;
     }
 
-    localStorage.setItem('redirectTo', window.location.pathname);
+    // 온보딩 페이지에서 로그인하는 경우 홈으로 리다이렉트
+    const currentPath = window.location.pathname;
+    const redirectPath = currentPath === '/onboarding' ? '/' : currentPath;
+    localStorage.setItem('redirectTo', redirectPath);
 
     const kakaoAuthUrl = `${AUTH_URL}?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
     window.location.href = kakaoAuthUrl;

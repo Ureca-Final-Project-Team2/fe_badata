@@ -6,14 +6,15 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useInView } from 'framer-motion';
 
+import { useTradePostsInfiniteQuery } from '@/entities/trade-post/model/queries';
 import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
 import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
-import { useTradeDeadlineInfiniteQuery } from '@/features/trade/model/queries';
 import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
 import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
 import { TradeDeadlineBanner } from '@/features/trade/ui/TradeDeadlineBanner';
 import { TradeFlatTab } from '@/features/trade/ui/TradeFlatTab';
 import { TradeList } from '@/features/trade/ui/TradeList';
+import TradeRecommendPostsSection from '@/features/trade/ui/TradeRecommendPostsSection';
 import { TradeTrendingRanking } from '@/features/trade/ui/TradeTrendingRanking';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
@@ -26,7 +27,7 @@ export default function TradePageClient() {
   const searchParams = useSearchParams();
   const page = searchParams?.get('page') ?? 'all';
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTradeDeadlineInfiniteQuery();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTradePostsInfiniteQuery();
 
   const allPosts = data.pages.flatMap((page) => page.item);
 
@@ -101,6 +102,7 @@ export default function TradePageClient() {
       <TradeSearchInput />
       {page === 'all' && (
         <>
+          <TradeRecommendPostsSection />
           <TradeTrendingRanking />
           <TradeDeadlineBanner />
           <SectionDivider size="full" thickness="thick" />

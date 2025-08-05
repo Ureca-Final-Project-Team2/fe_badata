@@ -41,6 +41,12 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   onReservationClick,
   isLoadingDevices = false,
 }) => {
+  console.log('ReservationForm - 받은 dateRange:', dateRange);
+  console.log(
+    'ReservationForm - CalendarSection에 전달할 dateRange:',
+    convertToReducerDateRange(dateRange),
+  );
+
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* 날짜 선택 */}

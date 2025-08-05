@@ -3,6 +3,7 @@
 @import '../shared/styles/radius.css';
 @import '../shared/styles/custom-scrollbar.css';
 @import '../shared/styles/list-animations.css';
+@import '../shared/styles/onboarding-animations.css';
 @import 'swiper/css';
 @import 'swiper/css/pagination';
 @import 'swiper/css/navigation';
@@ -181,6 +182,12 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
+/* OceanWaveMarker를 위한 커스텀 스타일 */
+.custom-ocean-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -206,6 +213,11 @@ body {
     font-weight: var(--font-semibold);
   }
   /* title */
+  .font-title-bold {
+    font-family: var(--font-sans);
+    font-size: var(--font-title-size);
+    font-weight: var(--font-bold);
+  }
   .font-title-semibold {
     font-family: var(--font-sans);
     font-size: var(--font-title-size);
@@ -285,8 +297,6 @@ body {
     font-size: var(--font-small-size);
     font-weight: var(--font-regular);
   }
-
-
 }
 
 @keyframes slideUpDrawer {

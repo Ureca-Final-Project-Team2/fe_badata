@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useReservationDevices } from '@/features/rental/store/reservation/hooks/useReservationDevicesHooks';
 import { useReservationForm } from '@/features/rental/store/reservation/hooks/useReservationFormHooks';
@@ -18,11 +18,14 @@ import {
   convertToReducerDateRange,
 } from '@/features/rental/store/reservation/utils/typeConverters';
 
+import type { DateRange } from 'react-day-picker';
+
 interface ReservationPageProps {
   storeId: number;
+  initialDateRange?: DateRange;
 }
 
-export default function ReservationPage({ storeId }: ReservationPageProps) {
+export default function ReservationPage({ storeId, initialDateRange }: ReservationPageProps) {
   const [showReceiptModal, setShowReceiptModal] = useState(false);
 
   // 커스텀 훅들
@@ -31,6 +34,20 @@ export default function ReservationPage({ storeId }: ReservationPageProps) {
     storeId,
     dateRange: convertFromReducerDateRange(state.dateRange),
   });
+
+  // 초기 날짜 범위 설정
+  useEffect(() => {
+    if (initialDateRange?.from && initialDateRange?.to) {
+      console.log('초기 날짜 범위 설정:', initialDateRange);
+      dispatch({
+        type: 'SET_DATE_RANGE',
+        payload: {
+          from: initialDateRange.from,
+          to: initialDateRange.to,
+        },
+      });
+    }
+  }, [initialDateRange, dispatch]);
 
   // 결제 처리를 위한 훅 (날짜 범위가 유효할 때만 사용)
   const paymentConfig =
@@ -58,6 +75,10 @@ export default function ReservationPage({ storeId }: ReservationPageProps) {
   // 데이터 변환
   const convertedDevices = convertDevicesForUI(devices);
   const receiptDevices = createReceiptDevices(state.selectedDevices, devices);
+
+  // 디버깅: 현재 날짜 범위 상태 로깅
+  console.log('ReservationPage - 현재 날짜 범위:', state.dateRange);
+  console.log('ReservationPage - 변환된 날짜 범위:', convertFromReducerDateRange(state.dateRange));
 
   return (
     <>

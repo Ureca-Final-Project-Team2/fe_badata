@@ -33,6 +33,7 @@ export const ICONS = {
     FILTERICON: filterIcon,
     LIKE_ACTIVE_HALF: likeActiveHalf,
     SHELL: shell,
+    SPINNER: '/assets/spinner.gif',
   },
   MYPAGE: {
     COIN: coin,
@@ -45,6 +46,7 @@ export const ICONS = {
     RENTAL_NOTIFICATION: rentalNotification,
     MYSOS: mySos,
     NOTIFICATION: notification,
+    BACKGROUND: '/assets/mypage_background.png'
   },
   SOS: {
     WHALE: whale,
@@ -65,7 +67,7 @@ export const ICONS = {
 
       // OTT/뮤직
       YOUTUBE_PREMIUM: '/assets/gifticon/ott-music/YouTube_Logo.png',
-      CGV: '/assets/gifticon/ott-music/CGV_Logo.png',
+      CGV: '/assets/gifticon/ott-music/CGV_Logo.jpg',
       EMOTICON_PLUS: '/assets/gifticon/ott-music/Emoticon_Logo.png',
       NETFLIX: '/assets/gifticon/ott-music/NEFLIX_Logo.png',
       GENIE_MUSIC: '/assets/gifticon/ott-music/Genie_Logo.png',

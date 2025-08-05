@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { fetchStores } from '@/features/rental/map/api/apis';
+import { getClusterClickActive } from '@/features/rental/map/lib/clusterMarker';
 import { mapFilterStateToApiParams } from '@/features/rental/map/utils/filterParamsMapper';
 
 import type { Store } from '@/features/rental/map/lib/types';
@@ -23,11 +24,25 @@ export const useFetchStoresHooks = (
   const lastBoundsRef = useRef(currentBounds);
   const lastFilterStateRef = useRef(filterState);
   const lastStoresRef = useRef<Store[]>([]);
+  const lastZoomLevelRef = useRef<number | null>(null);
   const isInitializedRef = useRef(false);
 
   // 지도 bounds 업데이트 함수
   const updateStoresByBounds = useCallback(async () => {
     if (!map) {
+      return;
+    }
+
+    // 클러스터 클릭이 활성화되어 있으면 API 호출 건너뛰기
+    const isClusterClick = getClusterClickActive();
+    if (isClusterClick) {
+      console.log('🔍 클러스터 클릭 활성화 - API 호출 건너뜀');
+
+      // 클러스터 클릭 시에는 짧은 지연 후 API 호출 허용
+      setTimeout(() => {
+        console.log('🔍 클러스터 클릭 후 API 호출 허용');
+      }, 200); // 200ms 후 API 호출 허용
+
       return;
     }
 
@@ -37,6 +52,11 @@ export const useFetchStoresHooks = (
       const neLatLng = bounds.getNorthEast();
       const zoomLevel = map.getLevel();
 
+      // 지도가 유효한 데이터를 가지고 있는지 확인
+      if (!bounds || !swLatLng || !neLatLng || zoomLevel === undefined) {
+        return;
+      }
+
       const newBounds = {
         swLat: swLatLng.getLat(),
         swLng: swLatLng.getLng(),
@@ -44,31 +64,57 @@ export const useFetchStoresHooks = (
         neLng: neLatLng.getLng(),
       };
 
-      // bounds나 filterState가 실제로 변경되었는지 확인
-      const boundsChanged = JSON.stringify(newBounds) !== JSON.stringify(lastBoundsRef.current);
-      const filterChanged =
-        JSON.stringify(filterState) !== JSON.stringify(lastFilterStateRef.current);
-
-      if (!boundsChanged && !filterChanged) {
-        return; // 변경사항이 없으면 API 호출하지 않음
+      // bounds가 유효한지 확인
+      if (
+        newBounds.swLat === 0 &&
+        newBounds.swLng === 0 &&
+        newBounds.neLat === 0 &&
+        newBounds.neLng === 0
+      ) {
+        return;
       }
+
+      const zoomLevelChanged = zoomLevel !== lastZoomLevelRef.current;
 
       // 이전 타이머가 있다면 취소
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
 
-      // 500ms 디바운싱
+      // 줌 레벨 변경 시에는 더 빠르게 응답
+      const debounceTime = zoomLevelChanged ? 100 : 500;
+      // 디바운싱
       debounceRef.current = setTimeout(async () => {
         try {
           if (!map) return;
+
+          // 클러스터 클릭 상태 재확인
+          const isClusterClick = getClusterClickActive();
+          if (isClusterClick) {
+            console.log('🔍 디바운스 중 클러스터 클릭 활성화 - API 호출 건너뜀');
+            return;
+          }
+
           setIsLoading(true);
 
           setCurrentBounds(newBounds);
           lastBoundsRef.current = newBounds;
           lastFilterStateRef.current = filterState;
+          lastZoomLevelRef.current = zoomLevel;
 
           const mergedParams = mapFilterStateToApiParams(newBounds, filterState, zoomLevel);
+
+          // URL 파라미터 스트링 생성 및 출력
+          const urlParams = new URLSearchParams();
+          Object.entries(mergedParams).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+              // 배열인 경우 각 요소를 개별 파라미터로 추가
+              value.forEach((item) => urlParams.append(key, item.toString()));
+            } else if (value !== undefined && value !== null) {
+              urlParams.append(key, value.toString());
+            }
+          });
+
           const stores = await fetchStores(mergedParams);
 
           // stores가 실제로 변경되었는지 확인
@@ -84,7 +130,7 @@ export const useFetchStoresHooks = (
             setIsLoading(false);
           }
         }
-      }, 500);
+      }, debounceTime);
     } catch (error) {
       console.error('맵 bounds 가져오기 실패:', error);
     }
@@ -99,9 +145,23 @@ export const useFetchStoresHooks = (
     // 초기화 플래그 확인
     if (!isInitializedRef.current) {
       isInitializedRef.current = true;
+      // 지도가 완전히 로드될 때까지 기다린 후 초기 로드
+      const initializeAfterMapReady = () => {
+        try {
+          const bounds = map.getBounds();
+          const zoomLevel = map.getLevel();
 
-      // 초기 로드
-      updateStoresByBounds();
+          // 지도가 유효한 bounds를 가지고 있는지 확인
+          if (bounds && zoomLevel !== undefined) {
+            updateStoresByBounds();
+          } else {
+            setTimeout(initializeAfterMapReady, 100);
+          }
+        } catch (error) {
+          console.log('🗺️ 지도 초기화 중 오류, 100ms 후 재시도:', error);
+          setTimeout(initializeAfterMapReady, 100);
+        }
+      };
 
       // 지도 이동/줌 이벤트 리스너 등록
       const boundsChangedListener = () => {
@@ -110,6 +170,9 @@ export const useFetchStoresHooks = (
 
       window.kakao.maps.event.addListener(map, 'bounds_changed', boundsChangedListener);
       window.kakao.maps.event.addListener(map, 'zoom_changed', boundsChangedListener);
+
+      // 지도 준비 완료 후 초기 로드
+      initializeAfterMapReady();
 
       // 클린업
       return () => {
