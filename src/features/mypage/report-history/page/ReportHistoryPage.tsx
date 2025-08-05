@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import {
   useReportHistoryListQuery
 } from '@/features/mypage/report-history/model/queries';
+import { PATH } from '@/shared/config/path';
 import { isMobileCarrier } from '@/shared/lib/typeGuards';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -84,14 +85,6 @@ const STEP_ITEMS = [
   },
 ] as const;
 
-function getCurrentStepIdx(info: ReportInfo): number {
-  if (!info.paymentDateTime) return -1;
-  if (info.reportStatus === 'COMPLETE') return 3;
-  if (info.reportStatus === 'ANSWER') return 2;
-  if (info.questionDateTime) return 1;
-  return 0;
-}
-
 export default function ReportHistoryPage() {
   const router = useRouter();
   const reportStatus = 'ANSWER';
@@ -107,6 +100,22 @@ export default function ReportHistoryPage() {
     // 예시: isSold가 true면 완료, 아니면 진행중 등
     if (item.isSold) return 3; // 완료
     return 1; // 기본적으로 문의 단계
+  };
+
+  const handlePostClick = (postId: number) => {
+    const selectedPost = items.find((item) => item.postId === postId);
+
+    // 둘 다 확인해서 더 정확하게 구분
+    const hasValidCarrier = selectedPost && isMobileCarrier(selectedPost.mobileCarrier);
+    const hasPartner = selectedPost?.partner !== null;
+
+    if (hasValidCarrier && hasPartner) {
+      // 통신사와 파트너 정보가 모두 있으면 데이터 상품
+      router.push(PATH.TRADE.DATA_DETAIL.replace(':id', postId.toString()));
+    } else {
+      // 그 외의 경우는 기프티콘
+      router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', postId.toString()));
+    }
   };
 
   return (
@@ -152,8 +161,11 @@ export default function ReportHistoryPage() {
                   return (
                     <div
                       key={item.id}
-                      className="w-[178px] flex-shrink-0"
-                      onClick={() => setSelectedIdx(idx)}
+                      className="w-[178px] flex-shrink-0 cursor-pointer"
+                      onClick={() => {
+                        setSelectedIdx(idx);
+                        handlePostClick(item.postId);
+                      }}
                     >
                       <TradePostCard
                         imageUrl={item.thumbnailUrl || '/assets/trade-sample.png'}
