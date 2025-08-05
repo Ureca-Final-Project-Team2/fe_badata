@@ -175,7 +175,7 @@ export function TradeGifticonRegisterForm() {
         className="flex justify-end w-[380px] text-sm text-[var(--main-5)] font-medium underline cursor-pointer"
         onClick={() => setShowGuideModal(true)}
       >
-        사진 업로드 가이드 보기
+        이미지 파일 업로드 가이드
       </div>
       <Modal
         isOpen={showGuideModal}
