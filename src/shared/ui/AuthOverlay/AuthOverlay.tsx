@@ -1,8 +1,16 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
+
 import { LoginPrompt } from './LoginPrompt';
 
 export const AuthOverlay = () => {
+  const pathname = usePathname();
+
+  // 홈/마이페이지에서는 z-index를 낮게, 다른 페이지에서는 높게 설정
+  const isHomeOrMypage = pathname === '/' || pathname === '/mypage';
+  const zIndex = isHomeOrMypage ? 'z-40' : 'z-70';
+
   const handleKakaoLogin = () => {
     // 카카오 로그인 실행
     const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
@@ -25,7 +33,9 @@ export const AuthOverlay = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-[var(--black)]/50">
+    <div
+      className={`fixed inset-0 ${zIndex} flex items-center justify-center bg-[var(--black)]/50`}
+    >
       <LoginPrompt onLogin={handleKakaoLogin} />
     </div>
   );

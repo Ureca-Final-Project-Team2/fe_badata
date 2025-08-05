@@ -46,11 +46,10 @@ export function BaseLayout({
   // 홈과 마이페이지에서만 로그인 체크
   const requiresAuth = pathname === '/' || pathname === '/mypage';
   const shouldShowAuthOverlay = requiresAuth && !isLoggedIn;
-
-  // AuthModal이 열려있거나 AuthOverlay가 표시될 때 블러 처리
-  const shouldBlur = shouldShowAuthOverlay || isAuthModalOpen; // 수정
-
   const isHomeOrMypage = pathname === '/' || pathname === '/mypage';
+
+  // 홈/마이페이지에서만 블러 처리 (AuthOverlay 또는 AuthModal이 열렸을 때)
+  const shouldBlur = shouldShowAuthOverlay || (isAuthModalOpen && isHomeOrMypage);
 
   return (
     <div className={`w-full ${centered ? 'flex justify-center' : ''} bg-[var(--main-2)]`}>
@@ -99,7 +98,8 @@ export function BaseLayout({
           <div
             className={
               `fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[50]` +
-              (!isHomeOrMypage && shouldBlur ? ' filter blur-sm' : '')
+              // 홈/마이페이지에서는 AuthModal이 열려도 블러처리 안함
+              (isHomeOrMypage ? '' : shouldBlur ? ' filter blur-sm' : '')
             }
           >
             <BottomNav />

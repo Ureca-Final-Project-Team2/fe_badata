@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 
+import { usePathname } from 'next/navigation';
+
 import { X } from 'lucide-react';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
@@ -12,6 +14,11 @@ export const AuthModal = () => {
   const { isAuthModalOpen, closeAuthModal, pendingUrl, executePendingRequest } =
     useAuthErrorStore();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const pathname = usePathname();
+
+  // 홈/마이페이지에서는 z-index를 낮게, 다른 페이지에서는 높게 설정
+  const isHomeOrMypage = pathname === '/' || pathname === '/mypage';
+  const zIndex = isHomeOrMypage ? 'z-40' : 'z-70';
 
   // 로그인 성공 시 모달 닫기 및 원래 요청 실행
   useEffect(() => {
@@ -54,7 +61,9 @@ export const AuthModal = () => {
 
   return (
     // 1번과 완전히 동일한 구조
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-[var(--black)]/50">
+    <div
+      className={`fixed inset-0 ${zIndex} flex items-center justify-center bg-[var(--black)]/50`}
+    >
       <div className="relative">
         {/* X 버튼 */}
         <button
