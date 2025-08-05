@@ -75,16 +75,16 @@ export default function RentalHistoryPage() {
 
               return (
                 <div key={item.id} className={`relative mb-10${idx === 0 ? ' mt-6' : ''}`}>
-                  <div className="absolute -top-6 left-4 right-4 flex justify-between items-center">
+                  <div className="absolute -top-3 left-2 right-2 flex justify-between items-center">
                     <span className="font-body-xs-medium">{dateRangeText}</span>
                     <span className="font-body-xs-medium flex items-center gap-1 text-[var(--gray-mid)]">
                       📅 대여 기간 {days}일
                     </span>
                   </div>
-
+                  <div className="h-4" />
                   <div className="border border-[var(--gray)] rounded-xl bg-white px-4 py-4 pt-6">
                     <div className="flex flex-wrap items-center justify-between gap-y-1 mb-2">
-                      <span className="font-body-xs-medium max-w-[calc(100%-100px)] truncate">
+                      <span className="font-body-regular max-w-[calc(100%-100px)] truncate">
                         {item.storeName}
                       </span>
                       {showReviewButton && (
