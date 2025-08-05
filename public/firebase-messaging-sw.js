@@ -13,8 +13,8 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// 배포된 사이트의 실제 도메인
-const SITE_URL = 'https://badata.vercel.app';
+// 동적으로 origin을 가져오는 방식
+const SITE_ORIGIN = self.location.origin; // 개발/스테이징/프로덕션 자동 적용
 
 // Firebase FCM 백그라운드 메시지 처리
 messaging.onBackgroundMessage(function (payload) {
@@ -88,14 +88,14 @@ self.addEventListener('notificationclick', function (event) {
   const targetUrl = event.notification.data?.url || '/';
 
   // 전체 URL 생성 (상대 경로인 경우)
-  const fullUrl = targetUrl.startsWith('http') ? targetUrl : `${SITE_URL}${targetUrl}`;
+  const fullUrl = targetUrl.startsWith('http') ? targetUrl : `${SITE_ORIGIN}${targetUrl}`;
 
   // 알림 클릭 시 앱으로 이동
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       // 이미 열린 탭이 있으면 포커스
       for (const client of clientList) {
-        if (client.url.includes(SITE_URL) || client.url.includes('localhost:3000')) {
+        if (client.url.includes(SITE_ORIGIN) || client.url.includes('localhost:3000')) {
           client.navigate(fullUrl);
           return client.focus();
         }

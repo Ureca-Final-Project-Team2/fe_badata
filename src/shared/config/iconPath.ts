@@ -45,6 +45,7 @@ export const ICONS = {
     RENTAL_NOTIFICATION: rentalNotification,
     MYSOS: mySos,
     NOTIFICATION: notification,
+    BACKGROUND: '/assets/mypage_background.png'
   },
   TRADE: {
     BRAND_LOGO: {

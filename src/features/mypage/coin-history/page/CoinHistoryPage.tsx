@@ -54,15 +54,12 @@ export default function CoinHistoryPage() {
       header={<PageHeader title="코인 내역" onBack={() => history.back()} />}
       showBottomNav
     >
-      <div className="p-5 space-y-6">
-        <CoinBalanceSection coinAmount={data.coin} />
+      <CoinBalanceSection coinAmount={data.coin} />
+      <CoinUsageSection onInfoClick={() => setIsInfoModalOpen(true)} />
 
-        <CoinUsageSection onInfoClick={() => setIsInfoModalOpen(true)} />
-
-        <div className="space-y-3">
-          <h2 className="font-body-semibold">BADATA 코인 내역</h2>
-          <CoinHistoryInfiniteList />
-        </div>
+      <div className="space-y-3">
+        <h2 className="font-body-semibold mt-4">BADATA 코인 내역</h2>
+        <CoinHistoryInfiniteList />
       </div>
 
       <CoinInfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />

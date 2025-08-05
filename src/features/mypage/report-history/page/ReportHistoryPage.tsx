@@ -8,6 +8,7 @@ import {
   useReportHistoryListQuery,
   useReportInfoQuery,
 } from '@/features/mypage/report-history/model/queries';
+import { PATH } from '@/shared/config/path';
 import { isMobileCarrier } from '@/shared/lib/typeGuards';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -20,7 +21,7 @@ interface TimelineItemProps {
   label: string;
   text: string;
   date: string;
-  color: 'main' | 'gray';
+  color: 'main' | 'black';
   isLast?: boolean;
 }
 
@@ -38,13 +39,13 @@ function TimelineItem({ label, text, date, color, isLast }: TimelineItemProps) {
           />
         )}
         <div
-          className={`relative w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-semibold ${dotColor} z-10`}
+          className={`relative w-10 h-10 rounded-full flex items-center justify-center text-white font-label-semibold ${dotColor} z-10`}
         >
           {label}
         </div>
       </div>
       <div className="flex-1 pt-1">
-        <div className="font-label-semibold text-gray-900 mb-1">{text}</div>
+        <div className="font-label-semibold text-[var(--black)] mb-1">{text}</div>
         <div className="font-small-regular text-[var(--gray-mid)]">{date}</div>
       </div>
     </li>
@@ -62,6 +63,22 @@ export default function ReportHistoryPage() {
   const reportId = selectedItem?.id;
 
   const { data: reportInfo } = useReportInfoQuery(reportId ?? 0);
+
+  const handlePostClick = (postId: number) => {
+    const selectedPost = items.find((item) => item.postId === postId);
+
+    // 둘 다 확인해서 더 정확하게 구분
+    const hasValidCarrier = selectedPost && isMobileCarrier(selectedPost.mobileCarrier);
+    const hasPartner = selectedPost?.partner !== null;
+
+    if (hasValidCarrier && hasPartner) {
+      // 통신사와 파트너 정보가 모두 있으면 데이터 상품
+      router.push(PATH.TRADE.DATA_DETAIL.replace(':id', postId.toString()));
+    } else {
+      // 그 외의 경우는 기프티콘
+      router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', postId.toString()));
+    }
+  };
 
   const STEP_ITEMS = [
     {
@@ -158,55 +175,54 @@ export default function ReportHistoryPage() {
       showBottomNav
     >
       <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
-        <div className="px-4 pt-6 pb-24">
-          <h2 className="font-body-semibold mb-4">신고 게시물</h2>
-          <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar pb-2">
-            {items.map((item, idx) => {
-              const safeCarrier = isMobileCarrier(item.mobileCarrier)
-                ? item.mobileCarrier
-                : 'UPLUS';
+        <h2 className="font-body-semibold mb-4 mt-4">신고 게시물</h2>
+        <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar pb-2">
+          {items.map((item, idx) => {
+            const safeCarrier = isMobileCarrier(item.mobileCarrier) ? item.mobileCarrier : 'UPLUS';
 
+            return (
+              <div
+                key={item.id}
+                className="w-[178px] flex-shrink-0 cursor-pointer"
+                onClick={() => {
+                  setSelectedIdx(idx);
+                  handlePostClick(item.postId);
+                }}
+              >
+                <TradePostCard
+                  imageUrl={item.thumbnailUrl || '/assets/trade-sample.png'}
+                  title={item.title}
+                  partner={item.partner || undefined}
+                  mobileCarrier={safeCarrier}
+                  price={item.price}
+                  likeCount={item.postLikes}
+                  isCompleted={item.isSold}
+                  isLiked={false}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <SectionDivider className="my-6" />
+        <h2 className="font-body-semibold mb-4">신고 진행 과정</h2>
+        {selectedItem && reportInfo && (
+          <ul className="flex flex-col gap-6">
+            {STEP_ITEMS.map((step, idx) => {
+              const isActive = idx <= getCurrentStepIdx(reportInfo);
+              const date = step.getDate(reportInfo);
               return (
-                <div
-                  key={item.id}
-                  className="w-[178px] flex-shrink-0"
-                  onClick={() => setSelectedIdx(idx)}
-                >
-                  <TradePostCard
-                    imageUrl={item.thumbnailUrl || '/assets/trade-sample.png'}
-                    title={item.title}
-                    partner={item.partner || undefined}
-                    mobileCarrier={safeCarrier}
-                    price={item.price}
-                    likeCount={item.postLikes}
-                    isCompleted={item.isSold}
-                    isLiked={false}
-                  />
-                </div>
+                <TimelineItem
+                  key={step.key}
+                  label={step.label}
+                  text={step.text}
+                  date={date ? new Date(date).toLocaleString() : ''}
+                  color={isActive ? 'main' : 'black'}
+                  isLast={idx === STEP_ITEMS.length - 1}
+                />
               );
             })}
-          </div>
-          <SectionDivider className="my-6" />
-          <h2 className="font-body-semibold mb-4">신고 진행 과정</h2>
-          {selectedItem && reportInfo && (
-            <ul className="flex flex-col gap-6">
-              {STEP_ITEMS.map((step, idx) => {
-                const isActive = idx <= getCurrentStepIdx(reportInfo);
-                const date = step.getDate(reportInfo);
-                return (
-                  <TimelineItem
-                    key={step.key}
-                    label={step.label}
-                    text={step.text}
-                    date={date ? new Date(date).toLocaleString() : ''}
-                    color={isActive ? 'main' : 'gray'}
-                    isLast={idx === STEP_ITEMS.length - 1}
-                  />
-                );
-              })}
-            </ul>
-          )}
-        </div>
+          </ul>
+        )}
       </div>
     </BaseLayout>
   );

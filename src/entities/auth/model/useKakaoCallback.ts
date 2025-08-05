@@ -37,7 +37,14 @@ export const useKakaoCallback = () => {
           console.warn(' 로그인은 성공했지만 FCM 토큰이 없어 서버 전송 생략');
         }
 
-        router.replace(content.newUser ? '/onboarding' : '/');
+        // 리다이렉트 파라미터 확인
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
+        if (redirect) {
+          router.replace(redirect);
+        } else {
+          router.replace(content.newUser ? '/onboarding' : '/');
+        }
       } catch (err) {
         console.error('카카오 로그인 실패', err);
       }
