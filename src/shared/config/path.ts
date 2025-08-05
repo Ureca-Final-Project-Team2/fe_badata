@@ -21,6 +21,7 @@ export const PATH = {
   MYPAGE: {
     MAIN: '/mypage',
     LIKE_STORE: '/mypage/like-store',
+    LIKE_TRADE_POST: '/mypage/like-trade-post',
     FOLLOWER: '/mypage/follower',
     FOLLOWING: '/mypage/following',
   },

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useLikedTradePosts } from '@/features/mypage/like-trade-post/model/queries';
+import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
@@ -23,6 +24,14 @@ export default function LikeTradePostPage() {
 
   const handleBack = () => router.back();
 
+  const handlePostClick = (postId: number, postCategory: 'GIFTICON' | 'DATA') => {
+    if (postCategory === 'DATA') {
+      router.push(PATH.TRADE.DATA_DETAIL.replace(':id', postId.toString()));
+    } else {
+      router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', postId.toString()));
+    }
+  };
+
   if (isLoading && !cursor) return <div>로딩중...</div>;
   if (isError) return <div>에러가 발생했습니다.</div>;
 
@@ -34,17 +43,22 @@ export default function LikeTradePostPage() {
         <>
           <div className="grid grid-cols-2 gap-5 mt-4">
             {likeTradePostItems.map((item) => (
-              <TradePostCard
+              <div
                 key={item.postId}
-                imageUrl={item.postImage}
-                title={item.title}
-                partner={item.partner}
-                price={item.price}
-                likeCount={item.postLikes}
-                isLiked={true}
-                hasDday={false}
-                dday={0}
-              />
+                onClick={() => handlePostClick(item.postId, item.postCategory)}
+                className="cursor-pointer"
+              >
+                <TradePostCard
+                  imageUrl={item.postImage}
+                  title={item.title}
+                  partner={item.partner}
+                  price={item.price}
+                  likeCount={item.postLikes}
+                  isLiked={true}
+                  hasDday={false}
+                  dday={0}
+                />
+              </div>
             ))}
           </div>
 
