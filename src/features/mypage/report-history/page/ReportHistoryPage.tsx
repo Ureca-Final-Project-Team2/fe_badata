@@ -8,6 +8,7 @@ import {
   useReportHistoryListQuery,
   useReportInfoQuery,
 } from '@/features/mypage/report-history/model/queries';
+import { PATH } from '@/shared/config/path';
 import { isMobileCarrier } from '@/shared/lib/typeGuards';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
@@ -62,6 +63,19 @@ export default function ReportHistoryPage() {
   const reportId = selectedItem?.id;
 
   const { data: reportInfo } = useReportInfoQuery(reportId ?? 0);
+
+  const handlePostClick = (postId: number) => {
+    // mobileCarrier가 있으면 DATA로, 없으면 GIFTICON으로 추정
+    const selectedPost = items.find((item) => item.postId === postId);
+
+    if (selectedPost?.mobileCarrier) {
+      // 통신사 정보가 있으면 데이터 상품으로 간주
+      router.push(PATH.TRADE.DATA_DETAIL.replace(':id', postId.toString()));
+    } else {
+      // 통신사 정보가 없으면 기프티콘으로 간주
+      router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', postId.toString()));
+    }
+  };
 
   const STEP_ITEMS = [
     {
@@ -161,15 +175,16 @@ export default function ReportHistoryPage() {
         <h2 className="font-body-semibold mb-4 mt-4">신고 게시물</h2>
         <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar pb-2">
           {items.map((item, idx) => {
-            const safeCarrier = isMobileCarrier(item.mobileCarrier)
-              ? item.mobileCarrier
-              : 'UPLUS';
+            const safeCarrier = isMobileCarrier(item.mobileCarrier) ? item.mobileCarrier : 'UPLUS';
 
             return (
               <div
                 key={item.id}
-                className="w-[178px] flex-shrink-0"
-                onClick={() => setSelectedIdx(idx)}
+                className="w-[178px] flex-shrink-0 cursor-pointer"
+                onClick={() => {
+                  setSelectedIdx(idx);
+                  handlePostClick(item.postId);
+                }}
               >
                 <TradePostCard
                   imageUrl={item.thumbnailUrl || '/assets/trade-sample.png'}
