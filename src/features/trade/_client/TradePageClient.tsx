@@ -6,9 +6,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useInView } from 'framer-motion';
 
+import { useTradePostsInfiniteQuery } from '@/entities/trade-post/model/queries';
 import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
 import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
-import { useTradeDeadlineInfiniteQuery } from '@/features/trade/model/queries';
 import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
 import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
 import { TradeDeadlineBanner } from '@/features/trade/ui/TradeDeadlineBanner';
@@ -27,7 +27,7 @@ export default function TradePageClient() {
   const searchParams = useSearchParams();
   const page = searchParams?.get('page') ?? 'all';
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTradeDeadlineInfiniteQuery();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTradePostsInfiniteQuery();
 
   const allPosts = data.pages.flatMap((page) => page.item);
 

@@ -1,4 +1,10 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseInfiniteQuery,
+} from '@tanstack/react-query';
 
 import { getTradePosts, tradePostApis } from '@/entities/trade-post/api/apis';
 import { useAllFollowingsQuery } from '@/entities/user/model/queries';
@@ -6,21 +12,18 @@ import { getTradePostDetail } from '@/features/trade/data/detail/api/apis';
 import { ErrorCode, ErrorMessageMap } from '@/shared/config/errorCodes';
 import { makeToast } from '@/shared/lib/makeToast';
 
-import type {
-  DeadlinePost,
-  SellerPostsContent,
-  UserInfoResponse,
-} from '@/entities/trade-post/lib/types';
+import type { SellerPostsContent, UserInfoResponse } from '@/entities/trade-post/lib/types';
+import type { DeadlinePostResponse } from '@/features/trade/deadline/lib/types';
 
-export const useTradePostsQuery = () => {
-  const { data: posts, isLoading } = useQuery<DeadlinePost[]>({
+export const useTradePostsInfiniteQuery = () => {
+  return useSuspenseInfiniteQuery({
     queryKey: ['trade-posts'],
-    queryFn: getTradePosts,
-    gcTime: 5 * 60 * 1000,
-    staleTime: 5 * 60 * 1000,
+    queryFn: ({ pageParam }) => getTradePosts(pageParam),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage: DeadlinePostResponse) => {
+      return lastPage.hasNext ? lastPage.nextCursor : null;
+    },
   });
-
-  return { posts, isLoading };
 };
 
 export const useTradePostDetailQuery = (postId: number) => {
