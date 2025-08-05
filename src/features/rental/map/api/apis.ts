@@ -17,20 +17,6 @@ import type {
 export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> => {
   try {
     const endpoint = END_POINTS.STORES.ALLDEVICE();
-
-    // URL 파라미터 구성
-    const queryParams = new URLSearchParams();
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          // 배열인 경우 여러 번 추가 (dataCapacity=999&dataCapacity=111 형태)
-          value.forEach((v) => queryParams.append(key, v.toString()));
-        } else {
-          queryParams.append(key, value.toString());
-        }
-      }
-    });
-
     const response = await axiosInstance.get(endpoint, {
       params,
     });
@@ -46,26 +32,48 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
         stores = response as Record<string, unknown>[];
       }
     }
-
     // API 응답을 Store 타입에 맞게 매핑
     const mappedStores = stores.map((store: Record<string, unknown>) => {
       const isCluster = !store.name; // name이 null이면 클러스터
       const mappedStore = {
-        id: store.id as number,
-        name: (store.name as string) || `클러스터 ${store.id}`, // name이 null인 경우 클러스터 ID로 대체
-        latitude: store.latitude as number,
-        longititude: store.longititude as number,
-        leftDeviceCount: store.leftDeviceCount as number,
-        liked: (store.liked as boolean) || false,
+        id: Number(store.id) || 0,
+        name: (store.name as string) || (isCluster ? `클러스터 ${store.id}` : `스토어 ${store.id}`),
+        latitude: Number(store.latitude) || 0,
+        longititude: Number(store.longititude) || 0,
+        leftDeviceCount: Number(store.leftDeviceCount) || 0,
+        liked: Boolean(store.liked) || false,
         isCluster,
       };
-
       return mappedStore;
     });
 
+    // 줌 레벨에 따른 데이터 필터링
+    const zoomLevel = params.zoomLevel;
+    if (zoomLevel && zoomLevel <= 3) {
+      // 줌 레벨 3 이하에서는 클러스터 데이터를 완전히 제거
+      const filteredStores = mappedStores.filter((store) => !store.isCluster);
+      console.log('🔍 줌 레벨 3 이하 - 클러스터 데이터 필터링:', {
+        total: mappedStores.length,
+        filtered: filteredStores.length,
+        clusters: mappedStores.filter((s) => s.isCluster).length,
+        zoomLevel,
+      });
+      return filteredStores;
+    } else if (zoomLevel && zoomLevel >= 4) {
+      // 줌 레벨 4 이상에서는 개별 스토어 데이터를 제거하고 클러스터만 표시
+      const filteredStores = mappedStores.filter((store) => store.isCluster);
+      console.log('🔍 줌 레벨 4 이상 - 개별 스토어 데이터 필터링:', {
+        total: mappedStores.length,
+        filtered: filteredStores.length,
+        individual: mappedStores.filter((s) => !s.isCluster).length,
+        zoomLevel,
+      });
+      return filteredStores;
+    }
+
     return mappedStores;
   } catch (error) {
-    console.error(' fetchStores API 호출 실패:', error);
+    console.error('❌ fetchStores API 호출 실패:', error);
     return [];
   }
 };
@@ -78,9 +86,14 @@ export const fetchStoreDevices = async (
   params: FetchStoreDevicesParams,
 ): Promise<StoreDevice[]> => {
   try {
+    // 개별 스토어의 디바이스를 조회할 때는 STORES.ALLSTORE 엔드포인트 사용
     const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
-      params,
+      params: {
+        ...params,
+        // storeId는 URL 경로에 포함되므로 params에서 제외
+      },
     });
+
     return Array.isArray(response) ? response : [];
   } catch (error) {
     console.error(`스토어 ${storeId} 디바이스 조회 실패:`, error);

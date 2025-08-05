@@ -27,14 +27,14 @@ export function ImageBox({ size = 'sm', url, className }: ImageBoxProps) {
   return (
     <div
       className={cn(
-        'flex items-center justify-center border',
+        'flex items-center justify-center border overflow-hidden',
         'bg-[var(--gray-light)] border-[var(--gray)]',
         borderRadius,
         SIZE_MAP[size],
         className,
       )}
     >
-      <img src={url || fallbackImage} alt="image" className="object-contain w-full h-full" />
+      <img src={url || fallbackImage} alt="image" className="object-cover w-full h-full" />
     </div>
   );
 }

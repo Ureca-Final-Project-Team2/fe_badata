@@ -2,6 +2,8 @@
 
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { updateAddressUsageTime } from '@/features/rental/search/api/apis';
@@ -11,7 +13,6 @@ import { useGetAddressHistoryInfinite } from '@/features/rental/search/hook/useG
 import { useSearchPlaces } from '@/features/rental/search/hook/useSearchPlacesHooks';
 import useThrottledScroll from '@/features/rental/search/hook/useThrottledScrollHooks';
 import AddressHistoryList from '@/features/rental/search/ui/AddressHistoryList';
-import CurrentLocationButton from '@/features/rental/search/ui/CurrentLocationButton';
 import SearchInputField from '@/features/rental/search/ui/SearchInputField';
 import SearchResults from '@/features/rental/search/ui/SearchResults';
 import { isLoggedIn } from '@/features/rental/search/utils/auth/isLoggedIn';
@@ -22,6 +23,7 @@ import type { PlaceSearchResult } from '@/features/rental/search/utils/address/s
 
 export default function SearchPosPage() {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const createAddressMutation = useCreateAddressHistory();
   const deleteAddressMutation = useDeleteAddressHistory();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -69,9 +71,18 @@ export default function SearchPosPage() {
           }, 500); // 더 긴 지연을 두어 서버 데이터가 준비되도록 함
         },
       });
-      setKeyword('');
+
+      // 선택한 장소 정보를 URL 파라미터로 전달하여 rentalPage로 이동
+      const searchParams = new URLSearchParams({
+        lat: place.y.toString(),
+        lng: place.x.toString(),
+        address: place.road_address_name || place.address_name,
+        placeName: place.place_name,
+      });
+
+      router.push(`/rental?${searchParams.toString()}`);
     },
-    [createAddressMutation, setKeyword, refetch, sort, queryClient],
+    [createAddressMutation, refetch, sort, queryClient, router],
   );
 
   // 주소 이력 클릭 시 호출되는 함수
@@ -143,12 +154,6 @@ export default function SearchPosPage() {
     },
     [setKeyword, queryClient, sort],
   );
-
-  // 현재 위치 클릭 핸들러
-  const handleCurrentLocation = useCallback(() => {
-    console.log('현재 위치로 찾기');
-    // TODO: 현재 위치 기반 검색 로직 구현
-  }, []);
 
   // 주소 삭제 핸들러
   const handleDeleteAddress = useCallback(
@@ -237,8 +242,6 @@ export default function SearchPosPage() {
           ) : (
             // 검색어가 없을 때 - 현재 위치 버튼과 최근 검색 주소 표시
             <>
-              <CurrentLocationButton onClick={handleCurrentLocation} />
-
               {/* 최근 검색 주소 제목 */}
               {hasAddressHistory && (
                 <h2 className="font-small-medium text-[var(--black)] mb-4">최근 검색 주소</h2>

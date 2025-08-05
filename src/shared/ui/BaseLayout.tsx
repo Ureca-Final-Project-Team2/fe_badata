@@ -10,6 +10,7 @@ import { BottomNav } from './BottomNav';
 interface BaseLayoutProps {
   children: React.ReactNode;
   header?: React.ReactNode;
+  headerfab?: React.ReactNode;
   fab?: React.ReactNode;
   className?: string;
   centered?: boolean; // 가운데 정렬 여부
@@ -22,6 +23,7 @@ interface BaseLayoutProps {
 export function BaseLayout({
   children,
   header,
+  headerfab,
   fab,
   className,
   centered = true,
@@ -36,6 +38,13 @@ export function BaseLayout({
         {showHeader && header && (
           <div className="fixed max-w-[428px] mx-auto top-0 left-0 right-0 z-20">{header}</div>
         )}
+
+        {/* header fab */}
+        <div className="pointer-events-none fixed top-[135px] inset-x-0 z-30">
+          <div className="mx-auto max-w-[428px] w-full flex justify-end pointer-events-auto">
+            {headerfab}
+          </div>
+        </div>
 
         {/* 메인 스크롤 영역 */}
         <main

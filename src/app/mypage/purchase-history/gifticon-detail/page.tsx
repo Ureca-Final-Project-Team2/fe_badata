@@ -8,7 +8,7 @@ import PurchasedGifticonDetailPage from '@/features/mypage/purchase-history/gift
 
 function GifticonDetailContent() {
   const searchParams = useSearchParams();
-  const encodedGifticonId = searchParams.get('id');
+  const encodedGifticonId = searchParams?.get('id');
 
   if (!encodedGifticonId) {
     return (

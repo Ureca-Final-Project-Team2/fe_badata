@@ -32,6 +32,7 @@ export const ICONS = {
     FILTERICON: filterIcon,
     LIKE_ACTIVE_HALF: likeActiveHalf,
     SHELL: shell,
+    SPINNER: '/assets/spinner.gif',
   },
   MYPAGE: {
     COIN: coin,

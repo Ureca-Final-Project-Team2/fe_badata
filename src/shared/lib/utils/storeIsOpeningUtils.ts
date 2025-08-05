@@ -5,10 +5,27 @@
  * @returns 영업 중이면 true, 아니면 false
  */
 export const isStoreOpen = (startTime: string, endTime: string): boolean => {
+  // 입력 유효성 검사
+  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+  if (!timeRegex.test(startTime) || !timeRegex.test(endTime)) {
+    throw new Error('Invalid time format. Expected HH:mm:ss');
+  }
+
+  // 한국 시간 기준으로 현재 시간 가져오기
   const now = new Date();
-  // 브라우저가 이미 한국 시간으로 설정되어 있으므로 현재 시간을 그대로 사용
-  const currentTimeString = now.toTimeString().split(' ')[0];
-  // startTime과 endTime을 비교
-  const isOpen = currentTimeString >= startTime && currentTimeString <= endTime;
-  return isOpen;
+  const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC+9
+  const currentTime =
+    koreaTime.getUTCHours() * 3600 + koreaTime.getUTCMinutes() * 60 + koreaTime.getUTCSeconds();
+
+  const [startHour, startMin, startSec] = startTime.split(':').map(Number);
+  const [endHour, endMin, endSec] = endTime.split(':').map(Number);
+  const startSeconds = startHour * 3600 + startMin * 60 + startSec;
+  const endSeconds = endHour * 3600 + endMin * 60 + endSec;
+
+  // 자정을 넘나드는 경우 처리
+  if (startSeconds > endSeconds) {
+    return currentTime >= startSeconds || currentTime <= endSeconds;
+  }
+
+  return currentTime >= startSeconds && currentTime <= endSeconds;
 };
