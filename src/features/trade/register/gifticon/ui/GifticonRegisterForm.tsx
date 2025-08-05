@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -16,11 +16,14 @@ import {
   usePostTradeGifticonMutation,
   useValidateGifticonImageMutation,
 } from '@/features/trade/register/gifticon/model/mutations';
+import GuideItem from '@/features/trade/register/gifticon/ui/GuideItem';
 import { PATH } from '@/shared/config/path';
 import { toRawPrice } from '@/shared/lib/formatPrice';
 import { makeToast } from '@/shared/lib/makeToast';
 import { InputField } from '@/shared/ui/InputField';
+import { Modal } from '@/shared/ui/Modal';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
+import { SectionDivider } from '@/shared/ui/SectionDivider';
 import { TextAreaField } from '@/shared/ui/TextAreaField';
 
 import type {
@@ -31,6 +34,7 @@ import type { State } from '@/features/trade/register/gifticon/model/gifticonReg
 import type { ApiResponse } from '@/shared/lib/axios/responseTypes';
 
 export function TradeGifticonRegisterForm() {
+  const [showGuideModal, setShowGuideModal] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = usePostTradeGifticonMutation();
   const { mutate: validateImage, isPending: isValidating } = useValidateGifticonImageMutation();
@@ -160,11 +164,82 @@ export function TradeGifticonRegisterForm() {
           </div>
         )}
       </label>
+
       {state.imageFile && (
         <p className="text-[16px] text-[var(--gray-mid)] mb-4">
           이미지 선택됨: {state.imageFile.name}
         </p>
       )}
+
+      <div
+        className="flex justify-end w-[380px] text-sm text-[var(--main-5)] font-medium underline cursor-pointer"
+        onClick={() => setShowGuideModal(true)}
+      >
+        사진 업로드 가이드 보기
+      </div>
+      <Modal
+        isOpen={showGuideModal}
+        onClose={() => setShowGuideModal(false)}
+        className="w-[380px] mx-4 no-scrollbar overflow-x-hidden"
+      >
+        <div className="p-5 space-y-4">
+          <h2 className="font-body-semibold text-[var(--black)] text-center">
+            기프티콘 이미지 등록 가이드
+          </h2>
+          <SectionDivider />
+          <h3 className="font-body-semibold flex flex-row items-center gap-2">
+            <div className="w-5 h-5 bg-[var(--green)] rounded-full flex items-center justify-center text-white flex-shrink-0 font-small-regular">
+              ✔
+            </div>
+            이미지 업로드 가능한 경우
+          </h3>
+          <div className="space-y-4">
+            <GuideItem title="쿠폰 1장만 있는 경우" image="/images/guides/guide1.jpg" />
+            <GuideItem
+              title="2장 중 아래 쿠폰만 잘라 업로드한 경우"
+              image="/images/guides/guide2.jpg"
+            />
+            <GuideItem title="쿠폰만 직접 잘라낸 경우" image="/images/guides/guide3.jpg" />
+            <GuideItem
+              title="다른 사람이 보낸 쿠폰을 등록한 경우"
+              image="/images/guides/guide4.jpg"
+            />
+          </div>
+          <h3 className="font-body-semibold flex flex-row items-center gap-2">
+            <div className="w-5 h-5 bg-[var(--red)] rounded-full flex items-center justify-center text-white flex-shrink-0 font-small-regular">
+              ✘
+            </div>
+            업로드 불가능한 이미지
+          </h3>
+          <div className="flex items-center px-1">
+            <p className="font-label-medium text-[var(--black)] leading-tight">
+              ・ 유플러스 유독 기프티콘
+              <span className="text-[var(--red)]"> 외의 모든 기프티콘</span>
+              <br />
+              &emsp; (카카오톡 선물하기, 니콘내콘 등)
+            </p>
+          </div>
+          <div className="flex items-center gap-2 px-1">
+            <p className="font-label-medium text-[var(--black)] leading-tight">
+              ・ <span className="text-[var(--red)]">흐릿</span>하거나 &nbsp;
+              <span className="text-[var(--red)]">조작</span>된 이미지
+            </p>
+          </div>
+          <div className="flex items-center gap-2 px-1">
+            <p className="font-label-medium text-[var(--black)] leading-tight">
+              ・ <span className="text-[var(--red)]">유효기간이 지난</span> 이미지
+            </p>
+          </div>
+
+          <button
+            onClick={() => setShowGuideModal(false)}
+            className="mt-6 w-full py-3 font-label-medium bg-[var(--main-5)] text-white cursor-pointer rounded-lg hover:bg-[var(--main-4)] transition-all duration-200"
+          >
+            확인했어요
+          </button>
+        </div>
+      </Modal>
+
       <InputField
         label="상품명"
         readOnly
