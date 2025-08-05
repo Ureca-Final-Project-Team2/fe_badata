@@ -2,43 +2,42 @@
 
 import { useEffect, useRef } from 'react';
 
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useOnboarding } from '@/shared/hooks/useOnboarding';
-import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { Header } from '@/shared/ui/Header';
 
 export default function HomePage() {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const hasLogged = useRef(false);
-  const { isLoading, redirectToOnboardingIfNeeded } = useOnboarding();
+  const { isLoading } = useOnboarding();
 
   useEffect(() => {
-    // 로딩이 완료되면 온보딩 필요 여부 확인
-    if (!isLoading) {
-      redirectToOnboardingIfNeeded();
-    }
-
     if (user && !hasLogged.current) {
       console.log('현재 사용자 정보:', user);
       hasLogged.current = true;
     }
-  }, [user, isLoading, redirectToOnboardingIfNeeded]);
+  }, [user]);
 
-  // 로딩 중이거나 온보딩으로 리다이렉트 중일 때는 아무것도 렌더링하지 않음
-  if (isLoading) {
+  // 리다이렉트 처리
+  useEffect(() => {
+    if (isLoading) return; // 로딩 중이면 아무것도 하지 않음
+
+    if (user) {
+      // 로그인된 사용자는 trade 페이지로
+      router.replace('/trade');
+    } else {
+      // 로그인되지 않은 사용자는 무조건 온보딩으로
+      router.replace('/onboarding');
+    }
+  }, [user, isLoading, router]);
+
+  // 로딩 중이거나 리다이렉트 중이면 아무것도 렌더링하지 않음
+  if (isLoading || user) {
     return null;
   }
 
-  // 사용자가 로그인되어 있으면 trade 페이지로 리다이렉트
-  if (user) {
-    redirect('/trade');
-  }
-
-  return (
-    <BaseLayout header={<Header />} paddingX>
-      홈화면
-    </BaseLayout>
-  );
+  // 로그인되지 않은 사용자는 홈 화면을 보여주지 않고 바로 온보딩으로
+  return null;
 }

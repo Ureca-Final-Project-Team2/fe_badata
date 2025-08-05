@@ -23,6 +23,12 @@ export function LoginChoice({ onComplete }: LoginChoiceProps) {
     onComplete();
   };
 
+  const handleKakaoLogin = () => {
+    // 카카오 로그인 시 온보딩 완료 상태를 미리 설정
+    // 로그인 성공 후 온보딩이 다시 시작되지 않도록 함
+    localStorage.setItem('onboarding-completed', 'true');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col items-center justify-center px-8 text-center">
       {/* BADATA 로고 */}
@@ -39,7 +45,9 @@ export function LoginChoice({ onComplete }: LoginChoiceProps) {
             onMouseLeave={() => setShowTooltip(false)}
             className="relative"
           >
-            <KakaoLoginButton />
+            <div onClick={handleKakaoLogin}>
+              <KakaoLoginButton />
+            </div>
             {/* 툴팁 */}
             {showTooltip && (
               <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-[var(--main-4)] text-[var(--white)] px-3 py-2 rounded-lg font-caption-medium whitespace-nowrap z-10">
