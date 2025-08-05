@@ -224,7 +224,10 @@ async function showSuccessToast(type: string) {
     RESTOCK: '재입고 알림이 설정되었습니다.',
   };
 
-  makeToast(messages[type as keyof typeof messages] || '요청이 완료되었습니다.', 'success');
+  const message = messages[type as keyof typeof messages] || '요청이 완료되었습니다.';
+
+  console.log('✅ 성공 토스트 표시:', message);
+  makeToast(message, 'success');
 }
 
 async function showErrorToast(type: string) {
@@ -239,8 +242,8 @@ async function showErrorToast(type: string) {
     RESTOCK: '재입고 알림 설정 중 오류가 발생했습니다.',
   };
 
-  makeToast(
-    messages[type as keyof typeof messages] || '요청 처리 중 오류가 발생했습니다.',
-    'warning',
-  );
+  const message = messages[type as keyof typeof messages] || '요청 처리 중 오류가 발생했습니다.';
+
+  console.log('✅ 에러 토스트 표시:', message);
+  makeToast(message, 'warning');
 }
