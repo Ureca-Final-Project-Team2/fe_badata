@@ -12,6 +12,7 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const playVideo = async () => {
     const video = videoRef.current;
@@ -21,7 +22,13 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
       // 비디오가 로드되지 않았으면 로드 대기
       if (video.readyState < 2) {
         await new Promise((resolve) => {
-          video.addEventListener('canplay', resolve, { once: true });
+          const controller = new AbortController();
+          abortControllerRef.current = controller;
+
+          video.addEventListener('canplay', resolve, { once: true, signal: controller.signal });
+
+          // 컴포넌트가 언마운트되면 중단
+          setTimeout(() => controller.abort(), 10000); // 10초 타임아웃
         });
       }
 
@@ -89,6 +96,13 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
 
     return () => {
       clearTimeout(skipTimer);
+
+      // AbortController로 진행 중인 Promise 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+
       video.removeEventListener('ended', handleVideoEnd);
       video.removeEventListener('play', handleVideoPlay);
       video.removeEventListener('pause', handleVideoPause);
