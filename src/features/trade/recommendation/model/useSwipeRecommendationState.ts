@@ -22,7 +22,7 @@ export function useSwipeRecommendationState() {
   const { mutate: updateRecommendVector } = usePatchRecommendVectorMutation();
 
   useEffect(() => {
-    if (fetchedPosts && cards.length === 0 && !isFinished) {
+    if (fetchedPosts && cards.length === 0 && !isFinished && fetchedPosts.length > 0) {
       setCards(fetchedPosts);
       setTotalCards((prev) => (isStart ? fetchedPosts.length : prev + fetchedPosts.length));
     }
