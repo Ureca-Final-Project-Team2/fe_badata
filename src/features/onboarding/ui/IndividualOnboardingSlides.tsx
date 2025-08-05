@@ -35,7 +35,7 @@ export function IndividualOnboardingSlides({ onComplete }: IndividualOnboardingS
   const renderSlide = () => {
     switch (currentSlide) {
       case 0:
-        return <Slide1 onNext={handleNext} onPrevious={handlePrevious} onSkip={handleSkip} />;
+        return <Slide1 onNext={handleNext} onSkip={handleSkip} />;
       case 1:
         return <Slide2 onNext={handleNext} onPrevious={handlePrevious} onSkip={handleSkip} />;
       case 2:
@@ -47,7 +47,7 @@ export function IndividualOnboardingSlides({ onComplete }: IndividualOnboardingS
       case 5:
         return <Slide6 onNext={onComplete} onPrevious={handlePrevious} onSkip={handleSkip} />;
       default:
-        return <Slide1 onNext={handleNext} onPrevious={handlePrevious} onSkip={handleSkip} />;
+        return <Slide1 onNext={handleNext} onSkip={handleSkip} />;
     }
   };
 
