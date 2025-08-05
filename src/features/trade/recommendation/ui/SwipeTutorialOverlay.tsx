@@ -71,7 +71,7 @@ export default function SwipeTutorialOverlay({ onClose }: Props) {
         <div className="mt-32 flex flex-col gap-3 w-full max-w-xs">
           <motion.button
             onClick={handleNext}
-            className="w-full py-3 rounded-full bg-white text-black font-label-medium shadow-md"
+            className="w-full py-3 rounded-full bg-white text-black font-label-medium shadow-md cursor-pointer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -80,7 +80,7 @@ export default function SwipeTutorialOverlay({ onClose }: Props) {
 
           <motion.button
             onClick={onClose}
-            className="text-sm text-white/60 underline"
+            className="text-sm text-white/60 underline cursor-pointer"
             whileTap={{ scale: 0.96 }}
           >
             튜토리얼 건너뛰기
