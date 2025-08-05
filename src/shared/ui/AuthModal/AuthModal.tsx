@@ -11,8 +11,7 @@ import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore';
 import { LoginPrompt } from '@/shared/ui/AuthOverlay/LoginPrompt';
 
 export const AuthModal = () => {
-  const { isAuthModalOpen, closeAuthModal, pendingUrl, executePendingRequest } =
-    useAuthErrorStore();
+  const { isAuthModalOpen, closeAuthModal, executePendingRequest } = useAuthErrorStore();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const pathname = usePathname();
 
@@ -33,12 +32,9 @@ export const AuthModal = () => {
   };
 
   const handleKakaoLogin = () => {
-    // 원래 페이지 정보 저장
-    if (pendingUrl) {
-      localStorage.setItem('redirectTo', pendingUrl);
-    } else {
-      localStorage.setItem('redirectTo', window.location.pathname);
-    }
+    // 원래 페이지 정보 저장 (API 엔드포인트가 아닌 현재 페이지 경로)
+    const currentPath = window.location.pathname;
+    localStorage.setItem('redirectTo', currentPath);
 
     // 카카오 로그인 실행
     const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY;

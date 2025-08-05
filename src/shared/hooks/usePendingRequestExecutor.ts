@@ -10,7 +10,10 @@ export const usePendingRequestExecutor = () => {
   useEffect(() => {
     // 로그인된 상태이고 pendingRequest가 있으면 실행
     if (isLoggedIn && pendingRequest) {
-      executePendingRequest();
+      // 약간의 지연을 두어 상태가 안정화된 후 실행
+      setTimeout(() => {
+        executePendingRequest();
+      }, 100);
     }
   }, [isLoggedIn, pendingRequest, executePendingRequest]);
 };

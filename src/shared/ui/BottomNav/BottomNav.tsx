@@ -84,7 +84,7 @@ export const BottomNav = () => {
         <li className=" relative mb-6 z-20 flex flex-col items-center transition-transform duration-300">
           <button
             onClick={toggleDrawer}
-            className={`w-[80px] h-[80px] rounded-full flex items-center justify-center transition-color duration-100 ${
+            className={`cursor-pointer w-[80px] h-[80px] rounded-full flex items-center justify-center transition-color duration-100 ${
               isDrawerOpen ? 'bg-black' : 'none'
             }`}
           >

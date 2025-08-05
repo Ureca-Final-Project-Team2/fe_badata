@@ -25,8 +25,9 @@ export const AuthOverlay = () => {
       return;
     }
 
-    // 현재 페이지 정보 저장
-    localStorage.setItem('redirectTo', window.location.pathname);
+    // 현재 페이지 정보 저장 (API 엔드포인트가 아닌 현재 페이지 경로)
+    const currentPath = window.location.pathname;
+    localStorage.setItem('redirectTo', currentPath);
 
     const kakaoAuthUrl = `${AUTH_URL}?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
     window.location.href = kakaoAuthUrl;

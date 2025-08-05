@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore';
+
 import type { User } from '@/entities/auth/lib/user';
 
 interface AuthState {
@@ -43,6 +45,11 @@ export const useAuthStore = create<AuthState>()(
           }),
         );
         set({ isLoggedIn: true, accessToken: token, user });
+
+        // 로그인 후 pendingRequest 확인 및 실행
+        setTimeout(() => {
+          useAuthErrorStore.getState().checkAndExecutePendingRequest();
+        }, 100);
       },
       logout: () => {
         // localStorage에서 accessToken 삭제

@@ -21,6 +21,7 @@ export function SosDrawer() {
   const handleSosRequest = () => {
     executeWithAuth(
       () => {
+        // 로그인된 상태에서만 SosModal 열기
         setIsModalOpen(true);
         return Promise.resolve();
       },
