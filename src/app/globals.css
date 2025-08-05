@@ -3,6 +3,7 @@
 @import '../shared/styles/radius.css';
 @import '../shared/styles/custom-scrollbar.css';
 @import '../shared/styles/list-animations.css';
+@import '../shared/styles/onboarding-animations.css';
 @import 'swiper/css';
 @import 'swiper/css/pagination';
 @import 'swiper/css/navigation';
@@ -212,6 +213,11 @@ body {
     font-weight: var(--font-semibold);
   }
   /* title */
+  .font-title-bold {
+    font-family: var(--font-sans);
+    font-size: var(--font-title-size);
+    font-weight: var(--font-bold);
+  }
   .font-title-semibold {
     font-family: var(--font-sans);
     font-size: var(--font-title-size);
