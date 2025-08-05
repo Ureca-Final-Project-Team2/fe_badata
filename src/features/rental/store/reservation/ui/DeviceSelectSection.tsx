@@ -3,11 +3,10 @@ import React, { useMemo } from 'react';
 import { CircleCheck } from 'lucide-react';
 
 import ReservationDeviceCard from '@/features/rental/map/ui/ReservationDeviceCard';
-
-import { useRestockModal } from '../hooks/useRestockModalHooks';
-import { useScrollDrag } from '../hooks/useScrollDragHooks';
-
-import RestockNotificationModal from './RestockNotificationModal';
+import { useRestockModal } from '@/features/rental/store/reservation/hooks/useRestockModalHooks';
+import { useScrollDrag } from '@/features/rental/store/reservation/hooks/useScrollDragHooks';
+import RestockNotificationModal from '@/features/rental/store/reservation/ui/RestockNotificationModal';
+import { formatDateForReservation } from '@/features/rental/store/reservation/utils';
 
 interface Device {
   id: number;
@@ -95,6 +94,17 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
         deviceName={restockDevice?.deviceName || ''}
         totalCount={restockDevice?.totalCount || 0}
         isSubmitting={isSubmitting}
+        storeDeviceId={restockDevice?.id || 0}
+        desiredStartDate={
+          dateRange?.from
+            ? formatDateForReservation(dateRange.from)
+            : formatDateForReservation(new Date())
+        }
+        desiredEndDate={
+          dateRange?.to
+            ? formatDateForReservation(dateRange.to)
+            : formatDateForReservation(new Date(Date.now() + 24 * 60 * 60 * 1000))
+        }
       />
     </>
   );

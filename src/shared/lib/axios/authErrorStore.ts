@@ -11,13 +11,22 @@ interface PendingApiRequest {
   timestamp: number;
 }
 
+// openAuthModal에서 받는 타입 (timestamp 제외)
+interface AuthModalRequest {
+  type: 'STORE_LIKE' | 'SOS_REQUEST' | 'POST_LIKE' | 'RESERVATION' | 'FOLLOW' | 'RESTOCK';
+  url: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  data?: unknown;
+  params?: Record<string, unknown>;
+}
+
 interface AuthErrorState {
   isAuthModalOpen: boolean;
   pendingRequest: PendingApiRequest | null;
   onAuthModalClose: (() => void) | null;
 
   // 모달 관련
-  openAuthModal: (request: PendingApiRequest, onClose?: () => void) => void;
+  openAuthModal: (request: AuthModalRequest, onClose?: () => void) => void;
   closeAuthModal: () => void;
 
   // 요청 실행 관련
@@ -32,7 +41,7 @@ export const useAuthErrorStore = create<AuthErrorState>()(
       pendingRequest: null,
       onAuthModalClose: null,
 
-      openAuthModal: (request: PendingApiRequest, onClose?: () => void) => {
+      openAuthModal: (request: AuthModalRequest, onClose?: () => void) => {
         console.log('🔒 Auth modal 열기:', { type: request.type, url: request.url });
 
         set({
