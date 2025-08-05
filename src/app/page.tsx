@@ -1,6 +1,8 @@
-import { redirect } from 'next/navigation';
+'use client';
 
 import { useEffect, useRef } from 'react';
+
+import { redirect } from 'next/navigation';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useOnboarding } from '@/shared/hooks/useOnboarding';
@@ -29,12 +31,14 @@ export default function HomePage() {
     return null;
   }
 
+  // 사용자가 로그인되어 있으면 trade 페이지로 리다이렉트
+  if (user) {
+    redirect('/trade');
+  }
+
   return (
     <BaseLayout header={<Header />} paddingX>
       홈화면
     </BaseLayout>
   );
-
-export default function Home() {
-  redirect('/trade');
 }
