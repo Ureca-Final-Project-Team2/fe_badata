@@ -50,6 +50,8 @@ export function BaseLayout({
   // AuthModal이 열려있거나 AuthOverlay가 표시될 때 블러 처리
   const shouldBlur = shouldShowAuthOverlay || isAuthModalOpen; // 수정
 
+  const isHomeOrMypage = pathname === '/' || pathname === '/mypage';
+
   return (
     <div className={`w-full ${centered ? 'flex justify-center' : ''} bg-[var(--main-2)]`}>
       <div className="relative w-full max-w-[428px] min-h-screen overflow-hidden bg-white">
@@ -95,7 +97,10 @@ export function BaseLayout({
         {/* 고정 바텀 네비게이션 */}
         {showBottomNav && (
           <div
-            className={`fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[50] ${shouldBlur ? 'filter blur-sm' : ''}`}
+            className={
+              `fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[50]` +
+              (!isHomeOrMypage && shouldBlur ? ' filter blur-sm' : '')
+            }
           >
             <BottomNav />
           </div>

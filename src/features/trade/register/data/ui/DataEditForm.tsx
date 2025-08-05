@@ -6,6 +6,7 @@ import { useUpdateDataPostMutation } from '@/entities/trade-post/model/mutations
 import { useTradePostDetailQuery } from '@/entities/trade-post/model/queries';
 import { initialState, reducer } from '@/features/trade/register/data/model/dataRegisterReducer';
 import { PATH } from '@/shared/config/path';
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { formatPrice, toRawPrice } from '@/shared/lib/formatPrice';
 import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
@@ -19,6 +20,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = useUpdateDataPostMutation();
   const { post, isLoading, error } = useTradePostDetailQuery(postId);
+  const { executeWithAuth } = useAuthRequiredRequest();
   const router = useRouter();
 
   // 게시물 상세 정보를 폼에 자동으로 채우기
@@ -35,30 +37,46 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
     }
   }, [post]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { price, comment, title } = state.form;
     if (!price || !title) return;
 
     dispatch({ type: 'SET_SUBMITTING', value: true });
-    mutate(
-      {
-        postId,
-        data: {
-          title: title || '',
-          comment: comment || '',
-          price: toRawPrice(price),
-        },
-      },
-      {
-        onSuccess: () => {
-          router.push(PATH.TRADE.DATA_DETAIL.replace(':id', String(postId)));
-        },
-        onError: (error) => {
-          console.error('수정 실패:', error);
-        },
-        onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
-      },
-    );
+
+    const requestFn = () =>
+      new Promise((resolve, reject) => {
+        mutate(
+          {
+            postId,
+            data: {
+              title: title || '',
+              comment: comment || '',
+              price: toRawPrice(price),
+            },
+          },
+          {
+            onSuccess: (data) => {
+              router.push(PATH.TRADE.DATA_DETAIL.replace(':id', String(postId)));
+              resolve(data);
+            },
+            onError: (error) => {
+              console.error('수정 실패:', error);
+              reject(error);
+            },
+            onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
+          },
+        );
+      });
+
+    try {
+      await executeWithAuth(requestFn, `/api/v1/trades/posts/${postId}`, () => {
+        // AuthModal이 닫힐 때 isSubmitting 상태 초기화
+        dispatch({ type: 'SET_SUBMITTING', value: false });
+      });
+    } catch (error) {
+      // 에러는 이미 위에서 처리됨
+      console.error('Data edit failed:', error);
+    }
   };
 
   const isFormValid = !!state.form.price && !!state.form.title;

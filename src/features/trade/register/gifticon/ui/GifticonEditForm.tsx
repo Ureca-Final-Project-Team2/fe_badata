@@ -9,6 +9,7 @@ import {
   reducer,
 } from '@/features/trade/register/gifticon/model/gifticonRegisterReducer';
 import { PATH } from '@/shared/config/path';
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { formatPrice, toRawPrice } from '@/shared/lib/formatPrice';
 import { InputField } from '@/shared/ui/InputField';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
@@ -24,6 +25,7 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = useUpdateGifticonPostMutation();
   const { post, isLoading, error } = useTradePostDetailQuery(postId);
+  const { executeWithAuth } = useAuthRequiredRequest();
   const router = useRouter();
 
   // 게시물 상세 정보를 폼에 자동으로 채우기
@@ -45,28 +47,44 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
       dispatch({ type: 'CHANGE_FIELD', field, value: e.target.value });
     };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!state.form.price) return;
 
     dispatch({ type: 'SET_SUBMITTING', value: true });
-    mutate(
-      {
-        postId,
-        data: {
-          comment: state.form.comment || '',
-          price: toRawPrice(state.form.price),
-        },
-      },
-      {
-        onSuccess: () => {
-          router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(postId)));
-        },
-        onError: (error) => {
-          console.error('수정 실패:', error);
-        },
-        onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
-      },
-    );
+
+    const requestFn = () =>
+      new Promise((resolve, reject) => {
+        mutate(
+          {
+            postId,
+            data: {
+              comment: state.form.comment || '',
+              price: toRawPrice(state.form.price),
+            },
+          },
+          {
+            onSuccess: (data) => {
+              router.push(PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(postId)));
+              resolve(data);
+            },
+            onError: (error) => {
+              console.error('수정 실패:', error);
+              reject(error);
+            },
+            onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
+          },
+        );
+      });
+
+    try {
+      await executeWithAuth(requestFn, `/api/v1/trades/posts/${postId}`, () => {
+        // AuthModal이 닫힐 때 isSubmitting 상태 초기화
+        dispatch({ type: 'SET_SUBMITTING', value: false });
+      });
+    } catch (error) {
+      // 에러는 이미 위에서 처리됨
+      console.error('Gifticon edit failed:', error);
+    }
   };
 
   const isFormValid = !!state.form.price;

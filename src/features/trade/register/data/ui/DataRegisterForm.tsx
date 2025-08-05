@@ -6,6 +6,7 @@ import { initialState, reducer } from '@/features/trade/register/data/model/data
 import { usePostTradeDataMutation } from '@/features/trade/register/data/model/mutations';
 import { MobileCarrierSelect } from '@/features/trade/register/data/ui/MobileCarrierSelect';
 import { PATH } from '@/shared/config/path';
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { toRawPrice } from '@/shared/lib/formatPrice';
 import { makeToast } from '@/shared/lib/makeToast';
 import { InputField } from '@/shared/ui/InputField';
@@ -15,33 +16,50 @@ import { TextAreaField } from '@/shared/ui/TextAreaField';
 export function TradeDataRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = usePostTradeDataMutation();
+  const { executeWithAuth } = useAuthRequiredRequest();
   const router = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { title, deadLine, capacity, price, comment } = state.form;
     if (!title || !deadLine || !capacity || !price) return;
 
     dispatch({ type: 'SET_SUBMITTING', value: true });
-    mutate(
-      {
-        title,
-        mobileCarrier: state.form.mobileCarrier,
-        deadLine,
-        capacity: Number(capacity),
-        price: toRawPrice(price),
-        comment,
-      },
-      {
-        onSuccess: () => {
-          makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
-          router.push(`${PATH.TRADE.MAIN}?page=data`);
-        },
-        onError: () => {
-          makeToast('게시물 등록에 실패했습니다.', 'warning');
-        },
-        onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
-      },
-    );
+
+    const requestFn = () =>
+      new Promise((resolve, reject) => {
+        mutate(
+          {
+            title,
+            mobileCarrier: state.form.mobileCarrier,
+            deadLine,
+            capacity: Number(capacity),
+            price: toRawPrice(price),
+            comment,
+          },
+          {
+            onSuccess: (data) => {
+              makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
+              router.push(`${PATH.TRADE.MAIN}?page=data`);
+              resolve(data);
+            },
+            onError: (error) => {
+              makeToast('게시물 등록에 실패했습니다.', 'warning');
+              reject(error);
+            },
+            onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
+          },
+        );
+      });
+
+    try {
+      await executeWithAuth(requestFn, '/api/v1/trades/posts/data', () => {
+        // AuthModal이 닫힐 때 isSubmitting 상태 초기화
+        dispatch({ type: 'SET_SUBMITTING', value: false });
+      });
+    } catch (error) {
+      // 에러는 이미 위에서 처리됨
+      console.error('Data registration failed:', error);
+    }
   };
 
   const isFormValid = !!(

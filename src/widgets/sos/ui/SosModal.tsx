@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { useCreateSosRequest } from '@/widgets/sos/model/mutations';
 import { useSosWebSocket } from '@/widgets/sos/model/useSosWebSocket';
 
@@ -12,25 +13,40 @@ interface SosModalProps {
 export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
   const { mutate: createSosRequest, isPending } = useCreateSosRequest();
   const { sendSosRequest } = useSosWebSocket();
+  const { executeWithAuth } = useAuthRequiredRequest();
 
-  const handleConfirm = () => {
-    createSosRequest(undefined, {
-      onSuccess: (data) => {
-        console.log('SOS 요청이 성공적으로 생성되었습니다:', data);
-        
-        // WebSocket을 통해 다른 사용자들에게 실시간 알림 전송
-        if (data.content?.sosId) {
-          sendSosRequest(data.content.sosId);
-        }
-        
-        onConfirm?.();
-        onClose();
-      },
-      onError: () => {
-        // TODO: 토스트 메시지나 에러 모달로 사용자에게 알림 표시
-        alert('SOS 요청 생성에 실패했습니다. 다시 시도해주세요.');
-      },
-    });
+  const handleConfirm = async () => {
+    const requestFn = () =>
+      new Promise((resolve, reject) => {
+        createSosRequest(undefined, {
+          onSuccess: (data) => {
+            console.log('SOS 요청이 성공적으로 생성되었습니다:', data);
+
+            // WebSocket을 통해 다른 사용자들에게 실시간 알림 전송
+            if (data.content?.sosId) {
+              sendSosRequest(data.content.sosId);
+            }
+
+            onConfirm?.();
+            onClose();
+            resolve(data);
+          },
+          onError: (error) => {
+            // TODO: 토스트 메시지나 에러 모달로 사용자에게 알림 표시
+            alert('SOS 요청 생성에 실패했습니다. 다시 시도해주세요.');
+            reject(error);
+          },
+        });
+      });
+
+    try {
+      await executeWithAuth(requestFn, '/api/v1/sos/request', () => {
+        // AuthModal이 닫힐 때 아무것도 하지 않음 (모달이 이미 닫혀있음)
+      });
+    } catch (error) {
+      // 에러는 이미 위에서 처리됨
+      console.error('SOS request failed:', error);
+    }
   };
 
   if (!isOpen) return null;
@@ -43,9 +59,10 @@ export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
           <h2 className="font-title-semibold mb-2 text-black">SOS 요청</h2>
           <p className="font-body-regular text-gray-600 mb-6">
             데이터가 부족하신가요?
-            <br />다른 사용자들에게 SOS 요청을 보내시겠습니까?
+            <br />
+            다른 사용자들에게 SOS 요청을 보내시겠습니까?
           </p>
-          
+
           <div className="flex gap-3">
             <button
               onClick={onClose}
@@ -66,4 +83,4 @@ export function SosModal({ isOpen, onClose, onConfirm }: SosModalProps) {
       </div>
     </div>
   );
-} 
+}

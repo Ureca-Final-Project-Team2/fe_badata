@@ -86,6 +86,7 @@ export default function BuyButtonWithPayment({
   const { executeWithAuth } = useAuthRequiredRequest();
 
   const handleBuyClick = () => {
+    // 코인 데이터를 가져오는 API와 결제 API 모두 로그인이 필요한지 체크
     executeWithAuth(() => {
       // 코인 데이터 에러 시 재시도
       if (isCoinError) {
@@ -93,7 +94,7 @@ export default function BuyButtonWithPayment({
       }
       openCoinModal();
       return Promise.resolve();
-    }, '/api/v1/users/coin');
+    }, `/api/v1/trades/order/${postId}`);
   };
 
   const handleCoinPayment = (useCoin: boolean, coinAmount: number) => {

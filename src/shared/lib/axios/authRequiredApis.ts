@@ -33,6 +33,14 @@ export const AUTH_REQUIRED_APIS = [
 
   // 거래 관련 (특정 사용자의 게시물)
   '/api/v1/trades/posts',
+  '/api/v1/trades/posts/data',
+  '/api/v1/trades/posts/gifticon',
+  '/api/v1/trades/search/recent',
+  '/api/v1/trades/search/trending',
+
+  // SOS 관련
+  '/api/v1/sos/request',
+  '/api/v1/sos/accept',
 ] as const;
 
 // 로그인이 필요한 API인지 확인하는 함수
@@ -52,6 +60,9 @@ export const AUTH_REQUIRED_PATTERNS = [
   /\/api\/v1\/restock\/\d+/,
   /\/api\/v1\/addresses\/\d+/,
   /\/api\/v1\/trades\/purchases\/.+/,
+  /\/api\/v1\/trades\/\d+\/post/,
+  /\/api\/v1\/trades\/\d+\/payment/,
+  /\/api\/v1\/trades\/search\/recent\/\d+/,
 ] as const;
 
 // 동적 경로를 포함한 API가 로그인이 필요한지 확인하는 함수

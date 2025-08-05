@@ -9,20 +9,29 @@ export const useAuthRequiredRequest = () => {
   const { openAuthModal } = useAuthErrorStore();
 
   const executeWithAuth = useCallback(
-    async <T>(requestFn: () => Promise<T>, url: string): Promise<T | null> => {
+    async <T>(
+      requestFn: () => Promise<T>,
+      url: string,
+      onAuthModalClose?: () => void,
+    ): Promise<T | null> => {
       // 로그인이 필요한 API인지 확인
       if (requiresAuth(url)) {
         // 로그인하지 않은 경우
         if (!isLoggedIn) {
           // 원래 요청을 저장하고 모달 열기
-          openAuthModal(async () => {
-            try {
-              return await requestFn();
-            } catch (error) {
-              console.error('Auth required request failed after login:', error);
-              throw error;
-            }
-          }, url);
+          openAuthModal(
+            async () => {
+              try {
+                return await requestFn();
+              } catch (error) {
+                console.error('Auth required request failed after login:', error);
+                throw error;
+              }
+            },
+            url,
+            onAuthModalClose,
+          );
+
           return null; // 요청을 보내지 않고 null 반환
         }
       }
