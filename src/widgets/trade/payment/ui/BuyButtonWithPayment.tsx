@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
 import { useCoinQuery } from '@/entities/user';
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { CoinPaymentModal } from '@/shared/ui/CoinPaymentModal';
 import { usePayment } from '@/widgets/trade/payment/model/usePayment';
 import { DetailLikeButton } from '@/widgets/trade/ui/DetailLikeButton';
@@ -82,13 +83,17 @@ export default function BuyButtonWithPayment({
   } = useCoinQuery();
   const { loading, isPaid, handlePayment, isCoinModalOpen, openCoinModal, closeCoinModal } =
     usePayment(postId, title, price, onPaymentSuccess);
+  const { executeWithAuth } = useAuthRequiredRequest();
 
   const handleBuyClick = () => {
-    // 코인 데이터 에러 시 재시도
-    if (isCoinError) {
-      refetchCoin();
-    }
-    openCoinModal();
+    executeWithAuth(() => {
+      // 코인 데이터 에러 시 재시도
+      if (isCoinError) {
+        refetchCoin();
+      }
+      openCoinModal();
+      return Promise.resolve();
+    }, '/api/v1/users/coin');
   };
 
   const handleCoinPayment = (useCoin: boolean, coinAmount: number) => {

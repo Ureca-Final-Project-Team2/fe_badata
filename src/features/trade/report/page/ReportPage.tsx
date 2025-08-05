@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 
 import { REPORT_REASONS } from '@/entities/trade-post/lib/types';
 import { useReportTradePostMutation } from '@/entities/trade-post/model/mutations';
+import { END_POINTS } from '@/shared/api/endpoints';
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
@@ -22,6 +24,7 @@ export default function ReportPage({ postId }: ReportPageProps) {
   const [comment, setComment] = useState('');
 
   const reportMutation = useReportTradePostMutation();
+  const { executeWithAuth } = useAuthRequiredRequest();
 
   const handleSubmit = async () => {
     if (!selectedReason) {
@@ -34,18 +37,22 @@ export default function ReportPage({ postId }: ReportPageProps) {
       return;
     }
 
-    try {
-      await reportMutation.mutateAsync({
-        postId,
-        reportData: {
-          reportType: selectedReason,
-          comment: comment.trim(),
-        },
-      });
-      router.back();
-    } catch (error) {
-      console.error('게시물 신고 처리 중 오류 발생:', error);
-    }
+    const executeReport = async () => {
+      try {
+        await reportMutation.mutateAsync({
+          postId,
+          reportData: {
+            reportType: selectedReason,
+            comment: comment.trim(),
+          },
+        });
+        router.back();
+      } catch (error) {
+        console.error('게시물 신고 처리 중 오류 발생:', error);
+      }
+    };
+
+    executeWithAuth(executeReport, END_POINTS.TRADES.REPORT(postId));
   };
 
   return (

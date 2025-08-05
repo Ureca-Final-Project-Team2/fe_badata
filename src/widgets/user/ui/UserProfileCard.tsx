@@ -7,6 +7,7 @@ import { useSellerSoldPostsCountQuery } from '@/entities/trade-post/model/querie
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
 import { useAllFollowingsQuery } from '@/entities/user/model/queries';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { makeToast } from '@/shared/lib/makeToast';
 import UserAvatar from '@/shared/ui/UserAvatar';
 
@@ -40,6 +41,7 @@ const UserProfileCard = ({
   const router = useRouter();
   const createFollowMutation = useCreateFollowMutation();
   const currentUser = useAuthStore((s) => s.user);
+  const { executeWithAuth } = useAuthRequiredRequest();
 
   const { data: followings, isLoading: isLoadingFollowings } = useAllFollowingsQuery();
   const { data: soldPostsCount, isLoading: isLoadingSoldCount } =
@@ -66,22 +68,27 @@ const UserProfileCard = ({
 
   const handleFollowClick = async () => {
     const previousState = currentIsFollowing;
-    try {
-      await createFollowMutation.mutateAsync(userId);
-      setLocalFollowingState(!previousState);
-      onFollowClick?.();
-    } catch (error: unknown) {
-      // 에러 발생 시 원래 상태로 복원
-      setLocalFollowingState(previousState);
-      const errorObj = error as { code?: number };
-      const errorCode = errorObj?.code as ErrorCode;
 
-      if (errorCode && errorCode in ErrorMessageMap) {
-        makeToast(ErrorMessageMap[errorCode], 'warning');
-      } else {
-        makeToast('팔로우/언팔로우에 실패했습니다.', 'warning');
+    const executeFollow = async () => {
+      try {
+        await createFollowMutation.mutateAsync(userId);
+        setLocalFollowingState(!previousState);
+        onFollowClick?.();
+      } catch (error: unknown) {
+        // 에러 발생 시 원래 상태로 복원
+        setLocalFollowingState(previousState);
+        const errorObj = error as { code?: number };
+        const errorCode = errorObj?.code as ErrorCode;
+
+        if (errorCode && errorCode in ErrorMessageMap) {
+          makeToast(ErrorMessageMap[errorCode], 'warning');
+        } else {
+          makeToast('팔로우/언팔로우에 실패했습니다.', 'warning');
+        }
       }
-    }
+    };
+
+    executeWithAuth(executeFollow, `/api/v1/users/${userId}/follows`);
   };
 
   const handleProfileClick = () => {
