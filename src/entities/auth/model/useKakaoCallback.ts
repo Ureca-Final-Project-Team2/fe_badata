@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { fetchFcmToken, fetchKakaoAuth } from '@/entities/auth/api/apis';
 import { useAuthStore } from '@/entities/auth/model/authStore';
@@ -10,7 +10,6 @@ import { useFCM } from '@/shared/hooks/useFCM';
 
 export const useKakaoCallback = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
   const { triggerFCMToken } = useFCM(); // ✅ 훅에서 함수만 가져옴
   const processedCode = useRef<string | null>(null);
@@ -39,7 +38,8 @@ export const useKakaoCallback = () => {
         }
 
         // 리다이렉트 파라미터 확인
-        const redirect = searchParams?.get('redirect');
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
         if (redirect) {
           router.replace(redirect);
         } else {
@@ -51,5 +51,5 @@ export const useKakaoCallback = () => {
     };
 
     handleAuth();
-  }, [login, router, triggerFCMToken, searchParams]);
+  }, [login, router, triggerFCMToken]);
 };
