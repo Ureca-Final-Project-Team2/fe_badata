@@ -40,8 +40,13 @@ export const useKakaoCallback = () => {
         // 리다이렉트 파라미터 확인
         const urlParams = new URLSearchParams(window.location.search);
         const redirect = urlParams.get('redirect');
+        const savedRedirect = localStorage.getItem('redirectTo');
+
         if (redirect) {
           router.replace(redirect);
+        } else if (savedRedirect) {
+          localStorage.removeItem('redirectTo'); // 사용 후 삭제
+          router.replace(savedRedirect);
         } else {
           router.replace(content.newUser ? '/onboarding' : '/');
         }
