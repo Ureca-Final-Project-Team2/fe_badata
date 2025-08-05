@@ -3,26 +3,30 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useUserCoinHistoryInfiniteQuery } from '@/features/mypage/coin-history/model/queries';
 import { CoinHistoryItem } from '@/features/mypage/coin-history/ui/CoinHistoryItem';
 
+// 공통 메시지 컴포넌트
+const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-center py-8">
+    <p className="font-label-regular text-[var(--gray)]">{children}</p>
+  </div>
+);
+
 export function CoinHistoryInfiniteList() {
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useUserCoinHistoryInfiniteQuery();
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useUserCoinHistoryInfiniteQuery();
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useCallback(
     (node: HTMLDivElement) => {
       if (isLoading) return;
       if (observerRef.current) observerRef.current.disconnect();
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      }, { threshold: 0.1 });
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        },
+        { threshold: 0.1 },
+      );
       if (node) observerRef.current.observe(node);
     },
     [isLoading, hasNextPage, isFetchingNextPage, fetchNextPage],
@@ -36,6 +40,7 @@ export function CoinHistoryInfiniteList() {
     };
   }, []);
 
+  // 로딩 상태
   if (isLoading) {
     return (
       <div className="space-y-3">
@@ -48,26 +53,19 @@ export function CoinHistoryInfiniteList() {
     );
   }
 
+  // 에러 상태
   if (isError) {
-    return (
-      <div className="bg-[var(--gray-light)] rounded-xl p-8 text-center">
-        <p className="font-label-regular text-[var(--gray-dark)]">
-          코인 내역을 불러오지 못했습니다.
-        </p>
-      </div>
-    );
+    return <CenteredMessage>코인 내역을 불러오지 못했습니다.</CenteredMessage>;
   }
 
   const allItems = data?.pages.flatMap((page) => page.item) || [];
 
+  // 빈 상태
   if (allItems.length === 0) {
-    return (
-      <div className="bg-[var(--gray-light)] rounded-xl p-8 text-center">
-        <p className="font-label-regular text-[var(--gray-dark)]">코인 내역이 없습니다.</p>
-      </div>
-    );
+    return <CenteredMessage>코인 내역이 없습니다.</CenteredMessage>;
   }
 
+  // 정상 상태
   return (
     <div className="space-y-3">
       {allItems.map((item, index) => {
@@ -82,9 +80,9 @@ export function CoinHistoryInfiniteList() {
       })}
       {isFetchingNextPage && (
         <div className="text-center py-4">
-          <p className="font-small-regular text-[var(--gray-dark)]">로딩 중...</p>
+          <p className="font-small-regular text-[var(--gray)]">로딩 중...</p>
         </div>
       )}
     </div>
   );
-};
+}

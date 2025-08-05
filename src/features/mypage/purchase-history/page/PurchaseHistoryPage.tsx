@@ -25,6 +25,13 @@ const tabList = [
   { id: '기프티콘', label: '기프티콘', value: '기프티콘' },
 ];
 
+// 공통 메시지 컴포넌트
+const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-center py-8">
+    <p className="font-label-regular text-[var(--gray)]">{children}</p>
+  </div>
+);
+
 export default function PurchaseHistoryPage() {
   const router = useRouter();
   const [tab, setTab] = useState<'데이터' | '기프티콘'>('데이터');
@@ -41,7 +48,7 @@ export default function PurchaseHistoryPage() {
   const { data: purchaseCount = 0 } = useUserPostCountQuery('PURCHASE');
   const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
     usePurchasesQuery();
 
   const handleTabChange = (value: string) => {
@@ -114,6 +121,12 @@ export default function PurchaseHistoryPage() {
     };
   });
 
+  // 데이터가 비어있는지 확인
+  const isEmpty =
+    !filteredData ||
+    filteredData.length === 0 ||
+    filteredData.every((page) => page?.content?.item.length === 0);
+
   return (
     <BaseLayout
       header={<PageHeader title="구매 내역" onBack={() => router.back()} />}
@@ -180,56 +193,54 @@ export default function PurchaseHistoryPage() {
 
           {/* 에러 상태 */}
           {isError && (
-            <div className="text-center py-8 text-[var(--red)]">
-              <p>구매 내역을 불러오는데 실패했습니다.</p>
-              <p className="text-sm mt-2">{error?.message}</p>
+            <div className="px-4">
+              <CenteredMessage>구매 내역을 불러오는데 실패했습니다.</CenteredMessage>
             </div>
           )}
 
-          {/* 데이터가 없는 경우 */}
-          {!isLoading &&
-            !showSkeleton &&
-            !isError &&
-            (!filteredData ||
-              filteredData.length === 0 ||
-              filteredData.every((page) => page?.content?.item.length === 0)) && (
-              <div className="text-center py-8 text-[var(--gray-mid)]">
-                <p>구매 내역이 없습니다.</p>
-              </div>
-            )}
+          {/* 빈 상태 */}
+          {!isLoading && !showSkeleton && !isError && isEmpty && (
+            <div className="px-4">
+              <CenteredMessage>구매 내역이 없습니다.</CenteredMessage>
+            </div>
+          )}
 
           {/* 데이터 표시 */}
-          {filteredData?.map((page, i) => (
-            <div key={i} className="grid grid-cols-2 gap-4">
-              {page?.content?.item.map((item) => (
-                <TradePostCard
-                  key={item.id}
-                  imageUrl={item.postImage}
-                  title={item.title}
-                  partner={item.postCategory === 'GIFTICON' ? item.partner : undefined}
-                  mobileCarrier={
-                    item.postCategory === 'DATA' ? (item.partner as MobileCarrier) : undefined
-                  }
-                  price={item.price}
-                  likeCount={item.postLikes}
-                  isCompleted={item.isSold}
-                  isLiked={false}
-                  hasDday={false}
-                  onCardClick={() => {
-                    const detailPath =
-                      item.postCategory === 'DATA'
-                        ? `/trade/data/${item.postId}`
-                        : `/mypage/purchase-history/gifticon-detail?id=${encodeURIComponent(item.postId)}`;
-                    router.push(detailPath);
-                  }}
-                />
+          {!isLoading && !showSkeleton && !isError && !isEmpty && (
+            <>
+              {filteredData?.map((page, i) => (
+                <div key={i} className="grid grid-cols-2 gap-4 px-4">
+                  {page?.content?.item.map((item) => (
+                    <TradePostCard
+                      key={item.id}
+                      imageUrl={item.postImage}
+                      title={item.title}
+                      partner={item.postCategory === 'GIFTICON' ? item.partner : undefined}
+                      mobileCarrier={
+                        item.postCategory === 'DATA' ? (item.partner as MobileCarrier) : undefined
+                      }
+                      price={item.price}
+                      likeCount={item.postLikes}
+                      isCompleted={item.isSold}
+                      isLiked={false}
+                      hasDday={false}
+                      onCardClick={() => {
+                        const detailPath =
+                          item.postCategory === 'DATA'
+                            ? `/trade/data/${item.postId}`
+                            : `/mypage/purchase-history/gifticon-detail?id=${encodeURIComponent(item.postId)}`;
+                        router.push(detailPath);
+                      }}
+                    />
+                  ))}
+                </div>
               ))}
-            </div>
-          ))}
+            </>
+          )}
 
           <div ref={observerRef} className="h-12">
             {isFetchingNextPage && (
-              <div className="mt-4">
+              <div className="px-4 mt-4">
                 <div className="grid grid-cols-2 gap-4">
                   {Array.from({ length: 4 }).map((_, index) => (
                     <TradePostCardSkeleton key={`next-${index}`} />

@@ -26,6 +26,13 @@ const tabList = [
   { id: '쿠폰', label: '쿠폰', value: '쿠폰' },
 ];
 
+// 공통 메시지 컴포넌트
+const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-center py-8">
+    <p className="font-label-regular text-[var(--gray)]">{children}</p>
+  </div>
+);
+
 export default function SalesHistoryPage() {
   const router = useRouter();
   const profile = useAuthStore((s) => s.user);
@@ -102,6 +109,12 @@ export default function SalesHistoryPage() {
     return () => observer.disconnect();
   }, [handleIntersection]);
 
+  // 데이터가 비어있는지 확인
+  const isEmpty =
+    !data?.pages ||
+    data.pages.length === 0 ||
+    data.pages.every((page) => page.content?.item.length === 0);
+
   return (
     <BaseLayout
       header={<PageHeader title="판매 내역" onBack={() => router.back()} />}
@@ -175,48 +188,42 @@ export default function SalesHistoryPage() {
           )}
 
           {/* 에러 상태 */}
-          {isError && (
-            <div className="text-center py-8 text-[var(--red)]">
-              <p>판매 내역을 불러오는데 실패했습니다.</p>
-              <p className="text-sm mt-2">{error?.message}</p>
+          {isError && <CenteredMessage>판매 내역을 불러오는데 실패했습니다.</CenteredMessage>}
+
+          {/* 빈 상태 */}
+          {!isLoading && !showSkeleton && !isError && isEmpty && (
+            <div className="px-4">
+              <CenteredMessage>판매 내역이 없습니다.</CenteredMessage>
             </div>
           )}
 
-          {/* 데이터가 없는 경우 */}
-          {!isLoading &&
-            !showSkeleton &&
-            !isError &&
-            (!data?.pages ||
-              data.pages.length === 0 ||
-              data.pages.every((page) => page.content?.item.length === 0)) && (
-              <div className="text-center py-8 text-[var(--gray-mid)]">
-                <p>판매 내역이 없습니다.</p>
-              </div>
-            )}
-
           {/* 데이터 표시 */}
-          {data?.pages.map((page, i) => (
-            <div key={i} className="grid grid-cols-2 gap-4">
-              {page.content?.item.map((item) => (
-                <TradePostCard
-                  key={item.postId}
-                  imageUrl={item.postImage || '/assets/trade-detail.jpg'}
-                  title={item.title}
-                  partner={item.partner || '제휴처'}
-                  price={item.price}
-                  likeCount={item.postLikes}
-                  isCompleted={item.isSold}
-                  onCardClick={() => {
-                    const detailPath =
-                      item.postCategory === 'DATA'
-                        ? `/trade/data/${item.postId}`
-                        : `/trade/gifticon/${item.postId}`;
-                    router.push(detailPath);
-                  }}
-                />
+          {!isLoading && !showSkeleton && !isError && !isEmpty && (
+            <>
+              {data?.pages.map((page, i) => (
+                <div key={i} className="grid grid-cols-2 gap-4 px-4">
+                  {page.content?.item.map((item) => (
+                    <TradePostCard
+                      key={item.postId}
+                      imageUrl={item.postImage || '/assets/trade-detail.jpg'}
+                      title={item.title}
+                      partner={item.partner || '제휴처'}
+                      price={item.price}
+                      likeCount={item.postLikes}
+                      isCompleted={item.isSold}
+                      onCardClick={() => {
+                        const detailPath =
+                          item.postCategory === 'DATA'
+                            ? `/trade/data/${item.postId}`
+                            : `/trade/gifticon/${item.postId}`;
+                        router.push(detailPath);
+                      }}
+                    />
+                  ))}
+                </div>
               ))}
-            </div>
-          ))}
+            </>
+          )}
 
           <div ref={observerRef} className="h-12">
             {isFetchingNextPage && (

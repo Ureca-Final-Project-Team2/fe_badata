@@ -44,15 +44,15 @@ export const DataUsageWidgetContainer: React.FC = () => {
   if (error || !data) {
     return (
       <div className="w-full rounded-[16px] bg-white p-4 shadow-sm border border-[var(--gray-light)]">
-        <div className="text-center text-gray-500">
-          데이터 사용량을 불러올 수 없습니다.
+        <div className="text-center text-gray-500">데이터 사용량을 불러올 수 없습니다.</div>
+        <div className="text-center">
+          <button
+            onClick={fetchData}
+            className="mt-4 px-4 py-2 bg-[var(--main-5)] text-white rounded-lg font-label-regular"
+          >
+            다시 시도
+          </button>
         </div>
-        <button 
-          onClick={fetchData}
-          className="mt-2 px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-        >
-          다시 시도
-        </button>
       </div>
     );
   }
@@ -67,4 +67,4 @@ export const DataUsageWidgetContainer: React.FC = () => {
       dataAmount={dataAmount}
     />
   );
-}; 
+};
