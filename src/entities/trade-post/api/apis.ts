@@ -3,7 +3,6 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 import type {
   DataUpdateRequest,
-  DeadlinePost,
   DeletePostResponse,
   FollowToggleResponse,
   GifticonUpdateRequest,
@@ -15,11 +14,16 @@ import type {
   UpdatePostResponse,
   UserInfoResponse,
 } from '@/entities/trade-post/lib/types';
+import type { DeadlinePostResponse } from '@/features/trade/deadline/lib/types';
 
 // 게시물 목록 조회
-export const getTradePosts = async (): Promise<DeadlinePost[]> => {
-  const content: { item: DeadlinePost[] } = await axiosInstance.get(END_POINTS.TRADES.LIST);
-  return content.item ?? [];
+export const getTradePosts = async (cursor?: number): Promise<DeadlinePostResponse> => {
+  return await axiosInstance.get(END_POINTS.TRADES.LIST, {
+    params: {
+      cursor,
+      size: 10,
+    },
+  });
 };
 
 // 게시물 삭제
