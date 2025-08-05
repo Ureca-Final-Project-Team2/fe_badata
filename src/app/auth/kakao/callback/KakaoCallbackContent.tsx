@@ -1,13 +1,10 @@
 'use client';
 
 import { useKakaoCallback } from '@/entities/auth/model/useKakaoCallback';
-import { useEffect } from 'react';
 
 export default function KakaoCallbackContent() {
   // 카카오 콜백 처리
-  useEffect(() => {
-    useKakaoCallback();
-  }, []);
+  useKakaoCallback();
 
   return (
     <main className="flex items-center justify-center min-h-[calc(100vh-200px)]">
