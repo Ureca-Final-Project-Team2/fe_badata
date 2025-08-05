@@ -15,7 +15,6 @@ export default function HomePage() {
 
   useEffect(() => {
     if (user && !hasLogged.current) {
-      console.log('현재 사용자 정보:', user);
       hasLogged.current = true;
     }
   }, [user]);
