@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore';
-
 import type { User } from '@/entities/auth/lib/user';
 
 interface AuthState {
@@ -31,6 +29,7 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       user: null,
       login: (token, user) => {
+        console.log('🔐 로그인 성공:', { token: token.substring(0, 20) + '...', user: user?.name });
         // localStorage에 accessToken 저장
         localStorage.setItem('accessToken', token);
         // 쿠키에도 저장 (미들웨어에서 접근 가능)
@@ -47,11 +46,19 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoggedIn: true, accessToken: token, user });
 
         // 로그인 후 pendingRequest 확인 및 실행
-        setTimeout(() => {
-          useAuthErrorStore.getState().checkAndExecutePendingRequest();
+        console.log('🔍 로그인 후 pending request 확인 예정');
+        setTimeout(async () => {
+          try {
+            const { useAuthErrorStore } = await import('@/shared/lib/axios/authErrorStore');
+            const { executePendingRequest } = useAuthErrorStore.getState();
+            executePendingRequest();
+          } catch (error) {
+            console.error('❌ Pending request 실행 실패:', error);
+          }
         }, 100);
       },
       logout: () => {
+        console.log('🔐 로그아웃');
         // localStorage에서 accessToken 삭제
         localStorage.removeItem('accessToken');
         // 쿠키에서도 삭제

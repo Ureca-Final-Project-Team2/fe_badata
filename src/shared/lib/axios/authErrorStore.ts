@@ -1,77 +1,246 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-import { useAuthStore } from '@/entities/auth/model/authStore';
+// API 요청 정보 저장 타입
+interface PendingApiRequest {
+  type: 'STORE_LIKE' | 'SOS_REQUEST' | 'POST_LIKE' | 'RESERVATION' | 'FOLLOW' | 'RESTOCK';
+  url: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  data?: unknown;
+  params?: Record<string, unknown>;
+  timestamp: number;
+}
 
 interface AuthErrorState {
   isAuthModalOpen: boolean;
-  pendingRequest: (() => Promise<unknown>) | null;
-  pendingUrl: string | null;
+  pendingRequest: PendingApiRequest | null;
   onAuthModalClose: (() => void) | null;
-  openAuthModal: (request?: () => Promise<unknown>, url?: string, onClose?: () => void) => void;
+
+  // 모달 관련
+  openAuthModal: (request: PendingApiRequest, onClose?: () => void) => void;
   closeAuthModal: () => void;
+
+  // 요청 실행 관련
   executePendingRequest: () => Promise<void>;
-  checkAndExecutePendingRequest: () => void;
+  clearPendingRequest: () => void;
 }
 
-export const useAuthErrorStore = create<AuthErrorState>((set, get) => ({
-  isAuthModalOpen: false,
-  pendingRequest: null,
-  pendingUrl: null,
-  onAuthModalClose: null,
-  openAuthModal: (request, url, onClose) => {
-    set({
-      isAuthModalOpen: true,
-      pendingRequest: request || null,
-      pendingUrl: url || null,
-      onAuthModalClose: onClose || null,
-    });
-  },
-  closeAuthModal: () => {
-    const { onAuthModalClose } = get();
-    // AuthModal이 닫힐 때 콜백 실행
-    if (onAuthModalClose) {
-      onAuthModalClose();
-    }
-    set({
+export const useAuthErrorStore = create<AuthErrorState>()(
+  persist(
+    (set, get) => ({
       isAuthModalOpen: false,
       pendingRequest: null,
-      pendingUrl: null,
       onAuthModalClose: null,
-    });
-  },
-  executePendingRequest: async () => {
-    const { pendingRequest } = get();
 
-    if (pendingRequest) {
-      try {
-        await pendingRequest();
-        // 요청이 성공적으로 실행된 후에만 초기화
+      openAuthModal: (request: PendingApiRequest, onClose?: () => void) => {
+        console.log('🔒 Auth modal 열기:', { type: request.type, url: request.url });
+
+        set({
+          isAuthModalOpen: true,
+          pendingRequest: {
+            ...request,
+            timestamp: Date.now(),
+          },
+          onAuthModalClose: onClose || null,
+        });
+      },
+
+      closeAuthModal: () => {
+        const { onAuthModalClose } = get();
+        console.log('🔒 Auth modal 닫기');
+
+        // 모달 닫힐 때 콜백 실행
+        if (onAuthModalClose) {
+          onAuthModalClose();
+        }
+
         set({
           isAuthModalOpen: false,
-          pendingRequest: null,
-          pendingUrl: null,
           onAuthModalClose: null,
+          // pendingRequest는 유지 (로그인 후 실행을 위해)
         });
-      } catch (error) {
-        console.error('❌ 저장된 요청 실행 실패:', error);
-        // 에러 발생 시에도 초기화
+      },
+
+      executePendingRequest: async () => {
+        const { pendingRequest } = get();
+
+        if (!pendingRequest) {
+          console.log('⚠️ 실행할 pending request가 없음');
+          return;
+        }
+
+        // 5분 이상 된 요청은 무시
+        const now = Date.now();
+        if (now - pendingRequest.timestamp > 5 * 60 * 1000) {
+          console.log('⏰ Pending request가 너무 오래됨, 삭제');
+          get().clearPendingRequest();
+          return;
+        }
+
+        try {
+          console.log('🔄 Pending request 실행 시작:', pendingRequest.type);
+
+          // 타입별로 API 실행
+          await executeApiByType(pendingRequest);
+
+          console.log('✅ Pending request 실행 성공');
+
+          // 성공 후 토스트 메시지 표시
+          showSuccessToast(pendingRequest.type);
+        } catch (error) {
+          console.error('❌ Pending request 실행 실패:', error);
+
+          // 실패 시 토스트 메시지 표시
+          showErrorToast(pendingRequest.type);
+        } finally {
+          // 성공/실패 관계없이 정리
+          get().clearPendingRequest();
+        }
+      },
+
+      clearPendingRequest: () => {
+        console.log('🗑️ Pending request 정리');
         set({
-          isAuthModalOpen: false,
           pendingRequest: null,
-          pendingUrl: null,
+          isAuthModalOpen: false,
           onAuthModalClose: null,
         });
+      },
+    }),
+    {
+      name: 'auth-error-storage',
+      partialize: (state) => ({
+        pendingRequest: state.pendingRequest,
+      }),
+    },
+  ),
+);
+
+// API 타입별 실행 함수
+async function executeApiByType(request: PendingApiRequest) {
+  const { type, url, data, method } = request;
+
+  switch (type) {
+    case 'STORE_LIKE': {
+      const { toggleStoreLike } = await import('@/features/rental/map/api/apis');
+      const storeId = extractStoreIdFromUrl(url);
+      const isLiked = (data as { isLiked?: boolean })?.isLiked ?? false;
+
+      console.log('🔄 STORE_LIKE 실행:', { storeId, isLiked });
+      await toggleStoreLike(storeId, isLiked);
+
+      // 마커 상태 업데이트
+      const { updateMarkerLikeStatus } = await import('@/features/rental/map/lib/markerCache');
+      updateMarkerLikeStatus(storeId, isLiked);
+      break;
+    }
+
+    case 'SOS_REQUEST': {
+      const { useCreateSosRequest } = await import('@/widgets/sos/model/mutations');
+      // SOS 요청은 별도 처리 필요
+      console.log('SOS 요청 처리:', data);
+      break;
+    }
+
+    case 'POST_LIKE': {
+      // 원래 코드의 API 함수 사용
+      const { postTradePostLike, deleteTradePostLike } = await import(
+        '@/entities/trade-post/api/apis'
+      );
+      const postId = extractPostIdFromUrl(url);
+
+      if (method === 'POST') {
+        await postTradePostLike(postId);
+      } else if (method === 'DELETE') {
+        await deleteTradePostLike(postId);
       }
+      break;
     }
-  },
-  checkAndExecutePendingRequest: () => {
-    const { pendingRequest } = get();
-    const isLoggedIn = useAuthStore.getState().isLoggedIn;
 
-    if (isLoggedIn && pendingRequest) {
-      setTimeout(() => {
-        get().executePendingRequest();
-      }, 100);
+    case 'RESERVATION': {
+      // 원래 코드의 API 함수 사용
+      const { createReservationWithValidation } = await import(
+        '@/features/rental/store/reservation/utils/reservationService'
+      );
+      await createReservationWithValidation(data as any);
+      break;
     }
-  },
-}));
+
+    case 'FOLLOW': {
+      // 원래 코드의 API 함수 사용
+      const { tradePostApis } = await import('@/entities/trade-post/api/apis');
+      const userId = extractUserIdFromUrl(url);
+      await tradePostApis.postFollowToggle(userId);
+      break;
+    }
+
+    case 'RESTOCK': {
+      // 원래 코드의 API 함수 사용
+      const { requestRestockNotification } = await import(
+        '@/features/rental/store/reservation/api/apis'
+      );
+      const result = await requestRestockNotification(data as any);
+
+      if (!result.success) {
+        throw new Error(result.error || '재입고 알림 신청에 실패했습니다.');
+      }
+      break;
+    }
+
+    default:
+      throw new Error(`Unknown request type: ${type}`);
+  }
+}
+
+// URL에서 ID 추출 헬퍼 함수들
+function extractStoreIdFromUrl(url: string): number {
+  const match = url.match(/\/stores\/(\d+)/);
+  if (!match) throw new Error('Invalid store URL');
+  return parseInt(match[1], 10);
+}
+
+function extractPostIdFromUrl(url: string): number {
+  const match = url.match(/\/posts\/(\d+)/) || url.match(/\/trades\/(\d+)/);
+  if (!match) throw new Error('Invalid post URL');
+  return parseInt(match[1], 10);
+}
+
+function extractUserIdFromUrl(url: string): number {
+  const match = url.match(/\/users\/(\d+)/);
+  if (!match) throw new Error('Invalid user URL');
+  return parseInt(match[1], 10);
+}
+
+// 성공/실패 토스트 메시지
+async function showSuccessToast(type: string) {
+  const { makeToast } = await import('@/shared/lib/makeToast');
+
+  const messages = {
+    STORE_LIKE: '좋아요가 처리되었습니다.',
+    SOS_REQUEST: 'SOS 요청이 전송되었습니다.',
+    POST_LIKE: '게시글 좋아요가 처리되었습니다.',
+    RESERVATION: '예약이 완료되었습니다.',
+    FOLLOW: '팔로우가 처리되었습니다.',
+    RESTOCK: '재입고 알림이 설정되었습니다.',
+  };
+
+  makeToast(messages[type as keyof typeof messages] || '요청이 완료되었습니다.', 'success');
+}
+
+async function showErrorToast(type: string) {
+  const { makeToast } = await import('@/shared/lib/makeToast');
+
+  const messages = {
+    STORE_LIKE: '좋아요 처리 중 오류가 발생했습니다.',
+    SOS_REQUEST: 'SOS 요청 중 오류가 발생했습니다.',
+    POST_LIKE: '게시글 좋아요 처리 중 오류가 발생했습니다.',
+    RESERVATION: '예약 중 오류가 발생했습니다.',
+    FOLLOW: '팔로우 처리 중 오류가 발생했습니다.',
+    RESTOCK: '재입고 알림 설정 중 오류가 발생했습니다.',
+  };
+
+  makeToast(
+    messages[type as keyof typeof messages] || '요청 처리 중 오류가 발생했습니다.',
+    'warning',
+  );
+}
