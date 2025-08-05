@@ -41,7 +41,7 @@ export default function RentalHistoryPage() {
       header={<PageHeader title="공유기 대여 내역" onBack={() => router.back()} />}
       showBottomNav
     >
-      <div className="flex-1 overflow-y-auto max-w-[428px] mx-auto pt-4">
+      <div className="flex-1 overflow-y-auto max-w-[428px] mx-auto mb-4 mt-4">
         {rentalHistoryData.length === 0 && (
           <div className="text-center text-gray-400 mt-10">대여 내역이 없습니다.</div>
         )}

@@ -6,12 +6,20 @@ import type { DateRange } from 'react-day-picker';
 export const convertToReducerDateRange = (
   range: { from: Date | null; to: Date | null } | null,
 ): DateRange | undefined => {
-  if (!range) return undefined;
+  console.log('convertToReducerDateRange - 입력:', range);
 
-  return {
+  if (!range) {
+    console.log('convertToReducerDateRange - null 반환');
+    return undefined;
+  }
+
+  const result = {
     from: range.from || undefined,
     to: range.to || undefined,
   };
+
+  console.log('convertToReducerDateRange - 결과:', result);
+  return result;
 };
 
 /**
@@ -20,10 +28,18 @@ export const convertToReducerDateRange = (
 export const convertFromReducerDateRange = (
   range: DateRange | undefined,
 ): { from: Date | null; to: Date | null } | null => {
-  if (!range) return null;
+  console.log('convertFromReducerDateRange - 입력:', range);
 
-  return {
+  if (!range) {
+    console.log('convertFromReducerDateRange - null 반환');
+    return null;
+  }
+
+  const result = {
     from: range.from || null,
     to: range.to || null,
   };
+
+  console.log('convertFromReducerDateRange - 결과:', result);
+  return result;
 };

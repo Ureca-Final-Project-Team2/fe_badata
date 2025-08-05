@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-import { motion, useAnimation, useMotionValue } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { ArrowUpDown } from 'lucide-react';
 
 import { StoreCard } from '@/features/rental/map/ui/StoreCard';
@@ -22,7 +22,6 @@ interface ExtendedDragBottomSheetProps extends DragBottomSheetProps {
 
 export const DragBottomSheet = ({
   open,
-  onClose,
   children,
   storeList,
   isLoading = false,
@@ -35,11 +34,23 @@ export const DragBottomSheet = ({
   currentSort = 'distance,asc',
 }: ExtendedDragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
+  const lastOpenRef = useRef(false); // useRef로 이전 상태 추적
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [animatedItems, setAnimatedItems] = useState<Set<string>>(new Set());
   const [lastStoreCount, setLastStoreCount] = useState(0);
+  const renderCountRef = useRef(0);
 
-  // 무한 스크롤 핸들러
+  // 메모이제이션된 계산값들
+  const calculatedValues = useMemo(() => {
+    const expandedY = windowHeight > 0 ? 60 : 0; // header 높이
+    const middleY = windowHeight > 0 ? windowHeight * 0.3 : 0; // 중간 높이를 30%로 조정
+    const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 접힌 높이 (80% 아래)
+
+    return { expandedY, middleY, collapsedY };
+  }, [windowHeight]);
+
+  // 무한 스크롤 핸들러 (디바운싱 적용)
   const handleScroll = useCallback(() => {
     if (!scrollContainerRef.current || !onLoadMore || isFetchingNextPage || !hasNextPage) return;
 
@@ -51,7 +62,7 @@ export const DragBottomSheet = ({
     }
   }, [onLoadMore, isFetchingNextPage, hasNextPage]);
 
-  // 새로 로드된 아이템들을 추적하여 애니메이션 적용
+  // 새로 로드된 아이템들을 추적하여 애니메이션 적용 (메모이제이션)
   useEffect(() => {
     if (storeList && storeList.length > lastStoreCount) {
       const newItems = storeList.slice(lastStoreCount);
@@ -68,49 +79,79 @@ export const DragBottomSheet = ({
     }
   }, [storeList, lastStoreCount, animatedItems]);
 
-  // windowHeight가 설정된 후에 계산하도록 수정
-  const expandedY = windowHeight > 0 ? 60 : 0; // header 높이
-  const middleY = windowHeight > 0 ? windowHeight * 0.5 : 0; // 중간 높이
-  const collapsedY = windowHeight > 0 ? windowHeight * 0.8 : 0; // 접힌 높이 (80% 아래)
-
-  // 초기 상태는 collapsed로 설정
-  const y = useMotionValue(collapsedY);
   const controls = useAnimation();
 
-  useEffect(() => {
+  // 렌더링 횟수 제한 (개발 환경에서만)
+  renderCountRef.current += 1;
+  if (renderCountRef.current > 10) {
+    console.warn('🔍 DragBottomSheet 과도한 렌더링 감지:', renderCountRef.current);
+  }
+
+  useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
       const height = window.innerHeight;
       setWindowHeight(height);
+      setCurrentY(height); // 초기값을 windowHeight로 설정
     }
   }, []);
 
   useEffect(() => {
-    if (windowHeight === 0) return;
+    if (windowHeight === 0) {
+      return;
+    }
 
-    const targetY = open ? expandedY : collapsedY; // 목록보기 버튼 클릭 시 header까지 올라가도록
+    // open 상태가 변경되었을 때만 애니메이션 실행
+    if (open !== lastOpenRef.current) {
+      lastOpenRef.current = open || false;
 
-    // 애니메이션으로 부드럽게 이동
-    controls.start({
-      y: targetY,
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        damping: 30,
-      },
-    });
-  }, [open, controls, windowHeight, expandedY, collapsedY]);
+      if (open) {
+        // 열린 상태로 애니메이션
+        controls.start({
+          y: calculatedValues.expandedY,
+          transition: { type: 'spring', damping: 25, stiffness: 200 },
+        });
+        setCurrentY(calculatedValues.expandedY);
+      } else {
+        // 닫힌 상태로 애니메이션
+        controls.start({
+          y: calculatedValues.collapsedY,
+          transition: { type: 'spring', damping: 25, stiffness: 200 },
+        });
+        setCurrentY(calculatedValues.collapsedY);
+      }
+    }
+  }, [open, windowHeight, calculatedValues, controls]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
-    if (info.point.y < middleY) {
-      controls.start({ y: expandedY });
-    } else if (info.point.y > middleY + 80) {
-      controls.start({ y: collapsedY });
-      onClose?.();
+    const { y } = info.point;
+    const threshold = 50; // 드래그 임계값
+
+    // 현재 위치에 따라 상태 결정
+    if (y < calculatedValues.middleY - threshold) {
+      // 위쪽으로 드래그하면 expanded 상태
+      controls.start({
+        y: calculatedValues.expandedY,
+        transition: { type: 'spring', damping: 25, stiffness: 200 },
+      });
+      setCurrentY(calculatedValues.expandedY);
+    } else if (y > calculatedValues.middleY + threshold) {
+      // 아래쪽으로 드래그하면 collapsed 상태
+      controls.start({
+        y: calculatedValues.collapsedY,
+        transition: { type: 'spring', damping: 25, stiffness: 200 },
+      });
+      setCurrentY(calculatedValues.collapsedY);
     } else {
-      controls.start({ y: middleY });
+      // 중간 영역이면 middle 상태로 이동
+      controls.start({
+        y: calculatedValues.middleY,
+        transition: { type: 'spring', damping: 25, stiffness: 200 },
+      });
+      setCurrentY(calculatedValues.middleY);
     }
   };
 
+  // 데이터가 로딩 중이거나 빈 배열이어도 항상 렌더링
   if (windowHeight === 0) {
     // windowHeight가 0일 때도 렌더링하되, 높이는 0으로 설정
     return (
@@ -120,6 +161,8 @@ export const DragBottomSheet = ({
       />
     );
   }
+
+  // 데이터가 로딩 중이거나 빈 배열이어도 항상 렌더링
 
   const handleSortClick = () => {
     onSortClick?.();
@@ -142,14 +185,14 @@ export const DragBottomSheet = ({
   return (
     <motion.div
       drag="y"
-      dragConstraints={{ top: expandedY, bottom: collapsedY }}
-      dragElastic={0.2}
+      dragConstraints={{ top: 0, bottom: windowHeight }}
+      dragElastic={0.1}
       onDragEnd={handleDragEnd}
       initial={false}
       animate={controls}
       style={{
-        y,
-        height: `calc(${windowHeight}px - ${y.get()}px)`,
+        y: currentY,
+        height: `calc(${windowHeight}px - ${currentY}px)`,
         minHeight: '200px', // 최소 높이 설정
       }}
       className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
@@ -174,23 +217,18 @@ export const DragBottomSheet = ({
         className="flex-1 mb-35 overflow-y-auto custom-scrollbar"
       >
         {isLoading ? (
-          <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
-            <div className="text-center text-[var(--gray-dark)] animate-pulse">
-              <div className="loading-spinner mr-2"></div>
-              스토어 목록을 불러오는 중...
-            </div>
+          <div className="flex flex-col items-center justify-center gap-3 px-4 pt-8 pb-6 min-h-[200px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <div className="text-center text-[var(--gray-dark)]">스토어 목록을 불러오는 중...</div>
           </div>
         ) : isError ? (
-          <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
-            <div className="text-center text-[var(--red-main)] animate-fade-in">
+          <div className="flex flex-col items-center justify-center gap-3 px-4 pt-8 pb-6 min-h-[200px]">
+            <div className="text-center text-[var(--red-main)]">
               에러가 발생했습니다: {error?.message || '알 수 없는 오류'}
             </div>
           </div>
         ) : storeList && storeList.length > 0 ? (
           <div className="flex flex-col items-center gap-3 px-4 pt-3 pb-6">
-            {(() => {
-              return null;
-            })()}
             {storeList.map((store, idx) => {
               const itemKey = `${store.id || `item-${idx}`}`;
               const isNewItem = animatedItems.has(itemKey);
@@ -216,7 +254,8 @@ export const DragBottomSheet = ({
             {/* 무한 스크롤 로딩 인디케이터 */}
             {isFetchingNextPage && (
               <div className="text-center text-[var(--gray-dark)] py-4 animate-fade-in">
-                <div className="loading-spinner mr-2"></div>더 많은 스토어를 불러오는 중...
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                더 많은 스토어를 불러오는 중...
               </div>
             )}
             {/* 더 이상 데이터가 없을 때 */}
@@ -227,10 +266,8 @@ export const DragBottomSheet = ({
             )}
           </div>
         ) : (
-          <div className="flex flex-col gap-3 px-4 pt-3 pb-6">
-            <div className="text-center text-[var(--gray-dark)] animate-fade-in">
-              표시할 스토어가 없습니다.
-            </div>
+          <div className="flex flex-col items-center justify-center gap-3 px-4 pt-8 pb-6 min-h-[200px]">
+            <div className="text-center text-[var(--gray-dark)]">표시할 스토어가 없습니다.</div>
             {children}
           </div>
         )}

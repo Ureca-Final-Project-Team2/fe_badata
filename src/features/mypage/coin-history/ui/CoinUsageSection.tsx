@@ -6,12 +6,12 @@ export function CoinUsageSection({ onInfoClick }: CoinUsageSectionProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <h2 className="font-body-semibold">코인 사용 가능 항목</h2>
+        <h2 className="font-body-semibold mt-4">코인 사용 가능 항목</h2>
         <button
           onClick={onInfoClick}
           className="flex items-center justify-center"
         >
-          <span className="font-small-semibold text-[var(--main-5)]">ⓘ</span>
+          <span className="font-small-semibold mt-4 text-[var(--main-5)]">ⓘ</span>
         </button>
       </div>
       <div className="flex gap-3">
