@@ -56,7 +56,7 @@ export const LoginPrompt = ({
         {/* 로그인 버튼 */}
         <button
           onClick={onLogin}
-          className="w-full h-12 bg-yellow-400 hover:bg-yellow-300 text-[var(--black)] text-center font-small-semibold rounded-xl transition-colors shadow-sm"
+          className="cursor-pointer w-full h-12 bg-yellow-400 hover:bg-yellow-300 text-[var(--black)] text-center font-small-semibold rounded-xl transition-colors shadow-sm"
         >
           {buttonText}
         </button>

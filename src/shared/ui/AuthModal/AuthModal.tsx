@@ -57,7 +57,7 @@ export const AuthModal = () => {
         {/* X 버튼 */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 p-2 hover:bg-[var(--white)]/20 rounded-full transition-colors z-10"
+          className="cursor-pointer absolute top-4 right-4 p-2 hover:bg-[var(--white)]/20 rounded-full transition-colors z-10"
         >
           <X className="w-5 h-5 text-[var(--white)]" />
         </button>
