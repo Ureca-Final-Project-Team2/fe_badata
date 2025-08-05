@@ -82,7 +82,7 @@ export default function SwiperCard({ post, onSwipe, isTop, isAnimating }: Swiper
       className="relative w-full max-w-[380px] mx-auto h-full bg-white rounded-3xl border border-[var(--gray)] overflow-hidden"
       style={{ x, rotate }}
       drag={isTop && !isAnimating ? 'x' : false}
-      dragConstraints={{ left: 0, right: 0 }}
+      dragConstraints={{ left: -300, right: 300 }}
       dragElastic={0.3}
       onDrag={handleDrag}
       onDragEnd={handleCardSwipeEnd}
