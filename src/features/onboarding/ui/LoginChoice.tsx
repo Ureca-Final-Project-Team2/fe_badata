@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { useOnboarding } from '@/shared/hooks/useOnboarding';
 import { KakaoLoginButton } from '@/shared/ui/KakaoLoginButton';
 
 interface LoginChoiceProps {
@@ -10,10 +11,11 @@ interface LoginChoiceProps {
 
 export function LoginChoice({ onComplete }: LoginChoiceProps) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const { completeOnboarding } = useOnboarding();
 
   const handleGuestMode = () => {
-    // 온보딩 완료 상태를 저장
-    localStorage.setItem('onboardingCompleted', 'true');
+    // 온보딩 완료 처리
+    completeOnboarding();
     localStorage.setItem('guestMode', 'true');
 
     // 홈으로 이동

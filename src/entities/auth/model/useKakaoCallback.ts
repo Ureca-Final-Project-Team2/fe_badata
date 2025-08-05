@@ -37,7 +37,15 @@ export const useKakaoCallback = () => {
           console.warn(' 로그인은 성공했지만 FCM 토큰이 없어 서버 전송 생략');
         }
 
-        router.replace(content.newUser ? '/onboarding' : '/');
+        // 새 사용자가 아닌 경우 홈으로, 새 사용자인 경우 온보딩으로
+        if (content.newUser) {
+          // 새 사용자의 경우 온보딩 완료 상태를 저장하지 않고 온보딩 페이지로 이동
+          router.replace('/onboarding');
+        } else {
+          // 기존 사용자의 경우 온보딩 완료 상태를 저장하고 홈으로 이동
+          localStorage.setItem('onboarding-completed', 'true');
+          router.replace('/');
+        }
       } catch (err) {
         console.error('카카오 로그인 실패', err);
       }
