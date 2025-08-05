@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { fetchFcmToken, fetchKakaoAuth } from '@/entities/auth/api/apis';
 import { useAuthStore } from '@/entities/auth/model/authStore';
@@ -10,6 +10,7 @@ import { useFCM } from '@/shared/hooks/useFCM';
 
 export const useKakaoCallback = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
   const { triggerFCMToken } = useFCM(); // ✅ 훅에서 함수만 가져옴
   const processedCode = useRef<string | null>(null);
@@ -37,12 +38,18 @@ export const useKakaoCallback = () => {
           console.warn(' 로그인은 성공했지만 FCM 토큰이 없어 서버 전송 생략');
         }
 
-        router.replace(content.newUser ? '/onboarding' : '/');
+        // 리다이렉트 파라미터 확인
+        const redirect = searchParams?.get('redirect');
+        if (redirect) {
+          router.replace(redirect);
+        } else {
+          router.replace(content.newUser ? '/onboarding' : '/');
+        }
       } catch (err) {
         console.error('카카오 로그인 실패', err);
       }
     };
 
     handleAuth();
-  }, [login, router, triggerFCMToken]);
+  }, [login, router, triggerFCMToken, searchParams]);
 };

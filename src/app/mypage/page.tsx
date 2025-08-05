@@ -11,6 +11,7 @@ import { ReportStatusSection } from '@/features/mypage/ui/ReportStatusSection';
 import { SosSection } from '@/features/mypage/ui/SosSection';
 import { TradeSection } from '@/features/mypage/ui/TradeSection';
 import { ICONS } from '@/shared/config/iconPath';
+import { AuthGuard } from '@/shared/ui/AuthGuard';
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { Header } from '@/shared/ui/Header';
 import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
@@ -25,68 +26,70 @@ export default function MyPage() {
     userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined;
 
   return (
-    <div className="relative w-full min-h-screen bg-[var(--main-2)]">
-      <div className="fixed top-0 left-0 right-0 z-20 max-w-[428px] mx-auto">
-        <Header />
-      </div>
+    <AuthGuard>
+      <div className="relative w-full min-h-screen bg-[var(--main-2)]">
+        <div className="fixed top-0 left-0 right-0 z-20 max-w-[428px] mx-auto">
+          <Header />
+        </div>
 
-      <main className="pt-[70px] pb-[70px] w-full max-w-[428px] mx-auto">
-        <div className="w-full bg-[var(--main-1)] pb-16 relative">
-          <div className="pt-4 flex justify-center">
-            {isProfileReady ? (
-              <MyProfileCard
-                name={userInfo.nickName}
-                days={userInfo.days}
-                avatarSrc={userInfo.profileImage}
-              />
-            ) : (
-              <MyProfileCard
-                name="로딩 중..."
-                days={0}
-                avatarSrc={ICONS.ETC.SHELL.src.toString()}
-                isLoading={isUserInfoLoading}
-              />
-            )}
-          </div>
-          <div className="relative px-4 pt-4 mb-4">
-            <DataUsageCardSection />
-          </div>
-          <div className="absolute right-4 bottom-10 flex flex-col items-center">
-            <div className="bg-[var(--white)] rounded-full px-3 py-1 shadow-md mb-2 min-w-[48px] text-center z-0">
-              <span className="mb-2 font-body-semibold text-[var(--main-5)]">
-                {coinData?.coin ?? 0}
-              </span>
+        <main className="pt-[70px] pb-[70px] w-full max-w-[428px] mx-auto">
+          <div className="w-full bg-[var(--main-1)] pb-16 relative">
+            <div className="pt-4 flex justify-center">
+              {isProfileReady ? (
+                <MyProfileCard
+                  name={userInfo.nickName}
+                  days={userInfo.days}
+                  avatarSrc={userInfo.profileImage}
+                />
+              ) : (
+                <MyProfileCard
+                  name="로딩 중..."
+                  days={0}
+                  avatarSrc={ICONS.ETC.SHELL.src.toString()}
+                  isLoading={isUserInfoLoading}
+                />
+              )}
             </div>
-            <a href="/mypage/coin-history" className="z-10">
-              <Image
-                src={ICONS.MYPAGE.COIN_STACK}
-                alt="코인 이미지"
-                width={100}
-                height={100}
-                className="w-[100px] h-[100px] cursor-pointer transition-transform duration-200 hover:scale-110 z-10"
-              />
-            </a>
+            <div className="relative px-4 pt-4 mb-4">
+              <DataUsageCardSection />
+            </div>
+            <div className="absolute right-4 bottom-10 flex flex-col items-center">
+              <div className="bg-[var(--white)] rounded-full px-3 py-1 shadow-md mb-2 min-w-[48px] text-center z-0">
+                <span className="mb-2 font-body-semibold text-[var(--main-5)]">
+                  {coinData?.coin ?? 0}
+                </span>
+              </div>
+              <a href="/mypage/coin-history" className="z-10">
+                <Image
+                  src={ICONS.MYPAGE.COIN_STACK}
+                  alt="코인 이미지"
+                  width={100}
+                  height={100}
+                  className="w-[100px] h-[100px] cursor-pointer transition-transform duration-200 hover:scale-110 z-10"
+                />
+              </a>
+            </div>
           </div>
-        </div>
-        <div
-          className="bg-[var(--white)] rounded-t-[50px] relative px-6 -mt-12"
-          style={{ minHeight: 'calc(100vh - 100px)' }}
-        >
-          <div className="pt-10 pb-6 space-y-8">
-            <TradeSection />
-            <RentalSection />
-            <SosSection />
-            <ReportStatusSection />
-            <AlarmSettingSection />
+          <div
+            className="bg-[var(--white)] rounded-t-[50px] relative px-6 -mt-12"
+            style={{ minHeight: 'calc(100vh - 100px)' }}
+          >
+            <div className="pt-10 pb-6 space-y-8">
+              <TradeSection />
+              <RentalSection />
+              <SosSection />
+              <ReportStatusSection />
+              <AlarmSettingSection />
+            </div>
           </div>
+        </main>
+        <div className="bg-[var(--white)] fixed bottom-0 left-0 right-0 z-50 max-w-[428px] mx-auto">
+          <BottomNav />
         </div>
-      </main>
-      <div className="bg-[var(--white)] fixed bottom-0 left-0 right-0 z-50 max-w-[428px] mx-auto">
-        <BottomNav />
-      </div>
 
-      {/* SOS Drawer 추가 */}
-      <SosDrawer />
-    </div>
+        {/* SOS Drawer 추가 */}
+        <SosDrawer />
+      </div>
+    </AuthGuard>
   );
 }
