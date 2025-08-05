@@ -8,7 +8,7 @@ interface CoinBalanceSectionProps {
 
 export function CoinBalanceSection({ coinAmount }: CoinBalanceSectionProps) {
   return (
-    <div className="flex flex-col items-center gap-0">
+    <div className="flex flex-col items-center gap-0 mt-2">
       <Image
         src={ICONS.MYPAGE.COIN}
         alt="코인 이미지"
