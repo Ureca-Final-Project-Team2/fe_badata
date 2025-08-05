@@ -18,12 +18,12 @@ export function OnboardingBackground({ children }: OnboardingBackgroundProps) {
 
         {/* 분리된 원형 애니메이션 */}
         {/* 큰 원 (334x334) - main-1 색상 */}
-        <div className="absolute inset-0 flex justify-center items-center -mt-56 sm:-mt-56 md:-mt-64 lg:-mt-72">
+        <div className="absolute inset-0 flex justify-center items-center -mt-52">
           <div className="w-[334px] h-[334px] rounded-full concentric-circle-large bg-[var(--main-2)]" />
         </div>
 
         {/* 작은 원 (234x234) - main-2 색상 */}
-        <div className="absolute inset-0 flex justify-center items-center -mt-52 sm:-mt-52 md:-mt-60 lg:-mt-68">
+        <div className="absolute inset-0 flex justify-center items-center -mt-48">
           <div className="w-[234px] h-[234px] rounded-full concentric-circle-small bg-[var(--main-4)]" />
         </div>
       </div>

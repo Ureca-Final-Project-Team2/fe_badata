@@ -38,7 +38,13 @@ export default function OnboardingPage() {
   };
 
   return (
-    <BaseLayout header={null} paddingX={false} showBottomNav={false} showHeader={false}>
+    <BaseLayout
+      header={null}
+      paddingX={false}
+      showBottomNav={false}
+      showHeader={false}
+      className="h-screen"
+    >
       {currentStep === 'intro' && <IntroVideo onComplete={() => handleNextStep('welcome')} />}
 
       {currentStep === 'welcome' && (

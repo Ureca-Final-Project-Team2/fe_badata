@@ -8,7 +8,7 @@ interface IndividualOnboardingSlidesProps {
   onComplete: () => void;
 }
 
-const TOTAL_SLIDES = 6; // Slide1~Slide6 = 6개 슬라이드
+const TOTAL_SLIDES = 7; // Slide1~Slide6 = 6개 슬라이드 + WelcomePage = 7개
 
 export function IndividualOnboardingSlides({ onComplete }: IndividualOnboardingSlidesProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -35,7 +35,7 @@ export function IndividualOnboardingSlides({ onComplete }: IndividualOnboardingS
   const renderSlide = () => {
     switch (currentSlide) {
       case 0:
-        return <Slide1 onNext={handleNext} onSkip={handleSkip} />;
+        return <Slide1 onNext={handleNext} onPrevious={handlePrevious} onSkip={handleSkip} />;
       case 1:
         return <Slide2 onNext={handleNext} onPrevious={handlePrevious} onSkip={handleSkip} />;
       case 2:
@@ -45,9 +45,9 @@ export function IndividualOnboardingSlides({ onComplete }: IndividualOnboardingS
       case 4:
         return <Slide5 onNext={handleNext} onPrevious={handlePrevious} onSkip={handleSkip} />;
       case 5:
-        return <Slide6 onComplete={onComplete} onPrevious={handlePrevious} onSkip={handleSkip} />;
+        return <Slide6 onNext={onComplete} onPrevious={handlePrevious} onSkip={handleSkip} />;
       default:
-        return <Slide1 onNext={handleNext} onSkip={handleSkip} />;
+        return <Slide1 onNext={handleNext} onPrevious={handlePrevious} onSkip={handleSkip} />;
     }
   };
 

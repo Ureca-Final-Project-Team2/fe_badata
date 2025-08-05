@@ -1,28 +1,23 @@
 'use client';
 
 import { OnboardingBackground } from '@/features/onboarding/ui/slides/OnboardingBackground';
+import { ProgressIndicator } from '@/features/onboarding/ui/slides/ProgressIndicator';
 
 interface Slide6Props {
-  onComplete: () => void;
+  onNext: () => void;
   onPrevious: () => void;
   onSkip: () => void;
 }
 
-export function Slide6({ onComplete, onPrevious, onSkip }: Slide6Props) {
+const TOTAL_SLIDES = 7;
+const CURRENT_SLIDE = 7;
+
+export function Slide6({ onNext, onPrevious, onSkip }: Slide6Props) {
   return (
     <OnboardingBackground>
-      <div className="flex flex-col">
+      <div className="min-h-screen flex flex-col items-center justify-center px-8 text-center relative">
         {/* 헤더 */}
-        <div className="flex justify-between items-center p-6">
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
-            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
-            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
-            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
-            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
-            <div className="w-2 h-2 rounded-full bg-[var(--gray)]" />
-            <div className="w-2 h-2 rounded-full bg-[var(--main-5)]" />
-          </div>
+        <div className="absolute top-6 right-6 flex justify-end items-center z-20">
           <button
             onClick={onSkip}
             className="text-[var(--gray-dark)] font-caption-medium hover:text-[var(--black)] transition-colors"
@@ -31,63 +26,53 @@ export function Slide6({ onComplete, onPrevious, onSkip }: Slide6Props) {
           </button>
         </div>
 
-        {/* 슬라이드 내용 */}
-        <div className="flex-1 flex flex-col items-center px-8 text-center">
-          {/* 이미지 - 동심원 중심에 위치 */}
-          <div className="w-96 h-96 flex items-center justify-center mt-14 relative">
+        {/* 이미지 - 원 바로 위에 고정 위치 */}
+        <div className="absolute inset-0 flex justify-center items-center -mt-52 z-10">
+          <div className="w-65 h-65 flex items-center justify-center">
             <img
               src="/assets/onboarding/onboarding-slide-6.svg"
-              alt="스마트 라이프"
-              className="max-w-full max-h-full object-contain absolute"
-            />
-            <img
-              src="/assets/onboarding/onboarding-slide-6-2-1.svg"
-              alt="데이터"
-              className="max-w-[30%] max-h-[30%] object-contain absolute top-4 right-2"
-            />
-            <img
-              src="/assets/onboarding/onboarding-slide-6-3.svg"
-              alt="혜택"
-              className="max-w-[40%] max-h-[40%] object-contain absolute bottom-0 left-0"
+              alt="스마트라이프"
+              className="max-w-full max-h-full object-contain"
             />
           </div>
+        </div>
 
+        {/* 제목과 설명 - 이미지 아래 고정 위치 */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center mt-70 z-10">
           {/* 제목 */}
-          <h1 className="font-title-bold text-[var(--black)] mb-4 mt-8">
+          <h1 className="font-body-semibold text-[var(--black)] text-xl mb-4">
             바다타와 함께하는
             <br />
             스마트한 모바일 라이프
           </h1>
 
           {/* 설명 */}
-          <p className="font-label-medium text-[var(--gray-dark)] mb-8 leading-relaxed">
+          <p className="font-caption-medium text-[var(--gray-dark)] leading-relaxed">
             카카오 로그인으로 간편하게 가입하고
             <br />
             다양한 혜택들을 누려보세요!
           </p>
-
-          {/* 네비게이션 버튼 */}
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={onPrevious}
-              className="px-6 py-3 text-[var(--gray-dark)] font-label-medium hover:text-[var(--black)] transition-colors"
-            >
-              이전
-            </button>
-            <button
-              onClick={onComplete}
-              className="px-8 py-3 bg-[var(--main-5)] text-[var(--white)] rounded-full font-label-medium hover:bg-[var(--main-4)] transition-colors"
-            >
-              시작하기
-            </button>
-          </div>
         </div>
 
-        {/* 스와이프 힌트 */}
-        <div className="p-6 text-center">
-          <p className="font-caption-medium text-[var(--gray-dark)]">
-            좌우로 스와이프하여 넘기세요
-          </p>
+        {/* 네비게이션 버튼 */}
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20 flex items-center space-x-4">
+          <button
+            onClick={onPrevious}
+            className="px-6 py-3 text-[var(--gray-dark)] font-label-medium hover:text-[var(--black)] transition-colors"
+          >
+            이전
+          </button>
+          <button
+            onClick={onNext}
+            className="px-8 py-3 bg-[var(--main-5)] text-[var(--white)] rounded-full font-label-medium hover:bg-[var(--main-4)] transition-colors"
+          >
+            시작하기
+          </button>
+        </div>
+
+        {/* ProgressIndicator - 스와이프 힌트 위치 */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+          <ProgressIndicator currentSlide={CURRENT_SLIDE} totalSlides={TOTAL_SLIDES} />
         </div>
       </div>
     </OnboardingBackground>
