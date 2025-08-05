@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -34,11 +34,11 @@ export const useOnboarding = () => {
   };
 
   // 온보딩이 필요하면 온보딩 페이지로 리다이렉트
-  const redirectToOnboardingIfNeeded = () => {
+  const redirectToOnboardingIfNeeded = useCallback(() => {
     if (!isOnboardingCompleted && !isLoading) {
       router.push('/onboarding');
     }
-  };
+  }, [isOnboardingCompleted, isLoading, router]);
 
   useEffect(() => {
     const completed = checkOnboardingStatus();
