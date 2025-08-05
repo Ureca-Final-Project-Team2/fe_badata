@@ -28,10 +28,10 @@ export function Slide2({ onNext, onPrevious, onSkip }: Slide2Props) {
 
         {/* 이미지 - 원 바로 위에 고정 위치 */}
         <div className="absolute inset-0 flex justify-center items-center -mt-52 z-10">
-          <div className="w-65 h-65 flex items-center justify-center">
+          <div className="w-90 h-90 flex items-center justify-center">
             <img
               src="/assets/onboarding/onboarding-slide-2.svg"
-              alt="데이터 거래"
+              alt="SOS"
               className="max-w-full max-h-full object-contain"
             />
           </div>

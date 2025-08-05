@@ -30,7 +30,7 @@ export function Slide3({ onNext, onPrevious, onSkip }: Slide3Props) {
         <div className="absolute inset-0 flex justify-center items-center -mt-52 z-10">
           <div className="relative w-65 h-65 flex items-center justify-center">
             {/* 메인 이미지 (영화 클래퍼보드) */}
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-40">
+            <div className="absolute -top-15 left-1/2 transform -translate-x-1/2 w-50 h-50">
               <img
                 src="/assets/onboarding/onboarding-slide-3-1.svg"
                 alt="영화 클래퍼보드"
@@ -39,7 +39,7 @@ export function Slide3({ onNext, onPrevious, onSkip }: Slide3Props) {
             </div>
 
             {/* 아이스크림 (왼쪽 하단) */}
-            <div className="absolute bottom-2 left-0 w-40 h-40">
+            <div className="absolute bottom-0 -left-10 w-40 h-40">
               <img
                 src="/assets/onboarding/onboarding-slide-3-2.svg"
                 alt="아이스크림"
@@ -48,7 +48,7 @@ export function Slide3({ onNext, onPrevious, onSkip }: Slide3Props) {
             </div>
 
             {/* 크루아상 (오른쪽 하단) */}
-            <div className="absolute bottom-4 right-0 w-40 h-40">
+            <div className="absolute bottom-4 -right-10 w-40 h-40">
               <img
                 src="/assets/onboarding/onboarding-slide-3-3.svg"
                 alt="크루아상"
@@ -62,14 +62,14 @@ export function Slide3({ onNext, onPrevious, onSkip }: Slide3Props) {
         <div className="absolute inset-0 flex flex-col items-center justify-center mt-70 z-10">
           {/* 제목 */}
           <h1 className="font-body-semibold text-[var(--black)] text-xl mb-4">
-            급하게 필요할 땐, SOS!
+            기프티콘 거래도 쉽고 안전하게
           </h1>
 
           {/* 설명 */}
           <p className="font-caption-medium text-[var(--gray-dark)] leading-relaxed">
-            급한 상황에서 데이터 SOS 요청을 할 수 있어요
+            OCR 자동 인식으로 번거로움 없이 등록하고
             <br />
-            바다타 유저들이 도와드릴거에요
+            검증된 사용자와 안전하게 거래하세요
           </p>
         </div>
 

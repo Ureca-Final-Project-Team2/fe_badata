@@ -5,14 +5,13 @@ import { ProgressIndicator } from '@/features/onboarding/ui/slides/ProgressIndic
 
 interface Slide1Props {
   onNext: () => void;
-  onPrevious: () => void;
   onSkip: () => void;
 }
 
 const TOTAL_SLIDES = 7;
 const CURRENT_SLIDE = 2;
 
-export function Slide1({ onNext, onPrevious, onSkip }: Slide1Props) {
+export function Slide1({ onNext, onSkip }: Slide1Props) {
   return (
     <OnboardingBackground>
       <div className="min-h-screen flex flex-col items-center justify-center px-8 text-center relative">
@@ -54,12 +53,6 @@ export function Slide1({ onNext, onPrevious, onSkip }: Slide1Props) {
 
         {/* 네비게이션 버튼 */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20 flex items-center space-x-4">
-          <button
-            onClick={onPrevious}
-            className="px-6 py-3 text-[var(--gray-dark)] font-label-medium hover:text-[var(--black)] transition-colors"
-          >
-            이전
-          </button>
           <button
             onClick={onNext}
             className="px-8 py-3 bg-[var(--main-5)] text-[var(--white)] rounded-full font-label-medium hover:bg-[var(--main-4)] transition-colors"
