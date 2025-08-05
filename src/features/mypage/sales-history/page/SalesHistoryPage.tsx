@@ -54,7 +54,7 @@ export default function SalesHistoryPage() {
 
   const postCategory = tab === '전체' ? undefined : tab === '데이터' ? 'DATA' : 'GIFTICON';
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
     useSalesQuery(undefined, postCategory, isCompleted, undefined, 30);
 
   const handleTabChange = (value: string) => {
