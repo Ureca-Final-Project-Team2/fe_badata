@@ -49,22 +49,23 @@ export default function SwipeTutorialOverlay({ onClose }: Props) {
     <div className="fixed inset-0 z-[100] bg-black/85 flex flex-col px-4 justify-end pb-18">
       <div className="w-full max-w-[428px] mx-auto flex flex-col items-center text-white text-center px-6">
         {animation && (
-          <motion.div
-            className="w-[160px] h-[160px]"
-            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <Lottie animationData={animation} loop autoPlay />
+          <motion.div className="w-[160px] h-[160px]">
+            <Lottie animationData={animation} loop={10} autoPlay />
           </motion.div>
         )}
 
         {/* 텍스트 */}
         <div className="space-y-2">
-          <p className="text-lg font-body-medium">{title}</p>
-          <p
-            className="text-2xl font-title-semibold text-[var(--main-5)]"
-            dangerouslySetInnerHTML={{ __html: highlight }}
-          />
-          <p className="text-sm text-white/80">{sub}</p>
+          <p className="font-body-medium">{title}</p>
+          <p className="font-title-semibold text-[var(--main-5)]">
+            {highlight.split('<br />').map((text, index, array) => (
+              <span key={index}>
+                {text}
+                {index < array.length - 1 && <br />}
+              </span>
+            ))}
+          </p>
+          <p className="font-caption-regular text-white/80">{sub}</p>
         </div>
 
         {/* 버튼 */}
@@ -80,7 +81,7 @@ export default function SwipeTutorialOverlay({ onClose }: Props) {
 
           <motion.button
             onClick={onClose}
-            className="text-sm text-white/60 underline"
+            className="font-label-regular text-white/60 underline"
             whileTap={{ scale: 0.96 }}
           >
             튜토리얼 건너뛰기
