@@ -14,6 +14,7 @@ import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilter
 import { TradeDeadlineBanner } from '@/features/trade/ui/TradeDeadlineBanner';
 import { TradeFlatTab } from '@/features/trade/ui/TradeFlatTab';
 import { TradeList } from '@/features/trade/ui/TradeList';
+import TradeRecommendPostsSection from '@/features/trade/ui/TradeRecommendPostsSection';
 import { TradeTrendingRanking } from '@/features/trade/ui/TradeTrendingRanking';
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
@@ -101,6 +102,7 @@ export default function TradePageClient() {
       <TradeSearchInput />
       {page === 'all' && (
         <>
+          <TradeRecommendPostsSection />
           <TradeTrendingRanking />
           <TradeDeadlineBanner />
           <SectionDivider size="full" thickness="thick" />
