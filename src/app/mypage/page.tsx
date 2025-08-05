@@ -21,13 +21,6 @@ export default function MyPage() {
   const { data: coinData } = useUserCoinQuery();
   const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
 
-  // 로그인하지 않은 경우 기본값 사용
-  const defaultUserInfo = {
-    nickName: '사용자',
-    profileImage: '',
-    days: 0,
-  };
-
   // 모든 사용자 정보가 로딩된 후에만 프로필 카드 렌더링
   const isProfileReady = isLoggedIn
     ? userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined
