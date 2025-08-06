@@ -48,6 +48,7 @@ export const InputField: React.FC<InputFieldProps> = ({
       {label && (
         <label className="text-[14px] text-[var(--gray-dark)] font-medium mb-1 inline-block">
           {label}
+          {isRequired && <span className="text-[var(--main-5)] ml-1">*</span>}
         </label>
       )}
       <div className="relative h-[45px]">
