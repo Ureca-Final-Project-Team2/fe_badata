@@ -1,6 +1,9 @@
 import { lazy, Suspense } from 'react';
 
-const StoreDetailPage = lazy(
+import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
+
+const StoreDetailContent = lazy(
   () => import('@/features/rental/store/store-detail/page/StoreDetailPage'),
 );
 
@@ -10,10 +13,13 @@ interface PageProps {
   }>;
 }
 
-// Loading fallback component
-const StoreDetailLoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="text-gray-500">가맹점 상세 페이지 로딩 중...</div>
+// Loading fallback component for main content
+const StoreDetailContentLoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--main-5)] mx-auto mb-4"></div>
+      <p className="text-[var(--main-5)]">가맹점 상세 페이지 로딩 중...</p>
+    </div>
   </div>
 );
 
@@ -26,8 +32,10 @@ export default async function Page({ params }: PageProps) {
   }
 
   return (
-    <Suspense fallback={<StoreDetailLoadingFallback />}>
-      <StoreDetailPage storeId={numericStoreId} />
-    </Suspense>
+    <BaseLayout header={<Header_Detail title="가맹점 상세" />} showBottomNav>
+      <Suspense fallback={<StoreDetailContentLoadingFallback />}>
+        <StoreDetailContent storeId={numericStoreId} />
+      </Suspense>
+    </BaseLayout>
   );
 }

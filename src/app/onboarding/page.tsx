@@ -32,10 +32,13 @@ const WelcomePage = lazy(() =>
   })),
 );
 
-// Loading fallback component
-const OnboardingLoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="text-gray-500">온보딩 로딩 중...</div>
+// Loading fallback component for main content
+const OnboardingContentLoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--main-5)] mx-auto mb-4"></div>
+      <p className="text-[var(--main-5)]">온보딩 로딩 중...</p>
+    </div>
   </div>
 );
 
@@ -72,7 +75,7 @@ export default function OnboardingPage() {
       showHeader={false}
       className="h-screen"
     >
-      <Suspense fallback={<OnboardingLoadingFallback />}>
+      <Suspense fallback={<OnboardingContentLoadingFallback />}>
         {currentStep === 'intro' && <IntroVideo onComplete={() => handleNextStep('welcome')} />}
 
         {currentStep === 'welcome' && (

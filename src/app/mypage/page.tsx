@@ -1,7 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { lazy, Suspense } from 'react';
+
+import Image from 'next/image';
 
 import { useUserInfoQuery } from '@/entities/user/model/queries';
 import { useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
@@ -46,13 +47,19 @@ const MyProfileCard = lazy(() =>
 // Loading fallback components
 const SectionLoadingFallback = () => (
   <div className="flex items-center justify-center p-4">
-    <div className="text-gray-500">섹션 로딩 중...</div>
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--main-5)] mx-auto mb-2"></div>
+      <p className="text-[var(--main-5)] text-sm">섹션 로딩 중...</p>
+    </div>
   </div>
 );
 
 const ProfileLoadingFallback = () => (
   <div className="flex items-center justify-center p-4">
-    <div className="text-gray-500">프로필 로딩 중...</div>
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--main-5)] mx-auto mb-2"></div>
+      <p className="text-[var(--main-5)] text-sm">프로필 로딩 중...</p>
+    </div>
   </div>
 );
 
