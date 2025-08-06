@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { respondToSos, sendSosRequest } from '../api/apis';
 
-import type { SosRespondRequest, SosRespondResponse } from '../lib/types';
+import type { SosRespondResponse } from '../lib/types';
 
 export const useSosRequestMutation = () =>
   useMutation<{ sosId: number }, Error, void>({
@@ -10,7 +10,7 @@ export const useSosRequestMutation = () =>
   });
 
 export const useSosRespondMutation = () => {
-  return useMutation<SosRespondResponse['content'], Error, SosRespondRequest>({
+  return useMutation<SosRespondResponse['content'], Error, number>({
     mutationFn: respondToSos,
   });
 };

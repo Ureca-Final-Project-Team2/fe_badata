@@ -29,22 +29,16 @@ export const SosNotificationHandler = () => {
           return;
         }
 
-        respond(
-          { sosId, isAccepted: true, dataAmount: transferAmount },
-          {
-            onSuccess: () =>
-              makeCustomToast(`✅ ${transferAmount}MB 데이터를 전달했어요!`, 'success'),
-            onError: () => makeCustomToast('✅ 도움을 주셔서 감사합니다!', 'success'),
-          },
-        );
+        respond(sosId, {
+          onSuccess: () =>
+            makeCustomToast(`✅ ${transferAmount}MB 데이터를 전달했어요!`, 'success'),
+          onError: () => makeCustomToast('❌ 데이터 전달에 실패했어요.', 'warning'),
+        });
       } else {
-        respond(
-          { sosId, isAccepted: false },
-          {
-            onSuccess: () => makeCustomToast('⛔ 요청을 거절했어요.', 'warning'),
-            onError: () => makeCustomToast('⛔ 요청을 거절했어요.', 'warning'),
-          },
-        );
+        respond(sosId, {
+          onSuccess: () => makeCustomToast('⛔ 요청을 거절했어요.', 'warning'),
+          onError: () => makeCustomToast('❌ 요청 거절 처리에 실패했어요.', 'warning'),
+        });
       }
     } catch (error) {
       console.error('❌ 응답 처리 중 오류:', error);
