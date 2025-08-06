@@ -2,13 +2,11 @@
 
 import { Modal } from '@/shared/ui/Modal';
 
-import type { RestockAlarmItem } from '@/features/mypage/restock-alarm/lib/types';
-
-interface DeleteConfirmModalProps {
+interface DeleteConfirmModalProps<T = unknown> {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  item: RestockAlarmItem | null;
+  item: T | null;
 }
 
 export function DeleteConfirmModal({ isOpen, onClose, onConfirm }: DeleteConfirmModalProps) {
