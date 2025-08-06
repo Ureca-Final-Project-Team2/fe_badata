@@ -28,6 +28,7 @@ const AddressHistoryItem = React.memo(
     const handleDelete = useCallback(
       (e: React.MouseEvent) => {
         e.preventDefault();
+        e.stopPropagation();
         setIsDeleting(true);
 
         // 애니메이션 완료 후 삭제 실행
@@ -41,7 +42,7 @@ const AddressHistoryItem = React.memo(
     return (
       <div
         className={`p-3 border-b border-[var(--gray-light)] rounded-lg cursor-pointer hover:bg-[var(--gray-light)] transition-all duration-300 ${
-          isDeleting ? 'animate-slide-out-down opacity-0' : ''
+          isDeleting ? 'opacity-0' : ''
         }`}
         onClick={handleClick}
       >
@@ -75,9 +76,11 @@ const AddressHistoryItem = React.memo(
           </div>
           <button
             onClick={handleDelete}
-            className="cursor-pointer p-1 rounded transition-colors flex-shrink-0"
+            onMouseDown={(e) => e.stopPropagation()}
+            onMouseUp={(e) => e.stopPropagation()}
+            className="cursor-pointer p-2 rounded transition-colors flex-shrink-0 hover:bg-[var(--gray-light)]"
           >
-            <X className="w-3 h-3 text-[var(--gray)] hover:text-[var(--gray-dark)] " />
+            <X className="w-4 h-4 text-[var(--gray)] hover:text-[var(--gray-dark)]" />
           </button>
         </div>
       </div>

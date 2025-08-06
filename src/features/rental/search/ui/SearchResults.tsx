@@ -29,7 +29,7 @@ const SearchResults = React.memo(
     const loadingContent = useMemo(
       () => (
         <div className="space-y-2">
-          <div className="text-center py-4 animate-fade-in">
+          <div className="text-center py-4">
             <p className="text-[var(--gray-dark)]">검색 중...</p>
           </div>
         </div>
@@ -41,7 +41,7 @@ const SearchResults = React.memo(
     const emptyContent = useMemo(
       () => (
         <div className="space-y-2">
-          <div className="text-center py-4 animate-fade-in">
+          <div className="text-center py-4">
             <p className="text-[var(--gray-dark)]">검색 결과가 없습니다.</p>
           </div>
         </div>
@@ -53,13 +53,13 @@ const SearchResults = React.memo(
     const resultsContent = useMemo(
       () => (
         <div className="space-y-2">
-          {results.map((place, index) => (
-            <div
+          {results.map((place) => (
+            <SearchResultItem
               key={place.id}
-              className={`animate-slide-in-up animate-stagger-${Math.min(index + 1, 5)}`}
-            >
-              <SearchResultItem place={place} keyword={keyword} onSelectPlace={onSelectPlace} />
-            </div>
+              place={place}
+              keyword={keyword}
+              onSelectPlace={onSelectPlace}
+            />
           ))}
           <InfiniteScrollObserver
             hasNext={hasNext}
