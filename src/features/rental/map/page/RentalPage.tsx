@@ -110,6 +110,8 @@ export default function RentalPage() {
 
   // 장소 마커 처리 상태 추적
   const placeMarkerProcessedRef = useRef(false);
+  // 검색 위치로 카메라 이동 처리 상태 추적
+  const cameraMoveProcessedRef = useRef(false);
 
   // URL 파라미터가 있으면 저장
   useEffect(() => {
@@ -119,6 +121,8 @@ export default function RentalPage() {
         lng: selectedLng,
         placeName: selectedPlaceName,
       });
+      // 새로운 검색 위치가 있으면 카메라 이동 상태 초기화
+      cameraMoveProcessedRef.current = false;
     }
   }, [selectedLat, selectedLng, selectedPlaceName, hasProcessedUrlParams]);
 
@@ -391,16 +395,18 @@ export default function RentalPage() {
 
         // 👉 클러스터 클릭 플래그가 true면 장소 마커는 생성하되 카메라 이동은 하지 않음
         const isClusterClick = getClusterClickActive();
-        if (!isClusterClick) {
+        if (!isClusterClick && !cameraMoveProcessedRef.current) {
           const lat = parseFloat(paramsToUse.lat);
           const lng = parseFloat(paramsToUse.lng);
 
           if (!isNaN(lat) && !isNaN(lng)) {
             const newPosition = new window.kakao.maps.LatLng(lat, lng);
 
-            // ✅ 검색 위치로 카메라 이동 (단, 클러스터 클릭이 아닐 경우에만)
+            // ✅ 검색 위치로 카메라 이동 (한 번만 실행되도록 처리)
             map.setCenter(newPosition);
             map.setLevel(4);
+            cameraMoveProcessedRef.current = true;
+            console.log('📍 검색 위치로 카메라 이동 완료 (한 번만 실행)');
 
             const newPlaceMarker = createPlaceMarker(
               map,
@@ -416,6 +422,26 @@ export default function RentalPage() {
           }
         } else {
           console.log('📍 클러스터 클릭 중이므로 장소 카메라 이동 생략');
+
+          // 클러스터 클릭 중에도 장소 마커는 생성
+          const lat = parseFloat(paramsToUse.lat);
+          const lng = parseFloat(paramsToUse.lng);
+
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const newPosition = new window.kakao.maps.LatLng(lat, lng);
+
+            const newPlaceMarker = createPlaceMarker(
+              map,
+              newPosition,
+              paramsToUse.placeName,
+              () => {
+                console.log('📍 장소 마커 클릭:', paramsToUse.placeName);
+              },
+            );
+
+            console.log('📍 클러스터 클릭 중 장소 마커 생성 완료:', paramsToUse.placeName);
+            setPlaceMarker(newPlaceMarker);
+          }
         }
 
         setHasProcessedUrlParams(true); // 장소 마커 처리 완료

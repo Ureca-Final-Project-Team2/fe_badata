@@ -201,6 +201,7 @@ export const createClusterMarker = (
     const currentZoomLevel = map.getLevel();
     const targetZoomLevel = Math.max(1, currentZoomLevel - 3); // 줌 레벨 1로 설정
 
+    // 클러스터 위치로 카메라 이동
     map.setCenter(position);
     map.setLevel(targetZoomLevel);
 
