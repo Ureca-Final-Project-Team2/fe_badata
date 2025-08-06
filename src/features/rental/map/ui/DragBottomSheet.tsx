@@ -22,6 +22,7 @@ interface ExtendedDragBottomSheetProps extends DragBottomSheetProps {
 
 export const DragBottomSheet = ({
   open,
+  onClose,
   children,
   storeList,
   isLoading = false,
@@ -118,6 +119,7 @@ export const DragBottomSheet = ({
           transition: { type: 'spring', damping: 25, stiffness: 200 },
         });
         setCurrentY(calculatedValues.collapsedY);
+        // open이 false로 변경될 때 onClose 호출하지 않음 (무한 루프 방지)
       }
     }
   }, [open, windowHeight, calculatedValues, controls]);
@@ -135,12 +137,14 @@ export const DragBottomSheet = ({
       });
       setCurrentY(calculatedValues.expandedY);
     } else if (y > calculatedValues.middleY + threshold) {
-      // 아래쪽으로 드래그하면 collapsed 상태
+      // 아래쪽으로 드래그하면 collapsed 상태 (닫기)
       controls.start({
         y: calculatedValues.collapsedY,
         transition: { type: 'spring', damping: 25, stiffness: 200 },
       });
       setCurrentY(calculatedValues.collapsedY);
+      // 드래그로 닫을 때 onClose 호출
+      onClose?.();
     } else {
       // 중간 영역이면 middle 상태로 이동
       controls.start({
@@ -150,19 +154,6 @@ export const DragBottomSheet = ({
       setCurrentY(calculatedValues.middleY);
     }
   };
-
-  // 데이터가 로딩 중이거나 빈 배열이어도 항상 렌더링
-  if (windowHeight === 0) {
-    // windowHeight가 0일 때도 렌더링하되, 높이는 0으로 설정
-    return (
-      <motion.div
-        className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
-        style={{ height: 0 }}
-      />
-    );
-  }
-
-  // 데이터가 로딩 중이거나 빈 배열이어도 항상 렌더링
 
   const handleSortClick = () => {
     onSortClick?.();

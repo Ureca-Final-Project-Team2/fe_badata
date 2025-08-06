@@ -7,7 +7,6 @@ export const useDrawerState = () => {
   const [currentSort, setCurrentSort] = useState('distance,asc');
 
   const handleListView = useCallback(() => {
-    // 데이터 유무와 관계없이 Drawer를 열기
     setIsDrawerOpen(true);
   }, []);
 
