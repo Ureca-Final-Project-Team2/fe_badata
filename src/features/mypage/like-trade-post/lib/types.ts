@@ -3,6 +3,7 @@ export interface LikeTradePostItem {
   postId: number;
   postCategory: 'GIFTICON' | 'DATA';
   partner: string;
+  mobileCarrier: string;
   title: string;
   price: number;
   postLikes: number;
