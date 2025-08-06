@@ -41,14 +41,14 @@ export function Slide2({ onNext, onPrevious, onSkip }: Slide2Props) {
         <div className="absolute inset-0 flex flex-col items-center justify-center mt-70 z-10">
           {/* 제목 */}
           <h1 className="font-body-semibold text-[var(--black)] text-xl mb-4">
-            급하게 필요할 땐, SOS!
+            데이터가 급하게 필요할 땐, SOS!
           </h1>
 
           {/* 설명 */}
           <p className="font-caption-medium text-[var(--gray-dark)] leading-relaxed">
-            급한 상황에서 데이터 SOS 요청을 할 수 있어요
+            데이터가 급할 땐 당황하지 마세요
             <br />
-            바다타 유저들이 도와드릴거에요
+            SOS 요청으로 바다타 유저들이 도와드릴게요
           </p>
         </div>
 

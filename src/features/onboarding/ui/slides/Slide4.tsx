@@ -62,12 +62,12 @@ export function Slide4({ onNext, onPrevious, onSkip }: Slide4Props) {
         <div className="absolute inset-0 flex flex-col items-center justify-center mt-70 z-10">
           {/* 제목 */}
           <h1 className="font-body-semibold text-[var(--black)] text-xl mb-4">
-            내 주변 공유기 대여도 OK
+            내 주변 공유기 대여도 OK!
           </h1>
 
           {/* 설명 */}
           <p className="font-caption-medium text-[var(--gray-dark)] leading-relaxed">
-            LG U+ 가맹점 기반으로 가까운 공유기를 찾고
+            LG U+ 가맹점이라면 어디든 조건에 맞는 공유기를 찾고
             <br />
             원하는 시간에 예약할 수 있어요
           </p>

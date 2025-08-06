@@ -6,40 +6,24 @@ export interface SosRequestResponse {
   };
 }
 
+export interface SosRespondRequest {
+  sosId: number;
+  isAccepted: boolean;
+  dataAmount?: number; // 수락 시 전달할 데이터 양 (MB 단위)
+}
+
 export interface SosRespondResponse {
   code: number;
-  message: string | null;
+  message: string;
   content: {
     sosId: number;
     isSuccess: boolean;
+    transferredData?: number; // 실제 전달된 데이터 양
   };
 }
 
-export interface SosRequest {
+export interface SseNotification {
   sosId: number;
+  type: 'REQUEST' | 'RESPOND'; 
+  isSuccess?: boolean; // 응답 시에만
 }
-
-export interface SosRespond {
-  sosId: number;
-  isSuccess: boolean;
-}
-
-// 실시간 알림 관련 타입들
-export interface SosNotification {
-  type: 'SOS_REQUEST' | 'SOS_RESPONSE';
-  sosId: number;
-  requesterName?: string;
-  requesterId?: number;
-  message?: string;
-  timestamp: string;
-}
-
-export type SosWebSocketMessage = 
-  | {
-      type: 'SOS_REQUEST' | 'SOS_RESPONSE';
-      data: SosNotification;
-    }
-  | {
-      type: 'CONNECT' | 'DISCONNECT';
-      userId: number;
-    };

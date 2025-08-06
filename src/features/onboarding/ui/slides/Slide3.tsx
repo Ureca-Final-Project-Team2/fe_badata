@@ -67,9 +67,11 @@ export function Slide3({ onNext, onPrevious, onSkip }: Slide3Props) {
 
           {/* 설명 */}
           <p className="font-caption-medium text-[var(--gray-dark)] leading-relaxed">
-            OCR 자동 인식으로 번거로움 없이 등록하고
+            귀찮게 입력하지 않아도 돼요!
             <br />
-            검증된 사용자와 안전하게 거래하세요
+            자동인식으로 간편하게 등록하고
+            <br />
+            인증된 유저와 안전하게 거래할 수 있어요
           </p>
         </div>
 

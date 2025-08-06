@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { ListFilter } from 'lucide-react';
 
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
@@ -28,6 +30,11 @@ export function TradeList({
   onFilterClick,
 }: TradeListProps) {
   const { toggleLike, isItemLoading } = useTradePostLikeHooks();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleCardClick = (item: DeadlinePost) => {
     onItemClick?.(item);
@@ -66,7 +73,7 @@ export function TradeList({
                 price={item.price}
                 imageUrl={item.postImage}
                 likeCount={item.likesCount}
-                isLiked={item.isLiked}
+                isLiked={mounted ? item.isLiked : false}
                 onLikeToggle={() => toggleLike(item)}
                 onCardClick={() => handleCardClick(item)}
                 isLikeLoading={isItemLoading(item.id)}

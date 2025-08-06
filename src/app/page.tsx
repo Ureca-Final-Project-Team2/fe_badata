@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useOnboarding } from '@/shared/hooks/useOnboarding';
+import { isGuestMode } from '@/shared/lib/onboarding';
 
 export default function HomePage() {
   const router = useRouter();
@@ -27,8 +28,14 @@ export default function HomePage() {
       // 로그인된 사용자는 trade 페이지로
       router.replace('/trade');
     } else {
-      // 로그인되지 않은 사용자는 무조건 온보딩으로
-      router.replace('/onboarding');
+      // 게스트 모드인지 확인
+      if (isGuestMode()) {
+        // 게스트 모드인 경우 trade 페이지로 이동 (둘러보기 가능)
+        router.replace('/trade');
+      } else {
+        // 로그인되지 않은 사용자는 온보딩으로
+        router.replace('/onboarding');
+      }
     }
   }, [user, isLoading, router]);
 

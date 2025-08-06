@@ -106,10 +106,8 @@ export function BaseLayout({
           </div>
         )}
 
-        {/* 전역 SOS Drawer */}
+        {/* 전역 SOS 컴포넌트들 */}
         <SosDrawer />
-
-        {/* 전역 SOS 실시간 알림 핸들러 */}
         <SosNotificationHandler />
 
         {/* 전역 인증 모달 */}

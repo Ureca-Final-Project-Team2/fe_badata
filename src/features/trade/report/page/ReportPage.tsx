@@ -91,6 +91,7 @@ export default function ReportPage({ postId }: ReportPageProps) {
         </div>
       )}
       <RegisterButton
+        size="lg_thin"
         onClick={handleSubmit}
         isFormValid={
           !!(

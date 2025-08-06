@@ -48,7 +48,10 @@ export default function OnboardingPage() {
       {currentStep === 'intro' && <IntroVideo onComplete={() => handleNextStep('welcome')} />}
 
       {currentStep === 'welcome' && (
-        <WelcomePage onNext={() => handleNextStep('slides')} onSkip={handleSkip} />
+        <WelcomePage
+          onNext={() => handleNextStep('slides')}
+          onSkip={() => handleNextStep('location')}
+        />
       )}
 
       {currentStep === 'slides' && (
