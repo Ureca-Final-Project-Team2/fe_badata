@@ -88,7 +88,10 @@ const UserProfileCard = ({
       }
     };
 
-    executeWithAuth(executeFollow, `/api/v1/users/${userId}/follows`);
+    executeWithAuth(executeFollow, `/api/v1/users/${userId}/follows`, {
+      type: 'FOLLOW',
+      method: 'POST',
+    });
   };
 
   const handleProfileClick = () => {

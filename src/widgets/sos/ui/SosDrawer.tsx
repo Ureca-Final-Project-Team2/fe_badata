@@ -17,11 +17,18 @@ export function SosDrawer() {
   const { executeWithAuth } = useAuthRequiredRequest();
 
   const handleSosRequest = () => {
-    executeWithAuth(() => {
-      // 로그인된 상태에서만 SosModal 열기
-      setIsModalOpen(true);
-      return Promise.resolve();
-    }, '/api/v1/sos/request');
+    executeWithAuth(
+      () => {
+        // 로그인된 상태에서만 SosModal 열기
+        setIsModalOpen(true);
+        return Promise.resolve();
+      },
+      '/api/v1/sos/request',
+      {
+        type: 'SOS_REQUEST',
+        method: 'POST',
+      },
+    );
   };
   const [isInfoOpen, setIsInfoOpen] = useState(false);
 

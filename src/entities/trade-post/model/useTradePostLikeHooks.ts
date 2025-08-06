@@ -94,7 +94,10 @@ export const useTradePostLikeHooks = () => {
       setItemLoading(item.id, false);
     };
 
-    executeWithAuth(executeLikeToggle, END_POINTS.TRADES.LIKE_POST(item.id));
+    executeWithAuth(executeLikeToggle, END_POINTS.TRADES.LIKE_POST(item.id), {
+      type: 'TRADE_POST',
+      method: 'POST',
+    });
   };
 
   // 상세페이지용 토글 (단일 게시물)
@@ -113,7 +116,10 @@ export const useTradePostLikeHooks = () => {
       setItemLoading(postId, false);
     };
 
-    executeWithAuth(executeLikeToggle, END_POINTS.TRADES.LIKE_POST(postId));
+    executeWithAuth(executeLikeToggle, END_POINTS.TRADES.LIKE_POST(postId), {
+      type: 'TRADE_POST',
+      method: 'POST',
+    });
   };
 
   // 캐시에서 좋아요 상태 가져오기 (infinite query 구조에 맞게 수정)

@@ -88,7 +88,6 @@ export const useStoreLikeToggle = ({
                   storeId,
                   isLiked: newLikedState,
                 },
-                timestamp: Date.now(),
               },
               () => {
                 // AuthModal이 닫힐 때 상태 롤백

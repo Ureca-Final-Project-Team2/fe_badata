@@ -52,7 +52,10 @@ export default function ReportPage({ postId }: ReportPageProps) {
       }
     };
 
-    executeWithAuth(executeReport, END_POINTS.TRADES.REPORT(postId));
+    executeWithAuth(executeReport, END_POINTS.TRADES.REPORT(postId), {
+      type: 'TRADE_POST',
+      method: 'POST',
+    });
   };
 
   return (

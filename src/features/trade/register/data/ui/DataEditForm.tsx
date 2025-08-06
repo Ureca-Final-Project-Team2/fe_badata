@@ -69,10 +69,18 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
       });
 
     try {
-      await executeWithAuth(requestFn, `/api/v1/trades/posts/${postId}`, () => {
-        // AuthModal이 닫힐 때 isSubmitting 상태 초기화
-        dispatch({ type: 'SET_SUBMITTING', value: false });
-      });
+      await executeWithAuth(
+        requestFn,
+        `/api/v1/trades/posts/${postId}`,
+        {
+          type: 'TRADE_POST',
+          method: 'PUT',
+        },
+        () => {
+          // AuthModal이 닫힐 때 isSubmitting 상태 초기화
+          dispatch({ type: 'SET_SUBMITTING', value: false });
+        },
+      );
     } catch (error) {
       // 에러는 이미 위에서 처리됨
       console.error('Data edit failed:', error);

@@ -10,7 +10,7 @@ export const useAuthRequiredRequest = () => {
     async <T>(
       requestFn: () => Promise<T>,
       url: string,
-      requestData?: {
+      requestData: {
         type:
           | 'STORE_LIKE'
           | 'SOS_REQUEST'
@@ -48,10 +48,10 @@ export const useAuthRequiredRequest = () => {
             // 원래 요청을 저장하고 AuthModal 열기
             openAuthModal(
               {
-                type: requestData?.type || apiType,
+                type: requestData.type || apiType,
                 url,
-                method: requestData?.method || 'POST',
-                data: requestData?.data,
+                method: requestData.method || 'POST',
+                data: requestData.data,
               },
               onAuthModalClose,
             );
