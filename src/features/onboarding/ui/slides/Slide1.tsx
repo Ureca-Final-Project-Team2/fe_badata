@@ -40,14 +40,14 @@ export function Slide1({ onNext, onSkip }: Slide1Props) {
         <div className="absolute inset-0 flex flex-col items-center justify-center mt-70 z-10">
           {/* 제목 */}
           <h1 className="font-body-semibold text-[var(--black)] mb-4">
-            데이터 남거나 부족할 땐, 바다타
+            데이터 거래 플랫폼, 바다타!
           </h1>
 
           {/* 설명 */}
           <p className="font-caption-medium text-[var(--gray-dark)] leading-relaxed">
-            바다타에서는 남는 데이터를 판매하고
+            잉여 데이터는 판매하고, 필요한 데이터는 원하는 만큼만!
             <br />
-            필요한 만큼 구매할 수 있어요
+            바다타에서 자유롭게 거래해보세요
           </p>
         </div>
 
