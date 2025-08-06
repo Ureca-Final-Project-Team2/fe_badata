@@ -17,7 +17,7 @@ function ContentSection({ store }: ContentSectionProps) {
   const { status, color } = getBusinessStatus(store.startTime, store.endTime);
 
   return (
-    <div className="flex flex-col w-full p-4 mb-4 gap-2">
+    <div className="flex flex-col w-full px-2 mb-4 gap-2">
       {/* 주소 섹션 */}
       <div className="flex items-start gap-4 mb-2 font-label-regular">
         <MapPin size={30} className="text-[var(--gray-dark)] mt-0.5 " />

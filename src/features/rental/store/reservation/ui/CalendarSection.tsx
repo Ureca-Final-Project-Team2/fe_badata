@@ -26,7 +26,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ dateRange, onChange }
 
   return (
     <>
-      <div className="font-body-semibold flex items-center mt-2">
+      <div className="font-body-semibold flex items-center mt-2 gap-2">
         <CalendarIcon size={20} className="text-[var(--main-5)]" />
         {hasSelectedDates ? '선택된 날짜' : '날짜를 선택해 주세요'}
       </div>
