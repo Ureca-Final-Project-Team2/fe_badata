@@ -5,13 +5,8 @@ import { useRouter } from 'next/navigation';
 import { ICONS } from '@/shared/config/iconPath';
 import { PATH } from '@/shared/config/path';
 import { HEADER_WIDTH } from '@/shared/config/ui';
-import { LoginButton } from '@/shared/ui/LoginButton/LoginButton';
 
-interface HeaderProps {
-  isLoggedIn?: boolean;
-}
-
-export const Header = ({ isLoggedIn }: HeaderProps) => {
+export const Header = () => {
   const router = useRouter();
   return (
     <header
@@ -25,7 +20,6 @@ export const Header = ({ isLoggedIn }: HeaderProps) => {
           onClick={() => router.push(PATH.TRADE.MAIN)}
         />
       </div>
-      <LoginButton isLoggedIn={isLoggedIn} className="mr-[24px]" />
     </header>
   );
 };
