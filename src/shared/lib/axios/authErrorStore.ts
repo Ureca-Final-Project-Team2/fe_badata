@@ -10,7 +10,8 @@ interface PendingApiRequest {
     | 'RESERVATION'
     | 'FOLLOW'
     | 'RESTOCK'
-    | 'TRADE_POST';
+    | 'TRADE_POST'
+    | 'PURCHASE';
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   data?: unknown;
@@ -27,7 +28,8 @@ interface AuthModalRequest {
     | 'RESERVATION'
     | 'FOLLOW'
     | 'RESTOCK'
-    | 'TRADE_POST';
+    | 'TRADE_POST'
+    | 'PURCHASE';
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   data?: unknown;
@@ -228,6 +230,13 @@ async function executeApiByType(request: PendingApiRequest) {
       break;
     }
 
+    case 'PURCHASE': {
+      const { createPayment } = await import('@/widgets/trade/payment/api/apis');
+      const { postId, useCoin } = data as { postId: number; useCoin: number };
+      await createPayment(postId, useCoin);
+      break;
+    }
+
     default:
       throw new Error(`Unknown request type: ${type}`);
   }
@@ -264,6 +273,7 @@ async function showSuccessToast(type: string) {
     FOLLOW: '팔로우가 처리되었습니다.',
     RESTOCK: '재입고 알림이 설정되었습니다.',
     TRADE_POST: '게시물이 성공적으로 등록되었습니다.',
+    PURCHASE: '결제가 완료되었습니다.',
   };
 
   const message = messages[type as keyof typeof messages] || '요청이 완료되었습니다.';
@@ -283,6 +293,7 @@ async function showErrorToast(type: string) {
     FOLLOW: '팔로우 처리 중 오류가 발생했습니다.',
     RESTOCK: '재입고 알림 설정 중 오류가 발생했습니다.',
     TRADE_POST: '게시물 등록 중 오류가 발생했습니다.',
+    PURCHASE: '결제 처리 중 오류가 발생했습니다.',
   };
 
   const message = messages[type as keyof typeof messages] || '요청 처리 중 오류가 발생했습니다.';

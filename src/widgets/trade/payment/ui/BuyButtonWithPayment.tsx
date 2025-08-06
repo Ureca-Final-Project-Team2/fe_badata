@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
 import { useCoinQuery } from '@/entities/user';
-import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
+import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore';
 import { CoinPaymentModal } from '@/shared/ui/CoinPaymentModal';
 import { usePayment } from '@/widgets/trade/payment/model/usePayment';
 import { DetailLikeButton } from '@/widgets/trade/ui/DetailLikeButton';
@@ -75,6 +76,7 @@ export default function BuyButtonWithPayment({
   isSold = false,
   onPaymentSuccess,
 }: BuyButtonWithPaymentProps) {
+  const { user } = useAuthStore();
   const {
     data: coinData,
     isLoading: isCoinLoading,
@@ -83,18 +85,21 @@ export default function BuyButtonWithPayment({
   } = useCoinQuery();
   const { loading, isPaid, handlePayment, isCoinModalOpen, openCoinModal, closeCoinModal } =
     usePayment(postId, title, price, onPaymentSuccess);
-  const { executeWithAuth } = useAuthRequiredRequest();
+  const { openAuthModal } = useAuthErrorStore();
 
   const handleBuyClick = () => {
-    // 코인 데이터를 가져오는 API와 결제 API 모두 로그인이 필요한지 체크
-    executeWithAuth(() => {
-      // 코인 데이터 에러 시 재시도
-      if (isCoinError) {
-        refetchCoin();
-      }
-      openCoinModal();
-      return Promise.resolve();
-    }, `/api/v1/trades/order/${postId}`);
+    if (!user) {
+      openAuthModal({
+        type: 'PURCHASE',
+        url: `/api/v1/trades/order/${postId}`,
+        method: 'POST',
+        data: { postId, useCoin: 0 },
+      });
+      return;
+    }
+
+    if (isCoinError) refetchCoin();
+    openCoinModal();
   };
 
   const handleCoinPayment = (useCoin: boolean, coinAmount: number) => {
