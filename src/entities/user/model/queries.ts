@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { userApis } from '@/entities/user/api/apis';
 
 import type {
@@ -26,6 +27,8 @@ export const useFollowingsQuery = (cursor?: number, size: number = 10) => {
 
 // 모든 팔로잉 목록 조회 훅 (팔로우 상태 확인용)
 export const useAllFollowingsQuery = () => {
+  const { isLoggedIn } = useAuthStore();
+
   return useQuery<ApiResponse<FollowingsContent>>({
     queryKey: ['user', 'all-followings'],
     queryFn: async () => {
@@ -61,6 +64,7 @@ export const useAllFollowingsQuery = () => {
         },
       };
     },
+    enabled: isLoggedIn, // 로그인 상태일 때만 실행
     staleTime: 5 * 60 * 1000,
   });
 };
@@ -73,6 +77,8 @@ export const useSalesQuery = (
   cursor?: number,
   size: number = 30,
 ) => {
+  const { isLoggedIn } = useAuthStore();
+
   return useInfiniteQuery<ApiResponse<SalesContent>>({
     queryKey: ['user', 'sales', userId, postCategory, isSold, size],
     queryFn: ({ pageParam }) =>
@@ -82,7 +88,7 @@ export const useSalesQuery = (
       if (!lastPage?.content?.hasNext) return undefined;
       return lastPage.content.nextCursor;
     },
-    enabled: true, // userId가 없어도 현재 로그인한 사용자의 데이터를 가져올 수 있음
+    enabled: isLoggedIn, // 로그인 상태일 때만 실행
     staleTime: 5 * 60 * 1000,
   });
 };
@@ -121,6 +127,8 @@ export const usePurchasesQuery = (
   cursor?: number,
   size: number = 30,
 ) => {
+  const { isLoggedIn } = useAuthStore();
+
   return useInfiniteQuery<ApiResponse<PurchaseResponse>>({
     queryKey: ['user', 'purchases', postCategory, isSold, size],
     queryFn: ({ pageParam }) =>
@@ -130,7 +138,7 @@ export const usePurchasesQuery = (
       if (!lastPage?.content?.hasNext) return undefined;
       return lastPage.content.nextCursor;
     },
-    enabled: true,
+    enabled: isLoggedIn, // 로그인 상태일 때만 실행
     staleTime: 5 * 60 * 1000,
     retry: (failureCount) => failureCount < 2, // 최대 2번 재시도
   });
@@ -138,18 +146,24 @@ export const usePurchasesQuery = (
 
 // 코인 조회 훅
 export const useCoinQuery = () => {
+  const { isLoggedIn } = useAuthStore();
+
   return useQuery<ApiResponse<CoinResponse>>({
     queryKey: ['user', 'coin'],
     queryFn: () => userApis.getCoin(),
+    enabled: isLoggedIn, // 로그인 상태일 때만 실행
     staleTime: 5 * 60 * 1000, // 5분
   });
 };
 
 // 사용자 정보 조회 훅
 export const useUserInfoQuery = () => {
+  const { isLoggedIn } = useAuthStore();
+
   return useQuery<UserInfoResponse>({
     queryKey: ['user', 'info'],
     queryFn: userApis.getUserInfo,
+    enabled: isLoggedIn,
     staleTime: 5 * 60 * 1000, // 5분
     retry: 1,
   });
@@ -157,10 +171,12 @@ export const useUserInfoQuery = () => {
 
 // 마이페이지 총 구매, 판매 내역 조회
 export const useUserPostCountQuery = (tradeType: 'SALE' | 'PURCHASE', enabled: boolean = true) => {
+  const { isLoggedIn } = useAuthStore();
+
   return useQuery<number>({
     queryKey: ['userPostCount', tradeType],
     queryFn: () => userApis.getUserPostCount(tradeType),
-    enabled,
+    enabled: enabled && isLoggedIn, // 로그인 상태이고 enabled가 true일 때만 실행
     staleTime: 1000 * 60 * 5, // optional
   });
 };

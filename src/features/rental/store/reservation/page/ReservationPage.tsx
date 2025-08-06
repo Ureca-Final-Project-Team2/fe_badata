@@ -38,7 +38,6 @@ export default function ReservationPage({ storeId, initialDateRange }: Reservati
   // 초기 날짜 범위 설정
   useEffect(() => {
     if (initialDateRange?.from && initialDateRange?.to) {
-      console.log('초기 날짜 범위 설정:', initialDateRange);
       dispatch({
         type: 'SET_DATE_RANGE',
         payload: {

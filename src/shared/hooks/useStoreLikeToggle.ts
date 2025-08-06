@@ -26,17 +26,25 @@ export const useStoreLikeToggle = ({
   const abortControllerRef = useRef<AbortController | null>(null);
   // 이전 상태 추적을 위한 ref
   const previousLikedRef = useRef(initialIsLiked);
+  // 중복 요청 방지를 위한 ref
+  const isRequestInProgressRef = useRef(false);
 
   const handleLikeToggle = useCallback(
     async (e?: React.MouseEvent) => {
       // 이벤트 전파 방지
       if (e) {
+        e.preventDefault();
         e.stopPropagation();
       }
 
-      // 로그인하지 않은 사용자는 좋아요 기능 비활성화
-      if (!isLoggedIn) {
-        makeToast('로그인이 필요한 서비스입니다.', 'warning');
+      // ✅ 중복 요청 방지 체크들
+      if (isRequestInProgressRef.current) {
+        console.log('🚫 이미 요청이 진행 중입니다.');
+        return;
+      }
+
+      if (isLoading) {
+        console.log('🚫 로딩 중입니다.');
         return;
       }
 
@@ -46,23 +54,65 @@ export const useStoreLikeToggle = ({
       }
 
       try {
+        // ✅ 요청 시작 플래그 설정
+        isRequestInProgressRef.current = true;
         abortControllerRef.current = new AbortController();
         setIsLoading(true);
 
         // 현재 상태 저장
         previousLikedRef.current = liked;
-
-        // 낙관적 업데이트: 즉시 UI 상태 변경
         const newLikedState = !liked;
-        setLiked(newLikedState);
 
-        // 마커 업데이트 트리거 (낙관적 업데이트)
+        // ✅ 낙관적 업데이트: 즉시 UI 상태 변경
+        setLiked(newLikedState);
         updateMarkerLikeStatus(storeId, newLikedState);
 
-        // API 호출
-        await toggleStoreLike(storeId, liked, abortControllerRef.current.signal);
+        console.log('🔄 가맹점 좋아요 토글 시작:', { storeId, newLikedState, isLoggedIn });
 
-        // 토스트 메시지 비활성화가 아닌 경우에만 표시
+        // 로그인하지 않은 경우 AuthModal 열기
+        if (!isLoggedIn) {
+          console.log('🔒 로그인하지 않은 상태 - AuthModal 열기');
+
+          try {
+            // AuthErrorStore를 동적으로 import
+            const { useAuthErrorStore } = await import('@/shared/lib/axios/authErrorStore');
+            const { openAuthModal } = useAuthErrorStore.getState();
+
+            // AuthModal 열기
+            openAuthModal(
+              {
+                type: 'STORE_LIKE',
+                url: `/api/v1/stores/${storeId}/like`,
+                method: 'POST',
+                data: {
+                  storeId,
+                  isLiked: newLikedState,
+                },
+              },
+              () => {
+                // AuthModal이 닫힐 때 상태 롤백
+                console.log('🔄 AuthModal 닫힘 - 상태 롤백');
+                setIsLoading(false);
+                setLiked(previousLikedRef.current);
+                updateMarkerLikeStatus(storeId, previousLikedRef.current);
+                isRequestInProgressRef.current = false;
+              },
+            );
+            return;
+          } catch (error) {
+            console.error('❌ AuthErrorStore import 실패:', error);
+            // 에러 발생 시 상태 롤백
+            setLiked(previousLikedRef.current);
+            updateMarkerLikeStatus(storeId, previousLikedRef.current);
+            return;
+          }
+        }
+
+        // 로그인된 경우에만 직접 API 호출
+        console.log('🚀 로그인된 상태 - 직접 API 호출');
+        await toggleStoreLike(storeId, newLikedState, abortControllerRef.current?.signal);
+
+        // 성공 시 토스트 메시지 표시
         if (!disableToast) {
           makeToast(
             newLikedState ? '좋아요가 추가되었습니다.' : '좋아요가 취소되었습니다.',
@@ -73,21 +123,26 @@ export const useStoreLikeToggle = ({
         // 콜백 함수 호출
         onToggle?.(storeId, newLikedState);
       } catch (error) {
-        // AbortError는 무시 (사용자가 취소한 경우)
+        // AbortError는 무시
         if (error instanceof Error && error.name === 'AbortError') {
+          console.log('🚫 요청이 취소되었습니다.');
           return;
         }
 
-        console.error('가맹점 좋아요 토글 실패:', error);
+        console.error('❌ 가맹점 좋아요 토글 실패:', error);
 
         // 에러 발생 시 원래 상태로 롤백
         setLiked(previousLikedRef.current);
         updateMarkerLikeStatus(storeId, previousLikedRef.current);
 
-        makeToast('좋아요 처리 중 오류가 발생했습니다.', 'warning');
+        if (!disableToast) {
+          makeToast('좋아요 처리 중 오류가 발생했습니다.', 'warning');
+        }
       } finally {
         setIsLoading(false);
         abortControllerRef.current = null;
+        // ✅ 요청 완료 플래그 해제
+        isRequestInProgressRef.current = false;
       }
     },
     [storeId, liked, isLoggedIn, onToggle, disableToast],

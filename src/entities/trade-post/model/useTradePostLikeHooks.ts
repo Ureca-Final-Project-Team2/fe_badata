@@ -6,6 +6,8 @@ import {
   useDeleteTradePostLikeMutation,
   usePostTradePostLikeMutation,
 } from '@/entities/trade-post/model/mutations';
+import { END_POINTS } from '@/shared/api/endpoints';
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 
 import type { AllPost } from '@/entities/trade-post/lib/types';
 import type { DeadlinePostResponse } from '@/features/trade/deadline/lib/types';
@@ -21,6 +23,7 @@ interface InfiniteQueryData {
 export const useTradePostLikeHooks = () => {
   const [loadingItems, setLoadingItems] = useState<Record<number, boolean>>({});
   const queryClient = useQueryClient();
+  const { executeWithAuth } = useAuthRequiredRequest();
 
   // 전체 페이지용 뮤테이션
   const postLikeMutation = usePostTradePostLikeMutation();
@@ -77,44 +80,54 @@ export const useTradePostLikeHooks = () => {
 
   // 전체 페이지용 토글
   const toggleLike = (item: AllPost) => {
-    setItemLoading(item.id, true);
-
-    if (item.isLiked) {
-      deleteLikeMutation.mutate(item.id, {
-        onSuccess: () => {
+    const executeLikeToggle = async () => {
+      setItemLoading(item.id, true);
+      try {
+        if (item.isLiked) {
+          await deleteLikeMutation.mutateAsync(item.id);
           updateAllCaches(item.id, false);
-        },
-        onSettled: () => setItemLoading(item.id, false),
-      });
-    } else {
-      postLikeMutation.mutate(item.id, {
-        onSuccess: () => {
+        } else {
+          await postLikeMutation.mutateAsync(item.id);
           updateAllCaches(item.id, true);
-        },
-        onSettled: () => setItemLoading(item.id, false),
-      });
-    }
+        }
+      } catch (error) {
+        console.error('좋아요 토글 실패:', error);
+        throw error;
+      } finally {
+        setItemLoading(item.id, false);
+      }
+    };
+
+    executeWithAuth(executeLikeToggle, END_POINTS.TRADES.LIKE_POST(item.id), {
+      type: 'TRADE_POST',
+      method: 'POST',
+    });
   };
 
   // 상세페이지용 토글 (단일 게시물)
   const toggleLikeById = (postId: number, currentIsLiked: boolean) => {
-    setItemLoading(postId, true);
-
-    if (currentIsLiked) {
-      deleteLikeMutation.mutate(postId, {
-        onSuccess: () => {
+    const executeLikeToggle = async () => {
+      setItemLoading(postId, true);
+      try {
+        if (currentIsLiked) {
+          await deleteLikeMutation.mutateAsync(postId);
           updateAllCaches(postId, false);
-        },
-        onSettled: () => setItemLoading(postId, false),
-      });
-    } else {
-      postLikeMutation.mutate(postId, {
-        onSuccess: () => {
+        } else {
+          await postLikeMutation.mutateAsync(postId);
           updateAllCaches(postId, true);
-        },
-        onSettled: () => setItemLoading(postId, false),
-      });
-    }
+        }
+      } catch (error) {
+        console.error('좋아요 토글 실패:', error);
+        throw error;
+      } finally {
+        setItemLoading(postId, false);
+      }
+    };
+
+    executeWithAuth(executeLikeToggle, END_POINTS.TRADES.LIKE_POST(postId), {
+      type: 'TRADE_POST',
+      method: 'POST',
+    });
   };
 
   // 캐시에서 좋아요 상태 가져오기 (infinite query 구조에 맞게 수정)

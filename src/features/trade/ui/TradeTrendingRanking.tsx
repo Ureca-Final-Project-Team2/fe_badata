@@ -8,7 +8,6 @@ import { ICONS } from '@/shared/config/iconPath';
 import { PATH } from '@/shared/config/path';
 import { getCarrierDefaultImage } from '@/shared/lib/getCarrierDefaultImage';
 import { getPartnerDefaultImage } from '@/shared/lib/getPartnerDefaultImage';
-import { SwipeScroll } from '@/shared/ui/SwipeScroll/SwipeScroll';
 
 import type { KoreanBrandName } from '@/shared/config/brandMapping';
 
@@ -25,26 +24,32 @@ export function TradeTrendingRanking() {
       ) : !trendingPosts || trendingPosts.length === 0 ? (
         <div className="py-4 text-center text-[var(--gray)]">핫한 게시물이 없습니다.</div>
       ) : (
-        <SwipeScroll items={trendingPosts} getKey={(item) => item.id}>
-          {(item, index) => (
-            <RankingItem
-              rank={index + 1}
-              imageUrl={
-                (item.partner && getPartnerDefaultImage(item.partner as KoreanBrandName)) ||
-                (item.mobileCarrier && getCarrierDefaultImage(item.mobileCarrier)) ||
-                ICONS.LOGO.SAMPLE
-              }
-              title={item.title}
-              onCardClick={() => {
-                const path =
-                  item.postCategory === 'DATA'
-                    ? PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id))
-                    : PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(item.id));
-                router.push(path);
-              }}
-            />
-          )}
-        </SwipeScroll>
+        <div className="flex overflow-x-auto gap-4 mb-8 no-scrollbar cursor-grab active:cursor-grabbing">
+          {trendingPosts.map((item, index) => (
+            <div
+              key={item.id}
+              className="flex-shrink-0"
+              style={{ width: 'calc((100% - 48px) / 2.2)' }}
+            >
+              <RankingItem
+                rank={index + 1}
+                imageUrl={
+                  (item.partner && getPartnerDefaultImage(item.partner as KoreanBrandName)) ||
+                  (item.mobileCarrier && getCarrierDefaultImage(item.mobileCarrier)) ||
+                  ICONS.LOGO.SAMPLE
+                }
+                title={item.title}
+                onCardClick={() => {
+                  const path =
+                    item.postCategory === 'DATA'
+                      ? PATH.TRADE.DATA_DETAIL.replace(':id', String(item.id))
+                      : PATH.TRADE.GIFTICON_DETAIL.replace(':id', String(item.id));
+                  router.push(path);
+                }}
+              />
+            </div>
+          ))}
+        </div>
       )}
     </section>
   );

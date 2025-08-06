@@ -5,7 +5,9 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { ShoppingCart, ThumbsUp, User, Wifi, X } from 'lucide-react';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { PATH } from '@/shared/config/path';
+import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore';
 import { useSosDrawer } from '@/widgets/sos/model/useSosDrawer';
 
 import { WAVE_CLIP_PATH } from './constants';
@@ -49,11 +51,24 @@ export const BottomNav = () => {
   const { isDrawerOpen, toggleDrawer } = useSosDrawer();
   const pathname = usePathname() ?? '';
   const router = useRouter();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const { openAuthModalForNavigation } = useAuthErrorStore();
 
   const getActiveIdx = () => {
     return NAV_CONFIG.findIndex((item) => pathname.startsWith(item.path));
   };
   const activeIdx = getActiveIdx();
+
+  const handleNavigation = (path: string) => {
+    // 추천 페이지인 경우 로그인 체크
+    if (path === PATH.RECOMMEND && !isLoggedIn) {
+      openAuthModalForNavigation(path);
+      return;
+    }
+
+    // 그 외 페이지는 바로 이동
+    router.push(path);
+  };
 
   return (
     <nav className="relative bottom-0 inset-x-0 h-[80px]">
@@ -71,7 +86,7 @@ export const BottomNav = () => {
             key={item.label}
             item={item}
             isActive={activeIdx === idx}
-            onClick={() => router.push(item.path)}
+            onClick={() => handleNavigation(item.path)}
           />
         ))}
 
@@ -79,7 +94,7 @@ export const BottomNav = () => {
         <li className=" relative mb-6 z-20 flex flex-col items-center transition-transform duration-300">
           <button
             onClick={toggleDrawer}
-            className={`w-[80px] h-[80px] rounded-full flex items-center justify-center transition-color duration-100 ${
+            className={`cursor-pointer w-[80px] h-[80px] rounded-full flex items-center justify-center transition-color duration-100 ${
               isDrawerOpen ? 'bg-black' : 'none'
             }`}
           >
@@ -106,7 +121,7 @@ export const BottomNav = () => {
             key={item.label}
             item={item}
             isActive={activeIdx === idx + 2}
-            onClick={() => router.push(item.path)}
+            onClick={() => handleNavigation(item.path)}
           />
         ))}
       </ul>

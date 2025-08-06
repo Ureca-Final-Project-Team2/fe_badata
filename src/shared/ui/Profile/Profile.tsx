@@ -100,9 +100,12 @@ function FollowButton({ isFollowing, onClick }: { isFollowing: boolean; onClick?
   return (
     <button
       onClick={onClick}
-      className={followButtonVariants({
-        followState: isFollowing ? 'following' : 'follow',
-      })}
+      className={cn(
+        followButtonVariants({
+          followState: isFollowing ? 'following' : 'follow',
+        }),
+        'cursor-pointer',
+      )}
       type="button"
     >
       {isFollowing ? '팔로잉' : '팔로우'}

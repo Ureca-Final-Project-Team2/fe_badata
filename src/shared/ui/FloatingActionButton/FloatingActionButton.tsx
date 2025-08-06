@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { X } from 'lucide-react';
+
 import { cn } from '@/shared/lib/cn';
 
 export interface FABAction {
@@ -43,7 +45,7 @@ export function FloatingActionButton({
             <button
               key={idx}
               onClick={action.onClick}
-              className="w-[120px] h-[46px] flex items-center justify-between px-4 py-2 text-white text-[18px] font-semibold cursor-pointer"
+              className=" w-[120px] h-[46px] flex items-center justify-between px-4 py-2 text-white text-[18px] font-semibold cursor-pointer"
             >
               <span className="w-[18px] h-[18px] flex items-center justify-center text-[16px]">
                 {action.icon}
@@ -59,12 +61,12 @@ export function FloatingActionButton({
         onClick={handleTriggerClick}
         className={
           mode === 'expand' && open
-            ? 'w-12 h-12 rounded-full bg-[var(--main-5)] text-white text-[18px] flex items-center justify-center shadow-md'
-            : 'min-w-[100px] h-[46px] rounded-full bg-[var(--main-5)] text-white text-[18px] font-semibold flex items-center justify-center gap-1 px-4 shadow-md'
+            ? 'cursor-pointer w-12 h-12 rounded-full bg-[var(--main-5)] text-white text-[18px] flex items-center justify-center shadow-md'
+            : 'cursor-pointer min-w-[100px] h-[46px] rounded-full bg-[var(--main-5)] text-white text-[18px] font-semibold flex items-center justify-center gap-1 px-4 shadow-md'
         }
       >
         {mode === 'expand' && open ? (
-          'x'
+          <X className="w-5 h-5 text-[var(--white)]" />
         ) : (
           <>
             <span className="w-[18px] h-[18px] flex items-center justify-center text-[16px]">
