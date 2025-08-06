@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
@@ -60,6 +60,18 @@ const TradePostCard = ({
   className = '',
   isLikeLoading = false,
 }: TradePostCardProps) => {
+  // hydration 오류 방지를 위한 클라이언트 사이드 상태
+  const [mounted, setMounted] = useState(false);
+  const [safeLikeCount, setSafeLikeCount] = useState(0);
+
+  useEffect(() => {
+    setMounted(true);
+    setSafeLikeCount(likeCount);
+  }, [likeCount]);
+
+  // 서버 사이드 렌더링 시에는 0으로 고정, 클라이언트에서만 실제 값 사용
+  const displayLikeCount = mounted ? safeLikeCount : 0;
+
   const getSafeImageUrl = (): string => {
     // 기프티콘 게시물인 경우 항상 파트너별 디폴트 이미지 사용
     if (partner) {
@@ -140,7 +152,7 @@ const TradePostCard = ({
               className="w-5 h-5"
             />
             <span className="flex items-center text-[var(--black)] font-small-regular leading-[20px]">
-              {likeCount}
+              {displayLikeCount}
             </span>
           </div>
           {isCompleted && <PostStatusBadge text="거래 완료" />}

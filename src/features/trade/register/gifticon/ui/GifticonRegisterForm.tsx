@@ -130,7 +130,7 @@ export function TradeGifticonRegisterForm() {
 
   return (
     <form
-      className="flex flex-col items-center gap-4 pt-6"
+      className="flex flex-col items-center gap-6 pt-6"
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();
@@ -282,14 +282,19 @@ export function TradeGifticonRegisterForm() {
         value={state.form.price}
         onChange={handleFieldChange('price')}
         placeholder="판매 가격"
-        errorMessage="가격을 입력해주세요."
       />
       <TextAreaField
         value={state.form.comment}
         onChange={handleFieldChange('comment')}
         placeholder="설명 (선택)"
       />
-      <RegisterButton type="submit" loading={state.isSubmitting} isFormValid={isFormValid}>
+      <RegisterButton
+        type="submit"
+        size="lg_thin"
+        loading={state.isSubmitting}
+        isFormValid={isFormValid}
+        className="mb-6"
+      >
         등록하기
       </RegisterButton>
     </form>

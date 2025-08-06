@@ -1,10 +1,4 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useSuspenseInfiniteQuery,
-} from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getTradePosts, tradePostApis } from '@/entities/trade-post/api/apis';
 import { useAllFollowingsQuery } from '@/entities/user/model/queries';
@@ -16,7 +10,7 @@ import type { SellerPostsContent, UserInfoResponse } from '@/entities/trade-post
 import type { DeadlinePostResponse } from '@/features/trade/deadline/lib/types';
 
 export const useTradePostsInfiniteQuery = () => {
-  return useSuspenseInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ['trade-posts'],
     queryFn: ({ pageParam }) => getTradePosts(pageParam),
     initialPageParam: undefined,

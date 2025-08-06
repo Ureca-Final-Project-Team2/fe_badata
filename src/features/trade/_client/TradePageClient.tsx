@@ -27,9 +27,11 @@ export default function TradePageClient() {
   const searchParams = useSearchParams();
   const page = searchParams?.get('page') ?? 'all';
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useTradePostsInfiniteQuery();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
+    useTradePostsInfiniteQuery();
 
-  const allPosts = data.pages.flatMap((page) => page.item);
+  // 데이터가 로딩 중이거나 에러인 경우 빈 배열 사용
+  const allPosts = data?.pages?.flatMap((page) => page.item) ?? [];
 
   const { sortOption, setSortOption, isSortDrawerOpen, openDrawer, closeDrawer } = useSortStateHook<
     'latest' | 'popular'
@@ -95,6 +97,31 @@ export default function TradePageClient() {
       fetchNextPage();
     }
   }, [isInView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // 로딩 중이거나 에러인 경우 로딩 UI 표시
+  if (isLoading) {
+    return (
+      <>
+        <TradeFlatTab basePath="/trade" />
+        <TradeSearchInput />
+        <div className="flex items-center justify-center py-20">
+          <div className="text-[var(--gray)]">로딩 중...</div>
+        </div>
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <TradeFlatTab basePath="/trade" />
+        <TradeSearchInput />
+        <div className="flex items-center justify-center py-20">
+          <div className="text-[var(--gray)]">데이터를 불러오는 중 오류가 발생했습니다.</div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

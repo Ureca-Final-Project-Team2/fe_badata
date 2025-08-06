@@ -134,9 +134,12 @@ export const useReportTradePostMutation = () => {
     onSuccess: () => {
       makeToast('게시물 신고가 접수되었습니다!', 'success');
     },
-    onError: (error) => {
-      console.error('게시물 신고 처리 실패:', error);
-      makeToast('게시물 신고 처리에 실패했습니다.', 'warning');
+    onError: (error: HTTPError) => {
+      if (error.code && ErrorMessageMap[error.code as ErrorCode]) {
+        makeToast(ErrorMessageMap[error.code as ErrorCode], 'warning');
+      } else {
+        makeToast('게시물 신고 처리에 실패했습니다.', 'warning');
+      }
     },
   });
 };
