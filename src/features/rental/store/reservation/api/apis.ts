@@ -136,7 +136,7 @@ export const requestRestockNotification = async (
 };
 
 /**
- * 예약 퓌소 API 함수 
+ * 예약 취소 API 함수 
  */
 export const deleteReservation = async (reservationId: number): Promise<void> => {
   try {

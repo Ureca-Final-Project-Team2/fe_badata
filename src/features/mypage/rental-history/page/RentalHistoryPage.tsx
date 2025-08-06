@@ -7,9 +7,7 @@ import { useRouter } from 'next/navigation';
 import { differenceInCalendarDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
-import {
-  useRentalHistoryQuery,
-} from '@/features/mypage/rental-history/model/queries';
+import { useRentalHistoryQuery } from '@/features/mypage/rental-history/model/queries';
 import { DeleteConfirmModal } from '@/features/mypage/ui/DeleteConfirmModal';
 import { useDeleteRentalMutation } from '@/features/rental/store/reservation/model/queries';
 import { PATH } from '@/shared/config/path';
@@ -40,6 +38,8 @@ export default function RentalHistoryPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletedIds, setDeletedIds] = useState<Set<number>>(new Set());
 
+  const items = data?.item ?? [];
+
   const handleReviewClick = (reservationId: number, storeId: number, hasWrittenReview: boolean) => {
     if (hasWrittenReview) {
       router.push(PATH.RENTAL.STORE_DETAIL.replace(':storeId', String(storeId)));
@@ -60,20 +60,11 @@ export default function RentalHistoryPage() {
       await deleteMutation.mutateAsync(itemToDelete.id);
       makeToast('예약이 취소되었습니다.', 'success');
       setDeletedIds((prev) => new Set(prev).add(itemToDelete.id));
-    } catch (e: unknown) {
-      if (e && typeof e === 'object' && 'response' in e) {
-        const axiosError = e as { response?: { data?: { message?: string } } };
-        const msg = axiosError.response?.data?.message ?? '예약 취소에 실패했습니다.';
-        makeToast(msg, 'warning');
-      } else {
-        makeToast('알 수 없는 오류가 발생했습니다.', 'warning');
-      }
     } finally {
       setShowDeleteModal(false);
       setItemToDelete(null);
     }
   };
-
 
   return (
     <BaseLayout
@@ -83,21 +74,26 @@ export default function RentalHistoryPage() {
       <div className="flex-1 overflow-y-auto max-w-[428px] mx-auto mb-4 mt-4">
         {isLoading && <CenteredMessage>로딩 중...</CenteredMessage>}
         {isError && <CenteredMessage>에러가 발생했습니다.</CenteredMessage>}
-        {!isLoading && !isError && (!data || !Array.isArray(data.item)) && (
-          <CenteredMessage>공유기 대여 내역을 불러올 수 없습니다.</CenteredMessage>
-        )}
-        {!isLoading && !isError && data && Array.isArray(data.item) && data.item.length === 0 && (
+        {!isLoading && !isError && items.length === 0 && (
           <CenteredMessage>공유기 대여 내역이 없습니다.</CenteredMessage>
         )}
-        {!isLoading && !isError && data && Array.isArray(data.item) && data.item.length > 0 && (
+        {!isLoading && !isError && items.length > 0 && (
           <>
-            {data.item
+            {items
               .filter((item) => !deletedIds.has(item.id))
               .map((item: RentalHistoryItem, idx: number) => {
+                console.log('[렌더링 아이템]', {
+                  id: item.id,
+                  storeName: item.storeName,
+                  reservationStatus: item.reservationStatus,
+                  isReviewed: item.isReviewed,
+                });
                 const startDate = new Date(item.rentalStartDate);
                 const endDate = new Date(item.rentalEndDate);
                 const days = differenceInCalendarDays(endDate, startDate) + 1;
-                const dateRangeText = `${format(startDate, 'yyyy.MM.dd', { locale: ko })} ~ ${format(endDate, 'MM.dd', { locale: ko })}`;
+                const dateRangeText = `${format(startDate, 'yyyy.MM.dd', {
+                  locale: ko,
+                })} ~ ${format(endDate, 'MM.dd', { locale: ko })}`;
                 const status = statusMap[item.reservationStatus];
                 const price = item.price.toLocaleString('ko-KR') + '원';
                 const showReviewButton = item.reservationStatus === 'COMPLETE';
@@ -136,7 +132,7 @@ export default function RentalHistoryPage() {
                             )}
                           </button>
                         )}
-                        {item.reservationStatus === 'PENDING' && (
+                        {['PENDING', 'BURROWING'].includes(item.reservationStatus) && (
                           <button
                             onClick={() => handleDeleteClick(item)}
                             className="text-[20px] ml-2 text-[var(--gray-mid)] hover:text-[var(--red-main)] hover:scale-110 relative -top-1"
