@@ -209,16 +209,14 @@ export default function PurchaseHistoryPage() {
           {!isLoading && !showSkeleton && !isError && !isEmpty && (
             <>
               {filteredData?.map((page, i) => (
-                <div key={i} className="grid grid-cols-2 gap-4 px-4">
+                <div key={i} className="grid grid-cols-2 gap-4">
                   {page?.content?.item.map((item) => (
                     <TradePostCard
                       key={item.id}
-                      imageUrl={item.postImage}
+                      imageUrl={item.postImage || undefined}
                       title={item.title}
-                      partner={item.postCategory === 'GIFTICON' ? item.partner : undefined}
-                      mobileCarrier={
-                        item.postCategory === 'DATA' ? (item.partner as MobileCarrier) : undefined
-                      }
+                      partner={item.partner || undefined}
+                      mobileCarrier={item.mobileCarrier as MobileCarrier}
                       price={item.price}
                       likeCount={item.postLikes}
                       isCompleted={item.isSold}
