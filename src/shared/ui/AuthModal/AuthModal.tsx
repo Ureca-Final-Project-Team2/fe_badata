@@ -11,7 +11,8 @@ import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore';
 import { LoginPrompt } from '@/shared/ui/AuthOverlay/LoginPrompt';
 
 export const AuthModal = () => {
-  const { isAuthModalOpen, closeAuthModal, executePendingRequest } = useAuthErrorStore();
+  const { isAuthModalOpen, closeAuthModal, executePendingRequest, clearPendingNavigation } =
+    useAuthErrorStore();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const pathname = usePathname();
 
@@ -22,12 +23,14 @@ export const AuthModal = () => {
   // 로그인 성공 시 모달 닫기 및 원래 요청 실행
   useEffect(() => {
     if (isLoggedIn && isAuthModalOpen) {
-      // 로그인 성공 후 원래 요청 실행
+      // 로그인 성공 후 원래 요청 실행 (API 요청 또는 네비게이션)
       executePendingRequest();
     }
   }, [isLoggedIn, isAuthModalOpen, executePendingRequest]);
 
   const handleClose = () => {
+    // 모달을 닫을 때 pendingNavigation 정리 (로그인하지 않고 닫은 경우)
+    clearPendingNavigation();
     closeAuthModal();
   };
 

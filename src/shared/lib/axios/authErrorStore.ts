@@ -39,15 +39,21 @@ interface AuthModalRequest {
 interface AuthErrorState {
   isAuthModalOpen: boolean;
   pendingRequest: PendingApiRequest | null;
+  pendingNavigation: string | null;
   onAuthModalClose: (() => void) | null;
 
   // 모달 관련
   openAuthModal: (request: AuthModalRequest, onClose?: () => void) => void;
+  openAuthModalForNavigation: (path: string, onClose?: () => void) => void;
   closeAuthModal: () => void;
 
   // 요청 실행 관련
   executePendingRequest: () => Promise<void>;
   clearPendingRequest: () => void;
+
+  // 네비게이션 관련
+  executePendingNavigation: () => void;
+  clearPendingNavigation: () => void;
 }
 
 export const useAuthErrorStore = create<AuthErrorState>()(
@@ -55,6 +61,7 @@ export const useAuthErrorStore = create<AuthErrorState>()(
     (set, get) => ({
       isAuthModalOpen: false,
       pendingRequest: null,
+      pendingNavigation: null,
       onAuthModalClose: null,
 
       openAuthModal: (request: AuthModalRequest, onClose?: () => void) => {
@@ -66,6 +73,16 @@ export const useAuthErrorStore = create<AuthErrorState>()(
             ...request,
             timestamp: Date.now(),
           },
+          onAuthModalClose: onClose || null,
+        });
+      },
+
+      openAuthModalForNavigation: (path: string, onClose?: () => void) => {
+        console.log('🔒 Auth modal 열기 (네비게이션):', { path });
+
+        set({
+          isAuthModalOpen: true,
+          pendingNavigation: path,
           onAuthModalClose: onClose || null,
         });
       },
@@ -82,12 +99,18 @@ export const useAuthErrorStore = create<AuthErrorState>()(
         set({
           isAuthModalOpen: false,
           onAuthModalClose: null,
-          // pendingRequest는 유지 (로그인 후 실행을 위해)
+          // pendingRequest와 pendingNavigation은 유지 (로그인 후 실행을 위해)
         });
       },
 
       executePendingRequest: async () => {
-        const { pendingRequest } = get();
+        const { pendingRequest, pendingNavigation } = get();
+
+        // 네비게이션 우선 처리
+        if (pendingNavigation) {
+          get().executePendingNavigation();
+          return;
+        }
 
         if (!pendingRequest) {
           console.log('⚠️ 실행할 pending request가 없음');
@@ -127,6 +150,34 @@ export const useAuthErrorStore = create<AuthErrorState>()(
         console.log('🗑️ Pending request 정리');
         set({
           pendingRequest: null,
+          pendingNavigation: null,
+          isAuthModalOpen: false,
+          onAuthModalClose: null,
+        });
+      },
+
+      executePendingNavigation: () => {
+        const { pendingNavigation } = get();
+
+        if (!pendingNavigation) {
+          console.log('⚠️ 실행할 pending navigation이 없음');
+          return;
+        }
+
+        console.log('🔄 Pending navigation 실행:', pendingNavigation);
+
+        // Next.js router를 사용하여 네비게이션
+        if (typeof window !== 'undefined') {
+          window.location.href = pendingNavigation;
+        }
+
+        get().clearPendingNavigation();
+      },
+
+      clearPendingNavigation: () => {
+        console.log('🗑️ Pending navigation 정리');
+        set({
+          pendingNavigation: null,
           isAuthModalOpen: false,
           onAuthModalClose: null,
         });
