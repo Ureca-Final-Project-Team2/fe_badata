@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CenterScrollSwiper } from '@/entities/scroll';
 import { useDrawerState } from '@/features/rental/map/hooks/useDrawerStaterHooks';
 import { useFilterState } from '@/features/rental/map/hooks/useFilterStaterHooks';
-import { useSelectedStore } from '@/features/rental/map/hooks/useSelectedStore';
+import { useSelectedStore } from '@/features/rental/map/hooks/useSelectedStoreHooks';
 import {
   convertToStoreCardProps,
   useStoreListWithInfiniteScroll,
@@ -142,17 +142,10 @@ export default function RentalPage() {
     dispatchSelectedStore,
   } = useSelectedStore(mapInstance);
 
-  // selectedStoreId 디버깅
-  console.log('RentalPage - selectedStoreId:', selectedStoreId);
-
   // 마커 클릭 핸들러 수정 - 하단 스와이퍼로 표시 및 확장 상태 관리
   const handleMarkerClick = useCallback(
     async (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
-      console.log('🔍 RentalPage 마커 클릭 핸들러:', { storeId, devices: devices.length });
-
       if (devices.length > 0 && storeId) {
-        console.log('마커 클릭 - storeId 설정:', storeId);
-
         // useSelectedStore의 handleStoreMarkerClick 호출하여 selectedStoreId 설정
         handleStoreMarkerClick(devices, storeDetail, storeId);
 

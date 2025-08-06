@@ -41,7 +41,7 @@ export const useSelectedStore = () => {
   const handleMapClick = useCallback(async () => {
     if (selectedStore.selectedDevices.length > 0) {
       const currentSelectedStoreId = selectedStoreId;
-      
+
       setSelectedStoreId(null);
       localStorage.removeItem('selected-store-id');
       dispatchSelectedStore({
