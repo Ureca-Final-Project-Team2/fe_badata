@@ -84,9 +84,6 @@ export const DragBottomSheet = ({
 
   // 렌더링 횟수 제한 (개발 환경에서만)
   renderCountRef.current += 1;
-  if (renderCountRef.current > 10) {
-    console.warn('🔍 DragBottomSheet 과도한 렌더링 감지:', renderCountRef.current);
-  }
 
   useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
@@ -172,7 +169,6 @@ export const DragBottomSheet = ({
     }
   };
 
-  // overlay div 제거!
   return (
     <motion.div
       drag="y"
@@ -185,8 +181,9 @@ export const DragBottomSheet = ({
         y: currentY,
         height: `calc(${windowHeight}px - ${currentY}px)`,
         minHeight: '200px', // 최소 높이 설정
+        zIndex: 40, // 명시적으로 z-index 설정
       }}
-      className="fixed left-0 right-0 bottom-0 z-40 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
+      className="fixed left-0 right-0 bottom-0 pointer-events-auto w-full max-w-[428px] mx-auto rounded-t-2xl border border-light-gray flex flex-col bg-[var(--main-2)]"
     >
       {/* Header 부분 */}
       <div className="px-4 pt-4 pb-2">

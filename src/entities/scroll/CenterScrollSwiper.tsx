@@ -32,28 +32,37 @@ export function CenterScrollSwiper<T>({
     <div
       ref={scrollRef}
       className={`flex overflow-x-auto no-scrollbar snap-x snap-proximity py-8 w-full max-w-screen-md mx-auto cursor-grab ${className}`}
-      style={{ scrollSnapType: 'x proximity', userSelect: isDragging ? 'none' : 'auto', ...style }}
+      style={{
+        scrollSnapType: 'x proximity',
+        userSelect: isDragging ? 'none' : 'auto',
+        zIndex: 1,
+        ...style,
+      }}
       onScroll={handleScroll}
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseLeave}
     >
-      {items.map((item, idx) => (
-        <div
-          key={idx}
-          ref={(el) => {
-            cardRefs.current[idx] = el;
-          }}
-          className="snap-center flex-shrink-0 mx-2 transition-transform duration-300"
-          style={{
-            transform: `scale(${cardScales[idx]})`,
-            zIndex: cardScales[idx] > 0.95 ? 10 : 1,
-          }}
-        >
-          {children(item, idx, cardScales[idx], centerIndex === idx)}
-        </div>
-      ))}
+      {items.map((item, idx) => {
+        const zIndexValue = cardScales[idx] > 0.95 ? 5 : 3;
+
+        return (
+          <div
+            key={idx}
+            ref={(el) => {
+              cardRefs.current[idx] = el;
+            }}
+            className="snap-center flex-shrink-0 mx-2 transition-transform duration-300"
+            style={{
+              transform: `scale(${cardScales[idx]})`,
+              zIndex: zIndexValue,
+            }}
+          >
+            {children(item, idx, cardScales[idx], centerIndex === idx)}
+          </div>
+        );
+      })}
     </div>
   );
 }

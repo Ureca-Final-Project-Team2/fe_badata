@@ -614,7 +614,7 @@ export default function RentalPage() {
         currentSort={currentSort}
       />
       {filteredDevicesList.length > 0 && (
-        <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
+        <div className="absolute bottom-20 left-0 w-full flex justify-center z-20">
           <CenterScrollSwiper
             key={filteredDevicesList.map((d: StoreDevice) => d.storeDeviceId).join('-')}
             items={filteredDevicesList}
