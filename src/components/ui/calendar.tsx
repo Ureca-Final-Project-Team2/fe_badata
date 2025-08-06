@@ -40,7 +40,7 @@ function Calendar({
         ...formatters,
       }}
       classNames={{
-        root: cn('w-full', defaultClassNames.root),
+        root: cn('w-full cursor-pointer rounded-lg', defaultClassNames.root),
         months: cn('flex gap-4 flex-col md:flex-row relative', defaultClassNames.months),
         month: cn('flex flex-col w-full gap-4', defaultClassNames.month),
         nav: cn(
@@ -169,7 +169,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        'data-[selected-single=true]:bg-[var(--main-5)] data-[selected-single=true]:text-white data-[range-middle=true]:bg-[var(--main-1)] data-[range-middle=true]:text-black data-[range-start=true]:bg-[var(--main-5)] data-[range-start=true]:text-white data-[range-end=true]:bg-[var(--main-5)] data-[range-end=true]:text-white hover:bg-[var(--main-3)] group-data-[focused=true]/day:border-[var(--main-1)] group-data-[focused=true]/day:ring-[var(--main-1)]/50 data-[today=true]:bg-[var(--main-1)] data-[today=true]:text-black flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70',
+        'data-[selected-single=true]:bg-[var(--main-5)] data-[selected-single=true]:text-white data-[range-middle=true]:bg-[var(--main-1)] data-[range-middle=true]:text-black data-[range-start=true]:bg-[var(--main-5)] data-[range-start=true]:text-white data-[range-end=true]:bg-[var(--main-5)] data-[range-end=true]:text-white hover:bg-[var(--main-3)] group-data-[focused=true]/day:border-[var(--main-1)] group-data-[focused=true]/day:ring-[var(--main-1)]/50 data-[today=true]:bg-[var(--main-1)] data-[today=true]:text-black flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 cursor-pointer',
         defaultClassNames.day,
         className,
       )}
