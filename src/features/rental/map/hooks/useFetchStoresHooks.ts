@@ -104,18 +104,39 @@ export const useFetchStoresHooks = (
 
           const mergedParams = mapFilterStateToApiParams(newBounds, filterState, zoomLevel);
 
+          // 디버그: mergedParams 내용 확인
+          console.log('🔍 mergedParams 내용:', mergedParams);
+          console.log(
+            '🔍 dataCapacity 타입:',
+            typeof mergedParams.dataCapacity,
+            mergedParams.dataCapacity,
+          );
+          console.log(
+            '🔍 maxSupportConnection 타입:',
+            typeof mergedParams.maxSupportConnection,
+            mergedParams.maxSupportConnection,
+          );
+
           // URL 파라미터 스트링 생성 및 출력
           const urlParams = new URLSearchParams();
           Object.entries(mergedParams).forEach(([key, value]) => {
-            if (Array.isArray(value)) {
-              // 배열인 경우 각 요소를 개별 파라미터로 추가
-              value.forEach((item) => urlParams.append(key, item.toString()));
-            } else if (value !== undefined && value !== null) {
-              urlParams.append(key, value.toString());
+            if (value !== undefined && value !== null) {
+              // dataCapacity와 maxSupportConnection은 단일 값으로 처리
+              if (key === 'dataCapacity' || key === 'maxSupportConnection') {
+                urlParams.append(key, value.toString());
+              } else if (Array.isArray(value)) {
+                // 배열인 경우 각 요소를 개별 파라미터로 추가
+                value.forEach((item) => urlParams.append(key, item.toString()));
+              } else {
+                urlParams.append(key, value.toString());
+              }
             }
           });
 
           const stores = await fetchStores(mergedParams);
+
+          // 디버그: 실제 API 호출 직전 파라미터 확인
+          console.log('🔍 fetchStores 호출 직전 mergedParams:', mergedParams);
 
           // stores가 실제로 변경되었는지 확인
           const storesChanged = JSON.stringify(stores) !== JSON.stringify(lastStoresRef.current);

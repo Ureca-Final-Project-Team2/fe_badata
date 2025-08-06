@@ -60,9 +60,9 @@ export const mapFilterStateToApiParams = (
   }
   // 일일 데이터 제공량 (dataAmount → dataCapacity)
   if (filterState.dataAmount && filterState.dataAmount !== '무제한') {
-    mergedParams.dataCapacity = [parseInt(filterState.dataAmount.replace('GB', ''))];
+    mergedParams.dataCapacity = parseInt(filterState.dataAmount.replace('GB', ''));
   } else if (filterState.dataAmount === '무제한') {
-    mergedParams.dataCapacity = [999]; // 백엔드와 협의된 값 사용
+    mergedParams.dataCapacity = 999; // 백엔드와 협의된 값 사용
   }
   // 데이터 타입 (dataType → is5G)
   if (filterState.dataType === '5G') {
@@ -70,9 +70,9 @@ export const mapFilterStateToApiParams = (
   } else if (filterState.dataType === '4G/LTE') {
     mergedParams.is5G = false;
   }
-  // 최대 접속 가능 기기 수 (number[])
+  // 최대 접속 가능 기기 수 (number)
   if (filterState.maxSupportConnection) {
-    mergedParams.maxSupportConnection = [filterState.maxSupportConnection];
+    mergedParams.maxSupportConnection = filterState.maxSupportConnection;
   }
   // 날짜
   if (filterState.dateRange?.from) {

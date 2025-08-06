@@ -17,8 +17,22 @@ import type {
 export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> => {
   try {
     const endpoint = END_POINTS.STORES.ALLDEVICE();
+
+    // 파라미터를 명시적으로 처리하여 배열 형태로 전송되지 않도록 함
+    const processedParams = { ...params };
+
+    // dataCapacity와 maxSupportConnection이 배열로 전송되지 않도록 보장
+    if (processedParams.dataCapacity !== undefined) {
+      processedParams.dataCapacity = Number(processedParams.dataCapacity);
+    }
+    if (processedParams.maxSupportConnection !== undefined) {
+      processedParams.maxSupportConnection = Number(processedParams.maxSupportConnection);
+    }
+
+    console.log('🔍 fetchStores API 호출 파라미터:', processedParams);
+
     const response = await axiosInstance.get(endpoint, {
-      params,
+      params: processedParams,
     });
     // API 응답 구조 확인 및 처리
     let stores: Record<string, unknown>[] = [];

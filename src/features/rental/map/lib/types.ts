@@ -108,9 +108,9 @@ export interface FetchStoreListParams {
   reviewRating?: number;
   minPrice?: number | null;
   maxPrice?: number | null;
-  dataCapacity?: number[];
+  dataCapacity?: number;
   is5G?: boolean | null;
-  maxSupportConnection?: number[];
+  maxSupportConnection?: number;
   page?: number; // 무한 스크롤용 페이지 번호
   size?: number; // 무한 스크롤용 페이지 크기
   sort: string[];
@@ -187,9 +187,9 @@ export interface FetchStoresParams {
   reviewRating?: number;
   minPrice?: number | null;
   maxPrice?: number | null;
-  dataCapacity?: number[];
+  dataCapacity?: number;
   is5G?: boolean;
-  maxSupportConnection?: number[];
+  maxSupportConnection?: number;
   zoomLevel?: number; // 줌 레벨 추가
 }
 

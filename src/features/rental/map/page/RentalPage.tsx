@@ -454,13 +454,13 @@ export default function RentalPage() {
         if (!filterState.dataAmount) return undefined;
         switch (filterState.dataAmount) {
           case '5GB':
-            return [5];
+            return 5;
           case '10GB':
-            return [10];
+            return 10;
           case '20GB':
-            return [20];
+            return 20;
           case '무제한':
-            return [999];
+            return 999;
           default:
             return undefined;
         }
@@ -472,7 +472,7 @@ export default function RentalPage() {
             ? false
             : undefined,
       maxSupportConnection: filterState.maxSupportConnection
-        ? [filterState.maxSupportConnection]
+        ? filterState.maxSupportConnection
         : undefined,
     }),
     [
