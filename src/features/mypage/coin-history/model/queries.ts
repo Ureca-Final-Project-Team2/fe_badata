@@ -1,14 +1,16 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import { getUserCoin, getUserCoinHistory } from '@/features/mypage/coin-history/api/apis';
+import { getUserCoinHistory } from '@/features/mypage/coin-history/api/apis';
+import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
-export const useUserCoinQuery = () => {
-  return useQuery<{ coin: number }>({
+export const useUserCoinQuery = () =>
+  useQuery({
     queryKey: ['user-coin'],
-    queryFn: getUserCoin,
-    staleTime: 1000 * 60,
+    queryFn: async () => {
+      const res = await axiosInstance.get('/api/v1/users/coin');
+      return res.data.content; 
+    },
   });
-};
 
 export const useUserCoinHistoryInfiniteQuery = (size: number = 10) => {
   return useInfiniteQuery({
