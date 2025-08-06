@@ -4,7 +4,6 @@ import Link from 'next/link';
 
 import { ChevronRight } from 'lucide-react';
 
-
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useReportStatusQuery } from '@/features/mypage/report-status/model/queries';
 
