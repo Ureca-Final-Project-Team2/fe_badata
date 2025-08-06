@@ -329,5 +329,24 @@ export const updateDropletMarker = (
       bubbleElement.style.transform = 'translateX(-50%) scale(0.8)';
       bubbleElement.style.pointerEvents = 'none';
     }
+
+    // 물방울 크기 업데이트 (선택 상태에 따라)
+    const size = isSelected ? 'large' : 'small';
+    const sizeStyles = {
+      small: { width: '30px', height: '30px', fontSize: '16px' },
+      large: { width: '40px', height: '40px', fontSize: '20px' },
+    };
+
+    if (!isSelected) {
+      // 선택 해제 시 물방울 크기를 작게 변경
+      dropletElement.style.width = sizeStyles[size].width;
+      dropletElement.style.height = sizeStyles[size].height;
+
+      // 숫자 요소 크기도 업데이트
+      const numberElement = dropletElement.querySelector('span');
+      if (numberElement) {
+        numberElement.style.fontSize = sizeStyles[size].fontSize;
+      }
+    }
   }
 };

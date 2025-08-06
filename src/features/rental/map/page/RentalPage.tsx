@@ -186,7 +186,10 @@ export default function RentalPage() {
             const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
             const cache = markerCaches.get(mapInstance);
             if (cache) {
+              // 모든 마커의 선택 상태 해제
               cache.clearAllSelections();
+
+              // 새로 선택된 마커만 선택 상태로 변경
               if (newExpanded.has(storeId)) {
                 cache.updateMarkerSelection(storeId, true);
               }
@@ -295,10 +298,7 @@ export default function RentalPage() {
           if (cache) {
             // 모든 마커의 선택 상태 해제
             cache.markers.forEach((markerData) => {
-              if (
-                markerData.isSelected &&
-                markerData.marker instanceof window.kakao.maps.CustomOverlay
-              ) {
+              if (markerData.marker instanceof window.kakao.maps.CustomOverlay) {
                 cache.updateMarkerSelection(markerData.storeId, false);
               }
             });
