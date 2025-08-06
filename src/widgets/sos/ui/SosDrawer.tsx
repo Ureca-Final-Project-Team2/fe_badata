@@ -1,5 +1,7 @@
 'use client';
 
+'use client';
+
 import { useState } from 'react';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
@@ -69,6 +71,8 @@ export function SosDrawer() {
           </div>
         </div>
       </Drawer>
+      <SosModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <SosInfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
       <SosModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <SosInfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
     </>

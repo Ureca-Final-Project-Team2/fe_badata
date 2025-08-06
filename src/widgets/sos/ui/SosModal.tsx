@@ -1,11 +1,9 @@
 'use client';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
-
-import { useSosRequestMutation } from '../model/queries';
-import { useSosStore } from '../model/sosStore';
-
-import { makeCustomToast } from './makeCustomToast';
+import { useSosRequestMutation } from '@/widgets/sos/model/queries';
+import { useSosStore } from '@/widgets/sos/model/sosStore';
+import { makeCustomToast } from '@/widgets/sos/ui/makeCustomToast';
 
 interface SosModalProps {
   isOpen: boolean;

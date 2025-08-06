@@ -12,7 +12,6 @@ export const useUserCoinQuery = () => {
     enabled: isLoggedIn,
     staleTime: 1000 * 60,
   });
-};
 
 export const useUserCoinHistoryInfiniteQuery = (size: number = 10) => {
   return useInfiniteQuery({
