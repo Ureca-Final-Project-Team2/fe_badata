@@ -17,6 +17,7 @@ import {
   useValidateGifticonImageMutation,
 } from '@/features/trade/register/gifticon/model/mutations';
 import GuideItem from '@/features/trade/register/gifticon/ui/GuideItem';
+import { END_POINTS } from '@/shared/api/endpoints';
 import { PATH } from '@/shared/config/path';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { toRawPrice } from '@/shared/lib/formatPrice';
@@ -136,7 +137,7 @@ export function TradeGifticonRegisterForm() {
     try {
       await executeWithAuth(
         requestFn,
-        '/api/v1/trades/posts/gifticon',
+        `${END_POINTS.TRADES.REGISTER_GIFTICON}`,
         {
           type: 'TRADE_POST',
           method: 'POST',

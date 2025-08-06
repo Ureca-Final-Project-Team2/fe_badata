@@ -1,10 +1,11 @@
 'use client';
 
-'use client';
-
 import { useState } from 'react';
 
+import { X } from 'lucide-react';
+
 import { useAuthStore } from '@/entities/auth/model/authStore';
+import { END_POINTS } from '@/shared/api/endpoints';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { Drawer } from '@/shared/ui/Drawer';
 import { DataUsageWidgetContainer } from '@/widgets/data-usage/ui/DataUsageWidgetContainer';
@@ -25,7 +26,7 @@ export function SosDrawer() {
         setIsModalOpen(true);
         return Promise.resolve();
       },
-      '/api/v1/sos/request',
+      `${END_POINTS.SOS.REQUEST}`,
       {
         type: 'SOS_REQUEST',
         method: 'POST',
@@ -36,13 +37,13 @@ export function SosDrawer() {
 
   return (
     <>
-      <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} className="bg-white">
+      <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} className="bg-[var(--white)]">
         <div className="w-full flex flex-col items-center px-4 pt-6 pb-28">
           <button
             onClick={handleSosRequest}
             className="w-full rounded-xl bg-[var(--main-1)] text-[var(--main-5)] font-body-medium py-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--main-2)] transition-colors"
           >
-            <span className="text-xl">🚨</span>
+            <span className="font-body-semibold">🚨</span>
             SOS 요청하기
           </button>
 
@@ -50,7 +51,7 @@ export function SosDrawer() {
           {isLoggedIn && (
             <div className="w-full mt-6">
               <div className="flex items-center justify-between">
-                <h2 className="font-body-semibold text-black mb-2">나의 데이터 서랍</h2>
+                <h2 className="font-body-semibold text-[var(--black)] mb-2">나의 데이터 서랍</h2>
                 <button onClick={() => setIsInfoOpen(true)}>
                   <span className="font-small-semibold text-[var(--main-5)]">ⓘ</span>
                 </button>
@@ -63,16 +64,14 @@ export function SosDrawer() {
           <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
             <button
               onClick={closeDrawer}
-              className="w-20 h-20 bg-black text-white rounded-full flex flex-col items-center justify-center border-2 border-white shadow-lg cursor-pointer"
+              className="w-20 h-20 bg-[var(--black)] text-[var(--white)] rounded-full flex flex-col items-center justify-center border-2 border-[var(--white)] shadow-lg cursor-pointer"
             >
-              <span className="text-xl font-bold">×</span>
-              <span className="text-xs mt-1">닫기</span>
+              <X className="font-label-semibold w-5 h-5 text-[var(--white)]" />
+              <span className="font-small-semibold mt-1">닫기</span>
             </button>
           </div>
         </div>
       </Drawer>
-      <SosModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <SosInfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
       <SosModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <SosInfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
     </>

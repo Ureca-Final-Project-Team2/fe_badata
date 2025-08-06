@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useUpdateDataPostMutation } from '@/entities/trade-post/model/mutations';
 import { useTradePostDetailQuery } from '@/entities/trade-post/model/queries';
 import { initialState, reducer } from '@/features/trade/register/data/model/dataRegisterReducer';
+import { END_POINTS } from '@/shared/api/endpoints';
 import { PATH } from '@/shared/config/path';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { formatPrice, toRawPrice } from '@/shared/lib/formatPrice';
@@ -71,7 +72,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
     try {
       await executeWithAuth(
         requestFn,
-        `/api/v1/trades/posts/${postId}`,
+        `${END_POINTS.TRADES.UPDATE_DATA(postId)}`,
         {
           type: 'TRADE_POST',
           method: 'PUT',

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { initialState, reducer } from '@/features/trade/register/data/model/dataRegisterReducer';
 import { usePostTradeDataMutation } from '@/features/trade/register/data/model/mutations';
 import { MobileCarrierSelect } from '@/features/trade/register/data/ui/MobileCarrierSelect';
+import { END_POINTS } from '@/shared/api/endpoints';
 import { PATH } from '@/shared/config/path';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { convertToMBInteger } from '@/shared/lib/convertToMBInteger';
@@ -57,7 +58,7 @@ export function TradeDataRegisterForm() {
     try {
       await executeWithAuth(
         requestFn,
-        '/api/v1/trades/posts/data',
+        `${END_POINTS.TRADES.REGISTER_DATA}`,
         {
           type: 'TRADE_POST',
           method: 'POST',

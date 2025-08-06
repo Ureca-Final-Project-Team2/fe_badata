@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 
 import { likeStore } from '@/features/rental/store/store-detail/api/apis';
+import { END_POINTS } from '@/shared/api/endpoints';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 
 interface UseStoreLikeHooksProps {
@@ -41,7 +42,7 @@ export function useStoreLikeHooks({
       // API 요청
       await executeWithAuth(
         requestFn,
-        `/api/v1/stores/${storeId}/like`,
+        `${END_POINTS.STORES.LIKESTORE(storeId)}`,
         {
           type: 'STORE_LIKE',
           method: 'POST',

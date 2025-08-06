@@ -6,6 +6,7 @@ import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useSellerSoldPostsCountQuery } from '@/entities/trade-post/model/queries';
 import { useCreateFollowMutation } from '@/entities/user/model/mutations';
 import { useAllFollowingsQuery } from '@/entities/user/model/queries';
+import { END_POINTS } from '@/shared/api/endpoints';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { makeToast } from '@/shared/lib/makeToast';
@@ -88,7 +89,7 @@ const UserProfileCard = ({
       }
     };
 
-    executeWithAuth(executeFollow, `/api/v1/users/${userId}/follows`, {
+    executeWithAuth(executeFollow, `${END_POINTS.USER.FOLLOW_TOGGLE(userId)}`, {
       type: 'FOLLOW',
       method: 'POST',
     });

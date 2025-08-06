@@ -82,16 +82,20 @@ export const useTradePostLikeHooks = () => {
   const toggleLike = (item: AllPost) => {
     const executeLikeToggle = async () => {
       setItemLoading(item.id, true);
-
-      if (item.isLiked) {
-        await deleteLikeMutation.mutateAsync(item.id);
-        updateAllCaches(item.id, false);
-      } else {
-        await postLikeMutation.mutateAsync(item.id);
-        updateAllCaches(item.id, true);
+      try {
+        if (item.isLiked) {
+          await deleteLikeMutation.mutateAsync(item.id);
+          updateAllCaches(item.id, false);
+        } else {
+          await postLikeMutation.mutateAsync(item.id);
+          updateAllCaches(item.id, true);
+        }
+      } catch (error) {
+        console.error('좋아요 토글 실패:', error);
+        throw error;
+      } finally {
+        setItemLoading(item.id, false);
       }
-
-      setItemLoading(item.id, false);
     };
 
     executeWithAuth(executeLikeToggle, END_POINTS.TRADES.LIKE_POST(item.id), {
@@ -104,16 +108,20 @@ export const useTradePostLikeHooks = () => {
   const toggleLikeById = (postId: number, currentIsLiked: boolean) => {
     const executeLikeToggle = async () => {
       setItemLoading(postId, true);
-
-      if (currentIsLiked) {
-        await deleteLikeMutation.mutateAsync(postId);
-        updateAllCaches(postId, false);
-      } else {
-        await postLikeMutation.mutateAsync(postId);
-        updateAllCaches(postId, true);
+      try {
+        if (currentIsLiked) {
+          await deleteLikeMutation.mutateAsync(postId);
+          updateAllCaches(postId, false);
+        } else {
+          await postLikeMutation.mutateAsync(postId);
+          updateAllCaches(postId, true);
+        }
+      } catch (error) {
+        console.error('좋아요 토글 실패:', error);
+        throw error;
+      } finally {
+        setItemLoading(postId, false);
       }
-
-      setItemLoading(postId, false);
     };
 
     executeWithAuth(executeLikeToggle, END_POINTS.TRADES.LIKE_POST(postId), {

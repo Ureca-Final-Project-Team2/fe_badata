@@ -6,7 +6,6 @@ interface LoginPromptProps {
   onLogin: () => void;
   buttonText?: string;
   className?: string;
-  noMargin?: boolean;
 }
 
 export const LoginPrompt = ({
@@ -15,7 +14,7 @@ export const LoginPrompt = ({
   className = '',
 }: LoginPromptProps) => {
   return (
-    <div className={`bg-[var(--white)] rounded-2xl overflow-hidden max-w-[400px]} ${className}`}>
+    <div className={`bg-[var(--white)] rounded-2xl overflow-hidden max-w-[400px] ${className}`}>
       {/* 헤더 배경 */}
       <div className="bg-gradient-to-r from-[var(--main-4)] to-[var(--main-5)] px-6 pt-8 pb-6 relative">
         <div className="text-center text-[var(--white)]">

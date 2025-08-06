@@ -24,19 +24,10 @@ export const useAuthRequiredRequest = () => {
       },
       onAuthModalClose?: () => void,
     ): Promise<T | null> => {
-      console.log('🔍 executeWithAuth 호출:', {
-        url,
-        isLoggedIn,
-        requiresAuth: requiresAuth(url),
-        requestType: requestData?.type,
-      });
-
       // 로그인이 필요한 API인지 확인
       if (requiresAuth(url)) {
         // 로그인하지 않은 경우
         if (!isLoggedIn) {
-          console.log('🔒 로그인 필요 - AuthModal 열기, API 요청은 하지 않음');
-
           try {
             // AuthErrorStore를 동적으로 import
             const { useAuthErrorStore } = await import('@/shared/lib/axios/authErrorStore');
@@ -59,20 +50,18 @@ export const useAuthRequiredRequest = () => {
             // ✅ 중요: API 요청을 하지 않고 null 반환
             return null;
           } catch (error) {
-            console.error('❌ AuthErrorStore import 실패:', error);
+            console.error(' AuthErrorStore import 실패:', error);
             return null;
           }
         }
       }
 
       // ✅ 로그인된 경우에만 실제 API 요청 실행
-      console.log('🚀 로그인된 상태 - 직접 API 요청 실행');
       try {
         const result = await requestFn();
-        console.log('✅ API 요청 성공:', { url, result: !!result });
         return result;
       } catch (error) {
-        console.error('❌ API 요청 실패:', { url, error });
+        console.error('API 요청 실패:', { url, error });
         throw error;
       }
     },

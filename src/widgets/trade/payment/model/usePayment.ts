@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { AxiosError } from 'axios';
 
+import { END_POINTS } from '@/shared/api/endpoints';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { makeToast } from '@/shared/lib/makeToast';
 import { createPayment, verifyPayment } from '@/widgets/trade/payment/api/apis';
@@ -160,7 +161,7 @@ export function usePayment(
     try {
       await executeWithAuth(
         requestFn,
-        `/api/v1/trades/order/${postId}`,
+        `${END_POINTS.TRADES.CREATE_PAYMENT(postId)}`,
         {
           type: 'TRADE_POST',
           method: 'POST',

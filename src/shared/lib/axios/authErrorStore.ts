@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
+import type { GifticonCategory } from '@/features/trade/register/gifticon/lib/types';
 
 // API 요청 정보 저장 타입
 interface PendingApiRequest {
@@ -291,8 +292,20 @@ async function executeApiByType(request: PendingApiRequest) {
       if (url.includes('/gifticon')) {
         // 기프티콘 등록 API 호출
         const { postTradeGifticon } = await import('@/features/trade/register/gifticon/api/apis');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await postTradeGifticon(data as any);
+        await postTradeGifticon(
+          data as {
+            title: string;
+            mobileCarrier: MobileCarrier;
+            deadLine: string;
+            capacity: number;
+            price: number;
+            comment?: string;
+            category: GifticonCategory;
+            partner: string;
+            gifticonNumber: string;
+            file: File;
+          },
+        );
       } else {
         // 데이터 등록 API 호출
         const { postTradeData } = await import('@/features/trade/register/data/api/apis');

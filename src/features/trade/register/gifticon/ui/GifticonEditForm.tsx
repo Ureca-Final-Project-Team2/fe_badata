@@ -8,6 +8,7 @@ import {
   initialState,
   reducer,
 } from '@/features/trade/register/gifticon/model/gifticonRegisterReducer';
+import { END_POINTS } from '@/shared/api/endpoints';
 import { PATH } from '@/shared/config/path';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { formatPrice, toRawPrice } from '@/shared/lib/formatPrice';
@@ -79,7 +80,7 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
     try {
       await executeWithAuth(
         requestFn,
-        `/api/v1/trades/posts/${postId}`,
+        `${END_POINTS.TRADES.UPDATE_GIFTICON(postId)}`,
         {
           type: 'TRADE_POST',
           method: 'PUT',
