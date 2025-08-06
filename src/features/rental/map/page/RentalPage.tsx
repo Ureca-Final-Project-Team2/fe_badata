@@ -146,30 +146,47 @@ export default function RentalPage() {
   const handleMarkerClick = useCallback(
     async (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
       if (devices.length > 0 && storeId) {
-        // useSelectedStore의 handleStoreMarkerClick 호출하여 selectedStoreId 설정
         handleStoreMarkerClick(devices, storeDetail, storeId);
 
-        // 마커 확장/축소 토글
         const newExpanded = new Set(expandedMarkers);
         if (newExpanded.has(storeId)) {
-          newExpanded.delete(storeId); // 이미 확장된 상태면 축소
+          newExpanded.delete(storeId);
         } else {
-          // 다른 모든 마커는 축소하고 현재 마커만 확장 (single selection)
           newExpanded.clear();
           newExpanded.add(storeId);
         }
         setExpandedMarkers(newExpanded);
 
-        // 마커 캐시에서 선택 상태 업데이트
+        if (mapInstance && storeId) {
+          try {
+            const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
+            const cache = markerCaches.get(mapInstance);
+            const markerData = cache?.getMarkerData(storeId);
+            if (markerData?.marker) {
+              const markerPosition = markerData.marker.getPosition();
+              const mapBounds = mapInstance.getBounds();
+              const ne = mapBounds.getNorthEast();
+              const sw = mapBounds.getSouthWest();
+              const latRange = ne.getLat() - sw.getLat();
+              const offsetLat = markerPosition.getLat() - latRange * 0.2;
+              const adjustedPosition = new window.kakao.maps.LatLng(
+                offsetLat,
+                markerPosition.getLng(),
+              );
+              mapInstance.panTo(adjustedPosition);
+            }
+          } catch (error) {
+            console.error('마커 좌표 가져오기 실패:', error);
+          }
+        }
+
+        // 선택 상태 마커 스타일 업데이트
         if (mapInstance) {
           try {
             const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
             const cache = markerCaches.get(mapInstance);
             if (cache) {
-              // 모든 마커를 먼저 비선택 상태로 변경
               cache.clearAllSelections();
-
-              // 새로 선택된 마커만 선택 상태로 변경
               if (newExpanded.has(storeId)) {
                 cache.updateMarkerSelection(storeId, true);
               }
