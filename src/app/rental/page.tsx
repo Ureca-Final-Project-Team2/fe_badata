@@ -1,18 +1,20 @@
 'use client';
 
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 
-import RentalPage from '@/features/rental/map/page/RentalPage';
-import { Loading } from '@/shared/ui/Loading';
+const RentalPage = lazy(() => import('@/features/rental/map/page/RentalPage'));
 
-function RentalPageWrapper() {
-  return <RentalPage />;
-}
+// Loading fallback component
+const RentalLoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="text-gray-500">대여 페이지 로딩 중...</div>
+  </div>
+);
 
 export default function Page() {
   return (
-    <Suspense fallback={<Loading />}>
-      <RentalPageWrapper />
+    <Suspense fallback={<RentalLoadingFallback />}>
+      <RentalPage />
     </Suspense>
   );
 }

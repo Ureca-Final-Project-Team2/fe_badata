@@ -1,16 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { IndividualOnboardingSlides } from '@/features/onboarding/ui/IndividualOnboardingSlides';
-import { IntroVideo } from '@/features/onboarding/ui/IntroVideo';
-import { LocationPermission } from '@/features/onboarding/ui/LocationPermission';
-import { LoginChoice } from '@/features/onboarding/ui/LoginChoice';
-import { WelcomePage } from '@/features/onboarding/ui/WelcomePage';
 import { useOnboarding } from '@/shared/hooks/useOnboarding';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+
+// Lazy loaded components for performance optimization
+const IndividualOnboardingSlides = lazy(() =>
+  import('@/features/onboarding/ui/IndividualOnboardingSlides').then((module) => ({
+    default: module.IndividualOnboardingSlides,
+  })),
+);
+const IntroVideo = lazy(() =>
+  import('@/features/onboarding/ui/IntroVideo').then((module) => ({ default: module.IntroVideo })),
+);
+const LocationPermission = lazy(() =>
+  import('@/features/onboarding/ui/LocationPermission').then((module) => ({
+    default: module.LocationPermission,
+  })),
+);
+const LoginChoice = lazy(() =>
+  import('@/features/onboarding/ui/LoginChoice').then((module) => ({
+    default: module.LoginChoice,
+  })),
+);
+const WelcomePage = lazy(() =>
+  import('@/features/onboarding/ui/WelcomePage').then((module) => ({
+    default: module.WelcomePage,
+  })),
+);
+
+// Loading fallback component
+const OnboardingLoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="text-gray-500">온보딩 로딩 중...</div>
+  </div>
+);
 
 type OnboardingStep = 'intro' | 'welcome' | 'slides' | 'location' | 'login-choice';
 
@@ -45,24 +72,29 @@ export default function OnboardingPage() {
       showHeader={false}
       className="h-screen"
     >
-      {currentStep === 'intro' && <IntroVideo onComplete={() => handleNextStep('welcome')} />}
+      <Suspense fallback={<OnboardingLoadingFallback />}>
+        {currentStep === 'intro' && <IntroVideo onComplete={() => handleNextStep('welcome')} />}
 
-      {currentStep === 'welcome' && (
-        <WelcomePage
-          onNext={() => handleNextStep('slides')}
-          onSkip={() => handleNextStep('location')}
-        />
-      )}
+        {currentStep === 'welcome' && (
+          <WelcomePage
+            onNext={() => handleNextStep('slides')}
+            onSkip={() => handleNextStep('location')}
+          />
+        )}
 
-      {currentStep === 'slides' && (
-        <IndividualOnboardingSlides onComplete={() => handleNextStep('location')} />
-      )}
+        {currentStep === 'slides' && (
+          <IndividualOnboardingSlides onComplete={() => handleNextStep('location')} />
+        )}
 
-      {currentStep === 'location' && (
-        <LocationPermission onComplete={() => handleNextStep('login-choice')} onSkip={handleSkip} />
-      )}
+        {currentStep === 'location' && (
+          <LocationPermission
+            onComplete={() => handleNextStep('login-choice')}
+            onSkip={handleSkip}
+          />
+        )}
 
-      {currentStep === 'login-choice' && <LoginChoice onComplete={handleComplete} />}
+        {currentStep === 'login-choice' && <LoginChoice onComplete={handleComplete} />}
+      </Suspense>
     </BaseLayout>
   );
 }

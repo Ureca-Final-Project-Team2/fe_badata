@@ -1,20 +1,62 @@
 'use client';
 
 import Image from 'next/image';
+import { lazy, Suspense } from 'react';
 
 import { useUserInfoQuery } from '@/entities/user/model/queries';
 import { useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
-import { AlarmSettingSection } from '@/features/mypage/ui/AlarmSettingSection';
-import DataUsageCardSection from '@/features/mypage/ui/DataUsageCardSection';
-import { RentalSection } from '@/features/mypage/ui/RentalSection';
-import { ReportStatusSection } from '@/features/mypage/ui/ReportStatusSection';
-import { SosSection } from '@/features/mypage/ui/SosSection';
-import { TradeSection } from '@/features/mypage/ui/TradeSection';
 import { ICONS } from '@/shared/config/iconPath';
 import { BottomNav } from '@/shared/ui/BottomNav';
 import { Header } from '@/shared/ui/Header';
-import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
-import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
+
+// Lazy loaded components for performance optimization
+const AlarmSettingSection = lazy(() =>
+  import('@/features/mypage/ui/AlarmSettingSection').then((module) => ({
+    default: module.AlarmSettingSection,
+  })),
+);
+const DataUsageCardSection = lazy(() =>
+  import('@/features/mypage/ui/DataUsageCardSection').then((module) => ({
+    default: module.default,
+  })),
+);
+const RentalSection = lazy(() =>
+  import('@/features/mypage/ui/RentalSection').then((module) => ({
+    default: module.RentalSection,
+  })),
+);
+const ReportStatusSection = lazy(() =>
+  import('@/features/mypage/ui/ReportStatusSection').then((module) => ({
+    default: module.ReportStatusSection,
+  })),
+);
+const SosSection = lazy(() =>
+  import('@/features/mypage/ui/SosSection').then((module) => ({ default: module.SosSection })),
+);
+const TradeSection = lazy(() =>
+  import('@/features/mypage/ui/TradeSection').then((module) => ({ default: module.TradeSection })),
+);
+const SosDrawer = lazy(() =>
+  import('@/widgets/sos/ui/SosDrawer').then((module) => ({ default: module.SosDrawer })),
+);
+const MyProfileCard = lazy(() =>
+  import('@/widgets/user/ui/MyProfileCard').then((module) => ({ default: module.default })),
+);
+
+// Loading fallback components
+const SectionLoadingFallback = () => (
+  <div className="flex items-center justify-center p-4">
+    <div className="text-gray-500">섹션 로딩 중...</div>
+  </div>
+);
+
+const ProfileLoadingFallback = () => (
+  <div className="flex items-center justify-center p-4">
+    <div className="text-gray-500">프로필 로딩 중...</div>
+  </div>
+);
+
+const SosDrawerLoadingFallback = () => null; // SOS Drawer는 필요할 때만 표시되므로 빈 fallback
 
 export default function MyPage() {
   const { data: coinData } = useUserCoinQuery();
@@ -41,23 +83,27 @@ export default function MyPage() {
           }}
         >
           <div className="pt-4 flex justify-center">
-            {isProfileReady ? (
-              <MyProfileCard
-                name={userInfo.nickName}
-                days={userInfo.days}
-                avatarSrc={userInfo.profileImage}
-              />
-            ) : (
-              <MyProfileCard
-                name="로딩 중..."
-                days={0}
-                avatarSrc={ICONS.ETC.SHELL.src.toString()}
-                isLoading={isUserInfoLoading}
-              />
-            )}
+            <Suspense fallback={<ProfileLoadingFallback />}>
+              {isProfileReady ? (
+                <MyProfileCard
+                  name={userInfo.nickName}
+                  days={userInfo.days}
+                  avatarSrc={userInfo.profileImage}
+                />
+              ) : (
+                <MyProfileCard
+                  name="로딩 중..."
+                  days={0}
+                  avatarSrc={ICONS.ETC.SHELL.src.toString()}
+                  isLoading={isUserInfoLoading}
+                />
+              )}
+            </Suspense>
           </div>
           <div className="relative px-4 pt-4 mb-4">
-            <DataUsageCardSection />
+            <Suspense fallback={<SectionLoadingFallback />}>
+              <DataUsageCardSection />
+            </Suspense>
           </div>
           <div className="absolute right-4 bottom-10 flex flex-col items-center">
             <div className="bg-[var(--white)] rounded-full px-3 py-1 shadow-md mb-2 min-w-[48px] text-center z-0">
@@ -81,11 +127,21 @@ export default function MyPage() {
           style={{ minHeight: 'calc(100vh - 100px)' }}
         >
           <div className="pt-10 pb-6 space-y-8">
-            <TradeSection />
-            <RentalSection />
-            <SosSection />
-            <ReportStatusSection />
-            <AlarmSettingSection />
+            <Suspense fallback={<SectionLoadingFallback />}>
+              <TradeSection />
+            </Suspense>
+            <Suspense fallback={<SectionLoadingFallback />}>
+              <RentalSection />
+            </Suspense>
+            <Suspense fallback={<SectionLoadingFallback />}>
+              <SosSection />
+            </Suspense>
+            <Suspense fallback={<SectionLoadingFallback />}>
+              <ReportStatusSection />
+            </Suspense>
+            <Suspense fallback={<SectionLoadingFallback />}>
+              <AlarmSettingSection />
+            </Suspense>
           </div>
         </div>
       </main>
@@ -94,7 +150,9 @@ export default function MyPage() {
       </div>
 
       {/* SOS Drawer 추가 */}
-      <SosDrawer />
+      <Suspense fallback={<SosDrawerLoadingFallback />}>
+        <SosDrawer />
+      </Suspense>
     </div>
   );
 }

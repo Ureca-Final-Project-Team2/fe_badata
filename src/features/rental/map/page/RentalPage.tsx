@@ -1,8 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { CenterScrollSwiper } from '@/entities/scroll';
 import { useDrawerState } from '@/features/rental/map/hooks/useDrawerStaterHooks';
 import { useFilterState } from '@/features/rental/map/hooks/useFilterStaterHooks';
 import { useSelectedStore } from '@/features/rental/map/hooks/useSelectedStoreHooks';
@@ -16,13 +15,9 @@ import { getClusterClickActive } from '@/features/rental/map/lib/clusterMarker';
 import { createPlaceMarker } from '@/features/rental/map/lib/placeMarker';
 import { filterDevices } from '@/features/rental/map/model/filtereDevices';
 import { CurrentLocationButton } from '@/features/rental/map/ui/CurrentLocationButton';
-import DeviceCard from '@/features/rental/map/ui/DeviceCard';
-import { DrawerSection } from '@/features/rental/map/ui/DrawerSection';
 import { ListViewButton } from '@/features/rental/map/ui/ListViewButton';
 import { LocationDisplay } from '@/features/rental/map/ui/LocationDisplay';
-import { MapSection } from '@/features/rental/map/ui/MapSection';
 import RentalFilterContent from '@/features/rental/map/ui/RentalFilterContent';
-import { RentalSortFilter } from '@/features/rental/map/ui/RentalSortFilter';
 import { SearchPosHeader } from '@/features/rental/map/ui/SearchPosHeader';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
@@ -30,6 +25,42 @@ import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
 
 import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
+
+// Lazy loaded components for performance optimization
+const MapSection = lazy(() =>
+  import('@/features/rental/map/ui/MapSection').then((module) => ({ default: module.MapSection })),
+);
+const DrawerSection = lazy(() =>
+  import('@/features/rental/map/ui/DrawerSection').then((module) => ({
+    default: module.DrawerSection,
+  })),
+);
+const RentalSortFilter = lazy(() =>
+  import('@/features/rental/map/ui/RentalSortFilter').then((module) => ({
+    default: module.RentalSortFilter,
+  })),
+);
+const DeviceCard = lazy(() =>
+  import('@/features/rental/map/ui/DeviceCard').then((module) => ({ default: module.default })),
+);
+const CenterScrollSwiper = lazy(() =>
+  import('@/entities/scroll').then((module) => ({ default: module.CenterScrollSwiper })),
+);
+
+// Loading fallback components
+const MapLoadingFallback = () => (
+  <div className="w-full h-[calc(100vh-190px)] bg-gray-100 flex items-center justify-center">
+    <div className="text-gray-500">지도 로딩 중...</div>
+  </div>
+);
+
+const DrawerLoadingFallback = () => null; // Drawer는 필요할 때만 표시되므로 빈 fallback
+
+const FilterLoadingFallback = () => (
+  <div className="flex items-center justify-center p-4">
+    <div className="text-gray-500">필터 로딩 중...</div>
+  </div>
+);
 
 export default function RentalPage() {
   const {
@@ -91,9 +122,9 @@ export default function RentalPage() {
     }
   }, [selectedLat, selectedLng, selectedPlaceName, hasProcessedUrlParams]);
 
+  // Lazy load heavy hooks only when needed
   const { userLocation, setUserLocation, userAddress, locationLoading, locationError } =
     useUserLocation();
-
   const {
     isDrawerOpen,
     setIsDrawerOpen,
@@ -104,7 +135,6 @@ export default function RentalPage() {
     handleSortClick,
     handleSortSelect,
   } = useDrawerState();
-
   const {
     filterState,
     tempFilterState,
@@ -113,11 +143,8 @@ export default function RentalPage() {
     setFilterDrawerOpen,
     handleFilterSubmit,
   } = useFilterState();
-
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
-  // 확장된 마커들의 ID를 Set으로 관리
   const [expandedMarkers, setExpandedMarkers] = useState<Set<number>>(() => {
-    // 초기화 시 localStorage에서 복원
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('expanded-markers');
       if (saved) {
@@ -130,10 +157,7 @@ export default function RentalPage() {
     }
     return new Set();
   });
-
-  // 장소 마커 상태 관리
   const [placeMarker, setPlaceMarker] = useState<kakao.maps.CustomOverlay | null>(null);
-
   const {
     selectedStore,
     selectedStoreId,
@@ -315,7 +339,7 @@ export default function RentalPage() {
 
   // 지도 준비 완료 시 호출되는 콜백 (디바운싱 추가)
   const handleMapReady = useCallback(
-    (map: kakao.maps.Map) => {
+    async (map: kakao.maps.Map) => {
       setMapInstance(map);
 
       // 디바운싱된 로그 출력
@@ -585,82 +609,102 @@ export default function RentalPage() {
         error={locationError}
       />
       <div className="w-full h-[calc(100vh-190px)]">
-        <MapSection
-          filterState={filterState}
-          initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
-          initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
-          onStoreMarkerClick={handleMarkerClick}
-          onMapClick={handleMapClickWrapper}
-          onMapReady={handleMapReady}
-          hasUrlParams={hasUrlParamsValue}
-          selectedStoreId={selectedStoreId}
-          userLat={userLocation.lat ?? undefined}
-          userLng={userLocation.lng ?? undefined}
-          expandedMarkers={expandedMarkers}
-        />
+        <Suspense fallback={<MapLoadingFallback />}>
+          <MapSection
+            filterState={filterState}
+            initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
+            initialLng={selectedLng ? parseFloat(selectedLng) : undefined}
+            onStoreMarkerClick={handleMarkerClick}
+            onMapClick={handleMapClickWrapper}
+            onMapReady={handleMapReady}
+            hasUrlParams={hasUrlParamsValue}
+            selectedStoreId={selectedStoreId}
+            userLat={userLocation.lat ?? undefined}
+            userLng={userLocation.lng ?? undefined}
+            expandedMarkers={expandedMarkers}
+          />
+        </Suspense>
       </div>
-      <DrawerSection
-        storeList={storeList}
-        isLoading={isLoading}
-        isFetchingNextPage={isFetchingNextPage}
-        hasNextPage={hasNextPage}
-        isError={isError}
-        error={error}
-        open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        onLoadMore={fetchNextPage}
-        onSortClick={handleSortClick}
-        currentSort={currentSort}
-      />
-      <FilterDrawer
-        isOpen={filterDrawerOpen}
-        onClose={() => setFilterDrawerOpen(false)}
-        className="bg-[var(--main-2)]"
-      >
-        <RentalFilterContent
-          onClose={() => setFilterDrawerOpen(false)}
-          filterState={tempFilterState}
-          setFilterState={setTempFilterState}
-          onSubmit={handleFilterSubmit}
+      <Suspense fallback={<DrawerLoadingFallback />}>
+        <DrawerSection
+          storeList={storeList}
+          isLoading={isLoading}
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage}
+          isError={isError}
+          error={error}
+          open={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          onLoadMore={fetchNextPage}
+          onSortClick={handleSortClick}
+          currentSort={currentSort}
         />
-      </FilterDrawer>
-      <RentalSortFilter
-        isOpen={isSortDrawerOpen}
-        onClose={() => setIsSortDrawerOpen(false)}
-        onSortSelect={handleSortSelect}
-        currentSort={currentSort}
-      />
+      </Suspense>
+      <Suspense fallback={<FilterLoadingFallback />}>
+        <FilterDrawer
+          isOpen={filterDrawerOpen}
+          onClose={() => setFilterDrawerOpen(false)}
+          className="bg-[var(--main-2)]"
+        >
+          <RentalFilterContent
+            onClose={() => setFilterDrawerOpen(false)}
+            filterState={tempFilterState}
+            setFilterState={setTempFilterState}
+            onSubmit={handleFilterSubmit}
+          />
+        </FilterDrawer>
+      </Suspense>
+      <Suspense fallback={<FilterLoadingFallback />}>
+        <RentalSortFilter
+          isOpen={isSortDrawerOpen}
+          onClose={() => setIsSortDrawerOpen(false)}
+          onSortSelect={handleSortSelect}
+          currentSort={currentSort}
+        />
+      </Suspense>
       {filteredDevicesList.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-20">
-          <CenterScrollSwiper
-            key={filteredDevicesList.map((d: StoreDevice) => d.storeDeviceId).join('-')}
-            items={filteredDevicesList}
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center p-4">디바이스 로딩 중...</div>
+            }
           >
-            {(device: StoreDevice) => (
-              <DeviceCard
-                device={device}
-                storeId={selectedStoreId ?? undefined}
-                dateRange={filterState.dateRange}
-              />
-            )}
-          </CenterScrollSwiper>
+            <CenterScrollSwiper
+              key={filteredDevicesList.map((d: StoreDevice) => d.storeDeviceId).join('-')}
+              items={filteredDevicesList}
+            >
+              {(device: unknown) => (
+                <DeviceCard
+                  device={device as StoreDevice}
+                  storeId={selectedStoreId ?? undefined}
+                  dateRange={filterState.dateRange}
+                />
+              )}
+            </CenterScrollSwiper>
+          </Suspense>
         </div>
       )}
       {/* 필터링된 결과가 없지만 선택된 디바이스가 있는 경우 원본 디바이스 표시 */}
       {filteredDevicesList.length === 0 && selectedStore.selectedDevices.length > 0 && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
-          <CenterScrollSwiper
-            key={selectedStore.selectedDevices.map((d: StoreDevice) => d.storeDeviceId).join('-')}
-            items={selectedStore.selectedDevices}
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center p-4">디바이스 로딩 중...</div>
+            }
           >
-            {(device: StoreDevice) => (
-              <DeviceCard
-                device={device}
-                storeId={selectedStoreId ?? undefined}
-                dateRange={filterState.dateRange}
-              />
-            )}
-          </CenterScrollSwiper>
+            <CenterScrollSwiper
+              key={selectedStore.selectedDevices.map((d: StoreDevice) => d.storeDeviceId).join('-')}
+              items={selectedStore.selectedDevices}
+            >
+              {(device: unknown) => (
+                <DeviceCard
+                  device={device as StoreDevice}
+                  storeId={selectedStoreId ?? undefined}
+                  dateRange={filterState.dateRange}
+                />
+              )}
+            </CenterScrollSwiper>
+          </Suspense>
         </div>
       )}
     </BaseLayout>
