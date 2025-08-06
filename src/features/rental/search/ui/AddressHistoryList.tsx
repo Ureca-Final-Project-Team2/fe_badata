@@ -45,19 +45,27 @@ const AddressHistoryList = React.memo(
     return (
       <div>
         <div className="space-y-2">
-          {addressHistoryInfinite.pages?.map((page) =>
-            page?.content?.getAddressResponses?.map((item) => (
-              <AddressHistoryItem
-                key={item.addressId}
-                item={item}
-                onAddressClick={onAddressClick}
-                onDelete={onDelete}
-              />
-            )),
+          {addressHistoryInfinite.pages?.map((page, pageIndex) =>
+            page?.content?.getAddressResponses?.map((item, itemIndex) => {
+              const globalIndex =
+                pageIndex * (page?.content?.getAddressResponses?.length || 0) + itemIndex;
+              return (
+                <div
+                  key={item.addressId}
+                  className={`animate-slide-in-up animate-stagger-${Math.min(globalIndex + 1, 5)}`}
+                >
+                  <AddressHistoryItem
+                    item={item}
+                    onAddressClick={onAddressClick}
+                    onDelete={onDelete}
+                  />
+                </div>
+              );
+            }),
           )}
           {/* 무한스크롤 로딩 표시 */}
           {isFetchingNextPage && (
-            <div className="text-center py-4">
+            <div className="text-center py-4 animate-fade-in">
               <p className="text-[var(--gray-dark)]">로딩 중...</p>
             </div>
           )}

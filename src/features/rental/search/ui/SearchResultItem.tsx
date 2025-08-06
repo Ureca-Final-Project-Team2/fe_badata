@@ -43,7 +43,7 @@ const SearchResultItem = React.memo(
 
     return (
       <div
-        className="p-3 border-b border-[var(--gray-light)] cursor-pointer hover:bg-[var(--gray-light)] transition-colors"
+        className="border-b border-[var(--gray-light)] cursor-pointer hover:bg-[var(--gray-light)] transition-all duration-300"
         onClick={handleClick}
       >
         <div className="flex items-start gap-3">
