@@ -42,7 +42,7 @@ export default function LikeTradePostPage() {
 
   return (
     <BaseLayout header={<PageHeader title="찜 목록" onBack={handleBack} />} showBottomNav>
-      <div className="px-4 pb-[96px]">
+      <div className="pb-[96px]">
         {/* 로딩 상태 (초기 로딩) */}
         {isLoading && !cursor && (
           <div className="grid grid-cols-2 gap-5 mt-4">
