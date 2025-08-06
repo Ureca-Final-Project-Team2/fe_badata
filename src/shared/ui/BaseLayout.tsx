@@ -1,10 +1,17 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
+
+import { useAuthStore } from '@/entities/auth/model/authStore';
+import { usePendingRequestExecutor } from '@/shared/hooks/usePendingRequestExecutor';
+import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore'; // 추가
 import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
 import { SosNotificationHandler } from '@/widgets/sos/ui/SosNotificationHandler';
 
 import { cn } from '../lib/cn';
 
+import { AuthModal } from './AuthModal';
+import { AuthOverlay } from './AuthOverlay';
 import { BottomNav } from './BottomNav';
 
 interface BaseLayoutProps {
@@ -13,10 +20,10 @@ interface BaseLayoutProps {
   headerfab?: React.ReactNode;
   fab?: React.ReactNode;
   className?: string;
-  centered?: boolean; // 가운데 정렬 여부
-  paddingX?: boolean; // 양옆 패딩 여부
-  showHeader?: boolean; // 헤더 표시 여부
-  showBottomNav?: boolean; // 바텀네비 표시 여부
+  centered?: boolean;
+  paddingX?: boolean;
+  showHeader?: boolean;
+  showBottomNav?: boolean;
   showSos?: boolean;
 }
 
@@ -31,16 +38,35 @@ export function BaseLayout({
   showHeader = true,
   showBottomNav = true,
 }: BaseLayoutProps) {
+  usePendingRequestExecutor();
+  const { isLoggedIn } = useAuthStore();
+  const { isAuthModalOpen } = useAuthErrorStore(); // 추가
+  const pathname = usePathname();
+
+  // 홈과 마이페이지에서만 로그인 체크
+  const requiresAuth = pathname === '/' || pathname === '/mypage';
+  const shouldShowAuthOverlay = requiresAuth && !isLoggedIn;
+  const isHomeOrMypage = pathname === '/' || pathname === '/mypage';
+
+  // 홈/마이페이지에서만 블러 처리 (AuthOverlay 또는 AuthModal이 열렸을 때)
+  const shouldBlur = shouldShowAuthOverlay || (isAuthModalOpen && isHomeOrMypage);
+
   return (
     <div className={`w-full ${centered ? 'flex justify-center' : ''} bg-[var(--main-2)]`}>
       <div className="relative w-full max-w-[428px] min-h-screen overflow-hidden bg-white">
         {/* 고정 헤더 */}
         {showHeader && header && (
-          <div className="fixed max-w-[428px] mx-auto top-0 left-0 right-0 z-20">{header}</div>
+          <div
+            className={`fixed max-w-[428px] mx-auto top-0 left-0 right-0 z-20 ${shouldBlur ? 'filter blur-sm pointer-events-none' : ''}`}
+          >
+            {header}
+          </div>
         )}
 
         {/* header fab */}
-        <div className="pointer-events-none fixed top-[135px] inset-x-0 z-30">
+        <div
+          className={`pointer-events-none fixed top-[135px] inset-x-0 z-30 ${shouldBlur ? 'filter blur-sm' : ''}`}
+        >
           <div className="mx-auto max-w-[428px] w-full flex justify-end pointer-events-auto">
             {headerfab}
           </div>
@@ -52,13 +78,16 @@ export function BaseLayout({
             `${showHeader ? 'pt-[70px]' : ''} ${showBottomNav ? 'pb-[70px]' : ''} h-full overflow-y-auto`,
             paddingX ? 'px-[24px]' : '',
             className,
+            shouldBlur ? 'filter blur-sm pointer-events-none' : '',
           )}
         >
           {children}
         </main>
 
         {/* 플로팅 버튼 영역 */}
-        <div className="pointer-events-none fixed bottom-[90px] inset-x-0 z-30">
+        <div
+          className={`pointer-events-none fixed bottom-[90px] inset-x-0 z-30 ${shouldBlur ? 'filter blur-sm' : ''}`}
+        >
           <div className="mx-auto max-w-[428px] w-full flex justify-end pointer-events-auto px-4">
             {fab}
           </div>
@@ -66,7 +95,13 @@ export function BaseLayout({
 
         {/* 고정 바텀 네비게이션 */}
         {showBottomNav && (
-          <div className="fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[50]">
+          <div
+            className={
+              `fixed max-w-[428px] mx-auto bottom-0 left-0 right-0 z-[50]` +
+              // 홈/마이페이지에서는 AuthModal이 열려도 블러처리 안함
+              (isHomeOrMypage ? '' : shouldBlur ? ' filter blur-sm' : '')
+            }
+          >
             <BottomNav />
           </div>
         )}
@@ -74,6 +109,12 @@ export function BaseLayout({
         {/* 전역 SOS 컴포넌트들 */}
         <SosDrawer />
         <SosNotificationHandler />
+
+        {/* 전역 인증 모달 */}
+        <AuthModal />
+
+        {/* 로그인하지 않은 경우 오버레이 */}
+        {shouldShowAuthOverlay && <AuthOverlay />}
       </div>
     </div>
   );

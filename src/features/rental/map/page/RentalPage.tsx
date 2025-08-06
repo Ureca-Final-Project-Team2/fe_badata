@@ -633,7 +633,7 @@ export default function RentalPage() {
       )}
       {/* 필터링된 결과가 없지만 선택된 디바이스가 있는 경우 원본 디바이스 표시 */}
       {filteredDevicesList.length === 0 && selectedStore.selectedDevices.length > 0 && (
-        <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
+        <div className="absolute bottom-20 left-0 w-full flex justify-center z-20">
           <CenterScrollSwiper
             key={selectedStore.selectedDevices.map((d: StoreDevice) => d.storeDeviceId).join('-')}
             items={selectedStore.selectedDevices}

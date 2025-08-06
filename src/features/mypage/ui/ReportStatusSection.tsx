@@ -3,16 +3,16 @@
 import Link from 'next/link';
 
 import { ChevronRight } from 'lucide-react';
-
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useReportStatusQuery } from '@/features/mypage/report-status/model/queries';
 
 export const ReportStatusSection = () => {
+  const { isLoggedIn } = useAuthStore();
   const { data } = useReportStatusQuery();
 
-  const questionCount = data?.questionCount ?? 0;
-  const answerCount = data?.answerCount ?? 0;
-  const completeCount = data?.completeCount ?? 0;
-
+  const questionCount = isLoggedIn ? (data?.questionCount ?? 0) : 0;
+  const answerCount = isLoggedIn ? (data?.answerCount ?? 0) : 0;
+  const completeCount = isLoggedIn ? (data?.completeCount ?? 0) : 0;
 
   const statusList = [
     { count: questionCount, label: '신고 접수' },

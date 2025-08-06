@@ -1,11 +1,9 @@
 'use client';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
-
-import { useSosRequestMutation } from '../model/queries';
-import { useSosStore } from '../model/sosStore';
-
-import { makeCustomToast } from './makeCustomToast';
+import { useSosRequestMutation } from '@/widgets/sos/model/queries';
+import { useSosStore } from '@/widgets/sos/model/sosStore';
+import { makeCustomToast } from '@/widgets/sos/ui/makeCustomToast';
 
 interface SosModalProps {
   isOpen: boolean;
@@ -53,7 +51,7 @@ export function SosModal({ isOpen, onClose }: SosModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+    <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-[50]">
       <div className="bg-white rounded-lg p-6 mx-4 max-w-sm w-full">
         <div className="text-center">
           <div className="text-4xl mb-4">🚨</div>
@@ -67,14 +65,14 @@ export function SosModal({ isOpen, onClose }: SosModalProps) {
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 py-2 px-4 border border-[var(--main-2)] rounded-lg text-gray-700 hover:bg-[var(--main-1)] transition-colors font-body-medium"
+              className="cursor-pointer flex-1 py-2 px-4 border border-[var(--main-2)] rounded-lg text-gray-700 hover:bg-[var(--main-1)] transition-colors font-body-medium"
               disabled={isPending}
             >
               취소
             </button>
             <button
               onClick={handleConfirm}
-              className="flex-1 py-2 px-4 bg-[var(--main-4)] text-white rounded-lg hover:bg-[var(--main-5)] transition-colors font-body-medium disabled:opacity-50"
+              className="cursor-pointer flex-1 py-2 px-4 bg-[var(--main-4)] text-white rounded-lg hover:bg-[var(--main-5)] transition-colors font-body-medium disabled:opacity-50"
               disabled={isPending}
             >
               {isPending ? '요청 중...' : 'SOS 요청'}
