@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
+
 // API 요청 정보 저장 타입
 interface PendingApiRequest {
   type:
@@ -242,7 +244,17 @@ async function executeApiByType(request: PendingApiRequest) {
       const { createReservationWithValidation } = await import(
         '@/features/rental/store/reservation/utils/reservationService'
       );
-      await createReservationWithValidation(data as any);
+      await createReservationWithValidation(
+        data as {
+          storeId: number;
+          storeDevices: Array<{
+            storeDeviceId: number;
+            count: number;
+          }>;
+          rentalStartDate: string;
+          rentalEndDate: string;
+        },
+      );
       break;
     }
 
@@ -259,7 +271,14 @@ async function executeApiByType(request: PendingApiRequest) {
       const { requestRestockNotification } = await import(
         '@/features/rental/store/reservation/api/apis'
       );
-      const result = await requestRestockNotification(data as any);
+      const result = await requestRestockNotification(
+        data as {
+          storeDeviceId: number;
+          count: number;
+          desiredStartDate: string;
+          desiredEndDate: string;
+        },
+      );
 
       if (!result.success) {
         throw new Error(result.error || '재입고 알림 신청에 실패했습니다.');
@@ -272,11 +291,21 @@ async function executeApiByType(request: PendingApiRequest) {
       if (url.includes('/gifticon')) {
         // 기프티콘 등록 API 호출
         const { postTradeGifticon } = await import('@/features/trade/register/gifticon/api/apis');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await postTradeGifticon(data as any);
       } else {
         // 데이터 등록 API 호출
         const { postTradeData } = await import('@/features/trade/register/data/api/apis');
-        await postTradeData(data as any);
+        await postTradeData(
+          data as {
+            title: string;
+            mobileCarrier: MobileCarrier;
+            deadLine: string;
+            capacity: number;
+            price: number;
+            comment?: string;
+          },
+        );
       }
       break;
     }
