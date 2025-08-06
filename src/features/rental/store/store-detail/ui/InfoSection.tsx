@@ -7,6 +7,7 @@ import { Phone, Share } from 'lucide-react';
 import InfoAction from '@/features/rental/store/store-detail/ui/InfoAction';
 import { ICONS } from '@/shared/config/iconPath';
 import { formatDistanceString } from '@/shared/lib/format/distanceUtils';
+import { useShareHooks } from '@/shared/model/useShareHooks';
 
 interface InfoSectionProps {
   reviewRating: number;
@@ -25,6 +26,9 @@ function InfoSection({
   isLikeLoading = false,
   onLikeToggle,
 }: InfoSectionProps) {
+  // 공유 훅 사용
+  const { share } = useShareHooks();
+
   // 찜 상태에 따라 아이콘 선택
   const likeIcon = liked ? ICONS.ETC.LIKE_ACTIVE : ICONS.ETC.LIKE_NONACTIVE;
   const likeStoreIcon = typeof likeIcon === 'string' ? likeIcon : likeIcon.src;
@@ -37,6 +41,14 @@ function InfoSection({
   // 거리 포맷팅 및 색상 클래스 계산
   const formattedDistance = formatDistanceString(distanceFromMe);
 
+  // 공유 핸들러
+  const handleShare = () => {
+    share({
+      title: 'BADATA에서 무선 공유기를 대여해보세요!',
+      url: window.location.href,
+    });
+  };
+
   return (
     <div className="w-full bg-[var(--white)] flex flex-col items-center mb-4">
       {/* 평점과 거리 정보 */}
@@ -45,7 +57,7 @@ function InfoSection({
           <Image src={ratingIcon} alt="평점" width={30} height={30} />
           <span className="font-label-semibold">{reviewRating.toFixed(1)}</span>
         </div>
-        <span className="font-label-regular text-[var(--black)]">
+        <span className="font-label-regular text-[var(--black)] pr-4">
           나와의 거리{' '}
           <span className="font-label-semibold text-[var(--main-5)]">{formattedDistance}</span>
         </span>
@@ -85,7 +97,11 @@ function InfoSection({
         <div className="w-px bg-[var(--gray-light)] mx-2" />
 
         {/* 공유 버튼 */}
-        <InfoAction icon={<Share size={24} className="text-[var(--gray-dark)]" />} label="공유" />
+        <InfoAction
+          icon={<Share size={24} className="text-[var(--gray-dark)]" />}
+          label="공유"
+          onClick={handleShare}
+        />
       </div>
 
       {/* 구분선 아래 */}

@@ -10,9 +10,20 @@ interface InfoActionProps {
 }
 
 function InfoAction({ icon, label, active, onClick, href, disabled }: InfoActionProps) {
+  const handleShare = () => {
+    share({
+      title: post.title,
+      price: post.price,
+      imageUrl:
+        !post.postImage || post.postImage === '' || post.postImage === 'no image'
+          ? undefined
+          : post.postImage,
+    });
+  };
+
   const content = (
     <div
-      className={`flex flex-col items-center flex-1 py-2 transition-opacity ${
+      className={` flex flex-col items-center flex-1 py-2 transition-opacity ${
         disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }`}
       onClick={disabled ? undefined : onClick}
