@@ -34,6 +34,6 @@ export const STORE_DETAIL_MESSAGES = {
 export const STORE_DETAIL_STYLES = {
   TAB_CONTAINER:
     'fixed max-w-[428px] mx-auto top-[70px] left-0 right-0 z-20 flex justify-center bg-[var(--white)]',
-  CONTENT_CONTAINER: 'pt-[50px] pb-16 overflow-y-auto',
+  CONTENT_CONTAINER: 'pb-16 overflow-y-auto',
   PADDING_CONTAINER: 'px-6',
 } as const;

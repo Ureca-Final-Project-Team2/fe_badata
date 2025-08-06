@@ -51,7 +51,7 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
 
   return (
     <>
-      <div className="font-body-semibold flex items-center gap-2 mt-6 transition-all duration-200">
+      <div className="font-body-semibold flex items-center gap-2 mt-6 transition-all duration-200 mb-3">
         <CircleCheck size={28} className="text-[var(--main-5)]" />
         기기를 선택해 주세요
         {memoizedDevices.length > 0 && (
