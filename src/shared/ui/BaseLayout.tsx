@@ -18,6 +18,7 @@ interface BaseLayoutProps {
   children: React.ReactNode;
   header?: React.ReactNode;
   headerfab?: React.ReactNode;
+  headerZoom?: React.ReactNode;
   fab?: React.ReactNode;
   className?: string;
   centered?: boolean;
@@ -31,6 +32,7 @@ export function BaseLayout({
   children,
   header,
   headerfab,
+  headerZoom,
   fab,
   className,
   centered = true,
@@ -69,6 +71,13 @@ export function BaseLayout({
         >
           <div className="mx-auto max-w-[428px] w-full flex justify-end pointer-events-auto">
             {headerfab}
+          </div>
+        </div>
+
+        {/* 줌인/줌 아웃 버튼 */}
+        <div className="fixed top-[200px] inset-x-0 z-30">
+          <div className="mx-auto max-w-[428px] w-full flex justify-start pointer-events-auto px-6">
+            {headerZoom}
           </div>
         </div>
 

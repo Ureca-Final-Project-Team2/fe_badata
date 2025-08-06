@@ -11,6 +11,7 @@ import {
 } from '@/features/rental/map/hooks/useStoreListHooks';
 import { useUrlParams } from '@/features/rental/map/hooks/useUrlParamsrHooks';
 import { useUserLocation } from '@/features/rental/map/hooks/useUserLocationrHooks';
+import { useZoom } from '@/features/rental/map/hooks/useZoomHooks';
 import { getClusterClickActive } from '@/features/rental/map/lib/clusterMarker';
 import { createPlaceMarker } from '@/features/rental/map/lib/placeMarker';
 import { filterDevices } from '@/features/rental/map/model/filtereDevices';
@@ -23,6 +24,7 @@ import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
+import { ZoomButton } from '@/widgets/zoom-button';
 
 import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 
@@ -148,6 +150,9 @@ export default function RentalPage() {
     handleFilterSubmit,
   } = useFilterState();
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
+
+  // 줌 기능 훅 사용
+  const { handleZoomIn, handleZoomOut } = useZoom({ mapInstance });
   const [expandedMarkers, setExpandedMarkers] = useState<Set<number>>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('expanded-markers');
@@ -646,6 +651,7 @@ export default function RentalPage() {
           <ListViewButton className="cursor-pointer" onClick={() => handleListView()} />
         </div>
       }
+      headerZoom={<ZoomButton onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} />}
     >
       <div className="flex items-center justify-between w-full px-4">
         <LocationDisplay
