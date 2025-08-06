@@ -100,12 +100,19 @@ export const fetchStoreDevices = async (
   params: FetchStoreDevicesParams,
 ): Promise<StoreDevice[]> => {
   try {
+    // 파라미터를 명시적으로 처리하여 배열 형태로 전송되지 않도록 함
+    const processedParams = { ...params };
+
+    // maxSupportConnection이 배열로 전송되지 않도록 보장
+    if (processedParams.maxSupportConnection !== undefined) {
+      processedParams.maxSupportConnection = Number(processedParams.maxSupportConnection);
+    }
+
+    console.log('🔍 fetchStoreDevices API 호출 파라미터:', processedParams);
+
     // 개별 스토어의 디바이스를 조회할 때는 STORES.ALLSTORE 엔드포인트 사용
     const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
-      params: {
-        ...params,
-        // storeId는 URL 경로에 포함되므로 params에서 제외
-      },
+      params: processedParams,
     });
 
     return Array.isArray(response) ? response : [];

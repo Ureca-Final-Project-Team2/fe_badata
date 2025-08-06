@@ -75,13 +75,13 @@ export const useMapZoomLevel = (
                 filterState.maxPrice && filterState.maxPrice > 0 ? filterState.maxPrice : undefined,
               dataCapacity: filterState.dataAmount
                 ? filterState.dataAmount === '5GB'
-                  ? [5]
+                  ? 5
                   : filterState.dataAmount === '10GB'
-                    ? [10]
+                    ? 10
                     : filterState.dataAmount === '20GB'
-                      ? [20]
+                      ? 20
                       : filterState.dataAmount === '무제한'
-                        ? [999]
+                        ? 999
                         : undefined
                 : undefined,
               is5G:
@@ -90,9 +90,7 @@ export const useMapZoomLevel = (
                   : filterState.dataType === '4G/LTE'
                     ? false
                     : undefined,
-              maxSupportConnection: filterState.maxSupportConnection
-                ? [filterState.maxSupportConnection]
-                : undefined,
+              maxSupportConnection: filterState.maxSupportConnection || undefined,
             };
 
             const newStores = await fetchStores(apiParams);
@@ -159,13 +157,13 @@ export const useMapZoomLevel = (
             filterState.maxPrice && filterState.maxPrice > 0 ? filterState.maxPrice : undefined,
           dataCapacity: filterState.dataAmount
             ? filterState.dataAmount === '5GB'
-              ? [5]
+              ? 5
               : filterState.dataAmount === '10GB'
-                ? [10]
+                ? 10
                 : filterState.dataAmount === '20GB'
-                  ? [20]
+                  ? 20
                   : filterState.dataAmount === '무제한'
-                    ? [999]
+                    ? 999
                     : undefined
             : undefined,
           is5G:
@@ -174,9 +172,7 @@ export const useMapZoomLevel = (
               : filterState.dataType === '4G/LTE'
                 ? false
                 : undefined,
-          maxSupportConnection: filterState.maxSupportConnection
-            ? [filterState.maxSupportConnection]
-            : undefined,
+          maxSupportConnection: filterState.maxSupportConnection || undefined,
         };
 
         const newStores = await fetchStores(apiParams);

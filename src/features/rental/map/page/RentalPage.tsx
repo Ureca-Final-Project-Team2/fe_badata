@@ -169,7 +169,20 @@ export default function RentalPage() {
   // 마커 클릭 핸들러 수정 - 하단 스와이퍼로 표시 및 확장 상태 관리
   const handleMarkerClick = useCallback(
     async (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
-      if (devices.length > 0 && storeId) {
+      console.log('🎯 handleMarkerClick 호출됨:', {
+        devicesLength: devices.length,
+        storeId,
+        storeDetail: !!storeDetail,
+        devices: devices.map((d) => ({
+          storeDeviceId: d.storeDeviceId,
+          deviceName: d.deviceName,
+          dataCapacity: d.dataCapacity,
+          price: d.price,
+        })),
+      });
+
+      // 디바이스가 없어도 storeId가 있으면 처리 (마커 유지 및 DeviceCard 표시)
+      if (storeId) {
         handleStoreMarkerClick(devices, storeDetail, storeId);
 
         const newExpanded = new Set(expandedMarkers);
@@ -519,17 +532,26 @@ export default function RentalPage() {
     [selectedStore.selectedDevices, filterState],
   );
 
-  // 필터링된 디바이스 업데이트
+  // 디버그: DeviceCard 표시 상태 확인
+  useEffect(() => {
+    console.log('🔍 DeviceCard 디버그:', {
+      selectedDevicesLength: selectedStore.selectedDevices.length,
+      filteredDevicesLength: filteredDevicesList.length,
+      selectedStoreId: selectedStore.selectedStoreId,
+      hasSelectedDevices: selectedStore.selectedDevices.length > 0,
+      hasFilteredDevices: filteredDevicesList.length > 0,
+    });
+  }, [selectedStore.selectedDevices, filteredDevicesList, selectedStore.selectedStoreId]);
+
+  // 필터링된 디바이스 업데이트 - 필터링된 결과가 없어도 원본 디바이스 유지
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
-    if (filteredDevicesList.length === 0) {
-      dispatchSelectedStore({
-        type: 'SELECT_STORE',
-        devices: [],
-        storeId: selectedStore.selectedStoreId ?? 0,
-        storeDetail: selectedStore.selectedStoreDetail,
-      });
-    } else if (filteredDevicesList.length !== selectedStore.selectedDevices.length) {
+
+    // 필터링된 결과가 있고, 원본과 다른 경우에만 업데이트
+    if (
+      filteredDevicesList.length > 0 &&
+      filteredDevicesList.length !== selectedStore.selectedDevices.length
+    ) {
       dispatchSelectedStore({
         type: 'SELECT_STORE',
         devices: filteredDevicesList,
@@ -537,6 +559,7 @@ export default function RentalPage() {
         storeDetail: selectedStore.selectedStoreDetail,
       });
     }
+    // 필터링된 결과가 없어도 원본 디바이스는 유지 (DeviceCard 표시용)
   }, [
     filterState,
     filteredDevicesList,
@@ -662,7 +685,8 @@ export default function RentalPage() {
           currentSort={currentSort}
         />
       </Suspense>
-      {filteredDevicesList.length > 0 && (
+      {/* 필터링된 결과가 있으면 필터링된 디바이스 표시, 없으면 원본 디바이스 표시 */}
+      {(filteredDevicesList.length > 0 || selectedStore.selectedDevices.length > 0) && (
         <div className="absolute bottom-20 left-0 w-full flex justify-center z-20">
           <Suspense
             fallback={
@@ -670,31 +694,15 @@ export default function RentalPage() {
             }
           >
             <CenterScrollSwiper
-              key={filteredDevicesList.map((d: StoreDevice) => d.storeDeviceId).join('-')}
-              items={filteredDevicesList}
-            >
-              {(device: unknown) => (
-                <DeviceCard
-                  device={device as StoreDevice}
-                  storeId={selectedStoreId ?? undefined}
-                  dateRange={filterState.dateRange}
-                />
-              )}
-            </CenterScrollSwiper>
-          </Suspense>
-        </div>
-      )}
-      {/* 필터링된 결과가 없지만 선택된 디바이스가 있는 경우 원본 디바이스 표시 */}
-      {filteredDevicesList.length === 0 && selectedStore.selectedDevices.length > 0 && (
-        <div className="absolute bottom-20 left-0 w-full flex justify-center z-50">
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center p-4">디바이스 로딩 중...</div>
-            }
-          >
-            <CenterScrollSwiper
-              key={selectedStore.selectedDevices.map((d: StoreDevice) => d.storeDeviceId).join('-')}
-              items={selectedStore.selectedDevices}
+              key={(filteredDevicesList.length > 0
+                ? filteredDevicesList
+                : selectedStore.selectedDevices
+              )
+                .map((d: StoreDevice) => d.storeDeviceId)
+                .join('-')}
+              items={
+                filteredDevicesList.length > 0 ? filteredDevicesList : selectedStore.selectedDevices
+              }
             >
               {(device: unknown) => (
                 <DeviceCard

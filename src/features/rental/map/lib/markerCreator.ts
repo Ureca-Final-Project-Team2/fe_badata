@@ -101,19 +101,34 @@ export const createStoreMarker = async (
             const currentZoomLevel = map.getLevel();
             if (currentZoomLevel <= 3) {
               console.log('🔍 디바이스 정보 조회 시작:', store.id);
+
+              // 마커 클릭 시에는 필터링 조건 없이 모든 디바이스를 조회
+              // 필터링은 클라이언트에서 DeviceCard 표시 시에만 적용
               const deviceParams = {
-                ...filterParams,
-                maxSupportConnection: filterParams.maxSupportConnection
-                  ? [filterParams.maxSupportConnection]
+                isOpeningNow: false,
+                // 필터링 조건 제거 - 모든 디바이스 조회
+                reviewRating: 0, // 필터링 제거
+                minPrice: null, // 필터링 제거
+                maxPrice: null, // 필터링 제거
+                dataCapacity: undefined, // 필터링 제거
+                is5G: undefined, // 필터링 제거
+                maxSupportConnection: undefined, // 필터링 제거
+                // dateRange는 유지 (대여 기간은 서버에서 필터링 필요)
+                rentalStartDate: filterParams.dateRange?.from
+                  ? filterParams.dateRange.from.toISOString().replace(/\.\d{3}Z$/, '')
+                  : undefined,
+                rentalEndDate: filterParams.dateRange?.to
+                  ? filterParams.dateRange.to.toISOString().replace(/\.\d{3}Z$/, '')
                   : undefined,
               };
               const devices = await fetchStoreDevices(store.id, deviceParams);
               safeDevices = Array.isArray(devices) ? devices : [];
-              console.log('🔍 개별 마커 클릭 시 디바이스 정보 조회:', {
+              console.log('🔍 개별 마커 클릭 시 디바이스 정보 조회 (필터링 없음):', {
                 storeId: store.id,
                 storeName: store.name,
                 deviceCount: safeDevices.length,
                 devices: safeDevices,
+                deviceParams,
               });
             }
           } else {
@@ -132,7 +147,33 @@ export const createStoreMarker = async (
           storeId: store.id,
         });
 
-        // DeviceCard 정보를 표시하기 위해 콜백 호출
+        // 디바이스 정보 상세 출력
+        if (safeDevices.length > 0) {
+          console.log('📱 디바이스 정보 상세:', {
+            storeId: store.id,
+            storeName: store.name,
+            totalDevices: safeDevices.length,
+            devices: safeDevices.map((device) => ({
+              storeDeviceId: device.storeDeviceId,
+              deviceName: device.deviceName,
+              dataCapacity: device.dataCapacity,
+              price: device.price,
+              leftCount: device.leftCount,
+              imageUrl: device.imageUrl,
+              dataType: device.dataType,
+              maxSupportConnection: device.maxSupportConnection,
+              reviewRating: device.reviewRating,
+            })),
+          });
+        } else {
+          console.log('📱 해당 조건에 맞는 디바이스가 없습니다:', {
+            storeId: store.id,
+            storeName: store.name,
+            filterParams,
+          });
+        }
+
+        // DeviceCard 정보를 표시하기 위해 콜백 호출 (디바이스가 없어도 호출)
         onStoreMarkerClick(safeDevices, storeDetail, store.id);
       } else {
         console.warn('🔍 onStoreMarkerClick이 제공되지 않음');
