@@ -23,7 +23,13 @@ export const useSelectedStore = (mapInstance?: kakao.maps.Map | null) => {
 
   const handleStoreMarkerClick = useCallback(
     (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
+      console.log('useSelectedStore - handleStoreMarkerClick 호출:', {
+        storeId,
+        devices: devices.length,
+      });
+
       if (storeId) {
+        console.log('useSelectedStore - selectedStoreId 설정:', storeId);
         setSelectedStoreId(storeId);
         localStorage.setItem('selected-store-id', storeId.toString());
       }

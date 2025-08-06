@@ -21,12 +21,20 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ dateRange, onChange }
   console.log('CalendarSection - dateRange.from:', dateRange?.from);
   console.log('CalendarSection - 현재 날짜:', new Date());
 
+  // 날짜가 선택되었는지 확인
+  const hasSelectedDates = dateRange?.from && dateRange?.to;
+
   return (
     <>
       <div className="font-body-semibold flex items-center gap-2 mt-2">
         <CalendarIcon size={20} className="text-[var(--main-5)]" />
-        날짜를 선택해 주세요
+        {hasSelectedDates ? '선택된 날짜' : '날짜를 선택해 주세요'}
       </div>
+      {hasSelectedDates && (
+        <div className="text-sm text-[var(--main-5)] mb-2">
+          {dateRange?.from?.toLocaleDateString()} ~ {dateRange?.to?.toLocaleDateString()}
+        </div>
+      )}
       <div className="w-full">
         <Calendar
           mode="range"

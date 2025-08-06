@@ -134,8 +134,16 @@ export default function RentalPage() {
   // 장소 마커 상태 관리
   const [placeMarker, setPlaceMarker] = useState<kakao.maps.CustomOverlay | null>(null);
 
-  const { selectedStore, selectedStoreId, handleMapClick, dispatchSelectedStore } =
-    useSelectedStore(mapInstance);
+  const {
+    selectedStore,
+    selectedStoreId,
+    handleStoreMarkerClick,
+    handleMapClick,
+    dispatchSelectedStore,
+  } = useSelectedStore(mapInstance);
+
+  // selectedStoreId 디버깅
+  console.log('RentalPage - selectedStoreId:', selectedStoreId);
 
   // 마커 클릭 핸들러 수정 - 하단 스와이퍼로 표시 및 확장 상태 관리
   const handleMarkerClick = useCallback(
@@ -143,6 +151,11 @@ export default function RentalPage() {
       console.log('🔍 RentalPage 마커 클릭 핸들러:', { storeId, devices: devices.length });
 
       if (devices.length > 0 && storeId) {
+        console.log('마커 클릭 - storeId 설정:', storeId);
+
+        // useSelectedStore의 handleStoreMarkerClick 호출하여 selectedStoreId 설정
+        handleStoreMarkerClick(devices, storeDetail, storeId);
+
         // 마커 확장/축소 토글
         const newExpanded = new Set(expandedMarkers);
         if (newExpanded.has(storeId)) {
@@ -153,14 +166,6 @@ export default function RentalPage() {
           newExpanded.add(storeId);
         }
         setExpandedMarkers(newExpanded);
-
-        // 선택된 스토어 정보 업데이트
-        dispatchSelectedStore({
-          type: 'SELECT_STORE',
-          devices: devices,
-          storeId: storeId,
-          storeDetail: storeDetail,
-        });
 
         // 마커 캐시에서 선택 상태 업데이트
         if (mapInstance) {
@@ -182,7 +187,7 @@ export default function RentalPage() {
         }
       }
     },
-    [dispatchSelectedStore, mapInstance, expandedMarkers],
+    [handleStoreMarkerClick, mapInstance, expandedMarkers],
   );
 
   // URL 파라미터 처리 완료 표시 (장소 마커 생성 후에만)

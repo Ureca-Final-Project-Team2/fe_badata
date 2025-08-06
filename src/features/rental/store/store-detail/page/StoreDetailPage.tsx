@@ -76,7 +76,16 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
     // 대여기간 정보가 있으면 저장
     if (startDate && endDate) {
       console.log('대여기간 설정:', { startDate, endDate });
-      setReservationDates({ startDate, endDate });
+      // 날짜 형식 검증
+      const fromDate = new Date(startDate + 'T00:00:00');
+      const toDate = new Date(endDate + 'T00:00:00');
+
+      if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
+        setReservationDates({ startDate, endDate });
+        console.log('유효한 날짜 형식:', { fromDate, toDate });
+      } else {
+        console.log('유효하지 않은 날짜 형식:', { startDate, endDate });
+      }
     } else {
       console.log('대여기간 정보 없음');
     }

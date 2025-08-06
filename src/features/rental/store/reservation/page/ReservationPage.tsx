@@ -39,11 +39,18 @@ export default function ReservationPage({ storeId, initialDateRange }: Reservati
   useEffect(() => {
     if (initialDateRange?.from && initialDateRange?.to) {
       console.log('초기 날짜 범위 설정:', initialDateRange);
+      // 날짜를 정확한 시간으로 설정 (00:00:00)
+      const fromDate = new Date(initialDateRange.from);
+      fromDate.setHours(0, 0, 0, 0);
+
+      const toDate = new Date(initialDateRange.to);
+      toDate.setHours(0, 0, 0, 0);
+
       dispatch({
         type: 'SET_DATE_RANGE',
         payload: {
-          from: initialDateRange.from,
-          to: initialDateRange.to,
+          from: fromDate,
+          to: toDate,
         },
       });
     }
