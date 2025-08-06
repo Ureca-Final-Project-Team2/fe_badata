@@ -159,9 +159,13 @@ async function executeApiByType(request: PendingApiRequest) {
     }
 
     case 'SOS_REQUEST': {
-      const { useCreateSosRequest } = await import('@/widgets/sos/model/mutations');
-      // SOS 요청은 별도 처리 필요
-      console.log('SOS 요청 처리:', data);
+      // SOS 요청 API 호출
+      const { sosMutations } = await import('@/widgets/sos/model/mutations');
+      const result = await sosMutations.requestSos(data as { storeId: number; message?: string });
+
+      if (!result.success) {
+        throw new Error(result.error || 'SOS 요청 전송에 실패했습니다.');
+      }
       break;
     }
 
