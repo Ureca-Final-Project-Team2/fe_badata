@@ -3,6 +3,7 @@ import Script from 'next/script';
 
 import Providers from '@/app/_providers';
 import FCMLoader from '@/components/FCMLoader';
+import { AuthModal } from '@/shared/ui/AuthModal';
 import { Toaster } from '@/shared/ui/Toaster';
 
 import './globals.css';
@@ -77,6 +78,7 @@ export default function RootLayout({
           <Toaster />
           <FCMLoader />
           {children}
+          <AuthModal />
         </Providers>
       </body>
     </html>

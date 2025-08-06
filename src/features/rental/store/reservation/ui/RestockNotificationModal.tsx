@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
+import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore';
+
 interface RestockNotificationModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -7,6 +10,9 @@ interface RestockNotificationModalProps {
   deviceName: string;
   totalCount: number; // 가맹점 보유 기기 수
   isSubmitting?: boolean;
+  storeDeviceId: number; // 스토어 디바이스 ID
+  desiredStartDate: string; // 원하는 시작 날짜
+  desiredEndDate: string; // 원하는 종료 날짜
 }
 
 const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
@@ -16,8 +22,13 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
   deviceName,
   totalCount,
   isSubmitting = false,
+  storeDeviceId,
+  desiredStartDate,
+  desiredEndDate,
 }) => {
   const [requestCount, setRequestCount] = useState(1);
+  const { isLoggedIn } = useAuthStore();
+  const { openAuthModal } = useAuthErrorStore();
 
   const handleIncrement = useCallback(() => {
     if (requestCount < totalCount) {
@@ -32,8 +43,39 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
   }, [requestCount]);
 
   const handleConfirm = useCallback(() => {
+    // 로그인하지 않은 경우 인증 모달 표시
+    if (!isLoggedIn) {
+      openAuthModal(
+        {
+          type: 'RESTOCK',
+          url: '/api/v1/restock',
+          method: 'POST',
+          data: {
+            storeDeviceId,
+            count: requestCount,
+            desiredStartDate,
+            desiredEndDate,
+          },
+        },
+        () => {
+          // 인증 모달이 닫힐 때 원래 모달도 닫기
+          handleClose();
+        },
+      );
+      return;
+    }
+
+    // 로그인된 경우 원래 로직 실행
     onConfirm(requestCount);
-  }, [onConfirm, requestCount]);
+  }, [
+    isLoggedIn,
+    openAuthModal,
+    requestCount,
+    onConfirm,
+    storeDeviceId,
+    desiredStartDate,
+    desiredEndDate,
+  ]);
 
   const handleClose = useCallback(() => {
     setRequestCount(1); // 모달 닫을 때 초기화
@@ -82,7 +124,7 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
             <div className="flex items-center justify-center gap-3">
               <button
                 type="button"
-                className={`w-8 h-8 rounded-lg bg-[var(--gray-light)] flex items-center justify-center font-title-semibold ${
+                className={`cursor-pointer w-8 h-8 rounded-lg bg-[var(--gray-light)] flex items-center justify-center font-title-semibold ${
                   requestCount <= 1 ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 onClick={handleDecrement}
@@ -98,7 +140,7 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
 
               <button
                 type="button"
-                className={`w-8 h-8 rounded-lg bg-[var(--gray-light)] flex items-center justify-center font-title-semibold ${
+                className={`cursor-pointer w-8 h-8 rounded-lg bg-[var(--gray-light)] flex items-center justify-center font-title-semibold ${
                   requestCount >= totalCount ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 onClick={handleIncrement}
@@ -118,7 +160,7 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
           <div className="flex gap-2">
             <button
               type="button"
-              className="flex-1 py-2.5 px-3 rounded-lg border border-[var(--gray)] text-[var(--gray-dark)] font-body-semibold hover:bg-[var(--gray-light)] transition-colors duration-200"
+              className="cursor-pointer flex-1 py-2.5 px-3 rounded-lg border border-[var(--gray)] text-[var(--gray-dark)] font-body-semibold hover:bg-[var(--gray-light)] transition-colors duration-200"
               onClick={handleClose}
               disabled={isSubmitting}
             >
@@ -126,7 +168,7 @@ const RestockNotificationModal: React.FC<RestockNotificationModalProps> = ({
             </button>
             <button
               type="button"
-              className={`flex-1 py-2.5 px-3 rounded-lg font-body-semibold transition-colors duration-200 ${
+              className={`cursor-pointer flex-1 py-2.5 px-3 rounded-lg font-body-semibold transition-colors duration-200 ${
                 isSubmitting
                   ? 'bg-[var(--gray)] text-[var(--white)] cursor-not-allowed'
                   : 'bg-[var(--main-5)] text-[var(--white)] hover:bg-[var(--main-4)]'
