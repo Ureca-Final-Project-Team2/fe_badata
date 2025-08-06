@@ -39,11 +39,19 @@ export function useStoreLikeHooks({
 
     try {
       // API 요청
-      await executeWithAuth(requestFn, `/api/v1/stores/${storeId}/like`, () => {
-        // AuthModal이 닫힐 때 이전 상태로 롤백
-        setLiked(previousState);
-        setIsLoading(false);
-      });
+      await executeWithAuth(
+        requestFn,
+        `/api/v1/stores/${storeId}/like`,
+        {
+          type: 'STORE_LIKE',
+          method: 'POST',
+        },
+        () => {
+          // AuthModal이 닫힐 때 이전 상태로 롤백
+          setLiked(previousState);
+          setIsLoading(false);
+        },
+      );
     } catch (error) {
       // API 요청 실패 시 이전 상태로 롤백
       setLiked(previousState);
