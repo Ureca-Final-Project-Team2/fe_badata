@@ -20,6 +20,8 @@ import { Switch } from '@/shared/ui/Switch/Switch';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
+
 const tabList = [
   { id: '전체', label: '전체', value: '전체' },
   { id: '데이터', label: '데이터', value: '데이터' },
@@ -178,7 +180,7 @@ export default function SalesHistoryPage() {
         <div className="pb-[96px]">
           {/* 로딩 상태 */}
           {(isLoading || showSkeleton) && (
-            <div className="px-4">
+            <div>
               <div className="grid grid-cols-2 gap-4">
                 {Array.from({ length: 6 }).map((_, index) => (
                   <TradePostCardSkeleton key={index} />
@@ -192,7 +194,7 @@ export default function SalesHistoryPage() {
 
           {/* 빈 상태 */}
           {!isLoading && !showSkeleton && !isError && isEmpty && (
-            <div className="px-4">
+            <div>
               <CenteredMessage>판매 내역이 없습니다.</CenteredMessage>
             </div>
           )}
@@ -201,13 +203,14 @@ export default function SalesHistoryPage() {
           {!isLoading && !showSkeleton && !isError && !isEmpty && (
             <>
               {data?.pages.map((page, i) => (
-                <div key={i} className="grid grid-cols-2 gap-4 px-4">
+                <div key={i} className="grid grid-cols-2 gap-4">
                   {page.content?.item.map((item) => (
                     <TradePostCard
                       key={item.postId}
-                      imageUrl={item.postImage || '/assets/trade-detail.jpg'}
+                      imageUrl={item.postImage || undefined}
                       title={item.title}
-                      partner={item.partner || '제휴처'}
+                      partner={item.partner || undefined}
+                      mobileCarrier={item.mobileCarrier as MobileCarrier}
                       price={item.price}
                       likeCount={item.postLikes}
                       isCompleted={item.isSold}
