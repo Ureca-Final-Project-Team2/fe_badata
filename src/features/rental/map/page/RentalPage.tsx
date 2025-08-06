@@ -633,14 +633,9 @@ export default function RentalPage() {
           // URL 파라미터가 없을 때 기존 헤더 사용
           <div className="max-w-[428px] px-4 pt-4 z-30">
             <div className="flex flex-row items-center gap-4">
-              <div className="flex-1 min-w-0 max-w-[calc(100%-40px)]">
+              <div className="flex-1 min-w-0 max-w-[calc(100%)]">
                 <SearchPosHeader search="" setSearch={() => {}} onSubmit={() => {}} />
               </div>
-              <FilterIcon
-                alt="필터 아이콘"
-                className="w-8 h-8 flex-shrink-0 cursor-pointer"
-                onClick={() => setFilterDrawerOpen(true)}
-              />
             </div>
           </div>
         )
@@ -652,11 +647,18 @@ export default function RentalPage() {
         </div>
       }
     >
-      <LocationDisplay
-        userAddress={userAddress}
-        isLoading={locationLoading || urlParamsLoading}
-        error={locationError}
-      />
+      <div className="flex items-center justify-between w-full px-4">
+        <LocationDisplay
+          userAddress={userAddress}
+          isLoading={locationLoading || urlParamsLoading}
+          error={locationError}
+        />
+        <FilterIcon
+          alt="필터 아이콘"
+          className="w-8 h-8 flex-shrink-0 cursor-pointer"
+          onClick={() => setFilterDrawerOpen(true)}
+        />
+      </div>
       <div className="w-full h-[calc(100vh-190px)]">
         <Suspense fallback={<MapLoadingFallback />}>
           <MapSection

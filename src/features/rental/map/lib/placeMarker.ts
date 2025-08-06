@@ -36,7 +36,7 @@ export const createPlaceMarker = (
     opacity: 1;
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: auto;
-    z-index: 30;
+    z-index: 100;
   `;
 
   // 요소들을 컨테이너에 추가
@@ -141,7 +141,7 @@ const createPlaceBubbleShape = (placeName: string): HTMLElement => {
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid ${backgroundColor};
-    z-index: 1000;
+    z-index: 10;
   `;
   bubbleElement.appendChild(tail);
 
@@ -157,7 +157,7 @@ const createPlaceBubbleShape = (placeName: string): HTMLElement => {
     border-left: 11px solid transparent;
     border-right: 11px solid transparent;
     border-top: 11px solid white;
-    z-index: 999;
+    z-index: 10;
   `;
   bubbleElement.appendChild(tailBorder);
 

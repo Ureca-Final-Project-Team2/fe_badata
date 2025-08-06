@@ -112,7 +112,7 @@ export const createClusterMarker = (
     background: ${style.outerGradient};
     border-radius: 50%;
     pointer-events: none;
-    z-index: 10;
+    z-index: 5;
   `;
 
   // 중간 그라데이션 레이어
@@ -127,7 +127,7 @@ export const createClusterMarker = (
     background: ${style.middleGradient};
     border-radius: 50%;
     pointer-events: none;
-    z-index: 20;
+    z-index: 15;
   `;
 
   // 중앙 마커
@@ -147,7 +147,7 @@ export const createClusterMarker = (
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 30;
+    z-index: 25;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(62, 159, 220, 0.15);
   `;
