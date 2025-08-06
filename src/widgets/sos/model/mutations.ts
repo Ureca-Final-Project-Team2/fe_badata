@@ -21,10 +21,12 @@ export const sosMutations = {
         success: true,
         message: response.data.message || 'SOS 요청이 성공적으로 전송되었습니다.',
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         success: false,
-        error: error.response?.data?.message || 'SOS 요청 전송에 실패했습니다.',
+        error:
+          (error as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+          'SOS 요청 전송에 실패했습니다.',
       };
     }
   },

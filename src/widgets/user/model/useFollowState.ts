@@ -24,8 +24,9 @@ export const useFollowState = (userId: number) => {
     try {
       await tradePostApis.postFollowToggle(userId);
       setIsFollowing((prev) => !prev);
-    } catch (err: any) {
-      if (err?.response?.status === 401) {
+    } catch (err) {
+      // err is expected to be an AxiosError or similar
+      if ((err as { response?: { status?: number } })?.response?.status === 401) {
         openAuthModal({
           type: 'FOLLOW',
           url: `/api/v1/users/${userId}/follow`,

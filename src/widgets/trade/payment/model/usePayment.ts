@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { AxiosError } from 'axios';
 
-import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { makeToast } from '@/shared/lib/makeToast';
 import { createPayment, verifyPayment } from '@/widgets/trade/payment/api/apis';
@@ -35,7 +34,6 @@ export function usePayment(
   const [isPaid, setIsPaid] = useState(false);
   const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
   const [usedCoin, setUsedCoin] = useState(0);
-  const { user, isLoggedIn } = useAuthStore();
   const { executeWithAuth } = useAuthRequiredRequest();
 
   /**
@@ -160,10 +158,22 @@ export function usePayment(
     };
 
     try {
-      await executeWithAuth(requestFn, `/api/v1/trades/order/${postId}`, () => {
-        // AuthModal이 닫힐 때 loading 상태 초기화
-        setLoading(false);
-      });
+      await executeWithAuth(
+        requestFn,
+        `/api/v1/trades/order/${postId}`,
+        {
+          type: 'TRADE_POST',
+          method: 'POST',
+          data: {
+            postId,
+            useCoin,
+          },
+        },
+        () => {
+          // AuthModal이 닫힐 때 loading 상태 초기화
+          setLoading(false);
+        },
+      );
     } catch (error) {
       // 에러는 이미 위에서 처리됨
       console.error('Payment failed:', error);
