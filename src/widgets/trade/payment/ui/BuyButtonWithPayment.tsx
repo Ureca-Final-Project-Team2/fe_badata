@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
 import { useCoinQuery } from '@/entities/user';
+import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore';
 import { CoinPaymentModal } from '@/shared/ui/CoinPaymentModal';
 import { usePayment } from '@/widgets/trade/payment/model/usePayment';
 import { DetailLikeButton } from '@/widgets/trade/ui/DetailLikeButton';
@@ -74,6 +76,7 @@ export default function BuyButtonWithPayment({
   isSold = false,
   onPaymentSuccess,
 }: BuyButtonWithPaymentProps) {
+  const { user } = useAuthStore();
   const {
     data: coinData,
     isLoading: isCoinLoading,
@@ -82,12 +85,20 @@ export default function BuyButtonWithPayment({
   } = useCoinQuery();
   const { loading, isPaid, handlePayment, isCoinModalOpen, openCoinModal, closeCoinModal } =
     usePayment(postId, title, price, onPaymentSuccess);
+  const { openAuthModal } = useAuthErrorStore();
 
   const handleBuyClick = () => {
-    // 코인 데이터 에러 시 재시도
-    if (isCoinError) {
-      refetchCoin();
+    if (!user) {
+      openAuthModal({
+        type: 'PURCHASE',
+        url: `/api/v1/trades/order/${postId}`,
+        method: 'POST',
+        data: { postId, useCoin: 0 },
+      });
+      return;
     }
+
+    if (isCoinError) refetchCoin();
     openCoinModal();
   };
 

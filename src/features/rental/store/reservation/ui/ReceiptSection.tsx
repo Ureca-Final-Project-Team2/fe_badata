@@ -121,7 +121,7 @@ const ReceiptSection: React.FC<ReceiptSectionProps> = ({
             처리 중...
           </div>
         ) : (
-          '결제'
+          '예약'
         )}
       </RegisterButton>
     </div>

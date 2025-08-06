@@ -30,7 +30,7 @@ interface Props {
 
 export default function GifticonDetailPage({ postUserId, post, postType, sellerName }: Props) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const { isFollowing, setIsFollowing } = useFollowState(postUserId);
+  const { isFollowing, toggleFollow } = useFollowState(postUserId);
   const { share } = useShareHooks();
   const { isPaymentModalOpen, usedCoin, coinData, handlePaymentSuccess, closeModal } =
     usePaymentReceipt();
@@ -97,7 +97,7 @@ export default function GifticonDetailPage({ postUserId, post, postType, sellerN
               sellerId={postUserId}
               sellerName={sellerName}
               isFollowing={isFollowing ?? false}
-              onFollowChange={() => setIsFollowing(!isFollowing)}
+              onFollowChange={toggleFollow}
             />
           </div>
         </div>

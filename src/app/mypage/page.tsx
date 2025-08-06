@@ -4,10 +4,10 @@ import { lazy, Suspense } from 'react';
 
 import Image from 'next/image';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserInfoQuery } from '@/entities/user/model/queries';
 import { useUserCoinQuery } from '@/features/mypage/coin-history/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
-import { BottomNav } from '@/shared/ui/BottomNav';
 import { Header } from '@/shared/ui/Header';
 
 // Lazy loaded components for performance optimization
@@ -66,12 +66,14 @@ const ProfileLoadingFallback = () => (
 const SosDrawerLoadingFallback = () => null; // SOS Drawer는 필요할 때만 표시되므로 빈 fallback
 
 export default function MyPage() {
+  const { isLoggedIn } = useAuthStore();
   const { data: coinData } = useUserCoinQuery();
   const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
 
   // 모든 사용자 정보가 로딩된 후에만 프로필 카드 렌더링
-  const isProfileReady =
-    userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined;
+  const isProfileReady = isLoggedIn
+    ? userInfo && userInfo.nickName && userInfo.profileImage && userInfo.days !== undefined
+    : true; // 로그인하지 않은 경우 항상 true
 
   return (
     <div className="relative w-full min-h-screen bg-[var(--main-2)]">

@@ -17,7 +17,9 @@ import {
   useValidateGifticonImageMutation,
 } from '@/features/trade/register/gifticon/model/mutations';
 import GuideItem from '@/features/trade/register/gifticon/ui/GuideItem';
+import { END_POINTS } from '@/shared/api/endpoints';
 import { PATH } from '@/shared/config/path';
+import { useAuthRequiredRequest } from '@/shared/hooks/useAuthRequiredRequest';
 import { toRawPrice } from '@/shared/lib/formatPrice';
 import { makeToast } from '@/shared/lib/makeToast';
 import { InputField } from '@/shared/ui/InputField';
@@ -38,6 +40,7 @@ export function TradeGifticonRegisterForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { mutate } = usePostTradeGifticonMutation();
   const { mutate: validateImage, isPending: isValidating } = useValidateGifticonImageMutation();
+  const { executeWithAuth } = useAuthRequiredRequest();
   const router = useRouter();
 
   useEffect(() => {
@@ -94,10 +97,11 @@ export function TradeGifticonRegisterForm() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!state.category || !state.form.price || !state.imageFile) return;
 
     dispatch({ type: 'SET_SUBMITTING', value: true });
+
     const basePayload: Omit<PostTradeGifticonRequest, 'comment'> = {
       title: state.ocrResult.title,
       partner: state.ocrResult.partner,
@@ -113,17 +117,41 @@ export function TradeGifticonRegisterForm() {
         ? { ...basePayload, comment: state.form.comment }
         : basePayload;
 
-    mutate(payload, {
-      onSuccess: () => {
-        makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
-        dispatch({ type: 'RESET' });
-        router.push(`${PATH.TRADE.MAIN}?page=gifticon`);
-      },
-      onError: () => {
-        makeToast('게시물 등록에 실패했습니다.', 'warning');
-      },
-      onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
-    });
+    const requestFn = () =>
+      new Promise((resolve, reject) => {
+        mutate(payload, {
+          onSuccess: (data) => {
+            makeToast('게시물이 성공적으로 등록되었습니다!', 'success');
+            dispatch({ type: 'RESET' });
+            router.push(`${PATH.TRADE.MAIN}`);
+            resolve(data);
+          },
+          onError: (error) => {
+            makeToast('게시물 등록에 실패했습니다.', 'warning');
+            reject(error);
+          },
+          onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
+        });
+      });
+
+    try {
+      await executeWithAuth(
+        requestFn,
+        `${END_POINTS.TRADES.REGISTER_GIFTICON}`,
+        {
+          type: 'TRADE_POST',
+          method: 'POST',
+          data: payload,
+        },
+        () => {
+          // AuthModal이 닫힐 때 isSubmitting 상태 초기화
+          dispatch({ type: 'SET_SUBMITTING', value: false });
+        },
+      );
+    } catch (error) {
+      // 에러는 이미 위에서 처리됨
+      console.error('Gifticon registration failed:', error);
+    }
   };
 
   const isFormValid = !!(state.category && state.form.price && state.imageFile);

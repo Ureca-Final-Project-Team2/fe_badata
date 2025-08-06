@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { motion } from 'framer-motion';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserDataAmount } from '@/widgets/data-usage/model/queries';
 
 // Bubble 컴포넌트
@@ -41,6 +42,7 @@ function Bubble({ delay = 0 }: { delay?: number }) {
 }
 
 const DataUsageCardSection = () => {
+  const { isLoggedIn } = useAuthStore();
   const { data } = useUserDataAmount();
   const [animationStarted, setAnimationStarted] = useState(false);
 
@@ -49,8 +51,8 @@ const DataUsageCardSection = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const used = data?.content.dataAmount ?? 0;
-  const total = data?.content.totalDataAmount ?? 1; // 0이면 나눗셈에서 NaN 될 수 있으니 기본값 1
+  const used = isLoggedIn ? (data?.content.dataAmount ?? 0) : 0;
+  const total = isLoggedIn ? (data?.content.totalDataAmount ?? 1) : 1; // 0이면 나눗셈에서 NaN 될 수 있으니 기본값 1
 
   const percentage = Math.round((used / total) * 100);
   // 파도 높이 계산 (10% ~ 90% 범위)

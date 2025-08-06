@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import KakaoCallbackContent from '@/app/auth/kakao/callback/KakaoCallbackContent';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { Header } from '@/shared/ui/Header';
 
 // 로딩 컴포넌트를 별도로 분리하여 재사용성 향상
 function LoadingSpinner() {
@@ -17,7 +18,7 @@ function LoadingSpinner() {
 
 export default function KakaoCallbackPage() {
   return (
-    <BaseLayout>
+    <BaseLayout header={<Header />} paddingX={false}>
       <Suspense fallback={<LoadingSpinner />}>
         <KakaoCallbackContent />
       </Suspense>
