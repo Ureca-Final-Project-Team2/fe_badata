@@ -35,7 +35,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
             : (placeholder ?? '')}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0 z-[200]" align="start">
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 z-[200]" align="start">
         <Calendar mode="range" selected={value} onSelect={onChange} initialFocus required={false} />
       </PopoverContent>
     </Popover>
