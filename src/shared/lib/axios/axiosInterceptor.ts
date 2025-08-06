@@ -10,17 +10,25 @@ import type { ApiResponse, ErrorResponse } from '@/shared/lib/axios/responseType
 import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
 export const applyInterceptors = (instance: AxiosInstance): void => {
-  instance.interceptors.request.use((config) => {
-    if (typeof window !== 'undefined') {
-      // authStore에서 토큰을 가져오기
-      const token = useAuthStore.getState().accessToken;
+  // Request Interceptor: 모든 요청에 토큰 추가
+  instance.interceptors.request.use(
+    (config) => {
+      if (typeof window !== 'undefined') {
+        // authStore에서 토큰을 가져오기
+        const token = useAuthStore.getState().accessToken;
 
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
       }
-    }
-    return config;
-  });
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    },
+  );
+
+  // Response Interceptor: 응답 처리 (401 에러 처리 제거)
   instance.interceptors.response.use(
     <T>(response: AxiosResponse<ApiResponse<T>>): T | AxiosResponse<ApiResponse<T>> => {
       // 카카오 로그인 API와 팔로우 API, 이미지 검증 API, sales API, coin API, purchases API, 검색 API는 응답 전체를 반환
@@ -33,7 +41,9 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
         response.config.url?.includes(END_POINTS.MYPAGE.COIN_HISTORY) ||
         response.config.url?.includes(END_POINTS.MYPAGE.PURCHASES_HISTORY) ||
         response.config.url?.includes(END_POINTS.POSITION.POSITION) ||
-        response.config.url?.includes('/trades/posts?query=')
+        response.config.url?.includes('/trades/posts?query=') ||
+        response.config.url?.includes(END_POINTS.SOS.REQUEST) ||
+        response.config.url?.includes(END_POINTS.SOS.RESPOND)
       ) {
         return response;
       }
@@ -51,6 +61,19 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
       return content as T;
     },
     (error: AxiosError<ErrorResponse>) => {
+      // 401 에러는 useAuthRequiredRequest에서 사전에 처리하므로
+      // 여기서는 일반적인 에러 처리만 수행
+      console.log('🔍 Axios Interceptor 에러 처리:', {
+        status: error.response?.status,
+        url: error.config?.url,
+      });
+
+      // 401 에러가 여기까지 온 경우는 예상치 못한 상황이므로 로그만 남기고 처리
+      if (error.response?.status === 401) {
+        console.warn('⚠️ 예상치 못한 401 에러 - useAuthRequiredRequest에서 사전 처리되어야 함');
+      }
+
+      // 다른 에러들은 기존 핸들러로 처리
       return handleAPIError(error);
     },
   );

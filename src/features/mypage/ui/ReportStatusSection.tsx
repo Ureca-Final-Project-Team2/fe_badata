@@ -2,15 +2,16 @@
 
 import Link from 'next/link';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useReportStatusQuery } from '@/features/mypage/report-status/model/queries';
 
 export const ReportStatusSection = () => {
+  const { isLoggedIn } = useAuthStore();
   const { data } = useReportStatusQuery();
 
-  const questionCount = data?.questionCount ?? 0;
-  const answerCount = data?.answerCount ?? 0;
-  const completeCount = data?.completeCount ?? 0;
-
+  const questionCount = isLoggedIn ? (data?.questionCount ?? 0) : 0;
+  const answerCount = isLoggedIn ? (data?.answerCount ?? 0) : 0;
+  const completeCount = isLoggedIn ? (data?.completeCount ?? 0) : 0;
 
   const statusList = [
     { count: questionCount, label: '신고 접수' },
@@ -29,10 +30,7 @@ export const ReportStatusSection = () => {
 
       <section className="grid grid-cols-3 gap-2 text-center">
         {statusList.map(({ count, label }) => (
-          <div
-            key={label}
-            className="bg-[var(--main-1)] rounded-xl p-4 flex flex-col items-center"
-          >
+          <div key={label} className="bg-[var(--main-1)] rounded-xl p-4 flex flex-col items-center">
             <div className="font-body-semibold">{count}</div>
             <div className="font-label-regular mt-1">{label}</div>
           </div>

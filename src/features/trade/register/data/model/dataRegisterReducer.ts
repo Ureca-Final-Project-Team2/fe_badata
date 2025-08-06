@@ -5,6 +5,7 @@ export interface State {
     title: string;
     deadLine: string;
     capacity: string;
+    capacityUnit: 'GB' | 'MB';
     price: string;
     comment: string;
     mobileCarrier: MobileCarrier;
@@ -23,6 +24,7 @@ export const initialState: State = {
     title: '',
     deadLine: '',
     capacity: '',
+    capacityUnit: 'MB',
     price: '',
     comment: '',
     mobileCarrier: 'UPLUS',
