@@ -1,4 +1,4 @@
-import { COIN_SOURCE_CONFIG, formatDate, getSourceText } from '../lib/constants';
+import { COIN_SOURCE_CONFIG, formatDate } from '../lib/constants';
 
 import type { CoinSource } from '@/features/mypage/coin-history/lib/constants';
 import type { CoinHistoryItem as CoinHistoryItemType } from '@/features/mypage/coin-history/lib/types';
@@ -8,10 +8,14 @@ interface CoinHistoryItemProps {
 }
 
 export function CoinHistoryItem({ item }: CoinHistoryItemProps) {
-  const isPositive = COIN_SOURCE_CONFIG[item.coinSource as CoinSource]?.isPositive;
+  const isValidCoinSource = (source: string): source is CoinSource =>
+    Object.keys(COIN_SOURCE_CONFIG).includes(source);
+
+  const source = isValidCoinSource(item.coinSource) ? item.coinSource : 'REVIEW_REWARD'; // fallback
+  const { isPositive, text: sourceText } = COIN_SOURCE_CONFIG[source];
+
   const displayAmount = isPositive ? `+${item.usedCoin}` : `-${Math.abs(item.usedCoin)}`;
   const amountColor = isPositive ? 'text-[var(--main-5)]' : 'text-[var(--red)]';
-  const sourceText = getSourceText(item.coinSource as CoinSource);
   const displayDate = formatDate(item.createdAt);
   const totalCoinText = item.totalCoin !== null ? `전체 ${item.totalCoin} 코인` : '';
 

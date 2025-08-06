@@ -2,8 +2,8 @@ export const COIN_HISTORY_DEFAULT_SIZE = 10;
 
 export const COIN_SOURCE_CONFIG = {
   REVIEW_REWARD: {
-    text: '📝 리뷰 보상',
-    icon: '/images/coin.png',
+    text: '🖊️ 리뷰 보상',
+    icon: '🖊️',
     isPositive: true,
   },
   SOS_REWARD: {
