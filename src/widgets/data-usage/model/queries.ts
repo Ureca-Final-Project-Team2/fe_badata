@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getDataUsage } from '@/widgets/data-usage/api/apis';
 
-import type { DataUsageResponse } from '@/widgets/data-usage/types';
+import type { DataUsageResponse } from '@/widgets/data-usage/lib/types';
 
 export const useUserDataAmount = () => {
   return useQuery<DataUsageResponse>({

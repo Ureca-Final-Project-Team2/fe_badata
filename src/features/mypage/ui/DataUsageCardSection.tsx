@@ -209,8 +209,8 @@ const DataUsageCardSection = () => {
           {/* 중앙 데이터 표시 */}
           <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
             <div className="text-center">
-              <div className="font-body-semibold text-[var(--black)]">{used}GB</div>
-              <div className="font-small-regular text-[var(--gray-mid)] mt-0.5">/ {total}GB</div>
+              <div className="font-body-semibold text-[var(--black)]">{used}MB</div>
+              <div className="font-small-regular text-[var(--gray-mid)] mt-0.5">/ {total}MB</div>
             </div>
           </div>
         </div>
