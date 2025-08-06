@@ -16,7 +16,6 @@ export const SosNotificationHandler = () => {
   const { mutate: respond } = useSosRespondMutation();
   const currentUser = useAuthStore((s) => s.user);
 
-  // 응답 처리
   const handleDataTransfer = async (sosId: number, isAccepted: boolean) => {
     try {
       const transferAmount = 100;
@@ -53,33 +52,28 @@ export const SosNotificationHandler = () => {
     }
   };
 
-  // SSE 메시지 처리
   useSseSosListener((rawData: string) => {
     const clean = rawData.replace(/^data:\s*/, '').trim();
 
-    // 중복 메시지 방지
+    // 중복 방지
     if (clean === lastSseMessage) {
-      console.log('⚠️ 중복 메시지 → 무시됨:', clean);
+      console.log('⚠️ 중복 메시지 무시:', clean);
       return;
     }
     lastSseMessage = clean;
 
-    // 문자열 메시지 예외 처리
+    // 문자열 메시지 처리
     if (!clean.includes('{')) {
-      console.log('⚠️ JSON 아님 → 문자열 메시지 분기 진입:', clean);
+      const lastRequesterId = localStorage.getItem('lastSosRequesterId');
 
-      const { lastRequestedSosId } = useSosStore.getState();
-      const lastUserId = Number(localStorage.getItem('lastSosRequestTime') ?? '0');
+      const isRequesterMyself = String(currentUser?.userId) === lastRequesterId;
 
-      // 현재 유저가 마지막 요청자라면 무시
-      if (Date.now() - lastUserId < 3000) {
-        console.log('ℹ️ 요청자 본인으로 추정됨 → 문자열 토스트 무시');
+      if (isRequesterMyself) {
+        console.log('ℹ️ 문자열 알림: 요청자 본인 → 무시');
         return;
       }
 
-      if (/sos|요청|도움/i.test(clean)) {
-        console.log('🚨 SOS 문자열 포함 → 토스트 띄우기 시도');
-
+      if (/누군가.*요청|sos|도움/i.test(clean)) {
         const tempSosId = Date.now();
         setSosId(tempSosId);
 
@@ -90,14 +84,8 @@ export const SosNotificationHandler = () => {
             position: 'top-center',
             duration: 10000,
             actions: [
-              {
-                label: '수락 (100MB)',
-                onClick: () => handleDataTransfer(tempSosId, true),
-              },
-              {
-                label: '거절',
-                onClick: () => handleDataTransfer(tempSosId, false),
-              },
+              { label: '수락 (100MB)', onClick: () => handleDataTransfer(tempSosId, true) },
+              { label: '거절', onClick: () => handleDataTransfer(tempSosId, false) },
             ],
           },
         );
@@ -106,14 +94,15 @@ export const SosNotificationHandler = () => {
       return;
     }
 
-    // JSON 처리
+    // JSON 메시지 처리
     try {
       const data = JSON.parse(clean);
 
       switch (data.type) {
         case 'REQUEST':
+        case 'SOS_REQUEST': {
           if (data.requesterId === currentUser?.userId) {
-            console.log('ℹ️ 요청자 본인 → 알림 무시');
+            console.log('ℹ️ 요청자 본인 → JSON 토스트 무시');
             return;
           }
 
@@ -126,20 +115,15 @@ export const SosNotificationHandler = () => {
               position: 'top-center',
               duration: 10000,
               actions: [
-                {
-                  label: '수락 (100MB)',
-                  onClick: () => handleDataTransfer(data.sosId, true),
-                },
-                {
-                  label: '거절',
-                  onClick: () => handleDataTransfer(data.sosId, false),
-                },
+                { label: '수락 (100MB)', onClick: () => handleDataTransfer(data.sosId, true) },
+                { label: '거절', onClick: () => handleDataTransfer(data.sosId, false) },
               ],
             },
           );
           break;
+        }
 
-        case 'RESPOND':
+        case 'RESPOND': {
           if (data.isSuccess) {
             const amount = data.transferredData || 100;
             makeCustomToast(
@@ -154,8 +138,10 @@ export const SosNotificationHandler = () => {
             });
           }
           break;
+        }
 
         default:
+          console.log('ℹ️ 알 수 없는 메시지 type:', data.type);
       }
     } catch (e) {
       console.error('❌ JSON 파싱 실패:', e);

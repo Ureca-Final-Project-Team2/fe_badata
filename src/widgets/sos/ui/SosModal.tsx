@@ -1,5 +1,7 @@
 'use client';
 
+import { useAuthStore } from '@/entities/auth/model/authStore';
+
 import { useSosRequestMutation } from '../model/queries';
 import { useSosStore } from '../model/sosStore';
 
@@ -13,6 +15,7 @@ interface SosModalProps {
 export function SosModal({ isOpen, onClose }: SosModalProps) {
   const setSosId = useSosStore((s) => s.setSosId);
   const setLastRequestedSosId = useSosStore((s) => s.setLastRequestedSosId);
+  const currentUser = useAuthStore((s) => s.user);
   const { mutate: sendSosRequest, isPending } = useSosRequestMutation();
 
   const handleConfirm = () => {
@@ -20,12 +23,16 @@ export function SosModal({ isOpen, onClose }: SosModalProps) {
 
     sendSosRequest(undefined, {
       onSuccess: (response) => {
-        setSosId(response.sosId);
-        setLastRequestedSosId(Date.now()); // 현재 시간을 lastRequestedSosId로 설정
-        
-        // localStorage에도 저장 (더 안정적인 구분을 위해)
+        const sosId = response.sosId;
+        setSosId(sosId);
+        setLastRequestedSosId(Date.now());
+
+        // 👉 요청자 정보 로컬 저장 (다른 유저 토스트 방지용)
+        if (currentUser?.userId) {
+          localStorage.setItem('lastSosRequesterId', String(currentUser.userId));
+        }
         localStorage.setItem('lastSosRequestTime', Date.now().toString());
-        
+
         makeCustomToast('🚨 SOS 요청이 전송되었습니다!', 'success', {
           position: 'top-center',
           duration: 4000,
