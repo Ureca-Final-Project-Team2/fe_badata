@@ -25,17 +25,23 @@ export const makeCustomToast = (
   if (options?.dismissAll) toast.dismiss();
 
   toast.custom(
-    () => (
-      <div className="flex flex-col items-start w-[350px] gap-4 px-6 py-5 rounded-xl bg-[var(--black)]/80 shadow-md">
-        <div className="flex items-center gap-4">
-          {variant === 'success' ? (
-            <CheckCircle2 color="var(--green)" />
-          ) : (
-            <XCircle color="var(--red)" />
-          )}
-          <span className="font-body-semibold text-[var(--white)] whitespace-pre-line">
-            {message}
-          </span>
+    (t) => (
+      <div className="flex flex-col items-start w-[350px] mx-auto gap-4 px-6 py-5 rounded-xl bg-[var(--black)]/80 shadow-md">
+        <div className="flex items-start justify-between w-full gap-4">
+          <div className="flex items-center gap-3">
+            {variant === 'success' ? (
+              <button onClick={() => toast.dismiss(t)} aria-label="닫기">
+                <CheckCircle2 color="var(--green)" />
+              </button>
+            ) : (
+              <button onClick={() => toast.dismiss(t)} aria-label="닫기">
+                <XCircle color="var(--red)" />
+              </button>
+            )}
+            <span className="font-body-semibold text-[var(--white)] whitespace-pre-line">
+              {message}
+            </span>
+          </div>
         </div>
 
         {options?.actions && (
