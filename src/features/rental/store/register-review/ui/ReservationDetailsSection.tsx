@@ -1,4 +1,3 @@
-
 import type { ReservationDetails } from '@/features/rental/store/register-review/lib/types';
 
 interface ReservationDetailsSectionProps {
@@ -21,7 +20,7 @@ export default function ReservationDetailsSection({
               src={reservationDetails.storeImageUrl}
               width={48}
               height={48}
-              className="object-cover"
+              className="object-cover w-full h-full"
               alt="가맹점이미지"
             />
           </div>
