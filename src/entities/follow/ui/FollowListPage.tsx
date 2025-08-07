@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 
-import { getFollowTypeText, useDeleteFollow, useFollows } from '@/entities/follow';
+import { useDeleteFollow, useFollows } from '@/entities/follow';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
 import { Profile } from '@/shared/ui/Profile';
+import { Spinner } from '@/shared/ui/Spinner';
 
 import type { FollowType } from '@/entities/follow/lib/types';
 
@@ -20,16 +21,13 @@ export default function FollowListPage({ followType, title, emptyMessage }: Foll
   const { followItems, isLoading, isError } = useFollows(followType);
   const deleteFollowMutation = useDeleteFollow();
 
-  if (isLoading) return <div>로딩중...</div>;
+  if (isLoading) return <Spinner className="mt-10" content="로딩중..." />;
   if (isError) return <div>에러가 발생했습니다.</div>;
 
   const handleRemove = async (id: number) => {
     try {
       await deleteFollowMutation.mutateAsync(id);
-    } catch (error) {
-      const followTypeText = getFollowTypeText(followType);
-      console.error(`${followTypeText} 삭제 실패:`, error);
-    }
+    } catch {}
   };
 
   return (
@@ -52,4 +50,4 @@ export default function FollowListPage({ followType, title, emptyMessage }: Foll
       </div>
     </BaseLayout>
   );
-} 
+}
