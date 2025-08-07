@@ -29,7 +29,6 @@ export const useKakaoMapHooks = (
     // 클러스터 클릭이 활성화되어 있으면 맵 재초기화 건너뛰기
     const isClusterClick = getClusterClickActive();
     if (isClusterClick) {
-      console.log('🔍 클러스터 클릭 활성화 - 맵 재초기화 건너뜀');
       return;
     }
 
@@ -74,7 +73,6 @@ export const useKakaoMapHooks = (
     // 클러스터 클릭 상태 재확인
     const isClusterClick = getClusterClickActive();
     if (isClusterClick) {
-      console.log('🔍 스크립트 로드 중 클러스터 클릭 활성화 - 맵 초기화 중단');
       return;
     }
 
@@ -131,10 +129,7 @@ export const useKakaoMapHooks = (
 
   // 클린업 함수
   useEffect(() => {
-    return () => {
-      // 맵 인스턴스는 자동으로 정리됨
-      console.log('🗺️ 맵 훅 클린업 완료');
-    };
+    return () => {};
   }, []);
 
   return { mapRef, map, isMapReady };

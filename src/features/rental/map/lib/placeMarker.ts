@@ -8,11 +8,6 @@ export const createPlaceMarker = (
   placeName: string,
   onClick?: () => void,
 ): kakao.maps.CustomOverlay => {
-  console.log('📍 장소 마커 생성:', {
-    placeName,
-    position: { lat: position.getLat(), lng: position.getLng() },
-  });
-
   // 마커 컨테이너 생성
   const markerContainer = document.createElement('div');
   markerContainer.className = 'place-marker';

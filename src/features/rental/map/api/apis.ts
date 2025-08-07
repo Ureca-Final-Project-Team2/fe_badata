@@ -29,8 +29,6 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
       processedParams.maxSupportConnection = Number(processedParams.maxSupportConnection);
     }
 
-    console.log('🔍 fetchStores API 호출 파라미터:', processedParams);
-
     const response = await axiosInstance.get(endpoint, {
       params: processedParams,
     });
@@ -66,22 +64,12 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
     if (zoomLevel && zoomLevel <= 3) {
       // 줌 레벨 3 이하에서는 클러스터 데이터를 완전히 제거
       const filteredStores = mappedStores.filter((store) => !store.isCluster);
-      console.log('🔍 줌 레벨 3 이하 - 클러스터 데이터 필터링:', {
-        total: mappedStores.length,
-        filtered: filteredStores.length,
-        clusters: mappedStores.filter((s) => s.isCluster).length,
-        zoomLevel,
-      });
+
       return filteredStores;
     } else if (zoomLevel && zoomLevel >= 4) {
       // 줌 레벨 4 이상에서는 개별 스토어 데이터를 제거하고 클러스터만 표시
       const filteredStores = mappedStores.filter((store) => store.isCluster);
-      console.log('🔍 줌 레벨 4 이상 - 개별 스토어 데이터 필터링:', {
-        total: mappedStores.length,
-        filtered: filteredStores.length,
-        individual: mappedStores.filter((s) => !s.isCluster).length,
-        zoomLevel,
-      });
+
       return filteredStores;
     }
 
@@ -107,8 +95,6 @@ export const fetchStoreDevices = async (
     if (processedParams.maxSupportConnection !== undefined) {
       processedParams.maxSupportConnection = Number(processedParams.maxSupportConnection);
     }
-
-    console.log('🔍 fetchStoreDevices API 호출 파라미터:', processedParams);
 
     // 개별 스토어의 디바이스를 조회할 때는 STORES.ALLSTORE 엔드포인트 사용
     const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {

@@ -50,8 +50,6 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
 
-    console.log('URL 파라미터:', { urlTab, startDate, endDate });
-
     // tab 파라미터가 있으면 해당 탭으로 설정
     if (urlTab) {
       // 'reservation'을 '예약'으로 매핑
@@ -64,30 +62,19 @@ export default function StoreDetailPage({ storeId }: StoreDetailPageProps) {
       const mappedTab = tabMapping[urlTab] || (urlTab as TabValue);
 
       if (STORE_DETAIL_TABS.some((t) => t.value === mappedTab)) {
-        console.log('탭 설정:', mappedTab);
         setTab(mappedTab);
-      } else {
-        console.log('유효하지 않은 탭:', urlTab);
       }
-    } else {
-      console.log('tab 파라미터가 없음, 기본 탭 사용');
     }
 
     // 대여기간 정보가 있으면 저장
     if (startDate && endDate) {
-      console.log('대여기간 설정:', { startDate, endDate });
       // 날짜 형식 검증
       const fromDate = new Date(startDate + 'T00:00:00');
       const toDate = new Date(endDate + 'T00:00:00');
 
       if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
         setReservationDates({ startDate, endDate });
-        console.log('유효한 날짜 형식:', { fromDate, toDate });
-      } else {
-        console.log('유효하지 않은 날짜 형식:', { startDate, endDate });
       }
-    } else {
-      console.log('대여기간 정보 없음');
     }
   }, [searchParams]);
 

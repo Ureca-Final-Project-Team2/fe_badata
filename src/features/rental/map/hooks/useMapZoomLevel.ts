@@ -26,39 +26,24 @@ export const useMapZoomLevel = (
 
     const listener = async () => {
       const newZoom = map.getLevel();
-      const currentCenter = map.getCenter();
       const isClusterClick = getClusterClickActive();
-
-      console.log('🔍 줌 레벨 변경 감지 및 통합 처리 시작:', {
-        newZoom,
-        currentCenter: {
-          lat: currentCenter.getLat(),
-          lng: currentCenter.getLng(),
-        },
-        isClusterClick,
-      });
 
       setZoomLevel(newZoom);
       setZoomChanged(true);
 
       // 클러스터 클릭으로 인한 줌 변경이면 짧은 지연 후 API 호출
       if (isClusterClick) {
-        console.log('🔍 클러스터 클릭으로 인한 줌 변경 - 지연 후 API 호출');
-        // 클러스터 클릭 후 줌인 완료를 기다린 후 API 호출
         setTimeout(async () => {
           try {
             // 1. 캐시 클리어
             const cache = markerCaches.get(map);
             if (cache) {
-              console.log('🧹 클러스터 클릭 후 캐시 클리어');
               cache.clearAll();
             }
 
             // 2. 현재 지도 정보 가져오기
             const bounds = map.getBounds();
             const center = map.getCenter();
-
-            console.log('🌐 클러스터 클릭 후 API 호출 시작');
 
             // 3. 직접 API 호출 (줌 레벨 반영)
             const apiParams: FetchStoresParams = {
@@ -95,11 +80,8 @@ export const useMapZoomLevel = (
 
             const newStores = await fetchStores(apiParams);
 
-            console.log('✅ 클러스터 클릭 후 API 호출 완료:', newStores.length, '개 stores');
-
             // 4. 직접 마커 렌더링
             if (newStores.length > 0) {
-              console.log('🎯 클러스터 클릭 후 직접 마커 렌더링 시작');
               await debouncedRenderMarkers(
                 map,
                 newStores,
@@ -107,9 +89,6 @@ export const useMapZoomLevel = (
                 onStoreMarkerClick,
                 undefined,
               );
-              console.log('✅ 클러스터 클릭 후 마커 렌더링 완료');
-            } else {
-              console.log('ℹ️ 클러스터 클릭 후 새로운 stores가 없음');
             }
 
             // 5. 줌 변경 콜백 호출
@@ -119,8 +98,6 @@ export const useMapZoomLevel = (
                 lng: center.getLng(),
               });
             }
-
-            console.log('🎯 클러스터 클릭 후 줌 변경 처리 완료');
           } catch (error) {
             console.error('❌ 클러스터 클릭 후 줌 변경 처리 중 오류:', error);
           }
@@ -132,15 +109,12 @@ export const useMapZoomLevel = (
         // 1. 캐시 클리어
         const cache = markerCaches.get(map);
         if (cache) {
-          console.log('🧹 줌 변경으로 인한 캐시 클리어');
           cache.clearAll();
         }
 
         // 2. 현재 지도 정보 가져오기
         const bounds = map.getBounds();
         const center = map.getCenter();
-
-        console.log('🌐 줌 변경으로 인한 직접 API 호출 시작');
 
         // 3. 직접 API 호출 (줌 레벨 반영)
         const apiParams: FetchStoresParams = {
@@ -177,15 +151,9 @@ export const useMapZoomLevel = (
 
         const newStores = await fetchStores(apiParams);
 
-        console.log('✅ 줌 변경으로 인한 API 호출 완료:', newStores.length, '개 stores');
-
         // 4. 직접 마커 렌더링
         if (newStores.length > 0) {
-          console.log('🎯 줌 변경으로 인한 직접 마커 렌더링 시작');
           await debouncedRenderMarkers(map, newStores, filterState, onStoreMarkerClick, undefined);
-          console.log('✅ 줌 변경으로 인한 마커 렌더링 완료');
-        } else {
-          console.log('ℹ️ 줌 변경 후 새로운 stores가 없음');
         }
 
         // 5. 줌 변경 콜백 호출
@@ -195,8 +163,6 @@ export const useMapZoomLevel = (
             lng: center.getLng(),
           });
         }
-
-        console.log('🎯 줌 변경 통합 처리 완료');
       } catch (error) {
         console.error('❌ 줌 변경 처리 중 오류:', error);
       }

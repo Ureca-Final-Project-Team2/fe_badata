@@ -14,11 +14,8 @@ export const createClusterMarker = (
 
   // 줌 레벨 3 이하에서는 클러스터 마커를 생성하지 않음
   if (zoomLevel < 4) {
-    console.log('🔍 줌 레벨 3 이하 - 클러스터 마커 생성 건너뜀');
     throw new Error('줌 레벨 3 이하에서는 클러스터 마커를 생성할 수 없습니다.');
   }
-
-  console.log('🔍 줌 레벨 4 이상 - 바다 파동 클러스터 마커 생성 시작');
 
   // 값에 따른 색상과 크기 결정 (main 색상 사용)
   const getClusterStyle = (count: number) => {
@@ -180,22 +177,11 @@ export const createClusterMarker = (
 
   // 클러스터 마커 클릭 핸들러
   clusterMarkerContainer.addEventListener('click', (e) => {
-    console.log('🔍 클러스터 마커 클릭 이벤트 발생!');
     e.stopPropagation();
     e.preventDefault();
 
     // 클러스터 클릭 플래그를 즉시 설정
     isClusterClickActive = true;
-    console.log('🔍 클러스터 클릭 플래그 즉시 설정됨:', isClusterClickActive);
-
-    console.log(
-      '🔍 바다 파동 클러스터 마커 클릭:',
-      store.id,
-      'leftDeviceCount:',
-      totalLeftCount,
-      '카테고리:',
-      style.category,
-    );
 
     // 클러스터 클릭 시 줌인
     const currentZoomLevel = map.getLevel();
@@ -205,20 +191,9 @@ export const createClusterMarker = (
     map.setCenter(position);
     map.setLevel(targetZoomLevel);
 
-    console.log('🔍 클러스터 클릭 후 지도 이동:', {
-      center: {
-        lat: position.getLat(),
-        lng: position.getLng(),
-      },
-      currentZoomLevel,
-      targetZoomLevel,
-      zoomLevelChanged: targetZoomLevel !== currentZoomLevel,
-    });
-
     // 줌인 완료 후 API 호출을 위해 플래그 해제 (짧은 지연)
     setTimeout(() => {
       isClusterClickActive = false;
-      console.log('🔍 클러스터 클릭 플래그 해제됨 (API 호출 허용)');
 
       // 줌 레벨을 다시 설정하여 이벤트 트리거
       const currentLevel = map.getLevel();
@@ -236,16 +211,6 @@ export const createClusterMarker = (
 
   // 지도에 오버레이 추가
   marker.setMap(map);
-  console.log(
-    '🔍 바다 파동 클러스터 마커 지도에 추가 완료:',
-    store.id,
-    'leftDeviceCount:',
-    totalLeftCount,
-    '카테고리:',
-    style.category,
-    '크기:',
-    style.size,
-  );
 
   return marker;
 };

@@ -179,9 +179,12 @@ export default function RentalPage() {
   // 마커 클릭 핸들러 수정 - 하단 스와이퍼로 표시 및 확장 상태 관리
   const handleMarkerClick = useCallback(
     async (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
-      console.log('🎯 handleMarkerClick 호출됨:', {
-        devicesLength: devices.length,
+      console.log('🎯 마커 클릭 핸들러 시작:', { storeId, devicesLength: devices.length });
+
+      // 디버깅: 마커 클릭 로그
+      console.log('🎯 마커 클릭 핸들러 호출:', {
         storeId,
+        devicesLength: devices.length,
         storeDetail: !!storeDetail,
         devices: devices.map((d) => ({
           storeDeviceId: d.storeDeviceId,
@@ -193,16 +196,35 @@ export default function RentalPage() {
 
       // 디바이스가 없어도 storeId가 있으면 처리 (마커 유지 및 DeviceCard 표시)
       if (storeId) {
+        console.log('🎯 handleStoreMarkerClick 호출 전:', {
+          storeId,
+          devicesLength: devices.length,
+        });
         handleStoreMarkerClick(devices, storeDetail, storeId);
+        console.log('🎯 handleStoreMarkerClick 호출 후');
 
+        // 확장 상태 업데이트 (안정성 개선)
         const newExpanded = new Set(expandedMarkers);
-        if (newExpanded.has(storeId)) {
+        const isCurrentlyExpanded = newExpanded.has(storeId);
+
+        if (isCurrentlyExpanded) {
+          // 이미 확장된 상태면 축소
           newExpanded.delete(storeId);
+          console.log('🎯 마커 축소:', storeId);
         } else {
+          // 확장되지 않은 상태면 확장 (다른 마커는 모두 축소)
           newExpanded.clear();
           newExpanded.add(storeId);
+          console.log('🎯 마커 확장:', storeId);
         }
+
+        // 상태 업데이트를 즉시 수행
         setExpandedMarkers(newExpanded);
+
+        // localStorage에도 즉시 저장
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('expanded-markers', JSON.stringify(Array.from(newExpanded)));
+        }
 
         if (mapInstance && storeId) {
           try {
@@ -227,18 +249,24 @@ export default function RentalPage() {
           }
         }
 
-        // 선택 상태 마커 스타일 업데이트
+        // 선택 상태 마커 스타일 업데이트 (깜빡임 방지)
         if (mapInstance) {
           try {
             const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
             const cache = markerCaches.get(mapInstance);
             if (cache) {
-              // 모든 마커의 선택 상태 해제
+              console.log('🎯 마커 선택 상태 업데이트:', {
+                storeId,
+                newExpanded: Array.from(newExpanded),
+              });
+
+              // 모든 마커의 선택 상태를 먼저 해제
               cache.clearAllSelections();
 
               // 새로 선택된 마커만 선택 상태로 변경
               if (newExpanded.has(storeId)) {
                 cache.updateMarkerSelection(storeId, true);
+                console.log('🎯 마커 선택 상태 설정 완료:', storeId);
               }
             }
           } catch (error) {
@@ -272,6 +300,12 @@ export default function RentalPage() {
   // 지도 클릭 핸들러
   const handleMapClickWrapper = useCallback(
     async (event?: MouseEvent) => {
+      console.log('📍 지도 클릭 이벤트:', {
+        hasEvent: !!event,
+        target: event?.target,
+        targetClass: (event?.target as Element)?.className,
+      });
+
       // 마커 클릭으로 인한 지도 클릭인지 확인
       if (
         event &&
@@ -326,21 +360,8 @@ export default function RentalPage() {
     async (map: kakao.maps.Map) => {
       setMapInstance(map);
 
-      // 디바운싱된 로그 출력
-      const timeoutId = setTimeout(() => {
-        console.log('📍 handleMapReady 호출:', {
-          selectedLat,
-          selectedLng,
-          selectedPlaceName,
-          hasProcessedUrlParams,
-          savedUrlParams,
-          placeMarkerProcessed: placeMarkerProcessedRef.current,
-        });
-      }, 100);
-
       // 이미 처리된 경우 무시
       if (placeMarkerProcessedRef.current) {
-        console.log('📍 이미 처리된 상태, 무시');
         return;
       }
 
@@ -358,8 +379,6 @@ export default function RentalPage() {
       };
 
       if (paramsToUse.lat && paramsToUse.lng && paramsToUse.placeName) {
-        console.log('📍 장소 마커 생성 조건 만족');
-
         // 👉 클러스터 클릭 플래그가 true면 장소 마커는 생성하되 카메라 이동은 하지 않음
         const isClusterClick = getClusterClickActive();
         if (!isClusterClick && !cameraMoveProcessedRef.current) {
@@ -373,23 +392,17 @@ export default function RentalPage() {
             map.setCenter(newPosition);
             map.setLevel(4);
             cameraMoveProcessedRef.current = true;
-            console.log('📍 검색 위치로 카메라 이동 완료 (한 번만 실행)');
 
             const newPlaceMarker = createPlaceMarker(
               map,
               newPosition,
               paramsToUse.placeName,
-              () => {
-                console.log('📍 장소 마커 클릭:', paramsToUse.placeName);
-              },
+              () => {},
             );
 
-            console.log('📍 RentalPage에서 장소 마커 생성 완료:', paramsToUse.placeName);
             setPlaceMarker(newPlaceMarker);
           }
         } else {
-          console.log('📍 클러스터 클릭 중이므로 장소 카메라 이동 생략');
-
           // 클러스터 클릭 중에도 장소 마커는 생성
           const lat = parseFloat(paramsToUse.lat);
           const lng = parseFloat(paramsToUse.lng);
@@ -401,12 +414,9 @@ export default function RentalPage() {
               map,
               newPosition,
               paramsToUse.placeName,
-              () => {
-                console.log('📍 장소 마커 클릭:', paramsToUse.placeName);
-              },
+              () => {},
             );
 
-            console.log('📍 클러스터 클릭 중 장소 마커 생성 완료:', paramsToUse.placeName);
             setPlaceMarker(newPlaceMarker);
           }
         }
@@ -414,16 +424,9 @@ export default function RentalPage() {
         setHasProcessedUrlParams(true); // 장소 마커 처리 완료
         placeMarkerProcessedRef.current = true;
       } else {
-        console.log('📍 장소 마커 생성 조건 불만족:', {
-          hasSelectedLat: !!paramsToUse.lat,
-          hasSelectedLng: !!paramsToUse.lng,
-          hasSelectedPlaceName: !!paramsToUse.placeName,
-        });
         // 조건이 불만족해도 처리 완료 표시
         placeMarkerProcessedRef.current = true;
       }
-
-      return () => clearTimeout(timeoutId);
     },
     [savedUrlParams, setHasProcessedUrlParams],
   );
@@ -525,40 +528,28 @@ export default function RentalPage() {
     [selectedStore.selectedDevices, filterState],
   );
 
-  // 디버그: DeviceCard 표시 상태 확인
-  useEffect(() => {
-    console.log('🔍 DeviceCard 디버그:', {
-      selectedDevicesLength: selectedStore.selectedDevices.length,
-      filteredDevicesLength: filteredDevicesList.length,
-      selectedStoreId: selectedStore.selectedStoreId,
-      hasSelectedDevices: selectedStore.selectedDevices.length > 0,
-      hasFilteredDevices: filteredDevicesList.length > 0,
-    });
-  }, [selectedStore.selectedDevices, filteredDevicesList, selectedStore.selectedStoreId]);
-
   // 필터링된 디바이스 업데이트 - 필터링된 결과가 없어도 원본 디바이스 유지
   useEffect(() => {
     if (!selectedStore.selectedDevices.length) return;
 
-    // 필터링된 결과가 있고, 원본과 다른 경우에만 업데이트
-    if (
-      filteredDevicesList.length > 0 &&
-      filteredDevicesList.length !== selectedStore.selectedDevices.length
-    ) {
+    // 필터링된 결과가 있으면 필터링된 결과 사용, 없으면 원본 디바이스 유지
+    if (filteredDevicesList.length > 0) {
       dispatchSelectedStore({
-        type: 'SELECT_STORE',
-        devices: filteredDevicesList,
-        storeId: selectedStore.selectedStoreId ?? 0,
-        storeDetail: selectedStore.selectedStoreDetail,
+        type: 'UPDATE_FILTERED_DEVICES',
+        filteredDevices: filteredDevicesList,
+      });
+    } else {
+      // 필터링된 결과가 없으면 원본 디바이스로 복원
+      dispatchSelectedStore({
+        type: 'UPDATE_FILTERED_DEVICES',
+        filteredDevices: selectedStore.originalDevices,
       });
     }
-    // 필터링된 결과가 없어도 원본 디바이스는 유지 (DeviceCard 표시용)
   }, [
     filterState,
     filteredDevicesList,
     selectedStore.selectedDevices.length,
-    selectedStore.selectedStoreDetail,
-    selectedStore.selectedStoreId,
+    selectedStore.originalDevices,
     dispatchSelectedStore,
   ]);
 
@@ -567,22 +558,6 @@ export default function RentalPage() {
     const value = !!(selectedLat && selectedLng && !hasProcessedUrlParams);
     return value;
   }, [selectedLat, selectedLng, hasProcessedUrlParams]);
-
-  // 디바운싱된 로그 출력 (개발 환경에서만)
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      const timeoutId = setTimeout(() => {
-        console.log('📍 RentalPage hasUrlParams 계산:', {
-          selectedLat,
-          selectedLng,
-          hasProcessedUrlParams,
-          hasUrlParamsValue,
-        });
-      }, 100);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [selectedLat, selectedLng, hasProcessedUrlParams, hasUrlParamsValue]);
 
   return (
     <BaseLayout

@@ -77,8 +77,7 @@ export const useDeleteAddressHistory = () => {
 
       return { previousData };
     },
-    onSuccess: (data) => {
-      console.log('주소 이력 삭제 성공:', data);
+    onSuccess: () => {
       // 성공 시 서버 데이터로 다시 조회
       const queryKey = getQueryKey();
       queryClient.invalidateQueries({ queryKey });

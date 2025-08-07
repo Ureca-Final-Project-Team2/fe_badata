@@ -17,9 +17,7 @@ export const useGetAddressHistoryInfinite = (size: number, sort: string = 'lastU
       lastCallRef.current = currentCall;
 
       if (process.env.NODE_ENV === 'development') {
-        const timeoutId = setTimeout(() => {
-          console.log('useGetAddressHistoryInfinite 호출:', currentCall);
-        }, 50);
+        const timeoutId = setTimeout(() => {}, 50);
 
         return () => clearTimeout(timeoutId);
       }

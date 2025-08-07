@@ -36,12 +36,8 @@ export const useFetchStoresHooks = (
     // 클러스터 클릭이 활성화되어 있으면 API 호출 건너뛰기
     const isClusterClick = getClusterClickActive();
     if (isClusterClick) {
-      console.log('🔍 클러스터 클릭 활성화 - API 호출 건너뜀');
-
       // 클러스터 클릭 시에는 짧은 지연 후 API 호출 허용
-      setTimeout(() => {
-        console.log('🔍 클러스터 클릭 후 API 호출 허용');
-      }, 200); // 200ms 후 API 호출 허용
+      setTimeout(() => {}, 200); // 200ms 후 API 호출 허용
 
       return;
     }
@@ -91,7 +87,6 @@ export const useFetchStoresHooks = (
           // 클러스터 클릭 상태 재확인
           const isClusterClick = getClusterClickActive();
           if (isClusterClick) {
-            console.log('🔍 디바운스 중 클러스터 클릭 활성화 - API 호출 건너뜀');
             return;
           }
 
@@ -103,19 +98,6 @@ export const useFetchStoresHooks = (
           lastZoomLevelRef.current = zoomLevel;
 
           const mergedParams = mapFilterStateToApiParams(newBounds, filterState, zoomLevel);
-
-          // 디버그: mergedParams 내용 확인
-          console.log('🔍 mergedParams 내용:', mergedParams);
-          console.log(
-            '🔍 dataCapacity 타입:',
-            typeof mergedParams.dataCapacity,
-            mergedParams.dataCapacity,
-          );
-          console.log(
-            '🔍 maxSupportConnection 타입:',
-            typeof mergedParams.maxSupportConnection,
-            mergedParams.maxSupportConnection,
-          );
 
           // URL 파라미터 스트링 생성 및 출력
           const urlParams = new URLSearchParams();
@@ -135,10 +117,6 @@ export const useFetchStoresHooks = (
 
           const stores = await fetchStores(mergedParams);
 
-          // 디버그: 실제 API 호출 직전 파라미터 확인
-          console.log('🔍 fetchStores 호출 직전 mergedParams:', mergedParams);
-
-          // stores가 실제로 변경되었는지 확인
           const storesChanged = JSON.stringify(stores) !== JSON.stringify(lastStoresRef.current);
           if (storesChanged) {
             setStores(stores);

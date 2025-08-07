@@ -54,9 +54,7 @@ export const useSearchPos = () => {
     (place: PlaceSearchResult) => {
       createAddressMutation.mutate(place, {
         onSuccess: () => {
-          console.log('주소 이력 생성 성공 후 refetch 호출');
           setTimeout(() => {
-            console.log('refetch 호출');
             queryClient.invalidateQueries({ queryKey: ['addressHistory', 5, sort] });
             refetch();
           }, 500);
