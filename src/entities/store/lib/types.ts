@@ -11,9 +11,9 @@ export interface FetchStoresParams {
   reviewRating?: number;
   minPrice?: number | null;
   maxPrice?: number | null;
-  dataCapacity?: number[];
+  dataCapacity?: number;
   is5G?: boolean;
-  maxSupportConnection?: number | number[];
+  maxSupportConnection?: number;
 }
 
 export interface FetchStoreDevicesParams extends FetchStoresParams {

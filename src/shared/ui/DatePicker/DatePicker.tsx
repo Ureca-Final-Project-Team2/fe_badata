@@ -25,7 +25,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
         <Button
           variant="outline"
           className={cn(
-            'w-full justify-start text-left font-normal text-[var(--main-5)] hover:text-[var(--main-5)]',
+            'cursor-pointer w-full justify-start text-left font-normal text-[var(--main-5)] hover:text-[var(--main-5)]',
             !value?.from && 'text-muted-foreground',
           )}
         >
@@ -35,8 +35,15 @@ export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeho
             : (placeholder ?? '')}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0 z-[200]" align="start">
-        <Calendar mode="range" selected={value} onSelect={onChange} initialFocus required={false} />
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 z-[200]" align="start">
+        <Calendar
+          mode="range"
+          selected={value}
+          onSelect={onChange}
+          initialFocus
+          required={false}
+          disabled={(date) => date <= new Date(new Date().setHours(0, 0, 0, 0))}
+        />
       </PopoverContent>
     </Popover>
   );

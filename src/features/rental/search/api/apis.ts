@@ -34,8 +34,6 @@ export const createAddressHistory = async (
   // 로그인 상태 확인 (accessToken이 없으면 로컬 스토리지 사용)
 
   if (!isLoggedIn()) {
-    console.log('로그인되지 않은 사용자. 로컬 스토리지에 저장합니다.');
-
     // 로컬 스토리지에 저장
     const addressId = addLocalAddressHistory(
       data.address_name,
@@ -104,8 +102,6 @@ export const getAddressHistoryList = async (
   const accessToken = localStorage.getItem('accessToken');
 
   if (!accessToken) {
-    console.log('로그인되지 않은 사용자. 로컬 스토리지에서 조회합니다.');
-
     // 로컬 스토리지에서 조회 (최대 5개)
     const localData = getLocalAddressHistoryPaginated(page, Math.min(size, 5), sort);
 
@@ -131,8 +127,6 @@ export const deleteAddressHistory = async (addressId: number): Promise<AddressHi
   const accessToken = localStorage.getItem('accessToken');
 
   if (!accessToken) {
-    console.log('로그인되지 않은 사용자. 로컬 스토리지에서 삭제합니다.');
-
     // 로컬 스토리지에서 삭제
     const deletedId = deleteLocalAddressHistory(addressId);
 

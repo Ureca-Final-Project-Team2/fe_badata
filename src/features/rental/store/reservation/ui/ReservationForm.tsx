@@ -1,12 +1,13 @@
 import React from 'react';
 
+import CalendarSection from '@/features/rental/store/reservation/ui/CalendarSection';
+import DeviceSelectSection from '@/features/rental/store/reservation/ui/DeviceSelectSection';
+import NoticeSection from '@/features/rental/store/reservation/ui/NoticeSection';
+import {
+  convertFromReducerDateRange,
+  convertToReducerDateRange,
+} from '@/features/rental/store/reservation/utils';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
-
-import { convertFromReducerDateRange, convertToReducerDateRange } from '../utils';
-
-import CalendarSection from './CalendarSection';
-import DeviceSelectSection from './DeviceSelectSection';
-import NoticeSection from './NoticeSection';
 
 interface ReservationFormProps {
   dateRange: { from: Date | null; to: Date | null } | null;
@@ -41,12 +42,6 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   onReservationClick,
   isLoadingDevices = false,
 }) => {
-  console.log('ReservationForm - 받은 dateRange:', dateRange);
-  console.log(
-    'ReservationForm - CalendarSection에 전달할 dateRange:',
-    convertToReducerDateRange(dateRange),
-  );
-
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* 날짜 선택 */}

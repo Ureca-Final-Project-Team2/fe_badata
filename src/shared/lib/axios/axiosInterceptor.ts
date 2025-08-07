@@ -61,13 +61,6 @@ export const applyInterceptors = (instance: AxiosInstance): void => {
       return content as T;
     },
     (error: AxiosError<ErrorResponse>) => {
-      // 401 에러는 useAuthRequiredRequest에서 사전에 처리하므로
-      // 여기서는 일반적인 에러 처리만 수행
-      console.log('🔍 Axios Interceptor 에러 처리:', {
-        status: error.response?.status,
-        url: error.config?.url,
-      });
-
       // 401 에러가 여기까지 온 경우는 예상치 못한 상황이므로 로그만 남기고 처리
       if (error.response?.status === 401) {
         console.warn('⚠️ 예상치 못한 401 에러 - useAuthRequiredRequest에서 사전 처리되어야 함');

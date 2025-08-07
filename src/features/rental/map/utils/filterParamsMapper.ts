@@ -16,17 +16,10 @@ export const mapFilterStateToApiParams = (
 ): Record<string, unknown> => {
   const mergedParams: Record<string, unknown> = { ...bounds };
 
-  console.log('🔍 mapFilterStateToApiParams 호출:', { bounds, filterState, zoomLevel });
-
   // zoomLevel 추가
   if (zoomLevel !== undefined) {
     mergedParams.zoomLevel = zoomLevel;
-    console.log('✅ zoomLevel 추가됨:', zoomLevel);
-  } else {
-    console.log('⚠️ zoomLevel이 undefined입니다');
   }
-
-  console.log('🔍 zoomLevel 추가 후 mergedParams:', mergedParams);
 
   // filterState가 없으면 기본 필터 값들을 추가하지 않음 (초기 로드)
   if (!filterState) {
@@ -60,9 +53,9 @@ export const mapFilterStateToApiParams = (
   }
   // 일일 데이터 제공량 (dataAmount → dataCapacity)
   if (filterState.dataAmount && filterState.dataAmount !== '무제한') {
-    mergedParams.dataCapacity = [parseInt(filterState.dataAmount.replace('GB', ''))];
+    mergedParams.dataCapacity = parseInt(filterState.dataAmount.replace('GB', ''));
   } else if (filterState.dataAmount === '무제한') {
-    mergedParams.dataCapacity = [999]; // 백엔드와 협의된 값 사용
+    mergedParams.dataCapacity = 999; // 백엔드와 협의된 값 사용
   }
   // 데이터 타입 (dataType → is5G)
   if (filterState.dataType === '5G') {
@@ -70,9 +63,9 @@ export const mapFilterStateToApiParams = (
   } else if (filterState.dataType === '4G/LTE') {
     mergedParams.is5G = false;
   }
-  // 최대 접속 가능 기기 수 (number[])
+  // 최대 접속 가능 기기 수 (number)
   if (filterState.maxSupportConnection) {
-    mergedParams.maxSupportConnection = [filterState.maxSupportConnection];
+    mergedParams.maxSupportConnection = filterState.maxSupportConnection;
   }
   // 날짜
   if (filterState.dateRange?.from) {

@@ -19,9 +19,9 @@ const FlatTabButton = ({ label, isActive, disabled, onClick, buttonRef }: FlatTa
     onClick={onClick}
     disabled={disabled}
     className={cn(
-      'flex-1 h-[30px] flex items-center justify-center min-w-0 transition-all duration-200 relative z-10',
+      'cursor-pointer flex-1 h-[30px] flex items-center justify-center min-w-0 transition-all duration-200 relative z-10',
       isActive
-        ? 'text-[var(--gray-dark)] font-body-semibold'
+        ? 'text-[var(--gray-dark)] font-label-semibold'
         : 'text-[var(--gray-mid)] font-title-regular hover:text-[var(--main-4)]',
     )}
     type="button"
@@ -34,7 +34,7 @@ const FlatTabButton = ({ label, isActive, disabled, onClick, buttonRef }: FlatTa
 export const FlatTab = forwardRef<HTMLDivElement, FlatTabProps>(
   ({ className, items, defaultValue, value, onValueChange, ...props }, ref) => {
     const { currentValue, activeItem, handleValueChange } = useFlatTab(
-      items, 
+      items,
       value,
       defaultValue,
       onValueChange,

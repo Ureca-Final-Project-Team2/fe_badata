@@ -43,10 +43,10 @@ const SearchResultItem = React.memo(
 
     return (
       <div
-        className="p-3 border-b border-[var(--gray-light)] cursor-pointer hover:bg-[var(--gray-light)] transition-colors"
+        className="border-b border-[var(--gray-light)] cursor-pointer transition-colors"
         onClick={handleClick}
       >
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3 py-3">
           <MapPin className="w-4 h-4 text-[var(--gray-dark)] mt-0.5 flex-shrink-0" />
           <div className="flex-1 min-w-0">
             {/* 장소명 */}

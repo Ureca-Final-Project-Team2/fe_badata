@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 
+import ReviewRegisterPageContent from '@/features/rental/store/register-review/_client/ReviewRegisterPageContent';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
-
-import ReviewRegisterPageContent from '../_client/ReviewRegisterPageContent';
 
 export default function RegisterReviewPage() {
   return (

@@ -56,48 +56,43 @@ export const createDropletMarker = (
 
   // 클릭 이벤트 추가
   if (onClick) {
-    console.log('💧 마커 클릭 이벤트 리스너 등록:', { storeId, storeName });
+    let isProcessing = false; // 중복 클릭 방지 플래그
 
     markerContainer.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation(); // 이벤트 버블링 방지 및 다른 리스너 실행 방지
 
-      console.log('💧 물방울 마커 클릭됨:', {
-        storeId,
-        storeName,
-        deviceCount,
-        isLiked,
-        isSelected,
-      });
+      // 중복 클릭 방지
+      if (isProcessing) {
+        return;
+      }
+
+      isProcessing = true;
 
       try {
         // 클릭 시 즉시 말풍선으로 변환
-        console.log('💧 마커 변환 시작 - 물방울 → 말풍선');
         dropletElement.style.opacity = '0';
         dropletElement.style.transform = 'translateX(-50%) scale(0.8)';
         bubbleElement.style.opacity = '1';
         bubbleElement.style.transform = 'translateX(-50%) scale(1)';
         bubbleElement.style.pointerEvents = 'auto';
-        console.log('💧 마커 변환 완료');
 
-        // localStorage에 확장된 마커 상태 저장
-        const expandedMarkers = JSON.parse(localStorage.getItem('expanded-markers') || '[]');
-        if (!expandedMarkers.includes(storeId)) {
-          expandedMarkers.push(storeId);
-          localStorage.setItem('expanded-markers', JSON.stringify(expandedMarkers));
-          console.log('💧 확장된 마커 상태 저장:', storeId);
-        }
+        // localStorage 저장은 RentalPage.tsx에서 처리 (중복 방지)
 
-        console.log('💧 onClick 함수 호출 시작');
+        // 비동기 처리 완료 후 플래그 리셋
+        setTimeout(() => {
+          isProcessing = false;
+        }, 1000);
+
         onClick();
-        console.log('💧 onClick 함수 호출 완료');
       } catch (error) {
-        console.error('💧 onClick 함수 실행 중 오류:', error);
+        console.error('onClick 함수 실행 중 오류:', error);
+        isProcessing = false;
       }
     });
   } else {
-    console.warn('💧 onClick 함수가 제공되지 않음 - storeId:', storeId);
+    console.warn('onClick 함수가 제공되지 않음 - storeId:', storeId);
   }
 
   // CustomOverlay 생성
@@ -176,11 +171,6 @@ const createDropletShape = (
 
   const displayText = deviceCount.toString();
   numberElement.textContent = displayText;
-
-  console.log('🔍 마커 텍스트 설정:', {
-    deviceCount,
-    displayText,
-  });
 
   dropletElement.appendChild(numberElement);
   return dropletElement;
@@ -294,13 +284,6 @@ export const updateDropletMarker = (
   const markerContainer = overlay.getContent() as HTMLElement;
   if (!markerContainer) return;
 
-  console.log('🔍 마커 업데이트:', {
-    isSelected,
-    storeName,
-    deviceCount,
-    isLiked,
-  });
-
   // 물방울 요소와 말풍선 요소 찾기
   const dropletElement = markerContainer.querySelector(
     '.droplet-marker > div:first-child',
@@ -328,6 +311,25 @@ export const updateDropletMarker = (
       bubbleElement.style.opacity = '0';
       bubbleElement.style.transform = 'translateX(-50%) scale(0.8)';
       bubbleElement.style.pointerEvents = 'none';
+    }
+
+    // 물방울 크기 업데이트 (선택 상태에 따라)
+    const size = isSelected ? 'large' : 'small';
+    const sizeStyles = {
+      small: { width: '30px', height: '30px', fontSize: '16px' },
+      large: { width: '40px', height: '40px', fontSize: '20px' },
+    };
+
+    if (!isSelected) {
+      // 선택 해제 시 물방울 크기를 작게 변경
+      dropletElement.style.width = sizeStyles[size].width;
+      dropletElement.style.height = sizeStyles[size].height;
+
+      // 숫자 요소 크기도 업데이트
+      const numberElement = dropletElement.querySelector('span');
+      if (numberElement) {
+        numberElement.style.fontSize = sizeStyles[size].fontSize;
+      }
     }
   }
 };

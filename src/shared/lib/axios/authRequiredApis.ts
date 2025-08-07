@@ -45,7 +45,8 @@ export const AUTH_REQUIRED_APIS = [
 
 // 로그인이 필요한 API인지 확인하는 함수
 export const isAuthRequiredApi = (url: string): boolean => {
-  return AUTH_REQUIRED_APIS.some((api) => url.includes(api));
+  const urlPath = url.split('?')[0];
+  return AUTH_REQUIRED_APIS.some((api) => urlPath === api || urlPath.startsWith(api + '/'));
 };
 
 // 동적 경로를 포함한 로그인 필요 API 패턴

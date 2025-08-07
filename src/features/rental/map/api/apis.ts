@@ -17,8 +17,20 @@ import type {
 export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> => {
   try {
     const endpoint = END_POINTS.STORES.ALLDEVICE();
+
+    // 파라미터를 명시적으로 처리하여 배열 형태로 전송되지 않도록 함
+    const processedParams = { ...params };
+
+    // dataCapacity와 maxSupportConnection이 배열로 전송되지 않도록 보장
+    if (processedParams.dataCapacity !== undefined) {
+      processedParams.dataCapacity = Number(processedParams.dataCapacity);
+    }
+    if (processedParams.maxSupportConnection !== undefined) {
+      processedParams.maxSupportConnection = Number(processedParams.maxSupportConnection);
+    }
+
     const response = await axiosInstance.get(endpoint, {
-      params,
+      params: processedParams,
     });
     // API 응답 구조 확인 및 처리
     let stores: Record<string, unknown>[] = [];
@@ -52,22 +64,12 @@ export const fetchStores = async (params: FetchStoresParams): Promise<Store[]> =
     if (zoomLevel && zoomLevel <= 3) {
       // 줌 레벨 3 이하에서는 클러스터 데이터를 완전히 제거
       const filteredStores = mappedStores.filter((store) => !store.isCluster);
-      console.log('🔍 줌 레벨 3 이하 - 클러스터 데이터 필터링:', {
-        total: mappedStores.length,
-        filtered: filteredStores.length,
-        clusters: mappedStores.filter((s) => s.isCluster).length,
-        zoomLevel,
-      });
+
       return filteredStores;
     } else if (zoomLevel && zoomLevel >= 4) {
       // 줌 레벨 4 이상에서는 개별 스토어 데이터를 제거하고 클러스터만 표시
       const filteredStores = mappedStores.filter((store) => store.isCluster);
-      console.log('🔍 줌 레벨 4 이상 - 개별 스토어 데이터 필터링:', {
-        total: mappedStores.length,
-        filtered: filteredStores.length,
-        individual: mappedStores.filter((s) => !s.isCluster).length,
-        zoomLevel,
-      });
+
       return filteredStores;
     }
 
@@ -86,12 +88,17 @@ export const fetchStoreDevices = async (
   params: FetchStoreDevicesParams,
 ): Promise<StoreDevice[]> => {
   try {
+    // 파라미터를 명시적으로 처리하여 배열 형태로 전송되지 않도록 함
+    const processedParams = { ...params };
+
+    // maxSupportConnection이 배열로 전송되지 않도록 보장
+    if (processedParams.maxSupportConnection !== undefined) {
+      processedParams.maxSupportConnection = Number(processedParams.maxSupportConnection);
+    }
+
     // 개별 스토어의 디바이스를 조회할 때는 STORES.ALLSTORE 엔드포인트 사용
     const response = await axiosInstance.get(END_POINTS.STORES.ALLSTORE(storeId), {
-      params: {
-        ...params,
-        // storeId는 URL 경로에 포함되므로 params에서 제외
-      },
+      params: processedParams,
     });
 
     return Array.isArray(response) ? response : [];

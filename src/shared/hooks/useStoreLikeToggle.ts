@@ -39,12 +39,10 @@ export const useStoreLikeToggle = ({
 
       // ✅ 중복 요청 방지 체크들
       if (isRequestInProgressRef.current) {
-        console.log('🚫 이미 요청이 진행 중입니다.');
         return;
       }
 
       if (isLoading) {
-        console.log('🚫 로딩 중입니다.');
         return;
       }
 
@@ -67,12 +65,8 @@ export const useStoreLikeToggle = ({
         setLiked(newLikedState);
         updateMarkerLikeStatus(storeId, newLikedState);
 
-        console.log('🔄 가맹점 좋아요 토글 시작:', { storeId, newLikedState, isLoggedIn });
-
         // 로그인하지 않은 경우 AuthModal 열기
         if (!isLoggedIn) {
-          console.log('🔒 로그인하지 않은 상태 - AuthModal 열기');
-
           try {
             // AuthErrorStore를 동적으로 import
             const { useAuthErrorStore } = await import('@/shared/lib/axios/authErrorStore');
@@ -91,7 +85,6 @@ export const useStoreLikeToggle = ({
               },
               () => {
                 // AuthModal이 닫힐 때 상태 롤백
-                console.log('🔄 AuthModal 닫힘 - 상태 롤백');
                 setIsLoading(false);
                 setLiked(previousLikedRef.current);
                 updateMarkerLikeStatus(storeId, previousLikedRef.current);
@@ -100,7 +93,7 @@ export const useStoreLikeToggle = ({
             );
             return;
           } catch (error) {
-            console.error('❌ AuthErrorStore import 실패:', error);
+            console.error('AuthErrorStore import 실패:', error);
             // 에러 발생 시 상태 롤백
             setLiked(previousLikedRef.current);
             updateMarkerLikeStatus(storeId, previousLikedRef.current);
@@ -109,7 +102,6 @@ export const useStoreLikeToggle = ({
         }
 
         // 로그인된 경우에만 직접 API 호출
-        console.log('🚀 로그인된 상태 - 직접 API 호출');
         await toggleStoreLike(storeId, newLikedState, abortControllerRef.current?.signal);
 
         // 성공 시 토스트 메시지 표시
@@ -125,11 +117,10 @@ export const useStoreLikeToggle = ({
       } catch (error) {
         // AbortError는 무시
         if (error instanceof Error && error.name === 'AbortError') {
-          console.log('🚫 요청이 취소되었습니다.');
           return;
         }
 
-        console.error('❌ 가맹점 좋아요 토글 실패:', error);
+        console.error('가맹점 좋아요 토글 실패:', error);
 
         // 에러 발생 시 원래 상태로 롤백
         setLiked(previousLikedRef.current);

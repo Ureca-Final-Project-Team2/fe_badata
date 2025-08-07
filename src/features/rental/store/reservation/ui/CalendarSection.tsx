@@ -12,21 +12,30 @@ interface CalendarSectionProps {
 }
 
 const CalendarSection: React.FC<CalendarSectionProps> = ({ dateRange, onChange }) => {
-  console.log('CalendarSection - 받은 dateRange:', dateRange);
-
   // 예약 기간이 설정되면 시작 날짜의 월을 기본으로 설정, 없으면 현재 월
   const month = dateRange?.from || new Date();
 
-  console.log('CalendarSection - month:', month);
-  console.log('CalendarSection - dateRange.from:', dateRange?.from);
-  console.log('CalendarSection - 현재 날짜:', new Date());
+  // 날짜가 선택되었는지 확인
+  const hasSelectedDates = dateRange?.from && dateRange?.to;
+
+  // 오늘 날짜를 포함한 이전 날짜들을 비활성화하는 함수
+  const disabledDays = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 설정
+    return date < today;
+  };
 
   return (
     <>
-      <div className="font-body-semibold flex items-center gap-2 mt-2">
+      <div className="font-body-semibold flex items-center mt-2 gap-2">
         <CalendarIcon size={20} className="text-[var(--main-5)]" />
-        날짜를 선택해 주세요
+        {hasSelectedDates ? '선택된 날짜' : '날짜를 선택해 주세요'}
       </div>
+      {hasSelectedDates && (
+        <div className="text-sm text-[var(--main-5)] mb-2">
+          {dateRange?.from?.toLocaleDateString()} ~ {dateRange?.to?.toLocaleDateString()}
+        </div>
+      )}
       <div className="w-full">
         <Calendar
           mode="range"
@@ -34,6 +43,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ dateRange, onChange }
           onSelect={onChange}
           month={month}
           required
+          disabled={disabledDays}
           className="rounded-md w-full"
         />
       </div>
