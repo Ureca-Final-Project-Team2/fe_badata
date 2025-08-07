@@ -71,8 +71,8 @@ export const ICONS = {
       EMOTICON_PLUS: '/assets/gifticon/ott-music/Emoticon_Logo.png',
       NETFLIX: '/assets/gifticon/ott-music/NETFLIX_Logo.svg',
       GENIE_MUSIC: '/assets/gifticon/ott-music/Genie_Logo.png',
-      DISNEY_PLUS: '/assets/gifticon/ott-music/Disney_Logo.png',
-      BAEMIN: '/assets/gifticon/ott-music/Baemin_Logo.png',
+      DISNEY_PLUS: '/assets/gifticon/ott-music/Disney_Logo.jpg',
+      BAEMIN: '/assets/gifticon/ott-music/Baemin_Logo.svg',
       TVING: '/assets/gifticon/ott-music/TVING_Logo.png',
       V_COLORING: '/assets/gifticon/ott-music/V_Logo.png',
 

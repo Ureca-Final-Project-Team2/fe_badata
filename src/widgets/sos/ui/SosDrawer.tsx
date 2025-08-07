@@ -25,14 +25,14 @@ export function SosDrawer() {
   useEffect(() => {
     if (isDrawerOpen) {
       setIsInfoOpen(true);
-    }
-  }, [isDrawerOpen]);
-
+    }  
+  }, [isDrawerOpen]);  
+  
   const handleSosRequest = () => {
     executeWithAuth(
       () => {
-        // 로그인된 상태에서만 SosModal 열기
-        setIsModalOpen(true);
+        closeDrawer(); // 먼저 Drawer 닫기
+        setIsModalOpen(true); // SosModal 열기
         return Promise.resolve();
       },
       `${END_POINTS.SOS.REQUEST}`,

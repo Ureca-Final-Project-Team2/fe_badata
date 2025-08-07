@@ -3,7 +3,6 @@ import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
 export const sendSosRequest = async (): Promise<{ sosId: number }> => {
   const response = await axiosInstance.post<{ sosId: number }>(END_POINTS.SOS.REQUEST);
-  console.log('📦 sos content:', response.data);
   return response.data;
 };
 
