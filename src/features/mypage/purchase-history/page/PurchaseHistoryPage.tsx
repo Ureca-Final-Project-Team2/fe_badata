@@ -12,6 +12,7 @@ import {
 } from '@/entities/user/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { FlatTab } from '@/shared/ui/FlatTab';
 import { PageHeader } from '@/shared/ui/Header';
 import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
@@ -200,25 +201,21 @@ export default function PurchaseHistoryPage() {
 
           {/* 빈 상태 */}
           {!isLoading && !showSkeleton && !isError && isEmpty && (
-            <div className="px-4">
-              <CenteredMessage>구매 내역이 없습니다.</CenteredMessage>
-            </div>
+            <EmptyState title="구매 내역이 없습니다." />
           )}
 
           {/* 데이터 표시 */}
           {!isLoading && !showSkeleton && !isError && !isEmpty && (
             <>
               {filteredData?.map((page, i) => (
-                <div key={i} className="grid grid-cols-2 gap-4 px-4">
+                <div key={i} className="grid grid-cols-2 gap-4">
                   {page?.content?.item.map((item) => (
                     <TradePostCard
                       key={item.id}
-                      imageUrl={item.postImage}
+                      imageUrl={item.postImage || undefined}
                       title={item.title}
-                      partner={item.postCategory === 'GIFTICON' ? item.partner : undefined}
-                      mobileCarrier={
-                        item.postCategory === 'DATA' ? (item.partner as MobileCarrier) : undefined
-                      }
+                      partner={item.partner || undefined}
+                      mobileCarrier={item.mobileCarrier as MobileCarrier}
                       price={item.price}
                       likeCount={item.postLikes}
                       isCompleted={item.isSold}

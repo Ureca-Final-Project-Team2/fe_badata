@@ -61,7 +61,6 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
               resolve(data);
             },
             onError: (error) => {
-              console.error('수정 실패:', error);
               reject(error);
             },
             onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
@@ -82,9 +81,8 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
           dispatch({ type: 'SET_SUBMITTING', value: false });
         },
       );
-    } catch (error) {
+    } catch {
       // 에러는 이미 위에서 처리됨
-      console.error('Data edit failed:', error);
     }
   };
 
@@ -95,7 +93,6 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
   }
 
   if (error) {
-    console.error('DataEditForm error:', error);
     return (
       <div className="flex justify-center items-center h-64 text-[var(--red)]">
         게시물 정보를 불러올 수 없습니다.
@@ -128,7 +125,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
             label="만료일"
             value={post.deadLine}
             disabled
-            className="bg-[var(--gray-light)]"
+            className="bg-[var(--gray-light)] cursor-pointer"
           />
           <InputField
             label="용량"
@@ -140,7 +137,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
             label="통신사"
             value={post.mobileCarrier || '정보 없음'}
             disabled
-            className="bg-[var(--gray-light)]"
+            className="bg-[var(--gray-light)] cursor-pointer"
           />
         </div>
 
@@ -155,7 +152,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
             }
             placeholder="제목을 입력해주세요"
             errorMessage="제목을 입력해주세요."
-            className="border-[var(--main-3)]"
+            className="border-[var(--main-3)] cursor-pointer"
           />
           <InputField
             label="판매 가격"
@@ -167,7 +164,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
             }
             placeholder="판매 가격"
             errorMessage="가격을 입력해주세요."
-            className="bg-[var(--white)] border-[var(--main-3)]"
+            className="bg-[var(--white)] border-[var(--main-3)] cursor-pointer"
           />
           <TextAreaField
             label="설명"
@@ -176,7 +173,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
               dispatch({ type: 'CHANGE_FIELD', field: 'comment', value: e.target.value })
             }
             placeholder="설명 (선택)"
-            className="border-[var(--main-3)]"
+            className="border-[var(--main-3)] cursor-pointer"
           />
         </div>
       </form>

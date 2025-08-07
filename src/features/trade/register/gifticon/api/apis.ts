@@ -34,7 +34,6 @@ export const validateGifticonImage = async (
 
     return response.data;
   } catch (error) {
-    console.error('validateGifticonImage API error:', error);
     throw error;
   }
 };

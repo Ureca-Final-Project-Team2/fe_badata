@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import { ICONS } from '@/shared/config/iconPath';
+import { ChevronLeft } from 'lucide-react';
+
 import { HEADER_WIDTH } from '@/shared/config/ui';
 
 interface HeaderDetailProps {
@@ -25,18 +25,14 @@ export function Header_Detail({ title }: HeaderDetailProps) {
         minWidth: `${HEADER_WIDTH.MIN}px`,
       }}
     >
-      <div
-        className="flex items-center justify-center w-[60px] h-[58px] absolute left-[24px] top-1/2 -translate-y-1/2 cursor-pointer"
+      <button
+        className="absolute left-4 w-[50px] h-[30px] flex items-center justify-center cursor-pointer"
         onClick={handleBackClick}
+        aria-label="뒤로가기"
       >
-        <Image
-          src={ICONS.ETC.BACKICON}
-          alt="뒤로가기"
-          width={60}
-          height={58}
-          className="object-contain"
-        />
-      </div>
+        <ChevronLeft size={30} className="text-[var(--main-4)]" />
+      </button>
+
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex items-center justify-center pointer-events-none">
         <span className="text-black text-xl font-semibold">{title}</span>
       </div>

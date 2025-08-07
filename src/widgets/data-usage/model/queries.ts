@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { getDataUsage } from '@/widgets/data-usage/api/apis';
 
-import type { DataUsageResponse } from '@/widgets/data-usage/types';
+import type { DataUsageResponse } from '@/widgets/data-usage/lib/types';
 
 export const useUserDataAmount = () => {
   const { isLoggedIn } = useAuthStore();

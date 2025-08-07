@@ -15,7 +15,7 @@ export function DataListFilter({ sortLabel, onSortClick, onFilterClick }: DataLi
       <button
         type="button"
         onClick={onFilterClick}
-        className="flex flex-row gap-1 items-center font-label-semibold"
+        className="flex flex-row gap-1 items-center font-label-semibold cursor-pointer"
       >
         조건
         <ListFilter size={14} />

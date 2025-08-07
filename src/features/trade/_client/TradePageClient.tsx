@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -8,6 +8,7 @@ import { useInView } from 'framer-motion';
 
 import { useTradePostsInfiniteQuery } from '@/entities/trade-post/model/queries';
 import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
+import { GifticonFilter } from '@/features/trade/gifticon/ui/GifticonFilter';
 import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
 import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
 import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilterHooks';
@@ -27,6 +28,7 @@ export default function TradePageClient() {
   const searchParams = useSearchParams();
   const page = searchParams?.get('page') ?? 'all';
 
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
     useTradePostsInfiniteQuery();
 
@@ -68,7 +70,11 @@ export default function TradePageClient() {
         );
       }
       if (page === 'gifticon') {
-        return post.postCategory === 'GIFTICON' && post.price <= gifticonPrice;
+        return (
+          post.postCategory === 'GIFTICON' &&
+          (selectedCategory === '전체' || post.gifticonCategory === selectedCategory) &&
+          post.price <= gifticonPrice
+        );
       }
       return true;
     })
@@ -136,6 +142,12 @@ export default function TradePageClient() {
         </>
       )}
 
+      {page === 'gifticon' && (
+        <GifticonFilter
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
+      )}
       <TradeList
         title={currentTitle}
         items={filteredPosts}

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tansta
 
 import { deleteFollow, fetchFollows } from '@/entities/follow/api/apis';
 import { FOLLOW_TYPES } from '@/entities/follow/lib/types';
+import { makeToast } from '@/shared/lib/makeToast';
 
 import type { FollowItem, FollowType } from '@/entities/follow/lib/types';
 
@@ -15,7 +16,11 @@ const invalidateFollowQueries = (queryClient: QueryClient) => {
   queryClient.invalidateQueries({ queryKey: ['followings'], exact: false });
 };
 
-export function useFollows(followType: FollowType, cursor?: number, size: number = DEFAULT_PAGE_SIZE) {
+export function useFollows(
+  followType: FollowType,
+  cursor?: number,
+  size: number = DEFAULT_PAGE_SIZE,
+) {
   const { data, isLoading, isError } = useQuery<{
     item: FollowItem[];
     nextCursor: number;
@@ -46,17 +51,25 @@ export function useDeleteFollow() {
     onSuccess: () => {
       invalidateFollowQueries(queryClient);
     },
-    onError: (error) => {
-      console.error('팔로우 삭제 실패:', error);
+    onError: () => {
+      makeToast('팔로우 삭제에 실패했습니다.', 'warning');
     },
   });
 }
 
 export function useUserStats() {
   const queryClient = useQueryClient();
-  
-  const { followItems: followersItems, isLoading: isLoadingFollowers } = useFollows(FOLLOW_TYPES.FOLLOWERS, undefined, STATS_PAGE_SIZE);
-  const { followItems: followingsItems, isLoading: isLoadingFollowings } = useFollows(FOLLOW_TYPES.FOLLOWINGS, undefined, STATS_PAGE_SIZE);
+
+  const { followItems: followersItems, isLoading: isLoadingFollowers } = useFollows(
+    FOLLOW_TYPES.FOLLOWERS,
+    undefined,
+    STATS_PAGE_SIZE,
+  );
+  const { followItems: followingsItems, isLoading: isLoadingFollowings } = useFollows(
+    FOLLOW_TYPES.FOLLOWINGS,
+    undefined,
+    STATS_PAGE_SIZE,
+  );
 
   const invalidateStats = () => {
     invalidateFollowQueries(queryClient);
@@ -68,4 +81,4 @@ export function useUserStats() {
     isLoading: isLoadingFollowers || isLoadingFollowings,
     invalidateStats,
   };
-} 
+}

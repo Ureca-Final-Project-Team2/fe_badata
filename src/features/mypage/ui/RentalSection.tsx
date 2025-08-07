@@ -17,7 +17,7 @@ export const RentalSection = () => (
               height={20}
               className="object-contain"
             />
-            <span className="font-label-regular group-hover:text-[var(--main-3)]">
+            <span className="font-label-regular group-hover:text-[var(--main-5)]">
               공유기 대여 내역
             </span>
           </Link>
@@ -31,7 +31,7 @@ export const RentalSection = () => (
               height={20}
               className="object-contain"
             />
-            <span className="font-label-regular group-hover:text-[var(--main-3)]">관심 매장</span>
+            <span className="font-label-regular group-hover:text-[var(--main-5)]">관심 매장</span>
           </Link>
         </li>
         <li>
@@ -43,7 +43,7 @@ export const RentalSection = () => (
               height={20}
               className="object-contain"
             />
-            <span className="font-label-regular group-hover:text-[var(--main-3)]">재입고 알림</span>
+            <span className="font-label-regular group-hover:text-[var(--main-5)]">재입고 알림</span>
           </Link>
         </li>
       </ul>

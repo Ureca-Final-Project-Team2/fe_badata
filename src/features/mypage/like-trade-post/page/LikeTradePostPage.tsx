@@ -4,12 +4,17 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { Heart } from 'lucide-react';
+
 import { useLikedTradePosts } from '@/features/mypage/like-trade-post/model/queries';
 import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { PageHeader } from '@/shared/ui/Header';
 import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
+
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
 
 // 공통 메시지 컴포넌트
 const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
@@ -42,7 +47,7 @@ export default function LikeTradePostPage() {
 
   return (
     <BaseLayout header={<PageHeader title="찜 목록" onBack={handleBack} />} showBottomNav>
-      <div className="px-4 pb-[96px]">
+      <div className="pb-[96px]">
         {/* 로딩 상태 (초기 로딩) */}
         {isLoading && !cursor && (
           <div className="grid grid-cols-2 gap-5 mt-4">
@@ -57,7 +62,10 @@ export default function LikeTradePostPage() {
 
         {/* 빈 상태 */}
         {!isLoading && !isError && (!likeTradePostItems || likeTradePostItems.length === 0) && (
-          <CenteredMessage>찜 목록이 없습니다.</CenteredMessage>
+          <EmptyState
+            title="찜 목록이 없습니다."
+            icon={<Heart className="w-6 h-6 text-[var(--gray-dark)]" />}
+          />
         )}
 
         {/* 데이터 표시 */}
@@ -74,6 +82,7 @@ export default function LikeTradePostPage() {
                     imageUrl={item.postImage}
                     title={item.title}
                     partner={item.partner}
+                    mobileCarrier={item.mobileCarrier as MobileCarrier}
                     price={item.price}
                     likeCount={item.postLikes}
                     isLiked={true}

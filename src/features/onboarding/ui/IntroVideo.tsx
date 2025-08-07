@@ -34,8 +34,7 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
 
       // 재생 시도
       await video.play();
-    } catch (error) {
-      console.error('동영상 자동 재생 실패:', error);
+    } catch {
       // 자동 재생이 실패하면 사용자에게 재생 버튼 표시
       setIsPlaying(false);
     }
@@ -76,7 +75,6 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
     };
 
     const handleVideoError = () => {
-      console.error('동영상 로드 실패');
       setVideoError(true);
       setIsVideoReady(false);
     };
@@ -124,8 +122,8 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
     if (video.paused) {
       try {
         await video.play();
-      } catch (error) {
-        console.error('동영상 재생 실패:', error);
+      } catch {
+        // 재생 실패 처리
       }
     } else {
       video.pause();

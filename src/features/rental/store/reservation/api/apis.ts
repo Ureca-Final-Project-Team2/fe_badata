@@ -132,3 +132,15 @@ export const requestRestockNotification = async (
     };
   }
 };
+
+/**
+ * 예약 취소 API 함수 
+ */
+export const deleteReservation = async (reservationId: number): Promise<void> => {
+  try {
+    await axiosInstance.delete(END_POINTS.RENTAL.DELETE_RESERVATION(reservationId));
+  } catch (error) {
+    console.error(`예약 ${reservationId} 취소 실패:`, error);
+    throw error;
+  }
+};

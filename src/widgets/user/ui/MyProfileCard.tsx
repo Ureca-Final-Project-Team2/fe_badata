@@ -39,7 +39,7 @@ const MyProfileCard = ({
             </span>
             <span className="text-[var(--black)] font-small-regular leading-[20px] text-right mt-1.5">
               BADATA와 함께 한지{' '}
-              <span className="font-small-semibold text-white">{days}</span>
+              <span className="font-small-semibold text-[var(--black)]">{days}</span>
               일째
             </span>
           </>

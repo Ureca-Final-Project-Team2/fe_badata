@@ -193,7 +193,7 @@ export function CoinPaymentModal({
         <button
           onClick={handleConfirm}
           disabled={finalPrice === 0 || isCoinLoading || isCoinError}
-          className="w-full py-4 rounded-lg bg-[var(--main-3)] hover:bg-[var(--main-4)] transition-colors duration-200 disabled:bg-[var(--gray-light)] disabled:text-[var(--gray-mid)] disabled:hover:bg-[var(--gray-light)] font-body-semibold text-[var(--white)]"
+          className="w-full py-4 rounded-lg bg-[var(--main-5)] hover:bg-[var(--main-4)] transition-colors duration-200 disabled:bg-[var(--gray-light)] disabled:text-[var(--gray-mid)] disabled:hover:bg-[var(--gray-light)] font-body-semibold text-[var(--white)]"
         >
           {isCoinLoading
             ? '잔액 확인 중...'

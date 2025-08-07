@@ -9,10 +9,11 @@ import { CoinInfoModal } from '@/features/mypage/coin-history/ui/CoinInfoModal';
 import { CoinUsageSection } from '@/features/mypage/coin-history/ui/CoinUsageSection';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
+import { Spinner } from '@/shared/ui/Spinner/Spinner';
 
 export default function CoinHistoryPage() {
   const { data, isLoading, isError } = useUserCoinQuery();
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(true);
 
   // Hydration mismatch 방지를 위해 초기 상태 처리
   const isInitialLoading = isLoading && !data;
@@ -24,9 +25,7 @@ export default function CoinHistoryPage() {
         showBottomNav
       >
         <div className="p-5 space-y-6">
-          <div className="bg-[var(--white)] rounded-xl p-8 text-center">
-            <p className="font-label-regular text-[var(--gray)]">로딩 중...</p>
-          </div>
+          <Spinner content="코인 내역을 불러오는 중입니다..." />
         </div>
       </BaseLayout>
     );

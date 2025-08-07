@@ -22,6 +22,7 @@ import ReservationDetailsSection from '@/features/rental/store/register-review/u
 import { PATH } from '@/shared/config/path';
 import { makeToast } from '@/shared/lib/makeToast';
 import { RegisterButton } from '@/shared/ui/RegisterButton';
+import { Spinner } from '@/shared/ui/Spinner/Spinner';
 
 import type { ReviewDetailResponse } from '@/features/rental/store/register-review/lib/types';
 
@@ -116,8 +117,8 @@ export default function ReviewRegisterForm({
               PATH.RENTAL.STORE_DETAIL.replace(':storeId', String(reservationDetailsData?.storeId)),
             );
           },
-          onError: (error) => {
-            console.error('리뷰 등록 실패: ', error);
+          onError: () => {
+            // 에러 처리
           },
         },
       );
@@ -131,8 +132,7 @@ export default function ReviewRegisterForm({
               PATH.RENTAL.STORE_DETAIL.replace(':storeId', String(reservationDetailsData?.storeId)),
             );
           },
-          onError: (error) => {
-            console.error('리뷰 수정 실패: ', error);
+          onError: () => {
             makeToast('리뷰 수정에 실패했습니다.', 'warning');
           },
         },
@@ -141,7 +141,7 @@ export default function ReviewRegisterForm({
   };
 
   if (isQuickRepliesLoading || isReservationDetailsLoading) {
-    return <div>로딩 중...</div>;
+    return <Spinner content="로딩 중..." />;
   }
 
   if (!quickRepliesData || !reservationDetailsData) {

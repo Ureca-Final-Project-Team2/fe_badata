@@ -86,8 +86,7 @@ export function TradeGifticonRegisterForm() {
               },
             });
           },
-          onError: (error) => {
-            console.error('이미지 검증 실패:', error);
+          onError: () => {
             makeToast('조작된 이미지이거나 유효하지 않은 기프티콘입니다.', 'warning');
             dispatch({ type: 'RESET_IMAGE' });
           },
@@ -148,9 +147,8 @@ export function TradeGifticonRegisterForm() {
           dispatch({ type: 'SET_SUBMITTING', value: false });
         },
       );
-    } catch (error) {
+    } catch {
       // 에러는 이미 위에서 처리됨
-      console.error('Gifticon registration failed:', error);
     }
   };
 
@@ -188,7 +186,7 @@ export function TradeGifticonRegisterForm() {
         />
         {isValidating && (
           <div className="absolute inset-0 bg-[var(--black)]/50 flex items-center justify-center">
-            <div className="text-white">이미지 검증 중...</div>
+            <div className="text-[var(--gray-dark)]">이미지 검증 중...</div>
           </div>
         )}
       </label>
@@ -261,7 +259,7 @@ export function TradeGifticonRegisterForm() {
 
           <button
             onClick={() => setShowGuideModal(false)}
-            className="mt-6 w-full py-3 font-label-medium bg-[var(--main-5)] text-white cursor-pointer rounded-lg hover:bg-[var(--main-4)] transition-all duration-200"
+            className="mt-6 w-full py-3 font-label-medium bg-[var(--main-5)] text-[var(--white)] cursor-pointer rounded-lg hover:bg-[var(--main-4)] transition-all duration-200"
           >
             확인했어요
           </button>
@@ -310,11 +308,13 @@ export function TradeGifticonRegisterForm() {
         value={state.form.price}
         onChange={handleFieldChange('price')}
         placeholder="판매 가격"
+        className="cursor-pointer"
       />
       <TextAreaField
         value={state.form.comment}
         onChange={handleFieldChange('comment')}
         placeholder="설명 (선택)"
+        className="cursor-pointer"
       />
       <RegisterButton
         type="submit"

@@ -44,7 +44,6 @@ export const InAppNotification = ({
               alt="BADATA"
               className="w-6 h-6 object-contain"
               onError={() => {
-                console.error('로고 이미지 로드 실패');
                 setImageError(true);
               }}
             />

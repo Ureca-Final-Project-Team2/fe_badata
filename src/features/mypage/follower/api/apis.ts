@@ -23,7 +23,6 @@ export const fetchFollowers = async (
 
     return response.data;
   } catch (error) {
-    console.error('팔로워 목록 조회 실패:', error);
     throw error;
   }
 };
