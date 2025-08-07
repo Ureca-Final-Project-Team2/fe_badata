@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getDataUsage } from '@/widgets/data-usage/api/apis';
 import { DataUsageWidget } from '@/widgets/data-usage/DataUsageWidget';
 
-import type { DataUsageResponse } from '@/widgets/data-usage/types';
+import type { DataUsageResponse } from '@/widgets/data-usage/lib/types';
 
 export const DataUsageWidgetContainer: React.FC = () => {
   const [data, setData] = useState<DataUsageResponse | null>(null);

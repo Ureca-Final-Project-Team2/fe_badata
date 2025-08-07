@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { X } from 'lucide-react';
 
@@ -16,8 +16,17 @@ import { SosModal } from '@/widgets/sos/ui/SosModal';
 export function SosDrawer() {
   const { isDrawerOpen, closeDrawer } = useSosDrawer();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+
   const { isLoggedIn } = useAuthStore();
   const { executeWithAuth } = useAuthRequiredRequest();
+
+  // 정보 창 자동 오픈
+  useEffect(() => {
+    if (isDrawerOpen) {
+      setIsInfoOpen(true);
+    }
+  }, [isDrawerOpen]);
 
   const handleSosRequest = () => {
     executeWithAuth(
@@ -33,7 +42,6 @@ export function SosDrawer() {
       },
     );
   };
-  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   return (
     <>
@@ -50,10 +58,12 @@ export function SosDrawer() {
           {/* 로그인한 상태일 때만 '나의 데이터 서랍' 표시 */}
           {isLoggedIn && (
             <div className="w-full mt-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
                 <h2 className="font-body-semibold text-[var(--black)] mb-2">나의 데이터 서랍</h2>
                 <button onClick={() => setIsInfoOpen(true)}>
-                  <span className="font-small-semibold text-[var(--main-5)]">ⓘ</span>
+                  <span className="font-small-semibold text-[var(--main-5)] translate-y-[-3px] inline-block">
+                    ⓘ
+                  </span>
                 </button>
               </div>
               <DataUsageWidgetContainer />

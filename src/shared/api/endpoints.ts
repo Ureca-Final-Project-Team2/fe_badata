@@ -53,6 +53,7 @@ export const END_POINTS = {
     RENTAL_CANCEL: (restockId: number) => `/api/v1/restock/${restockId}`,
     RESERVATION_DETAILS: (reservationId: number) =>
       `/api/v1/rentals/reservations/${reservationId}/devices`,
+    DELETE_RESERVATION: (id: number) => `/api/v1/rentals/${id}`,
   },
   POSITION: {
     POSITION: '/api/v1/addresses',

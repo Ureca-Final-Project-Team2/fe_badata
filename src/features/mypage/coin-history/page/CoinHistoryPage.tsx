@@ -12,7 +12,7 @@ import { PageHeader } from '@/shared/ui/Header';
 
 export default function CoinHistoryPage() {
   const { data, isLoading, isError } = useUserCoinQuery();
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(true);
 
   // Hydration mismatch 방지를 위해 초기 상태 처리
   const isInitialLoading = isLoading && !data;

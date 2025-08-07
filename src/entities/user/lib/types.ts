@@ -12,6 +12,7 @@ export interface FollowingsContent {
 export interface SalesItem {
   postId: number;
   postCategory: string;
+  mobileCarrier: string;
   partner: string | null;
   title: string;
   price: number;
@@ -43,6 +44,7 @@ export interface PurchaseItem {
   postId: number;
   postCategory: 'DATA' | 'GIFTICON';
   partner: string;
+  mobileCarrier: string;
   title: string;
   price: number;
   postLikes: number;

@@ -11,6 +11,8 @@ import { PageHeader } from '@/shared/ui/Header';
 import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
+import type { MobileCarrier } from '@/features/trade/register/data/lib/types';
+
 // 공통 메시지 컴포넌트
 const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
   <div className="text-center py-8">
@@ -42,7 +44,7 @@ export default function LikeTradePostPage() {
 
   return (
     <BaseLayout header={<PageHeader title="찜 목록" onBack={handleBack} />} showBottomNav>
-      <div className="px-4 pb-[96px]">
+      <div className="pb-[96px]">
         {/* 로딩 상태 (초기 로딩) */}
         {isLoading && !cursor && (
           <div className="grid grid-cols-2 gap-5 mt-4">
@@ -74,6 +76,7 @@ export default function LikeTradePostPage() {
                     imageUrl={item.postImage}
                     title={item.title}
                     partner={item.partner}
+                    mobileCarrier={item.mobileCarrier as MobileCarrier}
                     price={item.price}
                     likeCount={item.postLikes}
                     isLiked={true}

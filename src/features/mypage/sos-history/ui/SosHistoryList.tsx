@@ -6,9 +6,7 @@ interface SosHistoryListProps {
 }
 
 export const SosHistoryList = ({ name, date, amount, status }: SosHistoryListProps) => {
-  const isDone = status === '요청 완료';
-
-    return (
+  return (
     <div className="space-y-1">
       <p className="font-small-regular text-[var(--gray-dark)] px-1">{date}</p>
 
@@ -23,11 +21,7 @@ export const SosHistoryList = ({ name, date, amount, status }: SosHistoryListPro
           <p className="font-small-regular text-[var(--gray-mid)] leading-[16px]">{amount}</p>
 
           <button
-            className={`w-[86px] py-1 rounded-full text-center font-title-regular text-[16px] ${
-              isDone
-                ? 'bg-[var(--white)] border border-[var(--main-5)] text-[var(--main-5)]'
-                : 'bg-[var(--main-5)] text-[var(--white)]'
-            }`}
+            className="w-[86px] py-1 rounded-full text-center font-title-regular text-[16px] bg-[var(--main-5)] text-[var(--white)]"
             type="button"
           >
             {status}
