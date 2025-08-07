@@ -2,8 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 
+import { Users } from 'lucide-react';
+
 import { useDeleteFollow, useFollows } from '@/entities/follow';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { PageHeader } from '@/shared/ui/Header';
 import { Profile } from '@/shared/ui/Profile';
 import { Spinner } from '@/shared/ui/Spinner';
@@ -34,7 +37,10 @@ export default function FollowListPage({ followType, title, emptyMessage }: Foll
     <BaseLayout header={<PageHeader title={title} onBack={() => router.back()} />} showBottomNav>
       <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-[96px]">
         {followItems.length === 0 ? (
-          <div className="py-4 text-center text-[var(--gray)]">{emptyMessage}</div>
+          <EmptyState
+            title={emptyMessage}
+            icon={<Users className="w-6 h-6 text-[var(--gray-dark)]" />}
+          />
         ) : (
           followItems.map((user) => (
             <div key={user.id} className="w-full max-w-[400px] flex justify-center">
