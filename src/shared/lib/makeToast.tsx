@@ -31,6 +31,4 @@ export const makeToast = (message: string, variant: ToastVariant) => {
       },
     },
   );
-
-  console.log('✅ 새 토스트 표시:', message);
 };

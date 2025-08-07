@@ -18,18 +18,15 @@ export const getTradePostDetail = async (
     const content = response.data || response;
 
     if (!content) {
-      console.error('Content is undefined, full response:', response);
       throw new Error('No content in trade detail response');
     }
 
     if (!content.post) {
-      console.error('Post is undefined, content:', content);
       throw new Error('No post info in trade detail response');
     }
 
     const writer = content.user ?? content.seller;
     if (!writer) {
-      console.error('No writer found, content:', content);
       throw new Error('No writer info in trade detail response');
     }
 
@@ -39,7 +36,6 @@ export const getTradePostDetail = async (
       post: content.post,
     };
   } catch (error) {
-    console.error('Error fetching trade post detail:', error);
     throw error;
   }
 };

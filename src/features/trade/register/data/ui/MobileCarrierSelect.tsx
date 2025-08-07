@@ -14,7 +14,6 @@ export function MobileCarrierSelect({ value, onChange, required }: MobileCarrier
     if (isMobileCarrier(newValue)) {
       onChange(newValue);
     } else {
-      console.error('Invalid mobile carrier value:', newValue);
       onChange('UPLUS');
     }
   };

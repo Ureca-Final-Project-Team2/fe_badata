@@ -4,9 +4,13 @@ import {
   patchRecommendVectorUpdate,
   postRecommendLike,
 } from '@/features/trade/recommendation/api/apis';
+import { ErrorMessageMap } from '@/shared/config/errorCodes';
+import { makeToast } from '@/shared/lib/makeToast';
 import { queryClient } from '@/shared/lib/queryClient';
 
-import type { RecommendLikeResponse } from '../lib/types';
+import type { RecommendLikeResponse } from '@/features/trade/recommendation/lib/types';
+import type { ErrorCode } from '@/shared/config/errorCodes';
+import type { HTTPError } from '@/shared/lib/HTTPError';
 
 // 추천 게시물 좋아요
 export const usePostRecommendLikeMutation = () => {
@@ -17,8 +21,13 @@ export const usePostRecommendLikeMutation = () => {
         queryKey: ['recommendPosts'],
       });
     },
-    onError: (error) => {
-      console.error('추천 게시물 좋아요에 실패했습니다:', error);
+    onError: (error: Error) => {
+      const httpError = error as HTTPError;
+      if (httpError.code && ErrorMessageMap[httpError.code as ErrorCode]) {
+        makeToast(ErrorMessageMap[httpError.code as ErrorCode], 'warning');
+      } else {
+        makeToast('추천 게시물 좋아요에 실패했습니다.', 'warning');
+      }
     },
   });
 };

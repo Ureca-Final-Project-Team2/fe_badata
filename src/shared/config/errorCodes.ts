@@ -15,12 +15,15 @@ export enum ErrorCode {
   EXPIRED_POST_ACCESS = 3012,
   EXPIRED_POST_MODIFY = 3013,
   DELETED_POST_ACCESS_DENIED = 3020,
-  
+
   // 거래 결제
   SELF_PAYMENT_DENIED = 3023,
   COIN_DECIMAL_NOT_ALLOWED = 3029,
   COIN_NOT_ENOUGH = 3030,
   COIN_EXCEED_PRICE = 3032,
+
+  // 추천 게시물
+  RECOMMENDATION_FAILED = 3036,
 
   // 유저 팔로우
   FOLLOW_SELF_ERROR = 2014,
@@ -71,6 +74,9 @@ export const ErrorMessageMap: Record<ErrorCode, string> = {
   [ErrorCode.COIN_DECIMAL_NOT_ALLOWED]: '포인트는 소수점 이하를 사용할 수 없습니다.',
   [ErrorCode.COIN_NOT_ENOUGH]: '포인트가 부족합니다.',
   [ErrorCode.COIN_EXCEED_PRICE]: '포인트는 게시글 가격을 초과할 수 없습니다.',
+
+  // 추천 게시물
+  [ErrorCode.RECOMMENDATION_FAILED]: '추천 게시글 처리에 실패했습니다.',
 
   // 유저 팔로우
   [ErrorCode.FOLLOW_SELF_ERROR]: '자기 자신을 팔로우할 수 없습니다.',

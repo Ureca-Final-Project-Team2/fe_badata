@@ -43,8 +43,6 @@ export function usePayment(
    * @param defaultMessage 기본 에러 메시지
    */
   const handleError = (error: unknown, defaultMessage: string) => {
-    console.error('Payment error:', error);
-
     if (error instanceof AxiosError) {
       const errorMessage = error.response?.data?.message;
       makeToast(errorMessage || defaultMessage, 'warning');
@@ -175,9 +173,8 @@ export function usePayment(
           setLoading(false);
         },
       );
-    } catch (error) {
+    } catch {
       // 에러는 이미 위에서 처리됨
-      console.error('Payment failed:', error);
     }
   };
 

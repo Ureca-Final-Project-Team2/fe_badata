@@ -76,9 +76,8 @@ export function TradeDataRegisterForm() {
           dispatch({ type: 'SET_SUBMITTING', value: false });
         },
       );
-    } catch (error) {
+    } catch {
       // 에러는 이미 위에서 처리됨
-      console.error('Data registration failed:', error);
     }
   };
 
