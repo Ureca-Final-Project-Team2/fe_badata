@@ -128,9 +128,6 @@ export default function RentalPage() {
     }
   }, [selectedLat, selectedLng, selectedPlaceName, hasProcessedUrlParams]);
 
-  // Lazy load heavy hooks only when needed
-  const { userLocation, setUserLocation, userAddress, locationLoading, locationError } =
-    useUserLocation();
   const {
     isDrawerOpen,
     setIsDrawerOpen,
@@ -150,6 +147,10 @@ export default function RentalPage() {
     handleFilterSubmit,
   } = useFilterState();
   const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
+
+  // Lazy load heavy hooks only when needed
+  const { userLocation, userAddress, locationLoading, locationError, moveToUserLocation } =
+    useUserLocation({ mapInstance });
 
   // 줌 기능 훅 사용
   const { handleZoomIn, handleZoomOut } = useZoom({ mapInstance });
@@ -265,47 +266,8 @@ export default function RentalPage() {
 
   // 현재 위치로 이동하는 함수
   const handleCurrentLocation = useCallback(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setUserLocation(newLocation);
-
-          if (mapInstance) {
-            const newPosition = new window.kakao.maps.LatLng(newLocation.lat, newLocation.lng);
-            mapInstance.setCenter(newPosition);
-            // 마커는 useCurrentLocationMarker 훅에서 관리하므로 여기서는 생성하지 않음
-          }
-        },
-        (error) => {
-          console.log('위치 정보를 가져올 수 없습니다:', error.message);
-          // fallback: 서울시청 좌표
-          const fallbackLocation = {
-            lat: 37.5665,
-            lng: 126.978,
-          };
-          setUserLocation(fallbackLocation);
-
-          if (mapInstance) {
-            const newPosition = new window.kakao.maps.LatLng(
-              fallbackLocation.lat,
-              fallbackLocation.lng,
-            );
-            mapInstance.setCenter(newPosition);
-            // 마커는 useCurrentLocationMarker 훅에서 관리하므로 여기서는 생성하지 않음
-          }
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 300000, // 5분 캐시 허용
-        },
-      );
-    }
-  }, [mapInstance, setUserLocation]);
+    moveToUserLocation();
+  }, [moveToUserLocation]);
 
   // 지도 클릭 핸들러
   const handleMapClickWrapper = useCallback(
