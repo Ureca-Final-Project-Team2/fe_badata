@@ -146,33 +146,6 @@ export function TradeDataRegisterForm() {
           </select>
         </div>
       </div>
-      <div className="flex w-[380px] gap-1 overflow-hidden">
-        <div className="w-2/3 overflow-hidden">
-          <InputField
-            label="데이터 용량"
-            isRequired
-            type="number"
-            value={state.form.capacity}
-            onChange={(e) =>
-              dispatch({ type: 'CHANGE_FIELD', field: 'capacity', value: e.target.value })
-            }
-            placeholder="용량"
-            className="w-full"
-          />
-        </div>
-        <div className="w-1/3 flex flex-col justify-end">
-          <select
-            className="w-full h-[45px] rounded-lg border border-[var(--gray-light)] px-3 py-2 font-caption-regular text-[var(--black)] bg-[var(--white)] focus:outline-none cursor-pointer"
-            value={state.form.capacityUnit}
-            onChange={(e) =>
-              dispatch({ type: 'CHANGE_FIELD', field: 'capacityUnit', value: e.target.value })
-            }
-          >
-            <option value="MB">MB</option>
-            <option value="GB">GB</option>
-          </select>
-        </div>
-      </div>
       <InputField
         label="판매 가격"
         isRequired
