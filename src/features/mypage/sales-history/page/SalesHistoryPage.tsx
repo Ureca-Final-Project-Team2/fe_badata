@@ -13,6 +13,7 @@ import {
 } from '@/entities/user/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { FlatTab } from '@/shared/ui/FlatTab';
 import { PageHeader } from '@/shared/ui/Header';
 import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
@@ -194,9 +195,7 @@ export default function SalesHistoryPage() {
 
           {/* 빈 상태 */}
           {!isLoading && !showSkeleton && !isError && isEmpty && (
-            <div>
-              <CenteredMessage>판매 내역이 없습니다.</CenteredMessage>
-            </div>
+            <EmptyState title="판매 내역이 없습니다." />
           )}
 
           {/* 데이터 표시 */}
