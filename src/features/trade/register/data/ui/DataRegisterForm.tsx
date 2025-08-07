@@ -102,6 +102,7 @@ export function TradeDataRegisterForm() {
         value={state.form.title}
         onChange={(e) => dispatch({ type: 'CHANGE_FIELD', field: 'title', value: e.target.value })}
         placeholder="데이터 상품명"
+        className="cursor-pointer"
       />
       <MobileCarrierSelect
         value={state.form.mobileCarrier}
@@ -117,6 +118,7 @@ export function TradeDataRegisterForm() {
           dispatch({ type: 'CHANGE_FIELD', field: 'deadLine', value: e.target.value })
         }
         placeholder="만료일"
+        className="cursor-pointer"
       />
       <div className="flex w-[380px] gap-1 overflow-hidden">
         <div className="w-2/3 overflow-hidden">
@@ -129,7 +131,7 @@ export function TradeDataRegisterForm() {
               dispatch({ type: 'CHANGE_FIELD', field: 'capacity', value: e.target.value })
             }
             placeholder="용량"
-            className="w-full"
+            className="w-full cursor-pointer"
           />
         </div>
         <div className="w-1/3 flex flex-col justify-end">
@@ -140,8 +142,12 @@ export function TradeDataRegisterForm() {
               dispatch({ type: 'CHANGE_FIELD', field: 'capacityUnit', value: e.target.value })
             }
           >
-            <option value="MB">MB</option>
-            <option value="GB">GB</option>
+            <option value="MB" className="cursor-pointer">
+              MB
+            </option>
+            <option value="GB" className="cursor-pointer">
+              GB
+            </option>
           </select>
         </div>
       </div>
@@ -152,6 +158,7 @@ export function TradeDataRegisterForm() {
         value={state.form.price}
         onChange={(e) => dispatch({ type: 'CHANGE_FIELD', field: 'price', value: e.target.value })}
         placeholder="판매 가격"
+        className="cursor-pointer"
       />
       <TextAreaField
         value={state.form.comment}
@@ -159,6 +166,7 @@ export function TradeDataRegisterForm() {
           dispatch({ type: 'CHANGE_FIELD', field: 'comment', value: e.target.value })
         }
         placeholder="설명 (선택)"
+        className="cursor-pointer"
       />
 
       <RegisterButton

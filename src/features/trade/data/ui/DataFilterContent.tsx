@@ -40,7 +40,7 @@ export default function DataFilterContent({
           <span className="font-body-semibold">데이터 게시물 필터링</span>
           <button
             type="button"
-            className="ml-auto text-2xl text-[var(--gray-dark)]"
+            className="ml-auto text-2xl text-[var(--gray-dark)] cursor-pointer"
             onClick={onClose}
             aria-label="필터 창 닫기"
           >

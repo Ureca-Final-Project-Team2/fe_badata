@@ -160,14 +160,14 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
             onChange={handleFieldChange('price')}
             placeholder="판매 가격"
             errorMessage="가격을 입력해주세요."
-            className="bg-[var(--white)] border-[var(--main-3)]"
+            className="bg-[var(--white)] border-[var(--main-3)] cursor-pointer"
           />
           <TextAreaField
             label="설명"
             value={state.form.comment}
             onChange={handleFieldChange('comment')}
             placeholder="설명 (선택)"
-            className="border-[var(--main-3)]"
+            className="border-[var(--main-3)] cursor-pointer"
           />
         </div>
       </form>

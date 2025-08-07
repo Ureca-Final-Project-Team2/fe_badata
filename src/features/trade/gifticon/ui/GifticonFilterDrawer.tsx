@@ -29,7 +29,7 @@ export const GifticonFilterDrawer = ({
           <span className="font-body-semibold">기프티콘 가격 필터</span>
           <button
             type="button"
-            className="ml-auto text-2xl text-[var(--gray-dark)]"
+            className="ml-auto text-2xl text-[var(--gray-dark)] cursor-pointer"
             onClick={onClose}
             aria-label="필터 창 닫기"
           >
