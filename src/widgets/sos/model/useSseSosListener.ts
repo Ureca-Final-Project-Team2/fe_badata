@@ -31,16 +31,13 @@ export function useSseSosListener(onMessage: (data: string) => void) {
           signal: controller.signal,
         });
 
-        console.log('[SSE] 응답 상태 코드:', res.status);
-
         const reader = res.body?.getReader();
         if (!reader) {
           console.error('[SSE] reader 생성 실패!');
           return;
         }
 
-        console.log('[SSE] 연결 성공!');
-        hasConnected = true; // ✅ 연결 성공 시 플래그 설정
+        hasConnected = true; // 연결 성공 시 플래그 설정
 
         const decoder = new TextDecoder();
 
@@ -49,13 +46,11 @@ export function useSseSosListener(onMessage: (data: string) => void) {
           if (done || !value) break;
 
           const chunk = decoder.decode(value, { stream: true });
-          console.log('📩 수신된 원시 chunk:', chunk);
 
           const lines = chunk.split('\n').filter((line) => line.trim().startsWith('data:'));
 
           for (const line of lines) {
             const clean = line.replace(/^data:\s*/, '').trim();
-            console.log('📡 [SSE] 수신:', clean);
             onMessage(clean);
           }
         }
@@ -67,7 +62,6 @@ export function useSseSosListener(onMessage: (data: string) => void) {
 
         setTimeout(() => {
           if (!isCancelled) {
-            console.log('🔁 [SSE] 재연결 시도...');
             connect();
           }
         }, 3000);
@@ -79,8 +73,7 @@ export function useSseSosListener(onMessage: (data: string) => void) {
     return () => {
       isCancelled = true;
       controller.abort();
-      hasConnected = false; // ✅ 컴포넌트 언마운트 시 연결 해제
-      console.log('🧹 [SSE] 연결 종료');
+      hasConnected = false; // 컴포넌트 언마운트 시 연결 해제
     };
   }, [onMessage]);
 }
