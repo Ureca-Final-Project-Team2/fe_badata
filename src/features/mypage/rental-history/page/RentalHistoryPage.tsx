@@ -82,12 +82,6 @@ export default function RentalHistoryPage() {
             {items
               .filter((item) => !deletedIds.has(item.id))
               .map((item: RentalHistoryItem, idx: number) => {
-                console.log('[렌더링 아이템]', {
-                  id: item.id,
-                  storeName: item.storeName,
-                  reservationStatus: item.reservationStatus,
-                  isReviewed: item.isReviewed,
-                });
                 const startDate = new Date(item.rentalStartDate);
                 const endDate = new Date(item.rentalEndDate);
                 const days = differenceInCalendarDays(endDate, startDate) + 1;

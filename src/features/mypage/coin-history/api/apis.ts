@@ -26,7 +26,6 @@ export const getUserCoinHistory = async (
     });
     return response.data.content;
   } catch (error) {
-    console.error('Failed to fetch coin history:', error);
     throw error;
   }
 };

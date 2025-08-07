@@ -13,19 +13,17 @@ import type { AllPost } from '@/entities/trade-post/lib/types';
 import type { DeadlinePostResponse } from '@/features/trade/deadline/lib/types';
 import type { TradeDetailResponse } from '@/widgets/trade/post-detail/lib/types';
 
-// Infinite query 데이터 구조 타입
 interface InfiniteQueryData {
   pages: DeadlinePostResponse[];
   pageParams: unknown[];
 }
 
-// 통합된 좋아요 훅 (전체 페이지와 상세페이지 모두에서 사용)
+// 통합 좋아요 훅
 export const useTradePostLikeHooks = () => {
   const [loadingItems, setLoadingItems] = useState<Record<number, boolean>>({});
   const queryClient = useQueryClient();
   const { executeWithAuth } = useAuthRequiredRequest();
 
-  // 전체 페이지용 뮤테이션
   const postLikeMutation = usePostTradePostLikeMutation();
   const deleteLikeMutation = useDeleteTradePostLikeMutation();
 
@@ -36,9 +34,7 @@ export const useTradePostLikeHooks = () => {
     }));
   };
 
-  // 모든 관련 캐시 업데이트 함수
   const updateAllCaches = (postId: number, newIsLiked: boolean) => {
-    // 전체 페이지 캐시 업데이트 (infinite query 구조)
     queryClient.setQueryData(['trade-posts'], (oldData: InfiniteQueryData | undefined) => {
       if (!oldData || !oldData.pages || !Array.isArray(oldData.pages)) return oldData;
 
@@ -59,7 +55,6 @@ export const useTradePostLikeHooks = () => {
       };
     });
 
-    // 상세페이지 캐시 업데이트
     queryClient.setQueryData(
       ['trade', 'detail', postId],
       (oldData: TradeDetailResponse | undefined) => {
@@ -91,7 +86,6 @@ export const useTradePostLikeHooks = () => {
           updateAllCaches(item.id, true);
         }
       } catch (error) {
-        console.error('좋아요 토글 실패:', error);
         throw error;
       } finally {
         setItemLoading(item.id, false);
@@ -117,7 +111,6 @@ export const useTradePostLikeHooks = () => {
           updateAllCaches(postId, true);
         }
       } catch (error) {
-        console.error('좋아요 토글 실패:', error);
         throw error;
       } finally {
         setItemLoading(postId, false);
@@ -130,7 +123,7 @@ export const useTradePostLikeHooks = () => {
     });
   };
 
-  // 캐시에서 좋아요 상태 가져오기 (infinite query 구조에 맞게 수정)
+  // 캐시에서 좋아요 상태 가져오기
   const getCachedLikeState = (postId: number, fallbackIsLiked: boolean) => {
     const cachedData = queryClient.getQueryData<InfiniteQueryData>(['trade-posts']);
     if (cachedData && cachedData.pages && Array.isArray(cachedData.pages)) {

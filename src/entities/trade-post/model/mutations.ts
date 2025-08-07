@@ -28,7 +28,6 @@ export const usePostTradePostLikeMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
     },
     onError: (error: HTTPError) => {
-      console.error('좋아요 처리 실패', error);
       if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
         makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
       } else {
@@ -45,7 +44,6 @@ export const useDeleteTradePostLikeMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['trade-posts'] });
     },
     onError: (error: HTTPError) => {
-      console.error('좋아요 취소 실패', error);
       if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
         makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
       } else {
@@ -60,7 +58,6 @@ export const usePostTradePostLikeDetailMutation = () => {
   return useMutation({
     mutationFn: (postId: number) => postTradePostLike(postId),
     onError: (error: HTTPError) => {
-      console.error('좋아요 처리 실패', error);
       if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
         makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
       } else {
@@ -74,7 +71,6 @@ export const useDeleteTradePostLikeDetailMutation = () => {
   return useMutation({
     mutationFn: (postId: number) => deleteTradePostLike(postId),
     onError: (error: HTTPError) => {
-      console.error('좋아요 취소 실패', error);
       if (error.code === ErrorCode.LIKES_UNAUTHORIZED) {
         makeToast(ErrorMessageMap[ErrorCode.LIKES_UNAUTHORIZED], 'warning');
       } else {
@@ -102,8 +98,7 @@ export const useUpdateDataPostMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['trade', 'detail', postId] });
       makeToast('데이터 게시물이 수정되었습니다!', 'success');
     },
-    onError: (error) => {
-      console.error('데이터 게시물 수정 실패:', error);
+    onError: () => {
       makeToast('데이터 게시물 수정에 실패했습니다.', 'warning');
     },
   });
@@ -120,8 +115,7 @@ export const useUpdateGifticonPostMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['trade', 'detail', postId] });
       makeToast('기프티콘 게시물이 수정되었습니다!', 'success');
     },
-    onError: (error) => {
-      console.error('기프티콘 게시물 수정 실패:', error);
+    onError: () => {
       makeToast('기프티콘 게시물 수정에 실패했습니다.', 'warning');
     },
   });
