@@ -1,3 +1,4 @@
+import { isLoggedIn } from '@/features/rental/search/utils/auth/isLoggedIn';
 import {
   addLocalAddressHistory,
   deleteLocalAddressHistory,
@@ -6,8 +7,6 @@ import {
 } from '@/features/rental/search/utils/localStorage/addressHistory';
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
-
-import { isLoggedIn } from '../utils/auth/isLoggedIn';
 
 // 주소 이력 생성 요청 타입
 export interface CreateAddressHistoryRequest {

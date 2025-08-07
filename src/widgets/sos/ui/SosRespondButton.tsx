@@ -1,6 +1,6 @@
 'use client';
 
-import { useSosRespondMutation } from '../model/queries';
+import { useSosRespondMutation } from '@/widgets/sos/model/queries';
 
 interface SosRespondButtonProps {
   sosId: number;

@@ -4,10 +4,9 @@ let lastSseMessage = '';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { getDataUsage } from '@/widgets/data-usage/api/apis';
-
-import { useSosRespondMutation } from '../model/queries';
-import { useSosStore } from '../model/sosStore';
-import { useSseSosListener } from '../model/useSseSosListener';
+import { useSosRespondMutation } from '@/widgets/sos/model/queries';
+import { useSosStore } from '@/widgets/sos/model/sosStore';
+import { useSseSosListener } from '@/widgets/sos/model/useSseSosListener';
 
 import { makeCustomToast } from './makeCustomToast';
 

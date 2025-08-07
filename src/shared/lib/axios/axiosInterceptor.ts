@@ -1,10 +1,8 @@
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { END_POINTS, SUCCESS_CODE } from '@/shared/api/endpoints';
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
-
-import { HTTPError } from '../HTTPError';
-
-import { handleAPIError } from './errorHandler';
+import { handleAPIError } from '@/shared/lib/axios/errorHandler';
+import { HTTPError } from '@/shared/lib/HTTPError';
 
 import type { ApiResponse, ErrorResponse } from '@/shared/lib/axios/responseTypes';
 import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';

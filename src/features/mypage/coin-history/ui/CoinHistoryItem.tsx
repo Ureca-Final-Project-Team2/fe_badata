@@ -1,4 +1,4 @@
-import { COIN_SOURCE_CONFIG, formatDate } from '../lib/constants';
+import { COIN_SOURCE_CONFIG, formatDate } from '@/features/mypage/coin-history/lib/constants';
 
 import type { CoinSource } from '@/features/mypage/coin-history/lib/constants';
 import type { CoinHistoryItem as CoinHistoryItemType } from '@/features/mypage/coin-history/lib/types';

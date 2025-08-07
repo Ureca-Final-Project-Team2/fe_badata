@@ -1,6 +1,6 @@
-import { makeToast } from '../lib/makeToast';
+import { makeToast } from '@/shared/lib/makeToast';
 
-import type { KakaoShare } from '../lib/kakao';
+import type { KakaoShare } from '@/shared/lib/kakao';
 
 interface ShareParams {
   title: string;
