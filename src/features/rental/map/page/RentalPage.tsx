@@ -569,7 +569,7 @@ export default function RentalPage() {
         isLoading={locationLoading || urlParamsLoading}
         error={locationError}
       />
-      <div className="relative w-full h-[calc(100vh-130px)]">
+      <div className="w-full h-[calc(100vh-190px)]">
         <MapSection
           filterState={filterState}
           initialLat={selectedLat ? parseFloat(selectedLat) : undefined}
