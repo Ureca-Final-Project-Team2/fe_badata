@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { useUserInfoQuery } from '@/entities/user/model/queries';
@@ -12,14 +13,21 @@ import { ReportStatusSection } from '@/features/mypage/ui/ReportStatusSection';
 import { SosSection } from '@/features/mypage/ui/SosSection';
 import { TradeSection } from '@/features/mypage/ui/TradeSection';
 import { ICONS } from '@/shared/config/iconPath';
+import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { Header } from '@/shared/ui/Header';
 import MyProfileCard from '@/widgets/user/ui/MyProfileCard';
 
 export default function MyPage() {
-  const { isLoggedIn } = useAuthStore();
+  const router = useRouter();
+  const { isLoggedIn, logout } = useAuthStore();
+
   const { data: coinData } = useUserCoinQuery();
   const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfoQuery();
+  const handleLogout = () => {
+    logout();
+    router.push(PATH.TRADE.MAIN);
+  };
 
   // 모든 사용자 정보가 로딩된 후에만 프로필 카드 렌더링
   const isProfileReady = isLoggedIn
@@ -87,6 +95,11 @@ export default function MyPage() {
           <SosSection />
           <ReportStatusSection />
           <AlarmSettingSection />
+          <div className="flex flex-row justify-center ">
+            <button onClick={handleLogout} className="underline cursor-pointer">
+              로그아웃
+            </button>
+          </div>
         </div>
       </div>
     </BaseLayout>
