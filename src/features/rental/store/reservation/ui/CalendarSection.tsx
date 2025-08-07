@@ -18,6 +18,13 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ dateRange, onChange }
   // 날짜가 선택되었는지 확인
   const hasSelectedDates = dateRange?.from && dateRange?.to;
 
+  // 오늘 날짜를 포함한 이전 날짜들을 비활성화하는 함수
+  const disabledDays = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 설정
+    return date < today;
+  };
+
   return (
     <>
       <div className="font-body-semibold flex items-center mt-2 gap-2">
@@ -36,6 +43,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ dateRange, onChange }
           onSelect={onChange}
           month={month}
           required
+          disabled={disabledDays}
           className="rounded-md w-full"
         />
       </div>
