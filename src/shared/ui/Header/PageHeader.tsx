@@ -1,10 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-
-import { MoreVertical, Share } from 'lucide-react';
-
-import { ICONS } from '@/shared/config/iconPath';
+import { ChevronLeft, MoreVertical, Share } from 'lucide-react';
 
 interface PageHeaderProps {
   title: string;
@@ -27,7 +23,7 @@ export const PageHeader = ({
       onClick={onBack}
       aria-label="뒤로가기"
     >
-      <Image src={ICONS.ETC.BACKICON} alt="back-button" width={50} height={30} />
+      <ChevronLeft size={30} className="text-[var(--main-4)]" />
     </button>
 
     <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[20px] font-bold text-black">
