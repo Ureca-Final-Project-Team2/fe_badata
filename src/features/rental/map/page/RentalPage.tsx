@@ -619,21 +619,24 @@ export default function RentalPage() {
           />
         </Suspense>
       </div>
-      <Suspense fallback={<DrawerLoadingFallback />}>
-        <DrawerSection
-          storeList={storeList}
-          isLoading={isLoading}
-          isFetchingNextPage={isFetchingNextPage}
-          hasNextPage={hasNextPage}
-          isError={isError}
-          error={error}
-          open={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
-          onLoadMore={fetchNextPage}
-          onSortClick={handleSortClick}
-          currentSort={currentSort}
-        />
-      </Suspense>
+      {/* DrawerSection은 isDrawerOpen이 true일 때만 렌더링 */}
+      {isDrawerOpen && (
+        <Suspense fallback={<DrawerLoadingFallback />}>
+          <DrawerSection
+            storeList={storeList}
+            isLoading={isLoading}
+            isFetchingNextPage={isFetchingNextPage}
+            hasNextPage={hasNextPage}
+            isError={isError}
+            error={error}
+            open={isDrawerOpen}
+            onClose={() => setIsDrawerOpen(false)}
+            onLoadMore={fetchNextPage}
+            onSortClick={handleSortClick}
+            currentSort={currentSort}
+          />
+        </Suspense>
+      )}
       <Suspense fallback={<FilterLoadingFallback />}>
         <FilterDrawer
           isOpen={filterDrawerOpen}

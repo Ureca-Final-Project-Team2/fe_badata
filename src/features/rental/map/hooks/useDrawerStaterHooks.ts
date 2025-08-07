@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react';
 
 // Drawer 상태 관리를 위한 커스텀 훅
 export const useDrawerState = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isSortDrawerOpen, setIsSortDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isSortDrawerOpen, setIsSortDrawerOpen] = useState<boolean>(false);
   const [currentSort, setCurrentSort] = useState('distance,asc');
 
   const handleListView = useCallback(() => {

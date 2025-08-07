@@ -89,7 +89,8 @@ export const DragBottomSheet = ({
     if (typeof window !== 'undefined') {
       const height = window.innerHeight;
       setWindowHeight(height);
-      setCurrentY(height); // 초기값을 windowHeight로 설정
+      // 초기값을 collapsed 상태로 설정 (닫힌 상태)
+      setCurrentY(height * 0.8);
     }
   }, []);
 
@@ -168,6 +169,11 @@ export const DragBottomSheet = ({
         return '거리순';
     }
   };
+
+  // open이 false이면 렌더링하지 않음
+  if (!open) {
+    return null;
+  }
 
   return (
     <motion.div
