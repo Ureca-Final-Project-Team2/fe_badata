@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { MoreHorizontal } from 'lucide-react';
@@ -61,7 +60,7 @@ export default function ReviewItem({ review, isOwner }: ReviewItemProps) {
           bottomContent={
             <>
               <div className="flex items-center gap-1">
-                <Image src={ICONS.ETC.LIKE_ACTIVE} width={18} height={18} alt="별점" />
+                <img src={ICONS.ETC.LIKE_ACTIVE.src} width={18} height={18} alt="별점" />
                 <span className="font-label-medium text-[var(--main-5)]">
                   {review.rating.toFixed(1)}
                 </span>
@@ -84,12 +83,10 @@ export default function ReviewItem({ review, isOwner }: ReviewItemProps) {
 
         {review.reviewImageUrl && (
           <div className="mt-4 mb-2">
-            <Image
+            <img
               src={review.reviewImageUrl}
               alt="리뷰 이미지"
-              width={200}
-              height={140}
-              className="w-full h-[140px] object-contain rounded-lg bg-[var(--gray-light)]"
+              className="w-full h-full object-contain rounded-lg bg-[var(--gray-light)]"
             />
           </div>
         )}
