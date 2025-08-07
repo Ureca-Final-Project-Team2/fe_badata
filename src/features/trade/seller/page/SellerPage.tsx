@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSellerPostsQuery } from '@/entities/trade-post/model/queries';
 import { ICONS } from '@/shared/config/iconPath';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { PageHeader } from '@/shared/ui/Header';
 import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
 import { Switch } from '@/shared/ui/Switch/Switch';
@@ -31,7 +32,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
   const observerRef = useRef<HTMLDivElement>(null);
   const loadingStartTime = useRef<number>(0);
 
-  // 판매자의 거래 게시물 조회 (올바른 API 사용)
+  // 판매자의 거래 게시물 조회
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } =
     useSellerPostsQuery(userId, isCompleted, undefined, 30);
 
@@ -134,9 +135,7 @@ export default function SellerPage({ userId, sellerName, sellerAvatar }: SellerP
             (!data?.pages ||
               data.pages.length === 0 ||
               data.pages.every((page) => !page?.item || page.item.length === 0)) && (
-              <div className="text-center py-8 text-[var(--gray-mid)]">
-                <p>판매글이 없습니다.</p>
-              </div>
+              <EmptyState title="판매글이 없습니다." />
             )}
 
           {/* 데이터 표시 */}
