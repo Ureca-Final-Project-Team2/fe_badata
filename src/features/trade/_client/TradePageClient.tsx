@@ -70,7 +70,11 @@ export default function TradePageClient() {
         );
       }
       if (page === 'gifticon') {
-        return post.postCategory === 'GIFTICON' && post.price <= gifticonPrice;
+        return (
+          post.postCategory === 'GIFTICON' &&
+          (selectedCategory === '전체' || post.gifticonCategory === selectedCategory) &&
+          post.price <= gifticonPrice
+        );
       }
       return true;
     })

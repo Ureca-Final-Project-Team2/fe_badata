@@ -74,7 +74,11 @@ export default function DeadlinePageClient() {
       }
 
       if (page === 'gifticon') {
-        return p.postCategory === 'GIFTICON' && p.price <= gifticonPrice;
+        return (
+          p.postCategory === 'GIFTICON' &&
+          (selectedCategory === '전체' || p.gifticonCategory === selectedCategory) &&
+          p.price <= gifticonPrice
+        );
       }
       return false;
     })

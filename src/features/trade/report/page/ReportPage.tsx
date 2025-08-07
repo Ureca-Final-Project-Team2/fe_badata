@@ -90,6 +90,7 @@ export default function ReportPage({ postId }: ReportPageProps) {
         허위신고 작성 시 불이익이 있을 수 있습니다."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            className="cursor-pointer"
           />
         </div>
       )}
