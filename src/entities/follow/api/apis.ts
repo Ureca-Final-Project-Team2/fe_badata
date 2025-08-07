@@ -1,4 +1,3 @@
-import { getFollowTypeText } from '@/entities/follow/lib/types';
 import { END_POINTS } from '@/shared/api/endpoints';
 import { axiosInstance } from '@/shared/lib/axios/axiosInstance';
 
@@ -11,17 +10,15 @@ export const fetchFollows = async (
 ): Promise<FollowResponse> => {
   try {
     const response = await axiosInstance.get(END_POINTS.MYPAGE.FOLLOWERS, {
-      params: { 
+      params: {
         followType,
-        cursor, 
-        size 
+        cursor,
+        size,
       },
     });
-    
+
     return response.data;
   } catch (error) {
-    const followTypeText = getFollowTypeText(followType);
-    console.error(`${followTypeText} 목록 조회 실패:`, error);
     throw error;
   }
 };
@@ -31,7 +28,6 @@ export const deleteFollow = async (followId: number): Promise<DeleteFollowRespon
     const response = await axiosInstance.delete(END_POINTS.MYPAGE.DELETE_FOLLOW(followId));
     return response.data;
   } catch (error) {
-    console.error('팔로우 삭제 실패:', error);
     throw error;
   }
-}; 
+};

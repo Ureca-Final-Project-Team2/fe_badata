@@ -13,7 +13,7 @@ export const TradeSection = () => (
             <div className="h-[28px] flex items-center justify-center">
               <Image src={ICONS.MYPAGE.TRADE_CELL} alt="판매 내역" width={20} height={20} />
             </div>
-            <span className="font-label-regular group-hover:text-[var(--main-3)]">판매 내역</span>
+            <span className="font-label-regular group-hover:text-[var(--main-5)]">판매 내역</span>
           </Link>
         </li>
 
@@ -22,7 +22,7 @@ export const TradeSection = () => (
             <div className="h-[28px] flex items-center justify-center">
               <Image src={ICONS.MYPAGE.TRADE_BUY} alt="구매 내역" width={24} height={24} />
             </div>
-            <span className="font-label-regular group-hover:text-[var(--main-3)]">구매 내역</span>
+            <span className="font-label-regular group-hover:text-[var(--main-5)]">구매 내역</span>
           </Link>
         </li>
 
@@ -31,7 +31,7 @@ export const TradeSection = () => (
             <div className="h-[28px] flex items-center justify-center">
               <Image src={ICONS.MYPAGE.TRADE_LIKE} alt="찜 목록" width={18} height={18} />
             </div>
-            <span className="font-label-regular group-hover:text-[var(--main-3)]">찜 목록</span>
+            <span className="font-label-regular group-hover:text-[var(--main-5)]">찜 목록</span>
           </Link>
         </li>
       </ul>

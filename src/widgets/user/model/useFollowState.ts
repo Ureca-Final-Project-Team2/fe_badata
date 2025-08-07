@@ -33,7 +33,6 @@ export const useFollowState = (userId: number) => {
           method: 'POST',
         });
       } else {
-        console.error('팔로우 요청 실패:', err);
       }
     }
   };

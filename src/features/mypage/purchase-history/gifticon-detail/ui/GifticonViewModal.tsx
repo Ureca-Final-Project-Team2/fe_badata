@@ -37,8 +37,7 @@ export default function GifticonViewModal({
       try {
         await navigator.clipboard.writeText(gifticonImage.couponNumber);
         makeToast('쿠폰 번호가 복사되었습니다.', 'success');
-      } catch (error) {
-        console.error('클립보드 복사 실패:', error);
+      } catch {
         makeToast('쿠폰 번호 복사에 실패했습니다.', 'warning');
       }
     }

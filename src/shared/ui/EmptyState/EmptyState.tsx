@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react';
+import { Package } from 'lucide-react';
 
 interface EmptyStateProps {
   title?: string;
@@ -24,7 +24,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     <div className={`flex items-center justify-center py-8 ${className}`}>
       <div className="text-center">
         <div className="w-12 h-12 bg-[var(--gray-light)] rounded-full flex items-center justify-center mx-auto mb-2">
-          {icon || <Search className="w-6 h-6 text-[var(--gray-dark)]" />}
+          {icon || <Package className="w-6 h-6 text-[var(--gray-dark)]" />}
         </div>
         <p className="text-[var(--gray-dark)] font-caption-medium">{title}</p>
         {description && (

@@ -45,7 +45,6 @@ interface TradePostCardProps {
  * @param className - 추가 커스텀 클래스
  */
 const TradePostCard = ({
-  imageUrl,
   title,
   partner,
   mobileCarrier,
@@ -60,7 +59,6 @@ const TradePostCard = ({
   className = '',
   isLikeLoading = false,
 }: TradePostCardProps) => {
-  // hydration 오류 방지를 위한 클라이언트 사이드 상태
   const [mounted, setMounted] = useState(false);
   const [safeLikeCount, setSafeLikeCount] = useState(0);
 
@@ -69,22 +67,17 @@ const TradePostCard = ({
     setSafeLikeCount(likeCount);
   }, [likeCount]);
 
-  // 서버 사이드 렌더링 시에는 0으로 고정, 클라이언트에서만 실제 값 사용
   const displayLikeCount = mounted ? safeLikeCount : 0;
 
   const getSafeImageUrl = (): string => {
-    // 기프티콘 게시물인 경우 항상 파트너별 디폴트 이미지 사용
     if (partner) {
-      console.log('imgUrl:', imageUrl); // 디버깅용 로그
       return getPartnerDefaultImage(partner as KoreanBrandName);
     }
 
-    // 데이터 게시물인 경우 통신사별 디폴트 이미지 사용
     if (mobileCarrier) {
       return getCarrierDefaultImage(mobileCarrier);
     }
 
-    // 기본 이미지
     return DEFAULT_IMAGE;
   };
 
@@ -101,10 +94,10 @@ const TradePostCard = ({
 
   return (
     <div
-      className={`w-[178px] flex-shrink-0 rounded-[15px] bg-white flex flex-col cursor-pointer ${className}`}
+      className={`w-[178px] flex-shrink-0 rounded-[15px] bg-[var(--white)] flex flex-col cursor-pointer ${className}`}
       onClick={handleCardClick}
     >
-      <div className="relative w-[178px] h-[163px] overflow-hidden bg-white flex items-center justify-center">
+      <div className="relative w-[178px] h-[163px] overflow-hidden bg-[var(--white)] flex items-center justify-center">
         {hasDday && (
           <div className="absolute top-2 left-2 z-10">
             <DdayBadge dday={dday} size="md" />
@@ -120,11 +113,9 @@ const TradePostCard = ({
           height={163}
           className="w-[178px] h-[163px] object-cover rounded-[15px] bg-[var(--gray-light)]"
           onError={(e) => {
-            // 기프티콘 게시물인 경우 파트너별 디폴트 이미지 사용
             if (partner) {
               e.currentTarget.src = getPartnerDefaultImage(partner as KoreanBrandName);
             } else {
-              // 데이터 게시물인 경우 통신사별 디폴트 이미지 사용
               e.currentTarget.src = mobileCarrier
                 ? getCarrierDefaultImage(mobileCarrier)
                 : DEFAULT_IMAGE;

@@ -61,7 +61,6 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
               resolve(data);
             },
             onError: (error) => {
-              console.error('수정 실패:', error);
               reject(error);
             },
             onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
@@ -82,9 +81,8 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
           dispatch({ type: 'SET_SUBMITTING', value: false });
         },
       );
-    } catch (error) {
+    } catch {
       // 에러는 이미 위에서 처리됨
-      console.error('Data edit failed:', error);
     }
   };
 
@@ -95,7 +93,6 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
   }
 
   if (error) {
-    console.error('DataEditForm error:', error);
     return (
       <div className="flex justify-center items-center h-64 text-[var(--red)]">
         게시물 정보를 불러올 수 없습니다.

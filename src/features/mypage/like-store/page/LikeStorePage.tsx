@@ -4,11 +4,15 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { Store } from 'lucide-react';
+
 import { useLikedStores } from '@/features/mypage/like-store/model/queries';
 import { StoreCard } from '@/features/rental/map/ui/StoreCard';
 import { isStoreOpen } from '@/shared/lib/utils/storeIsOpeningUtils';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { PageHeader } from '@/shared/ui/Header';
+import { Spinner } from '@/shared/ui/Spinner/Spinner';
 
 const ANIMATION_DURATION = 500; // 애니메이션 지속 시간 상수화
 
@@ -63,14 +67,17 @@ export default function LikeStorePage() {
       showBottomNav
     >
       {/* 로딩 상태 */}
-      {isLoading && <CenteredMessage>로딩중...</CenteredMessage>}
+      {isLoading && <Spinner content="관심 매장을 불러오는 중입니다..." />}
 
       {/* 에러 상태 */}
       {isError && <CenteredMessage>에러가 발생했습니다.</CenteredMessage>}
 
       {/* 빈 상태 */}
       {!isLoading && !isError && (!filteredItems || filteredItems.length === 0) && (
-        <CenteredMessage>관심 매장이 없습니다.</CenteredMessage>
+        <EmptyState
+          title="관심 매장이 없습니다."
+          icon={<Store className="w-6 h-6 text-[var(--gray-dark)]" />}
+        />
       )}
 
       {/* 데이터 표시 */}

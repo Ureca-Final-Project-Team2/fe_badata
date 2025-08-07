@@ -4,9 +4,12 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { Heart } from 'lucide-react';
+
 import { useLikedTradePosts } from '@/features/mypage/like-trade-post/model/queries';
 import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { PageHeader } from '@/shared/ui/Header';
 import { TradePostCardSkeleton } from '@/shared/ui/Skeleton/TradePostCardSkeleton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
@@ -59,7 +62,10 @@ export default function LikeTradePostPage() {
 
         {/* 빈 상태 */}
         {!isLoading && !isError && (!likeTradePostItems || likeTradePostItems.length === 0) && (
-          <CenteredMessage>찜 목록이 없습니다.</CenteredMessage>
+          <EmptyState
+            title="찜 목록이 없습니다."
+            icon={<Heart className="w-6 h-6 text-[var(--gray-dark)]" />}
+          />
         )}
 
         {/* 데이터 표시 */}

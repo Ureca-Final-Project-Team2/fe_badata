@@ -76,9 +76,8 @@ export function TradeDataRegisterForm() {
           dispatch({ type: 'SET_SUBMITTING', value: false });
         },
       );
-    } catch (error) {
+    } catch {
       // 에러는 이미 위에서 처리됨
-      console.error('Data registration failed:', error);
     }
   };
 
@@ -150,21 +149,6 @@ export function TradeDataRegisterForm() {
               GB
             </option>
           </select>
-        </div>
-      </div>
-      <div className="flex w-[380px] gap-1 overflow-hidden">
-        <div className="w-2/3 overflow-hidden">
-          <InputField
-            label="데이터 용량"
-            isRequired
-            type="number"
-            value={state.form.capacity}
-            onChange={(e) =>
-              dispatch({ type: 'CHANGE_FIELD', field: 'capacity', value: e.target.value })
-            }
-            placeholder="용량"
-            className="w-full cursor-pointer"
-          />
         </div>
       </div>
       <InputField

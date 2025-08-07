@@ -17,7 +17,6 @@ export const DataUsageWidgetContainer: React.FC = () => {
       const response = await getDataUsage();
       setData(response);
     } catch (err) {
-      console.error('Failed to fetch data usage:', err);
       setError(err as Error);
     } finally {
       setIsLoading(false);
@@ -30,12 +29,12 @@ export const DataUsageWidgetContainer: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full rounded-[16px] bg-white p-4 shadow-sm border border-[var(--gray-light)]">
+      <div className="w-full rounded-[16px] bg-[var(--white)] p-4 shadow-sm border border-[var(--gray-light)]">
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded mb-2"></div>
-          <div className="h-3 bg-gray-200 rounded mb-3"></div>
-          <div className="h-3 bg-gray-200 rounded mb-2"></div>
-          <div className="h-2 bg-gray-200 rounded"></div>
+          <div className="h-4 bg-[var(--gray-light)] rounded mb-2"></div>
+          <div className="h-3 bg-[var(--gray-light)] rounded mb-3"></div>
+          <div className="h-3 bg-[var(--gray-light)] rounded mb-2"></div>
+          <div className="h-2 bg-[var(--gray-light)] rounded"></div>
         </div>
       </div>
     );
@@ -43,12 +42,14 @@ export const DataUsageWidgetContainer: React.FC = () => {
 
   if (error || !data) {
     return (
-      <div className="w-full rounded-[16px] bg-white p-4 shadow-sm border border-[var(--gray-light)]">
-        <div className="text-center text-gray-500">데이터 사용량을 불러올 수 없습니다.</div>
+      <div className="w-full rounded-[16px] bg-[var(--white)] p-4 shadow-sm border border-[var(--gray-light)]">
+        <div className="text-center text-[var(--gray-dark)]">
+          데이터 사용량을 불러올 수 없습니다.
+        </div>
         <div className="text-center">
           <button
             onClick={fetchData}
-            className="mt-4 px-4 py-2 bg-[var(--main-5)] text-white rounded-lg font-label-regular"
+            className="mt-4 px-4 py-2 bg-[var(--main-5)] text-[var(--white)] rounded-lg font-label-regular"
           >
             다시 시도
           </button>

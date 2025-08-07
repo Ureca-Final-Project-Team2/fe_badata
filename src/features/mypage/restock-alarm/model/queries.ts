@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { deleteRestockAlarm, getRestockAlarmList } from '@/features/mypage/restock-alarm/api/apis';
+import { makeToast } from '@/shared/lib/makeToast';
 
 import type { RestockAlarmItem } from '@/features/mypage/restock-alarm/lib/types';
 
@@ -18,8 +19,8 @@ export const useDeleteRestockAlarmMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['restockAlarmList'] });
     },
-    onError: (error, restockId) => {
-      console.error('삭제 mutation 실패:', restockId, error);
+    onError: () => {
+      makeToast('재입고 알림 삭제에 실패했습니다.', 'warning');
     },
   });
 };

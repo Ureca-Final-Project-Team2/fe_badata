@@ -12,7 +12,9 @@ import { AlarmNoticeSection } from '@/features/mypage/ui/AlarmNoticeSection';
 import { DeleteConfirmModal } from '@/features/mypage/ui/DeleteConfirmModal';
 import { makeToast } from '@/shared/lib/makeToast';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { PageHeader } from '@/shared/ui/Header';
+import { Spinner } from '@/shared/ui/Spinner/Spinner';
 
 import type { RestockAlarmItem } from '@/features/mypage/restock-alarm/lib/types';
 
@@ -65,7 +67,6 @@ export default function RestockAlarmPage() {
 
       makeToast('재입고 알림을 해제하였습니다.', 'success');
 
-      // 애니메이션 완료 후 실제 제거
       timeoutRef.current = setTimeout(() => {
         setRemovedAlarmIds((prev) => new Set([...prev, itemToDelete.id]));
         setRemovingAlarmIds((prev) => {
@@ -73,9 +74,8 @@ export default function RestockAlarmPage() {
           newSet.delete(itemToDelete.id);
           return newSet;
         });
-      }, 500); // 애니메이션 지속 시간
-    } catch (error) {
-      console.error('재입고 알림 삭제 실패:', error);
+      }, 500);
+    } catch {
       makeToast('재입고 알림 삭제에 실패했습니다.', 'warning');
     } finally {
       setDeletingIds((prev) => {
@@ -111,14 +111,14 @@ export default function RestockAlarmPage() {
       </div>
 
       {/* 로딩 상태 */}
-      {isLoading && <CenteredMessage>불러오는 중...</CenteredMessage>}
+      {isLoading && <Spinner content="재입고 알림 내역을 불러오는 중입니다..." />}
 
       {/* 에러 상태 */}
       {isError && <CenteredMessage>데이터를 불러오지 못했습니다.</CenteredMessage>}
 
       {/* 빈 상태 */}
       {!isLoading && !isError && filteredAlarms.length === 0 && (
-        <CenteredMessage>재입고 알림 내역이 없습니다.</CenteredMessage>
+        <EmptyState title="재입고 알림 내역이 없습니다." />
       )}
 
       {/* 데이터 표시 */}

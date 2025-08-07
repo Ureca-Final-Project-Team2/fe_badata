@@ -18,7 +18,7 @@ export const SosSection = () => (
             height={20}
             className="object-contain"
           />
-          <span className="font-label-regular group-hover:text-[var(--main-3)]">SOS 요청 내역</span>
+          <span className="font-label-regular group-hover:text-[var(--main-5)]">SOS 요청 내역</span>
         </div>
       </section>
     </Link>
