@@ -51,7 +51,7 @@ export function SosModal({ isOpen, onClose }: SosModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-[50]">
+    <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-[100]">
       <div className="bg-white rounded-lg p-6 mx-4 max-w-sm w-full">
         <div className="text-center">
           <div className="text-4xl mb-4">🚨</div>
