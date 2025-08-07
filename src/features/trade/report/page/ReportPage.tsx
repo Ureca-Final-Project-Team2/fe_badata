@@ -84,7 +84,7 @@ export default function ReportPage({ postId }: ReportPageProps) {
         </div>
       </div>
       {selectedReason === 'ETC' && (
-        <div className="mb-6">
+        <div className="mb-6 cursor-pointer">
           <TextAreaField
             placeholder="상세한 신고 사유를 적어주세요.
         허위신고 작성 시 불이익이 있을 수 있습니다."

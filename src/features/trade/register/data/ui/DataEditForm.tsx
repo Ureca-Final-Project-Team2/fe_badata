@@ -128,7 +128,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
             label="만료일"
             value={post.deadLine}
             disabled
-            className="bg-[var(--gray-light)]"
+            className="bg-[var(--gray-light)] cursor-pointer"
           />
           <InputField
             label="용량"
@@ -140,7 +140,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
             label="통신사"
             value={post.mobileCarrier || '정보 없음'}
             disabled
-            className="bg-[var(--gray-light)]"
+            className="bg-[var(--gray-light)] cursor-pointer"
           />
         </div>
 
@@ -155,7 +155,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
             }
             placeholder="제목을 입력해주세요"
             errorMessage="제목을 입력해주세요."
-            className="border-[var(--main-3)]"
+            className="border-[var(--main-3)] cursor-pointer"
           />
           <InputField
             label="판매 가격"
@@ -167,7 +167,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
             }
             placeholder="판매 가격"
             errorMessage="가격을 입력해주세요."
-            className="bg-[var(--white)] border-[var(--main-3)]"
+            className="bg-[var(--white)] border-[var(--main-3)] cursor-pointer"
           />
           <TextAreaField
             label="설명"
@@ -176,7 +176,7 @@ export function TradeDataEditForm({ postId }: DataEditFormProps) {
               dispatch({ type: 'CHANGE_FIELD', field: 'comment', value: e.target.value })
             }
             placeholder="설명 (선택)"
-            className="border-[var(--main-3)]"
+            className="border-[var(--main-3)] cursor-pointer"
           />
         </div>
       </form>

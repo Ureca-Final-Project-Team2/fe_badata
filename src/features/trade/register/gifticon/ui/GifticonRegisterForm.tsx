@@ -310,11 +310,13 @@ export function TradeGifticonRegisterForm() {
         value={state.form.price}
         onChange={handleFieldChange('price')}
         placeholder="판매 가격"
+        className="cursor-pointer"
       />
       <TextAreaField
         value={state.form.comment}
         onChange={handleFieldChange('comment')}
         placeholder="설명 (선택)"
+        className="cursor-pointer"
       />
       <RegisterButton
         type="submit"
