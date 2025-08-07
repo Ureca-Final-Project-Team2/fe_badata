@@ -7,6 +7,7 @@ import DeadlinePageClient from '@/features/trade/deadline/_client/DeadlinePageCl
 import { PATH } from '@/shared/config/path';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
 import { PageHeader } from '@/shared/ui/Header';
+import { Spinner } from '@/shared/ui/Spinner/Spinner';
 
 export default function DeadlinePage() {
   const router = useRouter();
@@ -14,7 +15,9 @@ export default function DeadlinePage() {
     <BaseLayout
       header={<PageHeader title="마감 임박 게시물" onBack={() => router.push(PATH.TRADE.MAIN)} />}
     >
-      <Suspense fallback={<div>마감 임박 게시물을 불러오는 중입니다...</div>}>
+      <Suspense
+        fallback={<Spinner className="mt-10" content="마감 임박 게시물을 불러오는 중입니다..." />}
+      >
         <DeadlinePageClient />
       </Suspense>
     </BaseLayout>
