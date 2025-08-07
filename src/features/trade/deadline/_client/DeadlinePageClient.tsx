@@ -9,6 +9,7 @@ import { useInView } from 'framer-motion';
 import { DataFilterDrawer } from '@/features/trade/data/ui/DataFilterDrawer';
 import { DeadlineFlatTab } from '@/features/trade/deadline/ui/DeadlineFlatTab';
 import { DeadlineList } from '@/features/trade/deadline/ui/DeadlineList';
+import { GifticonFilter } from '@/features/trade/gifticon/ui/GifticonFilter';
 import { GifticonFilterDrawer } from '@/features/trade/gifticon/ui/GifticonFilterDrawer';
 import { useTradeDeadlineInfiniteQuery } from '@/features/trade/model/queries';
 import { useDataFilterHooks } from '@/features/trade/model/useDataFilterHooks';
@@ -16,8 +17,6 @@ import { useGifticonFilterHooks } from '@/features/trade/model/useGifticonFilter
 import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
-
-import { GifticonFilter } from '../../gifticon/ui/GifticonFilter';
 
 import type { DeadlinePost } from '@/entities/trade-post/lib/types';
 
