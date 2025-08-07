@@ -73,9 +73,9 @@ export function BaseLayout({
         </div>
 
         {/* 줌인/줌 아웃 버튼 */}
-        <div className="fixed top-[200px] inset-x-0 z-30">
-          <div className="mx-auto max-w-[428px] w-full flex justify-start pointer-events-auto px-5">
-            {headerZoom}
+        <div className="fixed top-[200px] left-0 right-0 z-30 pointer-events-none">
+          <div className="mx-auto max-w-[428px] w-full flex justify-start px-6">
+            <div className="pointer-events-auto">{headerZoom}</div>
           </div>
         </div>
 
