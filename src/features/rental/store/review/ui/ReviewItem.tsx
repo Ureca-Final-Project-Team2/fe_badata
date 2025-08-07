@@ -86,7 +86,11 @@ export default function ReviewItem({ review, isOwner }: ReviewItemProps) {
             <img
               src={review.reviewImageUrl}
               alt="리뷰 이미지"
+<<<<<<< HEAD
               className="w-full h-full object-contain rounded-lg bg-[var(--gray-light)]"
+=======
+              className="w-full h-[140px] object-contain rounded-lg bg-[var(--gray-light)]"
+>>>>>>> develop
             />
           </div>
         )}

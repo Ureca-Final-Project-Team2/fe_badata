@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { respondToSos, sendSosRequest } from '../api/apis';
+import { respondToSos, sendSosRequest } from '@/widgets/sos/api/apis';
 
-import type { SosRespondResponse } from '../lib/types';
+import type { SosRespondResponse } from '@/widgets/sos/lib/types';
 
 export const useSosRequestMutation = () =>
   useMutation<{ sosId: number }, Error, void>({

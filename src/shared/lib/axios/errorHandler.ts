@@ -1,6 +1,5 @@
 import { ErrorMessageMap } from '@/shared/config/errorCodes';
-
-import { HTTPError } from '../HTTPError';
+import { HTTPError } from '@/shared/lib/HTTPError';
 
 import type { ErrorCode } from '@/shared/config/errorCodes';
 import type { ErrorResponse } from '@/shared/lib/axios/responseTypes';

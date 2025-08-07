@@ -2,11 +2,6 @@
 
 import { lazy, Suspense } from 'react';
 
-import { useRouter } from 'next/navigation';
-
-import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { PageHeader } from '@/shared/ui/Header';
-
 const TradeSearchContent = lazy(() => import('@/features/trade/search-post/page/SearchTradePage'));
 
 export const dynamic = 'force-dynamic';
@@ -22,19 +17,9 @@ const SearchContentLoadingFallback = () => (
 );
 
 export default function SearchPage() {
-  const router = useRouter();
-
-  const handleBack = () => router.back();
-
   return (
-    <BaseLayout
-      header={<PageHeader title="검색" onBack={handleBack} variant="default" />}
-      showBottomNav={true}
-      showSos={true}
-    >
-      <Suspense fallback={<SearchContentLoadingFallback />}>
-        <TradeSearchContent />
-      </Suspense>
-    </BaseLayout>
+    <Suspense fallback={<SearchContentLoadingFallback />}>
+      <TradeSearchContent />
+    </Suspense>
   );
 }
