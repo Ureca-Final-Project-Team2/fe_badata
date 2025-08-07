@@ -156,8 +156,7 @@ export const useFetchStoresHooks = (
           } else {
             setTimeout(initializeAfterMapReady, 100);
           }
-        } catch (error) {
-          console.log('🗺️ 지도 초기화 중 오류, 100ms 후 재시도:', error);
+        } catch {
           setTimeout(initializeAfterMapReady, 100);
         }
       };

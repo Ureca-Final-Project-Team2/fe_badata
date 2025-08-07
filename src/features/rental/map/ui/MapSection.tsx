@@ -80,7 +80,6 @@ export const MapSection = memo(function MapSection({
   // 지도가 준비되면 로딩 상태 해제 및 지도 클릭 이벤트 등록
   useEffect(() => {
     if (map) {
-      console.log('📍 MapSection: 지도가 준비됨, 로딩 상태 해제');
       setIsMapLoaded(true);
 
       // 지도 클릭 이벤트 등록
@@ -96,7 +95,6 @@ export const MapSection = memo(function MapSection({
     map,
     hasUrlParams,
     (mapInstance) => {
-      console.log('📍 MapSection 내부 onMapReady 호출됨');
       onMapReady?.(mapInstance);
     },
     isMapReadyRef,

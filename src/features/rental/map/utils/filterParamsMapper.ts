@@ -16,17 +16,10 @@ export const mapFilterStateToApiParams = (
 ): Record<string, unknown> => {
   const mergedParams: Record<string, unknown> = { ...bounds };
 
-  console.log('🔍 mapFilterStateToApiParams 호출:', { bounds, filterState, zoomLevel });
-
   // zoomLevel 추가
   if (zoomLevel !== undefined) {
     mergedParams.zoomLevel = zoomLevel;
-    console.log('✅ zoomLevel 추가됨:', zoomLevel);
-  } else {
-    console.log('⚠️ zoomLevel이 undefined입니다');
   }
-
-  console.log('🔍 zoomLevel 추가 후 mergedParams:', mergedParams);
 
   // filterState가 없으면 기본 필터 값들을 추가하지 않음 (초기 로드)
   if (!filterState) {

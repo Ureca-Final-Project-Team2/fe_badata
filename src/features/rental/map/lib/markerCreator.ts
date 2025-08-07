@@ -51,7 +51,6 @@ export const createStoreMarker = async (
 
     // 물방울 마커 클릭 핸들러
     const handleMarkerClick = async () => {
-      console.log('🔍 handleMarkerClick 시작:', { storeId: store.id, storeName: store.name });
       if (onStoreMarkerClick) {
         let storeDetail: StoreDetail | undefined = undefined;
         let safeDevices: StoreDevice[] = [];
@@ -87,12 +86,6 @@ export const createStoreMarker = async (
                 // '10GB' 형태의 문자열에서 숫자만 추출
                 const numericValue = filterParams.dataAmount.replace(/[^\d]/g, '');
                 const dataCapacity = Number(numericValue);
-                console.log('🔍 dataAmount 처리:', {
-                  original: filterParams.dataAmount,
-                  numericValue,
-                  dataCapacity,
-                  isValid: !isNaN(dataCapacity) && dataCapacity > 0,
-                });
                 if (!isNaN(dataCapacity) && dataCapacity > 0) {
                   deviceParams.dataCapacity = dataCapacity;
                 }
@@ -124,41 +117,14 @@ export const createStoreMarker = async (
                   .replace(/\.\d{3}Z$/, '');
               }
 
-              // 디버깅: API 호출 파라미터 로그
-              console.log('🔍 디바이스 조회 API 호출:', {
-                storeId: store.id,
-                storeName: store.name,
-                deviceParams,
-                filterParams,
-              });
-
               const devices = await fetchStoreDevices(store.id, deviceParams);
               safeDevices = Array.isArray(devices) ? devices : [];
-
-              // 디버깅: API 응답 로그
-              console.log('🔍 디바이스 조회 API 응답:', {
-                storeId: store.id,
-                devicesCount: safeDevices.length,
-                devices: safeDevices.map((d) => ({
-                  storeDeviceId: d.storeDeviceId,
-                  deviceName: d.deviceName,
-                  dataCapacity: d.dataCapacity,
-                  price: d.price,
-                })),
-              });
             }
           }
         } catch (error) {
           console.error('상세 정보 조회 실패:', error);
         }
 
-        // DeviceCard 정보를 표시하기 위해 콜백 호출 (디바이스가 없어도 호출)
-        console.log('🔍 onStoreMarkerClick 호출:', {
-          storeId: store.id,
-          devicesCount: safeDevices.length,
-          hasStoreDetail: !!storeDetail,
-          hasOnStoreMarkerClick: !!onStoreMarkerClick,
-        });
         onStoreMarkerClick(safeDevices, storeDetail, store.id);
       } else {
         console.warn('🔍 onStoreMarkerClick이 제공되지 않음');

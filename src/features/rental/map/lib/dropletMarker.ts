@@ -65,15 +65,12 @@ export const createDropletMarker = (
 
       // 중복 클릭 방지
       if (isProcessing) {
-        console.log('🔍 중복 클릭 방지:', storeId);
         return;
       }
 
       isProcessing = true;
 
       try {
-        console.log('🔍 마커 클릭 처리 시작:', storeId);
-
         // 클릭 시 즉시 말풍선으로 변환
         dropletElement.style.opacity = '0';
         dropletElement.style.transform = 'translateX(-50%) scale(0.8)';

@@ -179,29 +179,8 @@ export default function RentalPage() {
   // 마커 클릭 핸들러 수정 - 하단 스와이퍼로 표시 및 확장 상태 관리
   const handleMarkerClick = useCallback(
     async (devices: StoreDevice[], storeDetail?: StoreDetail, storeId?: number) => {
-      console.log('🎯 마커 클릭 핸들러 시작:', { storeId, devicesLength: devices.length });
-
-      // 디버깅: 마커 클릭 로그
-      console.log('🎯 마커 클릭 핸들러 호출:', {
-        storeId,
-        devicesLength: devices.length,
-        storeDetail: !!storeDetail,
-        devices: devices.map((d) => ({
-          storeDeviceId: d.storeDeviceId,
-          deviceName: d.deviceName,
-          dataCapacity: d.dataCapacity,
-          price: d.price,
-        })),
-      });
-
-      // 디바이스가 없어도 storeId가 있으면 처리 (마커 유지 및 DeviceCard 표시)
       if (storeId) {
-        console.log('🎯 handleStoreMarkerClick 호출 전:', {
-          storeId,
-          devicesLength: devices.length,
-        });
         handleStoreMarkerClick(devices, storeDetail, storeId);
-        console.log('🎯 handleStoreMarkerClick 호출 후');
 
         // 확장 상태 업데이트 (안정성 개선)
         const newExpanded = new Set(expandedMarkers);
@@ -210,12 +189,10 @@ export default function RentalPage() {
         if (isCurrentlyExpanded) {
           // 이미 확장된 상태면 축소
           newExpanded.delete(storeId);
-          console.log('🎯 마커 축소:', storeId);
         } else {
           // 확장되지 않은 상태면 확장 (다른 마커는 모두 축소)
           newExpanded.clear();
           newExpanded.add(storeId);
-          console.log('🎯 마커 확장:', storeId);
         }
 
         // 상태 업데이트를 즉시 수행
@@ -255,18 +232,12 @@ export default function RentalPage() {
             const { markerCaches } = await import('@/features/rental/map/lib/markerCache');
             const cache = markerCaches.get(mapInstance);
             if (cache) {
-              console.log('🎯 마커 선택 상태 업데이트:', {
-                storeId,
-                newExpanded: Array.from(newExpanded),
-              });
-
               // 모든 마커의 선택 상태를 먼저 해제
               cache.clearAllSelections();
 
               // 새로 선택된 마커만 선택 상태로 변경
               if (newExpanded.has(storeId)) {
                 cache.updateMarkerSelection(storeId, true);
-                console.log('🎯 마커 선택 상태 설정 완료:', storeId);
               }
             }
           } catch (error) {
@@ -300,12 +271,6 @@ export default function RentalPage() {
   // 지도 클릭 핸들러
   const handleMapClickWrapper = useCallback(
     async (event?: MouseEvent) => {
-      console.log('📍 지도 클릭 이벤트:', {
-        hasEvent: !!event,
-        target: event?.target,
-        targetClass: (event?.target as Element)?.className,
-      });
-
       // 마커 클릭으로 인한 지도 클릭인지 확인
       if (
         event &&
@@ -314,11 +279,8 @@ export default function RentalPage() {
           (event.target as Element).closest('.cluster-marker') ||
           (event.target as Element).closest('.kakao-maps-customoverlay'))
       ) {
-        console.log('📍 마커 클릭으로 인한 지도 클릭 무시');
         return;
       }
-
-      console.log('📍 지도 클릭됨');
 
       // 장소 마커 제거
       if (placeMarker) {

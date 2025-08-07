@@ -48,7 +48,6 @@ export default function RentalFilterContent({
       className="flex flex-col rounded-lg p-4 "
       onSubmit={(e) => {
         e.preventDefault();
-        console.log('결과보기 클릭 - 선택된 필터값:', filterState);
         onSubmit(filterState);
       }}
     >
