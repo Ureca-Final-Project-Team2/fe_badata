@@ -77,20 +77,24 @@ export const MapSection = memo(function MapSection({
     expandedMarkers,
   );
 
-  // 지도가 준비되면 로딩 상태 해제
+  // 지도가 준비되면 로딩 상태 해제 및 지도 클릭 이벤트 등록
   useEffect(() => {
     if (map) {
-      console.log('📍 MapSection: 지도가 준비됨, 로딩 상태 해제');
       setIsMapLoaded(true);
+
+      // 지도 클릭 이벤트 등록
+      if (onMapClick) {
+        window.kakao.maps.event.addListener(map, 'click', (event: MouseEvent) => {
+          onMapClick(event);
+        });
+      }
     }
-  }, [map]);
+  }, [map, onMapClick]);
 
   useCurrentLocationMarker(
     map,
     hasUrlParams,
-    onMapClick,
     (mapInstance) => {
-      console.log('📍 MapSection 내부 onMapReady 호출됨');
       onMapReady?.(mapInstance);
     },
     isMapReadyRef,

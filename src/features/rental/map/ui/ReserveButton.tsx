@@ -26,7 +26,7 @@ export default function ReserveButton({
   return (
     <button
       type="button"
-      className={`flex items-center rounded-full border border-[var(--main-5)] text-[var(--main-5)] bg-white font-label-semibold transition-colors
+      className={`cursor-pointer flex items-center rounded-full border border-[var(--main-5)] text-[var(--main-5)] bg-white font-label-semibold transition-colors
         hover:bg-[var(--main-4)] hover:text-white hover:border-[var(--main-4)] ${BTN_SIZE[size]} ${className}`}
       {...props}
     >

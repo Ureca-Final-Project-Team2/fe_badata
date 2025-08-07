@@ -36,12 +36,8 @@ export const useFetchStoresHooks = (
     // 클러스터 클릭이 활성화되어 있으면 API 호출 건너뛰기
     const isClusterClick = getClusterClickActive();
     if (isClusterClick) {
-      console.log('🔍 클러스터 클릭 활성화 - API 호출 건너뜀');
-
       // 클러스터 클릭 시에는 짧은 지연 후 API 호출 허용
-      setTimeout(() => {
-        console.log('🔍 클러스터 클릭 후 API 호출 허용');
-      }, 200); // 200ms 후 API 호출 허용
+      setTimeout(() => {}, 200); // 200ms 후 API 호출 허용
 
       return;
     }
@@ -91,7 +87,6 @@ export const useFetchStoresHooks = (
           // 클러스터 클릭 상태 재확인
           const isClusterClick = getClusterClickActive();
           if (isClusterClick) {
-            console.log('🔍 디바운스 중 클러스터 클릭 활성화 - API 호출 건너뜀');
             return;
           }
 
@@ -107,17 +102,21 @@ export const useFetchStoresHooks = (
           // URL 파라미터 스트링 생성 및 출력
           const urlParams = new URLSearchParams();
           Object.entries(mergedParams).forEach(([key, value]) => {
-            if (Array.isArray(value)) {
-              // 배열인 경우 각 요소를 개별 파라미터로 추가
-              value.forEach((item) => urlParams.append(key, item.toString()));
-            } else if (value !== undefined && value !== null) {
-              urlParams.append(key, value.toString());
+            if (value !== undefined && value !== null) {
+              // dataCapacity와 maxSupportConnection은 단일 값으로 처리
+              if (key === 'dataCapacity' || key === 'maxSupportConnection') {
+                urlParams.append(key, value.toString());
+              } else if (Array.isArray(value)) {
+                // 배열인 경우 각 요소를 개별 파라미터로 추가
+                value.forEach((item) => urlParams.append(key, item.toString()));
+              } else {
+                urlParams.append(key, value.toString());
+              }
             }
           });
 
           const stores = await fetchStores(mergedParams);
 
-          // stores가 실제로 변경되었는지 확인
           const storesChanged = JSON.stringify(stores) !== JSON.stringify(lastStoresRef.current);
           if (storesChanged) {
             setStores(stores);
@@ -157,8 +156,7 @@ export const useFetchStoresHooks = (
           } else {
             setTimeout(initializeAfterMapReady, 100);
           }
-        } catch (error) {
-          console.log('🗺️ 지도 초기화 중 오류, 100ms 후 재시도:', error);
+        } catch {
           setTimeout(initializeAfterMapReady, 100);
         }
       };

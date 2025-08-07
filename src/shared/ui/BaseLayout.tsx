@@ -5,19 +5,18 @@ import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { usePendingRequestExecutor } from '@/shared/hooks/usePendingRequestExecutor';
 import { useAuthErrorStore } from '@/shared/lib/axios/authErrorStore'; // 추가
+import { cn } from '@/shared/lib/cn';
+import { AuthModal } from '@/shared/ui/AuthModal';
+import { AuthOverlay } from '@/shared/ui/AuthOverlay';
+import { BottomNav } from '@/shared/ui/BottomNav';
 import { SosDrawer } from '@/widgets/sos/ui/SosDrawer';
 import { SosNotificationHandler } from '@/widgets/sos/ui/SosNotificationHandler';
-
-import { cn } from '../lib/cn';
-
-import { AuthModal } from './AuthModal';
-import { AuthOverlay } from './AuthOverlay';
-import { BottomNav } from './BottomNav';
 
 interface BaseLayoutProps {
   children: React.ReactNode;
   header?: React.ReactNode;
   headerfab?: React.ReactNode;
+  headerZoom?: React.ReactNode;
   fab?: React.ReactNode;
   className?: string;
   centered?: boolean;
@@ -31,6 +30,7 @@ export function BaseLayout({
   children,
   header,
   headerfab,
+  headerZoom,
   fab,
   className,
   centered = true,
@@ -69,6 +69,13 @@ export function BaseLayout({
         >
           <div className="mx-auto max-w-[428px] w-full flex justify-end pointer-events-auto">
             {headerfab}
+          </div>
+        </div>
+
+        {/* 줌인/줌 아웃 버튼 */}
+        <div className="fixed top-[200px] left-0 right-0 z-30 pointer-events-none">
+          <div className="mx-auto max-w-[428px] w-full flex justify-start px-6">
+            <div className="pointer-events-auto">{headerZoom}</div>
           </div>
         </div>
 

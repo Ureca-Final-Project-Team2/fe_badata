@@ -66,8 +66,6 @@ export const fetchRentalDevices = async (
       params,
     });
 
-    // axios interceptor에서 이미 response.data를 반환하므로 직접 사용
-    console.log('response', response);
     return Array.isArray(response) ? response : [];
   } catch (error) {
     console.error(`가맹점 ${storeId} 예약 가능한 장비 조회 실패:`, error);

@@ -68,8 +68,6 @@ export const useAuthErrorStore = create<AuthErrorState>()(
       onAuthModalClose: null,
 
       openAuthModal: (request: AuthModalRequest, onClose?: () => void) => {
-        console.log('🔒 Auth modal 열기:', { type: request.type, url: request.url });
-
         set({
           isAuthModalOpen: true,
           pendingRequest: {
@@ -81,8 +79,6 @@ export const useAuthErrorStore = create<AuthErrorState>()(
       },
 
       openAuthModalForNavigation: (path: string, onClose?: () => void) => {
-        console.log('🔒 Auth modal 열기 (네비게이션):', { path });
-
         set({
           isAuthModalOpen: true,
           pendingNavigation: path,
@@ -92,7 +88,6 @@ export const useAuthErrorStore = create<AuthErrorState>()(
 
       closeAuthModal: () => {
         const { onAuthModalClose } = get();
-        console.log('🔒 Auth modal 닫기');
 
         // 모달 닫힐 때 콜백 실행
         if (onAuthModalClose) {
@@ -116,31 +111,23 @@ export const useAuthErrorStore = create<AuthErrorState>()(
         }
 
         if (!pendingRequest) {
-          console.log('⚠️ 실행할 pending request가 없음');
           return;
         }
 
         // 5분 이상 된 요청은 무시
         const now = Date.now();
         if (now - pendingRequest.timestamp > 5 * 60 * 1000) {
-          console.log('⏰ Pending request가 너무 오래됨, 삭제');
           get().clearPendingRequest();
           return;
         }
 
         try {
-          console.log('🔄 Pending request 실행 시작:', pendingRequest.type);
-
           // 타입별로 API 실행
           await executeApiByType(pendingRequest);
 
-          console.log('✅ Pending request 실행 성공');
-
           // 성공 후 토스트 메시지 표시
           showSuccessToast(pendingRequest.type);
-        } catch (error) {
-          console.error('❌ Pending request 실행 실패:', error);
-
+        } catch {
           // 실패 시 토스트 메시지 표시
           showErrorToast(pendingRequest.type);
         } finally {
@@ -150,7 +137,6 @@ export const useAuthErrorStore = create<AuthErrorState>()(
       },
 
       clearPendingRequest: () => {
-        console.log('🗑️ Pending request 정리');
         set({
           pendingRequest: null,
           pendingNavigation: null,
@@ -163,11 +149,8 @@ export const useAuthErrorStore = create<AuthErrorState>()(
         const { pendingNavigation } = get();
 
         if (!pendingNavigation) {
-          console.log('⚠️ 실행할 pending navigation이 없음');
           return;
         }
-
-        console.log('🔄 Pending navigation 실행:', pendingNavigation);
 
         // Next.js router를 사용하여 네비게이션
         if (typeof window !== 'undefined') {
@@ -178,7 +161,6 @@ export const useAuthErrorStore = create<AuthErrorState>()(
       },
 
       clearPendingNavigation: () => {
-        console.log('🗑️ Pending navigation 정리');
         set({
           pendingNavigation: null,
           isAuthModalOpen: false,
@@ -205,7 +187,6 @@ async function executeApiByType(request: PendingApiRequest) {
       const storeId = extractStoreIdFromUrl(url);
       const isLiked = (data as { isLiked?: boolean })?.isLiked ?? false;
 
-      console.log('🔄 STORE_LIKE 실행:', { storeId, isLiked });
       await toggleStoreLike(storeId, isLiked);
 
       // 마커 상태 업데이트
@@ -370,8 +351,6 @@ async function showSuccessToast(type: string) {
   };
 
   const message = messages[type as keyof typeof messages] || '요청이 완료되었습니다.';
-
-  console.log('✅ 성공 토스트 표시:', message);
   makeToast(message, 'success');
 }
 
@@ -390,7 +369,5 @@ async function showErrorToast(type: string) {
   };
 
   const message = messages[type as keyof typeof messages] || '요청 처리 중 오류가 발생했습니다.';
-
-  console.log('✅ 에러 토스트 표시:', message);
   makeToast(message, 'warning');
 }

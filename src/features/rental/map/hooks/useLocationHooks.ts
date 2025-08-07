@@ -53,7 +53,6 @@ export function useLocation(): UseLocationReturn {
       Math.abs(lastCoords.lng - lng) < 0.0001;
 
     if (isSameCoords && now - lastCallTimeRef.current < 10000) {
-      if (isDev) console.log('🚫 같은 좌표로 너무 자주 호출됨, 무시');
       return;
     }
 
@@ -74,8 +73,6 @@ export function useLocation(): UseLocationReturn {
         const y = lat.toString();
         const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${x}&y=${y}`;
 
-        if (isDev) console.log('📍 주소 변환 API 호출:', { lat, lng });
-
         const response = await fetch(url, {
           headers: {
             Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
@@ -94,7 +91,6 @@ export function useLocation(): UseLocationReturn {
             const finalAddress = roadAddress || bunjiAddress || DEFAULT_ADDRESS;
             setUserAddress(finalAddress);
           } else {
-            if (isDev) console.log('주소 정보가 없습니다.');
             setUserAddress(DEFAULT_ADDRESS);
           }
         } else if (response.status === 429) {
@@ -110,10 +106,8 @@ export function useLocation(): UseLocationReturn {
         lastCoordsRef.current = { lat, lng };
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
-          if (isDev) console.log('📍 주소 변환 요청 취소됨');
           return;
         }
-        if (isDev) console.error('주소 변환 실패:', error);
         setUserAddress(DEFAULT_ADDRESS);
       }
     }, 3000); // 3초 디바운싱으로 증가
@@ -180,7 +174,6 @@ export function useLocation(): UseLocationReturn {
 
       // 같은 좌표이고 15초 내에 호출된 경우 무시
       if (isSameCoords && now - lastCallTimeRef.current < 15000) {
-        if (isDev) console.log('🚫 같은 위치로 너무 자주 호출됨, 무시');
         return;
       }
 

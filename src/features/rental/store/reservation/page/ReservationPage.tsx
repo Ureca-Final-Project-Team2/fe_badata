@@ -38,11 +38,17 @@ export default function ReservationPage({ storeId, initialDateRange }: Reservati
   // 초기 날짜 범위 설정
   useEffect(() => {
     if (initialDateRange?.from && initialDateRange?.to) {
+      const fromDate = new Date(initialDateRange.from);
+      fromDate.setHours(0, 0, 0, 0);
+
+      const toDate = new Date(initialDateRange.to);
+      toDate.setHours(0, 0, 0, 0);
+
       dispatch({
         type: 'SET_DATE_RANGE',
         payload: {
-          from: initialDateRange.from,
-          to: initialDateRange.to,
+          from: fromDate,
+          to: toDate,
         },
       });
     }
@@ -74,10 +80,6 @@ export default function ReservationPage({ storeId, initialDateRange }: Reservati
   // 데이터 변환
   const convertedDevices = convertDevicesForUI(devices);
   const receiptDevices = createReceiptDevices(state.selectedDevices, devices);
-
-  // 디버깅: 현재 날짜 범위 상태 로깅
-  console.log('ReservationPage - 현재 날짜 범위:', state.dateRange);
-  console.log('ReservationPage - 변환된 날짜 범위:', convertFromReducerDateRange(state.dateRange));
 
   return (
     <>

@@ -2,11 +2,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
+import { useKakaoLogin } from '@/entities/auth/model/useKakaoLogin';
 import { PATH } from '@/shared/config/path';
 
 export default function TradeRecommendPostsSection() {
-  const { user, isLoggedIn } = useAuthStore();
   const router = useRouter();
+  const { user, isLoggedIn } = useAuthStore();
+  const handleLogin = useKakaoLogin();
 
   return (
     <section className="mb-6">
@@ -66,7 +68,10 @@ export default function TradeRecommendPostsSection() {
                   <span className="text-[var(--main-1)]">추천 게시물</span>을 받아볼까요?
                 </p>
 
-                <button className="bg-white font-label-semibold text-[var(--main-5)] px-4 py-2 rounded-lg cursor-pointer hover:scale-[1.02] transition-all duration-300">
+                <button
+                  className="bg-white font-label-semibold text-[var(--main-5)] px-4 py-2 rounded-lg cursor-pointer hover:scale-[1.02] transition-all duration-300"
+                  onClick={handleLogin}
+                >
                   로그인하러 가기
                 </button>
               </div>

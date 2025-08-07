@@ -48,11 +48,10 @@ export default function RentalFilterContent({
       className="flex flex-col rounded-lg p-4 "
       onSubmit={(e) => {
         e.preventDefault();
-        console.log('결과보기 클릭 - 선택된 필터값:', filterState);
         onSubmit(filterState);
       }}
     >
-      <div className="flex flex-col gap-5 border-b border-[var(--gray)] pb-6">
+      <div className="flex flex-col gap-2 border-b border-[var(--gray)] pb-4">
         {/* 헤더 */}
         <div className="flex items-center gap-2 border-b border-[var(--gray)] pb-2 mb-2">
           <span className="font-body-semibold">플레이스 필터</span>
@@ -60,7 +59,7 @@ export default function RentalFilterContent({
           <span className="text-small-regular">지도</span>
           <button
             type="button"
-            className="ml-auto text-2xl text-[var(--gray-dark)]"
+            className="ml-auto text-2xl text-[var(--gray-dark)] cursor-pointer"
             onClick={onClose}
           >
             ×

@@ -1,9 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useLocation } from '@/features/rental/map/hooks/useLocationHooks';
 
+interface UseUserLocationProps {
+  mapInstance?: kakao.maps.Map | null;
+}
+
 // 사용자 위치 관리를 위한 커스텀 훅
-export const useUserLocation = () => {
+export const useUserLocation = ({ mapInstance }: UseUserLocationProps = {}) => {
   const [userLocation, setUserLocation] = useState({
     lat: null as number | null,
     lng: null as number | null,
@@ -58,6 +62,19 @@ export const useUserLocation = () => {
     }
   }, [locationData]);
 
+  // 현재위치로 카메라 이동하는 함수
+  const moveToUserLocation = useCallback(() => {
+    if (mapInstance && userLocation.lat && userLocation.lng) {
+      const position = new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+      mapInstance.setCenter(position);
+      mapInstance.setLevel(4, {
+        animate: {
+          duration: 500,
+        },
+      });
+    }
+  }, [mapInstance, userLocation.lat, userLocation.lng]);
+
   return {
     userLocation,
     setUserLocation,
@@ -65,5 +82,6 @@ export const useUserLocation = () => {
     locationLoading,
     locationError,
     refreshLocation,
+    moveToUserLocation,
   };
 };

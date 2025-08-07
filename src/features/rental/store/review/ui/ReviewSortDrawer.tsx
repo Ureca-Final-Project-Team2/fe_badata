@@ -21,7 +21,7 @@ export function ReviewSortDrawer({
   };
 
   return (
-    <FilterDrawer isOpen={isOpen} onClose={onClose}>
+    <FilterDrawer isOpen={isOpen} onClose={onClose} className="cursor-pointer">
       <FilterOption selected={sortOption === 'latest'} onClick={() => handleSelect('latest')}>
         최신순
       </FilterOption>

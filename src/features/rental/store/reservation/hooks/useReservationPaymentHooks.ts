@@ -85,7 +85,6 @@ export const useReservationPayment = ({
           },
         },
         () => {
-          console.log('AuthModal 닫힘 - isSubmitting 초기화');
           // AuthModal이 닫힐 때 isSubmitting 상태 초기화
           setIsSubmitting(false);
         },

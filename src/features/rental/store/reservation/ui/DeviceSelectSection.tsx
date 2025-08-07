@@ -51,18 +51,18 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
 
   return (
     <>
-      <div className="font-body-semibold flex items-center gap-2 mt-6 transition-all duration-200">
+      <div className="font-body-semibold flex items-center gap-2 mt-6 transition-all duration-200 mb-3">
         <CircleCheck size={28} className="text-[var(--main-5)]" />
         기기를 선택해 주세요
         {memoizedDevices.length > 0 && (
-          <span className="text-sm text-[var(--gray-dark)] ml-2 transition-opacity duration-300">
+          <span className="text-sm text-[var(--gray-dark)] ml-2 transition-opacity duration-300 ">
             ({memoizedDevices.length}개 기기)
           </span>
         )}
       </div>
       <div
         ref={scrollRef}
-        className="flex flex-row gap-6 overflow-x-auto pb-2 pl-1 transition-opacity duration-300 ease-in-out"
+        className="custom-scrollbar flex flex-row gap-6 overflow-x-auto pb-2 pl-1 transition-opacity duration-300 ease-in-out"
         style={{
           cursor: dragging ? 'grabbing' : 'grab',
           opacity: memoizedDevices.length === 0 ? 0.5 : 1,
@@ -72,7 +72,7 @@ const DeviceSelectSection: React.FC<DeviceSelectSectionProps> = ({
         {memoizedDevices.map((device) => (
           <div
             key={device.id}
-            className="flex-shrink-0 transition-all duration-300 ease-in-out transform hover:scale-105"
+            className=" flex-shrink-0 transition-all duration-300 ease-in-out transform hover:scale-105"
           >
             <ReservationDeviceCard
               device={device}

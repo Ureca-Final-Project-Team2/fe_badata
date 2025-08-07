@@ -112,8 +112,7 @@ export const useCreateAddressHistory = () => {
 
       return { previousData };
     },
-    onSuccess: (data) => {
-      console.log('주소 이력 생성 성공:', data);
+    onSuccess: () => {
       // 성공 시 캐시 무효화하여 서버 데이터로 다시 조회
       const queryKey = getQueryKey();
       queryClient.invalidateQueries({ queryKey });
