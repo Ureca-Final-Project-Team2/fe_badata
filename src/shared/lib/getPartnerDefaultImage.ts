@@ -15,7 +15,7 @@ export function getPartnerDefaultImage(partner: KoreanBrandName): string {
     case '이모티콘 플러스':
       return '/assets/gifticon/ott-music/bg/emoticonplus.png';
     case '넷플릭스':
-      return '/assets/gifticon/ott-music/NETFLIX_Logo.png';
+      return '/assets/gifticon/ott-music/bg/NETFLIX_Logo.svg';
     case '지니뮤직':
       return '/assets/gifticon/ott-music/bg/genie.png';
     case '디즈니+':
@@ -114,7 +114,7 @@ export function getPartnerDefaultImage(partner: KoreanBrandName): string {
       return '/assets/gifticon/kids/bg/COOKIDS_bg.png';
 
     // 반려동물
-    case '해피독TV':
+    case '해피독':
       return '/assets/gifticon/pet/bg/HappyDog_bg.png';
 
     default:

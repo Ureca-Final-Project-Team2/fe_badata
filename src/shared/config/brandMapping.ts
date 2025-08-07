@@ -61,7 +61,7 @@ export const BRAND_MAPPING = {
   '쿠키즈': 'COOKIDS',
 
   // 반려동물
-  '해피독TV': 'HAPPYDOG_TV',
+  '해피독': 'HAPPYDOG_TV',
 } as const;
 
 export type KoreanBrandName = keyof typeof BRAND_MAPPING;

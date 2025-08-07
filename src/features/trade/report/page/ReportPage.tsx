@@ -47,8 +47,8 @@ export default function ReportPage({ postId }: ReportPageProps) {
           },
         });
         router.back();
-      } catch (error) {
-        console.error('게시물 신고 처리 중 오류 발생:', error);
+      } catch {
+        // 에러는 이미 위에서 처리됨
       }
     };
 
@@ -90,6 +90,7 @@ export default function ReportPage({ postId }: ReportPageProps) {
         허위신고 작성 시 불이익이 있을 수 있습니다."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            className="cursor-pointer"
           />
         </div>
       )}

@@ -113,7 +113,6 @@ export const tradePostApis = {
       const responseData = response.data || response;
       return responseData;
     } catch (error) {
-      console.error('API Error:', error);
       throw error;
     }
   },

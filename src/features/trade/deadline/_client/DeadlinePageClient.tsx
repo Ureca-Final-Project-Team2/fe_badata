@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -17,6 +17,8 @@ import { PATH } from '@/shared/config/path';
 import { useSortStateHook } from '@/shared/model/useSortStateHook';
 import { TradeSortFilter } from '@/widgets/trade/trade-sort-filter';
 
+import { GifticonFilter } from '../../gifticon/ui/GifticonFilter';
+
 import type { DeadlinePost } from '@/entities/trade-post/lib/types';
 
 const SORT_OPTIONS = [
@@ -29,6 +31,7 @@ export default function DeadlinePageClient() {
   const searchParams = useSearchParams();
   const page = searchParams?.get('page') ?? 'all';
 
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useTradeDeadlineInfiniteQuery();
 
@@ -71,7 +74,11 @@ export default function DeadlinePageClient() {
       }
 
       if (page === 'gifticon') {
-        return p.postCategory === 'GIFTICON' && p.price <= gifticonPrice;
+        return (
+          p.postCategory === 'GIFTICON' &&
+          (selectedCategory === '전체' || p.gifticonCategory === selectedCategory) &&
+          p.price <= gifticonPrice
+        );
       }
       return false;
     })
@@ -103,6 +110,12 @@ export default function DeadlinePageClient() {
   return (
     <>
       <DeadlineFlatTab className="my-4" />
+      {page === 'gifticon' && (
+        <GifticonFilter
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
+      )}
       <DeadlineList
         items={filteredPosts}
         isLoading={isLoading}

@@ -96,7 +96,10 @@ export default function MyPage() {
           <ReportStatusSection />
           <AlarmSettingSection />
           <div className="flex flex-row justify-center ">
-            <button onClick={handleLogout} className="underline cursor-pointer">
+            <button
+              onClick={handleLogout}
+              className="underline cursor-pointer hover:text-[var(--red)]"
+            >
               로그아웃
             </button>
           </div>

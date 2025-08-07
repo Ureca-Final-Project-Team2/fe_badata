@@ -69,7 +69,6 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
               resolve(data);
             },
             onError: (error) => {
-              console.error('수정 실패:', error);
               reject(error);
             },
             onSettled: () => dispatch({ type: 'SET_SUBMITTING', value: false }),
@@ -90,9 +89,8 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
           dispatch({ type: 'SET_SUBMITTING', value: false });
         },
       );
-    } catch (error) {
+    } catch {
       // 에러는 이미 위에서 처리됨
-      console.error('Gifticon edit failed:', error);
     }
   };
 
@@ -103,7 +101,6 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
   }
 
   if (error) {
-    console.error('GifticonEditForm error:', error);
     return (
       <div className="flex justify-center items-center h-64 text-[var(--red)]">
         게시물 정보를 불러올 수 없습니다.
@@ -163,14 +160,14 @@ export function TradeGifticonEditForm({ postId }: GifticonEditFormProps) {
             onChange={handleFieldChange('price')}
             placeholder="판매 가격"
             errorMessage="가격을 입력해주세요."
-            className="bg-[var(--white)] border-[var(--main-3)]"
+            className="bg-[var(--white)] border-[var(--main-3)] cursor-pointer"
           />
           <TextAreaField
             label="설명"
             value={state.form.comment}
             onChange={handleFieldChange('comment')}
             placeholder="설명 (선택)"
-            className="border-[var(--main-3)]"
+            className="border-[var(--main-3)] cursor-pointer"
           />
         </div>
       </form>

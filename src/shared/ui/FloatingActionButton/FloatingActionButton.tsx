@@ -37,7 +37,7 @@ export function FloatingActionButton({
       {mode === 'expand' && (
         <div
           className={cn(
-            'mb-2 flex flex-col rounded-[20px] border bg-[var(--main-5)] shadow-md divide-y divide-white transition-all duration-150',
+            'mb-2 flex flex-col rounded-[20px] border bg-[var(--main-5)] shadow-md divide-y divide-white transition-all duration-150 cursor-pointer',
             open ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none',
           )}
         >
@@ -45,7 +45,7 @@ export function FloatingActionButton({
             <button
               key={idx}
               onClick={action.onClick}
-              className=" w-[120px] h-[46px] flex items-center justify-between px-4 py-2 text-white text-[18px] font-semibold cursor-pointer"
+              className="w-[120px] h-[46px] flex items-center justify-between px-4 py-2 text-white text-[18px] font-semibold cursor-pointer"
             >
               <span className="w-[18px] h-[18px] flex items-center justify-center text-[16px]">
                 {action.icon}
@@ -68,12 +68,12 @@ export function FloatingActionButton({
         {mode === 'expand' && open ? (
           <X className="w-5 h-5 text-[var(--white)]" />
         ) : (
-          <>
+          <div className="flex flex-row gap-2 justify-content items-center cursor-pointer">
             <span className="w-[18px] h-[18px] flex items-center justify-center text-[16px]">
               {triggerAction.icon}
             </span>
             {triggerAction.label}
-          </>
+          </div>
         )}
       </button>
     </div>

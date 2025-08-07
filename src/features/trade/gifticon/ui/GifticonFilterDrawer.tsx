@@ -25,11 +25,11 @@ export const GifticonFilterDrawer = ({
     <FilterDrawer isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col gap-5 px-4 pb-6">
         {/* 헤더 */}
-        <div className="flex items-center gap-2 border-b border-[var(--gray)] pb-2 mb-2">
+        <div className="flex items-center gap-2 border-b border-[var(--gray)] p-4 pb-2 mb-2">
           <span className="font-body-semibold">기프티콘 가격 필터</span>
           <button
             type="button"
-            className="ml-auto text-2xl text-[var(--gray-dark)]"
+            className="ml-auto text-2xl text-[var(--gray-dark)] cursor-pointer"
             onClick={onClose}
             aria-label="필터 창 닫기"
           >

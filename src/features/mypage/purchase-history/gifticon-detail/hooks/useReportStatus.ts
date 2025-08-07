@@ -20,8 +20,7 @@ export const useReportStatus = ({ gifticonId, onSuccess, onError }: UseReportSta
       try {
         const reportedItems = JSON.parse(localStorage.getItem('reportedItems') || '[]');
         return Array.isArray(reportedItems) && reportedItems.includes(gifticonId);
-      } catch (error) {
-        console.error('Failed to parse reportedItems from localStorage:', error);
+      } catch {
         return false;
       }
     }
@@ -38,8 +37,7 @@ export const useReportStatus = ({ gifticonId, onSuccess, onError }: UseReportSta
         localStorage.setItem('reportedItems', JSON.stringify(reportedItems));
       }
       setIsReported(true);
-    } catch (error) {
-      console.error('Failed to save report status to localStorage:', error);
+    } catch {
       setIsReported(true);
     }
   };
@@ -51,13 +49,6 @@ export const useReportStatus = ({ gifticonId, onSuccess, onError }: UseReportSta
   };
 
   const handleReportError = (error: Error) => {
-    // 프로덕션에서는 제한된 로깅
-    if (process.env.NODE_ENV === 'development') {
-      console.error('신고 제출 실패:', error);
-    } else {
-      console.error('신고 제출 실패');
-    }
-
     // 이미 신고한 경우
     if (error.message?.includes(ErrorMessageMap[ErrorCode.REPORT_ALREADY_SUBMITTED])) {
       makeToast(ErrorMessageMap[ErrorCode.REPORT_ALREADY_SUBMITTED], 'warning');

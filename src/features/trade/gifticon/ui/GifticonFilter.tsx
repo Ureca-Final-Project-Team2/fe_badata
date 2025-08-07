@@ -24,7 +24,7 @@ export function GifticonFilter({ selectedCategory, onSelectCategory }: GifticonF
                     ? 'bg-[var(--main-5)] text-white border-[var(--main-5)] shadow'
                     : 'bg-white text-[var(--gray)] border-[var(--gray-light)] hover:bg-[var(--gray-light)]'
                 }
-                transition-colors duration-100
+                transition-colors duration-100 cursor-pointer
               `}
             >
               {cat}

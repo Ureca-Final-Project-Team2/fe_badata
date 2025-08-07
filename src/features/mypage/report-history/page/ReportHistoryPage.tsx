@@ -4,14 +4,16 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import {
-  useReportHistoryListQuery
-} from '@/features/mypage/report-history/model/queries';
+import { Flag } from 'lucide-react';
+
+import { useReportHistoryListQuery } from '@/features/mypage/report-history/model/queries';
 import { PATH } from '@/shared/config/path';
 import { isMobileCarrier } from '@/shared/lib/typeGuards';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { PageHeader } from '@/shared/ui/Header';
 import { SectionDivider } from '@/shared/ui/SectionDivider';
+import { Spinner } from '@/shared/ui/Spinner/Spinner';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
 import type { ReportHistoryItem, ReportInfo } from '@/features/mypage/report-history/lib/types';
@@ -125,7 +127,7 @@ export default function ReportHistoryPage() {
     >
       <div className="w-full max-w-[428px] flex flex-col justify-between flex-1">
         {/* 로딩 상태 */}
-        {isLoading && <CenteredMessage>불러오는 중...</CenteredMessage>}
+        {isLoading && <Spinner content="신고 내역을 불러오는 중입니다..." />}
 
         {/* 에러 상태 */}
         {isError && (
@@ -144,13 +146,16 @@ export default function ReportHistoryPage() {
 
         {/* 빈 상태 */}
         {!isLoading && !isError && items.length === 0 && (
-          <CenteredMessage>신고 내역이 없습니다</CenteredMessage>
+          <EmptyState
+            title="신고 내역이 없습니다"
+            icon={<Flag className="w-6 h-6 text-[var(--gray-dark)]" />}
+          />
         )}
 
         {/* 데이터 표시 */}
         {!isLoading && !isError && items.length > 0 && (
           <>
-            <div className="px-4 pt-6 pb-24">
+            <div className="pt-6 pb-24">
               <h2 className="font-body-semibold mb-4">신고 게시물</h2>
               <div className="flex flex-row gap-4 overflow-x-auto no-scrollbar pb-2">
                 {items.map((item, idx) => {

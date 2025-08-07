@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { differenceInCalendarDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { Wifi } from 'lucide-react';
 
 import { useRentalHistoryQuery } from '@/features/mypage/rental-history/model/queries';
 import { DeleteConfirmModal } from '@/features/mypage/ui/DeleteConfirmModal';
@@ -13,7 +14,9 @@ import { useDeleteRentalMutation } from '@/features/rental/store/reservation/mod
 import { PATH } from '@/shared/config/path';
 import { makeToast } from '@/shared/lib/makeToast';
 import { BaseLayout } from '@/shared/ui/BaseLayout';
+import { EmptyState } from '@/shared/ui/EmptyState/EmptyState';
 import { PageHeader } from '@/shared/ui/Header';
+import { Spinner } from '@/shared/ui/Spinner/Spinner';
 
 import type { RentalHistoryItem } from '@/features/mypage/rental-history/lib/types';
 
@@ -72,22 +75,19 @@ export default function RentalHistoryPage() {
       showBottomNav
     >
       <div className="flex-1 overflow-y-auto max-w-[428px] mx-auto mb-4 mt-4">
-        {isLoading && <CenteredMessage>로딩 중...</CenteredMessage>}
+        {isLoading && <Spinner content="대여 내역을 불러오는 중입니다..." />}
         {isError && <CenteredMessage>에러가 발생했습니다.</CenteredMessage>}
         {!isLoading && !isError && items.length === 0 && (
-          <CenteredMessage>공유기 대여 내역이 없습니다.</CenteredMessage>
+          <EmptyState
+            title="공유기 대여 내역이 없습니다."
+            icon={<Wifi className="w-6 h-6 text-[var(--gray-dark)]" />}
+          />
         )}
         {!isLoading && !isError && items.length > 0 && (
           <>
             {items
               .filter((item) => !deletedIds.has(item.id))
               .map((item: RentalHistoryItem, idx: number) => {
-                console.log('[렌더링 아이템]', {
-                  id: item.id,
-                  storeName: item.storeName,
-                  reservationStatus: item.reservationStatus,
-                  isReviewed: item.isReviewed,
-                });
                 const startDate = new Date(item.rentalStartDate);
                 const endDate = new Date(item.rentalEndDate);
                 const days = differenceInCalendarDays(endDate, startDate) + 1;

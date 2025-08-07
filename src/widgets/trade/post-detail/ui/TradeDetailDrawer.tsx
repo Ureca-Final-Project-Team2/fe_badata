@@ -134,7 +134,7 @@ export const TradeDetailDrawer = ({ isOpen, onClose, postUserId, postId, postTyp
       {showDeleteConfirm &&
         createPortal(
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-[var(--black)]/50 flex items-center justify-center z-50"
             onClick={handleCancelDelete}
           >
             <div

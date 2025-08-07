@@ -1,6 +1,7 @@
-import { ListFilter } from 'lucide-react';
+import { Clock, ListFilter } from 'lucide-react';
 
 import { useTradePostLikeHooks } from '@/entities/trade-post/model/useTradePostLikeHooks';
+import { EmptyState } from '@/shared/ui/EmptyState';
 import { SortButton } from '@/shared/ui/SortButton';
 import TradePostCard from '@/widgets/trade/ui/TradePostCard';
 
@@ -30,7 +31,27 @@ export function DeadlineList({
   }
 
   if (items.length === 0) {
-    return <div>마감 임박 게시물이 없습니다.</div>;
+    return (
+      <section className="bg-[var(--white)]">
+        <div className="flex flex-row justify-between py-2">
+          <SortButton onClick={onSortClick} label={sortLabel} />
+
+          {onFilterClick && (
+            <button
+              onClick={onFilterClick}
+              className="flex flex-row gap-1 items-center font-label-semibold cursor-pointer"
+            >
+              조건
+              <ListFilter size={14} />
+            </button>
+          )}
+        </div>
+        <EmptyState
+          title="마감 임박 게시물이 없습니다"
+          icon={<Clock className="w-6 h-6 text-[var(--gray-dark)]" />}
+        />
+      </section>
+    );
   }
 
   const handleCardClick = (item: DeadlinePost) => {
@@ -40,14 +61,14 @@ export function DeadlineList({
   };
 
   return (
-    <section className="bg-white">
+    <section className="bg-[var(--white)]">
       <div className="flex flex-row justify-between py-2">
         <SortButton onClick={onSortClick} label={sortLabel} />
 
         {onFilterClick && (
           <button
             onClick={onFilterClick}
-            className="flex flex-row gap-1 items-center font-label-semibold"
+            className="flex flex-row gap-1 items-center font-label-semibold cursor-pointer"
           >
             조건
             <ListFilter size={14} />

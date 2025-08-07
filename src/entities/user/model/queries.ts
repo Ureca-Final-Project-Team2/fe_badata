@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 import { useAuthStore } from '@/entities/auth/model/authStore';
 import { userApis } from '@/entities/user/api/apis';
+import { makeToast } from '@/shared/lib/makeToast';
 
 import type {
   CoinResponse,
@@ -210,8 +211,8 @@ export const usePurchaseReportMutation = () => {
   >({
     mutationFn: ({ postId, comment }) => userApis.postPurchaseReport(postId, { comment }),
     onSuccess: () => {},
-    onError: (error) => {
-      console.error('구매 신고 제출 실패:', error);
+    onError: () => {
+      makeToast('구매 신고 제출에 실패했습니다.', 'warning');
     },
   });
 };
