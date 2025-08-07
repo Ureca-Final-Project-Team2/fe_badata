@@ -2,9 +2,6 @@
 
 import { lazy, Suspense } from 'react';
 
-import { BaseLayout } from '@/shared/ui/BaseLayout';
-import { Header } from '@/shared/ui/Header';
-
 const SwipeRecommendationContent = lazy(
   () => import('@/features/trade/recommendation/page/SwipeRecommendationPage'),
 );
@@ -21,10 +18,8 @@ const RecommendContentLoadingFallback = () => (
 
 export default function Page() {
   return (
-    <BaseLayout header={<Header />} showBottomNav>
-      <Suspense fallback={<RecommendContentLoadingFallback />}>
-        <SwipeRecommendationContent />
-      </Suspense>
-    </BaseLayout>
+    <Suspense fallback={<RecommendContentLoadingFallback />}>
+      <SwipeRecommendationContent />
+    </Suspense>
   );
 }
