@@ -214,7 +214,7 @@ export const DragBottomSheet = ({
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-1 mb-35 overflow-y-auto custom-scrollbar"
+        className="flex-1 overflow-y-auto pb-36 custom-scrollbar"
       >
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-3 px-4 pt-8 pb-6 min-h-[200px]">
