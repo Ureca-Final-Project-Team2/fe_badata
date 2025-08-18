@@ -15,21 +15,44 @@ _유레카 프론트엔드 개발자 과정 2기 <br/> 최종 융합 프로젝�
 
 **팀장** 이시현 ｜ **팀원** 박은서 · 박지회 · 이은채
 
+<br/>
+
+<!-- ✅ 서비스 바로가기 -->
+<strong><a href="https://www.badata.store">🐳 서비스 바로가기</a></strong>
+
 </div>
 
 &nbsp;  
 &nbsp;  
 
+## 🎬 시연 영상
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=-_NJCS0yGbM">
+    <img src="https://img.youtube.com/vi/-_NJCS0yGbM/0.jpg" alt="BADATA 시연 영상" width="600"/>
+  </a>
+  <br/>
+  ▶ 클릭 시 
+  <img src="https://www.vectorlogo.zone/logos/youtube/youtube-icon.svg" width="18" height="18" />
+  <!-- 빨간색 글자: SVG로 렌더링 (CSS 불필요) -->
+  <svg width="64" height="18" viewBox="0 0 64 18" xmlns="http://www.w3.org/2000/svg">
+    <text x="0" y="14" font-size="14" font-weight="700" fill="#FF0000">YouTube</text>
+  </svg>
+  로 이동합니다.
+</p>
+&nbsp;  
+&nbsp; 
+
 ## 📌 프로젝트 개요
 
 | 항목           | 내용                                         |
 | -------------- | -------------------------------------------- |
-| **프로젝트명** | BADATA (바다(BADA) + DATA)                                      |
-| **팀명**       | 2SeaU  (2조 + Sea + UPLUS)                                      |
-| **주제**       | LG U+ 공유 데이터 거래 통합 플랫폼          |
-| **타겟층**     | 가변적 데이터 소비자 & 임시 인터넷 필요층                 |
+| **프로젝트명** | BADATA (바다(BADA) + DATA)                   |
+| **팀명**       | 2SeaU  (2조 + Sea + UPLUS)                   |
+| **주제**       | LG U+ 공유 데이터 거래 통합 플랫폼           |
+| **타겟층**     | 가변적 데이터 소비자 & 임시 인터넷 필요층    |
 | **개발 기간**  | 2025.06.30 ~ 2025.08.07                      |
-| **팀 구성**    | 프론트엔드 중심 개발팀 (4명)                |
+| **팀 구성**    | 프론트엔드 중심 개발팀 (4명)                 |
 
 &nbsp;  
 &nbsp;  
@@ -42,8 +65,6 @@ _유레카 프론트엔드 개발자 과정 2기 <br/> 최종 융합 프로젝�
 npm run dev
 ```
 
-[배포 페이지](https://badata.store)
-홈 경로 뒤에 직접 `/trade`, `/mypage`, `/rental` 명시하여 확인 가능합니다!
 
 &nbsp;  
 &nbsp;  
