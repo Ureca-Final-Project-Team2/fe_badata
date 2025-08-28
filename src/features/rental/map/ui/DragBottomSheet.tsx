@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, useMotionValue, useTransform, type PanInfo } from 'framer-motion';
 import { ArrowUpDown } from 'lucide-react';
 import { Virtuoso } from 'react-virtuoso';
 
+import { useRafThrottle } from '@/features/rental/map/hooks/useRafThrottleHooks';
 import { StoreCard } from '@/features/rental/map/ui/StoreCard';
 
 import type { DragBottomSheetProps } from '@/features/rental/map/lib/types';
@@ -36,10 +37,14 @@ export const DragBottomSheet = ({
   currentSort = 'distance,asc',
 }: ExtendedDragBottomSheetProps) => {
   const [windowHeight, setWindowHeight] = useState(0);
-  const [currentY, setCurrentY] = useState(0);
   const lastOpenRef = useRef(false);
   const controls = useAnimation();
 
+  // 1) 위치를 state가 아니라 motionValue로 (드래그 중 React 렌더 0회)
+  const y = useMotionValue(0);
+  const heightMV = useTransform(y, (v) => `calc(${windowHeight}px - ${v}px)`);
+
+  // 포지션 프리셋
   const calculatedValues = useMemo(() => {
     const expandedY = windowHeight > 0 ? 60 : 0;
     const middleY = windowHeight > 0 ? windowHeight * 0.3 : 0;
@@ -47,62 +52,74 @@ export const DragBottomSheet = ({
     return { expandedY, middleY, collapsedY };
   }, [windowHeight]);
 
+  // 최초 높이 측정 & 초기 위치(접힘)
   useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
-      const height = window.innerHeight;
-      setWindowHeight(height);
-      setCurrentY(height * 0.8);
+      const h = window.innerHeight;
+      setWindowHeight(h);
+      y.set(h * 0.8);
     }
-  }, []);
+  }, [y]);
 
+  // 열림/닫힘에 따라 위치 애니메이션
   useEffect(() => {
     if (windowHeight === 0) return;
 
     if (open !== lastOpenRef.current) {
-      lastOpenRef.current = open || false;
+      lastOpenRef.current = !!open;
 
       if (open) {
         controls.start({
           y: calculatedValues.expandedY,
           transition: { type: 'spring', damping: 25, stiffness: 200 },
         });
-        setCurrentY(calculatedValues.expandedY);
+        y.set(calculatedValues.expandedY);
       } else {
         controls.start({
           y: calculatedValues.collapsedY,
           transition: { type: 'spring', damping: 25, stiffness: 200 },
         });
-        setCurrentY(calculatedValues.collapsedY);
+        y.set(calculatedValues.collapsedY);
       }
     }
-  }, [open, windowHeight, calculatedValues, controls]);
+  }, [open, windowHeight, calculatedValues, controls, y]);
 
+  // Virtuoso의 endReached → 패칭 트리거
   const handleEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) onLoadMore?.();
   }, [hasNextPage, isFetchingNextPage, onLoadMore]);
 
+  // 2) 드래그 중 위치 업데이트: rAF로 프레임당 1회 반영
+  const onDragRaf = useRafThrottle<[MouseEvent | TouchEvent | PointerEvent, PanInfo]>(
+    (_evt, info) => {
+      const next = Math.max(0, Math.min(info.point.y, windowHeight));
+      y.set(next);
+    },
+  );
+
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
-    const { y } = info.point;
+    const { y: py } = info.point;
     const threshold = 50;
-    if (y < calculatedValues.middleY - threshold) {
+
+    if (py < calculatedValues.middleY - threshold) {
       controls.start({
         y: calculatedValues.expandedY,
         transition: { type: 'spring', damping: 25, stiffness: 200 },
       });
-      setCurrentY(calculatedValues.expandedY);
-    } else if (y > calculatedValues.middleY + threshold) {
+      y.set(calculatedValues.expandedY);
+    } else if (py > calculatedValues.middleY + threshold) {
       controls.start({
         y: calculatedValues.collapsedY,
         transition: { type: 'spring', damping: 25, stiffness: 200 },
       });
-      setCurrentY(calculatedValues.collapsedY);
+      y.set(calculatedValues.collapsedY);
       onClose?.();
     } else {
       controls.start({
         y: calculatedValues.middleY,
         transition: { type: 'spring', damping: 25, stiffness: 200 },
       });
-      setCurrentY(calculatedValues.middleY);
+      y.set(calculatedValues.middleY);
     }
   };
 
@@ -128,12 +145,14 @@ export const DragBottomSheet = ({
       drag="y"
       dragConstraints={{ top: 0, bottom: windowHeight }}
       dragElastic={0.1}
+      onDrag={onDragRaf} // ← rAF로 배치
       onDragEnd={handleDragEnd}
       initial={false}
       animate={controls}
       style={{
-        y: currentY,
-        height: `calc(${windowHeight}px - ${currentY}px)`,
+        y, // transform: translateY(...) (GPU 경로)
+        height: heightMV, // 파생 height만 업데이트 (계산은 내부에서)
+        willChange: 'transform,height',
         minHeight: '200px',
         zIndex: 40,
       }}
@@ -156,7 +175,7 @@ export const DragBottomSheet = ({
       <div className="flex-1 pb-36 overflow-hidden">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-3 px-4 pt-8 pb-6 min-h-[200px]">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
             <div className="text-center text-[var(--gray-dark)]">스토어 목록을 불러오는 중...</div>
           </div>
         ) : isError ? (
@@ -182,7 +201,7 @@ export const DragBottomSheet = ({
               Footer: () =>
                 isFetchingNextPage ? (
                   <div className="text-center text-[var(--gray-dark)] py-4">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto mb-2" />
                     더 많은 스토어를 불러오는 중...
                   </div>
                 ) : hasNextPage ? (
