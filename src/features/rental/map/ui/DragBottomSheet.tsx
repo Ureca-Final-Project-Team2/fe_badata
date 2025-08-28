@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { motion, useAnimation } from 'framer-motion';
 import { ArrowUpDown } from 'lucide-react';
@@ -76,6 +76,10 @@ export const DragBottomSheet = ({
       }
     }
   }, [open, windowHeight, calculatedValues, controls]);
+
+  const handleEndReached = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) onLoadMore?.();
+  }, [hasNextPage, isFetchingNextPage, onLoadMore]);
 
   const handleDragEnd = (_: unknown, info: { point: { y: number } }) => {
     const { y } = info.point;
@@ -173,9 +177,7 @@ export const DragBottomSheet = ({
                 </div>
               </div>
             )}
-            endReached={() => {
-              if (hasNextPage && !isFetchingNextPage) onLoadMore?.();
-            }}
+            endReached={handleEndReached}
             components={{
               Footer: () =>
                 isFetchingNextPage ? (
