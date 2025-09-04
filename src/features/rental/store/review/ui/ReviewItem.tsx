@@ -51,7 +51,7 @@ export default function ReviewItem({ review, isOwner }: ReviewItemProps) {
   const formattedDate = formatDateToDash(review.rentalStartDate);
 
   return (
-    <>
+    <div>
       <div className="relative border-b border-[var(--gray-light)] pb-6 mb-6 last:border-b-0">
         <Profile
           avatar={review.userImageUrl}
@@ -147,6 +147,6 @@ export default function ReviewItem({ review, isOwner }: ReviewItemProps) {
           </div>
         </div>
       </Drawer>
-    </>
+    </div>
   );
 }
