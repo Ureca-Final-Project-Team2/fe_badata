@@ -11,7 +11,7 @@ import { PATH } from '@/shared/config/path';
 import { Drawer, DrawerButton } from '@/shared/ui/Drawer';
 import { Profile } from '@/shared/ui/Profile';
 
-import type { ReviewItem as ReviewItemType } from '@/features/rental/store/review/lib/types.ts';
+import type { ReviewItem as ReviewItemType } from '@/features/rental/store/review/lib/types';
 
 interface ReviewItemProps {
   review: ReviewItemType;

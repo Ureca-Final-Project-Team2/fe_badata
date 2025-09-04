@@ -1,3 +1,5 @@
+import React, { memo } from 'react';
+
 import Image from 'next/image';
 
 import { ICONS } from '@/shared/config/iconPath';
@@ -5,30 +7,21 @@ import { ICONS } from '@/shared/config/iconPath';
 interface StoreLikeButtonProps {
   isLiked: boolean;
   isLoading?: boolean;
-  onClick: (e: React.MouseEvent) => void;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function StoreLikeButton({
+const sizeClasses = { sm: 'w-6 h-6', md: 'w-8 h-8', lg: 'w-10 h-10' } as const;
+const imageSize = { sm: 21, md: 28, lg: 35 } as const;
+
+function StoreLikeButtonBase({
   isLiked,
   isLoading = false,
   onClick,
   className = '',
   size = 'sm',
 }: StoreLikeButtonProps) {
-  const sizeClasses = {
-    sm: 'w-6 h-6',
-    md: 'w-8 h-8',
-    lg: 'w-10 h-10',
-  };
-
-  const imageSize = {
-    sm: 21,
-    md: 28,
-    lg: 35,
-  };
-
   return (
     <div
       className={`rounded-full bg-white flex items-center justify-center shadow-lg ${sizeClasses[size]} ${className}`}
@@ -59,3 +52,12 @@ export function StoreLikeButton({
     </div>
   );
 }
+
+const eq = (a: StoreLikeButtonProps, b: StoreLikeButtonProps) =>
+  a.isLiked === b.isLiked &&
+  a.isLoading === b.isLoading &&
+  a.size === b.size &&
+  a.className === b.className &&
+  a.onClick === b.onClick; // 부모에서 useCallback으로 고정 권장
+
+export const StoreLikeButton = memo(StoreLikeButtonBase, eq);

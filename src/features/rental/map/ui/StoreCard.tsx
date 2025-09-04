@@ -1,4 +1,7 @@
+// src/features/rental/map/ui/StoreCard.tsx
 'use client';
+
+import React, { memo } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -10,10 +13,9 @@ import { StoreLikeButton } from '@/shared/ui/StoreLikeButton';
 
 import type { StoreCardProps } from '@/features/rental/map/lib/types';
 
-// 유틸 함수는 컴포넌트 바깥으로 분리
 const formatTime = (time: string) => time.substring(0, 5);
 
-export function StoreCard({
+function StoreCardBase({
   store,
   storeDetail,
   deviceCount,
@@ -47,21 +49,16 @@ export function StoreCard({
       className={`w-[380px] bg-white rounded-[16px] p-3 flex gap-3 shadow-sm relative items-start cursor-pointer hover:shadow-md transition-shadow ${className ?? ''}`}
       onClick={handleCardClick}
     >
-      {/* 왼쪽: 스토어 이미지 */}
-      <ImageBox
-        size="xs"
-        url={storeDetail.imageUrl} // 기본 이미지 설정
-      />
-      {/* 중앙: content 영역 */}
+      <ImageBox size="xs" url={storeDetail.imageUrl} />
+
       <div className="flex flex-col flex-1 h-[68px] justify-between min-w-0">
-        {/* 타이틀: 상단 고정 - 길면 ... 처리 */}
         <h3 className="text-black font-small-regular truncate">{store.name}</h3>
-        {/* 영업 상태 및 시간: 가운데 */}
+
         <p className="font-small-regular text-black truncate">
           {operatingStatus} · {formatTime(storeDetail.startTime)} ~{' '}
           {formatTime(storeDetail.endTime)}
         </p>
-        {/* 거리/주소/남은 공유기: 하단 고정 */}
+
         <div className="flex gap-2">
           <div className="flex items-end gap-2 flex-1 min-w-0">
             {showDistance && (
@@ -78,11 +75,11 @@ export function StoreCard({
           </div>
         </div>
       </div>
-      {/* 오른쪽 상단 좋아요 버튼 */}
+
       <div
         className="absolute right-3 top-3"
         onClick={(e) => {
-          e.stopPropagation(); // 카드 클릭 이벤트 전파 방지
+          e.stopPropagation();
           handleLikeToggle();
         }}
       >
@@ -96,3 +93,25 @@ export function StoreCard({
     </div>
   );
 }
+
+// 실제 렌더에 사용하는 필드만 비교(얕은 비교)
+const areEqual = (
+  a: Readonly<React.ComponentProps<typeof StoreCardBase>>,
+  b: Readonly<React.ComponentProps<typeof StoreCardBase>>,
+) =>
+  a.isLiked === b.isLiked &&
+  a.deviceCount === b.deviceCount &&
+  a.className === b.className &&
+  a.showDistance === b.showDistance &&
+  a.disableToast === b.disableToast &&
+  a.onLikeToggle === b.onLikeToggle && // 상위에서 useCallback 권장
+  a.store.id === b.store.id &&
+  a.store.name === b.store.name &&
+  a.storeDetail.imageUrl === b.storeDetail.imageUrl &&
+  a.storeDetail.detailAddress === b.storeDetail.detailAddress &&
+  a.storeDetail.isOpening === b.storeDetail.isOpening &&
+  a.storeDetail.startTime === b.storeDetail.startTime &&
+  a.storeDetail.endTime === b.storeDetail.endTime &&
+  a.storeDetail.distanceFromMe === b.storeDetail.distanceFromMe;
+
+export const StoreCard = memo(StoreCardBase, areEqual);
