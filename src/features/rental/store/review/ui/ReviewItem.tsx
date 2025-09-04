@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -93,9 +94,9 @@ export default function ReviewItem({ review, isOwner }: ReviewItemProps) {
         )}
 
         <div className="flex flex-row gap-4">
-          {review.reservedDeviceOnReviewResponses.map((device, index) => (
+          {review.reservedDeviceOnReviewResponses.map((device, idx) => (
             <span
-              key={index}
+              key={`${device.deviceName}-${device.dataCapacity}-${device.count}-${idx}`}
               className="inline-block my-2 px-3 py-1 bg-[var(--gray-light)] text-[var(--black)] font-small-regular rounded-sm"
             >
               <span className="text-[var(--main-5)] font-small-semibold">
@@ -105,23 +106,25 @@ export default function ReviewItem({ review, isOwner }: ReviewItemProps) {
             </span>
           ))}
         </div>
+
         <div className="mb-4 space-y-2">
           <p className="font-label-regular leading-relaxed whitespace-pre-wrap break-all">
             {displayText}
           </p>
+
           {shouldShowMore && (
             <button
-              onClick={() => setIsExpanded(!isExpanded)}
+              onClick={() => setIsExpanded((v) => !v)}
               className="text-[var(--gray-mid)] font-small-regular hover:underline mt-1"
             >
               {isExpanded ? '접기' : '더보기'}
             </button>
           )}
 
-          {review.quickReplyNames.length > 0 && (
+          {review.quickReplyNames?.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-2">
-              {review.quickReplyNames.map((tag, index) => (
-                <QuickReplyTag key={index} text={tag} />
+              {review.quickReplyNames.map((tag, idx) => (
+                <QuickReplyTag key={`${tag}-${idx}`} text={tag} />
               ))}
             </div>
           )}
