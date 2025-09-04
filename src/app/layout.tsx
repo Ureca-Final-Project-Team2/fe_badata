@@ -62,6 +62,15 @@ export default function RootLayout({
           href="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
           as="script"
         />
+
+        {/* 이미지 CDN 미리 연결 */}
+        <link rel="preconnect" href="https://img1.kakaocdn.net" crossOrigin="" />
+        <link rel="preconnect" href="https://k.kakaocdn.net" crossOrigin="" />
+        <link
+          rel="preconnect"
+          href="https://badatabucket.s3.ap-northeast-2.amazonaws.com"
+          crossOrigin=""
+        />
       </head>
       <body className="antialiased">
         {/* 외부 스크립트 - 성능 최적화 */}

@@ -5,10 +5,7 @@ import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } fro
 import { useDrawerState } from '@/features/rental/map/hooks/useDrawerStaterHooks';
 import { useFilterState } from '@/features/rental/map/hooks/useFilterStaterHooks';
 import { useSelectedStore } from '@/features/rental/map/hooks/useSelectedStoreHooks';
-import {
-  convertToStoreCardProps,
-  useStoreListWithInfiniteScroll,
-} from '@/features/rental/map/hooks/useStoreListHooks';
+import { useStoreListWithInfiniteScroll } from '@/features/rental/map/hooks/useStoreListHooks';
 import { useUrlParams } from '@/features/rental/map/hooks/useUrlParamsrHooks';
 import { useUserLocation } from '@/features/rental/map/hooks/useUserLocationrHooks';
 import { useZoom } from '@/features/rental/map/hooks/useZoomHooks';
@@ -25,6 +22,8 @@ import { FilterDrawer } from '@/shared/ui/FilterDrawer';
 import { FilterIcon } from '@/shared/ui/FilterIcon/FilterIcon';
 import { Header_Detail } from '@/shared/ui/Header_Detail/Header_Detail';
 import { ZoomButton } from '@/widgets/zoom-button';
+
+import { useStableStoreCardProps } from '../hooks/useStableStoreCardPropsHooks';
 
 import type { StoreDetail, StoreDevice } from '@/features/rental/map/lib/types';
 
@@ -483,7 +482,13 @@ export default function RentalPage() {
   }, [isDrawerOpen, stores.length, refetch]);
 
   // 메모이제이션된 데이터
-  const storeList = useMemo(() => convertToStoreCardProps(stores), [stores]);
+  const storeList = useStableStoreCardProps(stores);
+
+  const handleLoadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const filteredDevicesList = useMemo(
     () => filterDevices(selectedStore.selectedDevices, filterState),
@@ -593,7 +598,7 @@ export default function RentalPage() {
             error={error}
             open={isDrawerOpen}
             onClose={() => setIsDrawerOpen(false)}
-            onLoadMore={fetchNextPage}
+            onLoadMore={handleLoadMore}
             onSortClick={handleSortClick}
             currentSort={currentSort}
           />
