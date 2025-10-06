@@ -179,17 +179,14 @@ export const useSearchPos = () => {
     }
   }, [throttledHandleScroll]);
 
-  // 주소 이력 존재 여부
+  // 주소 이력 존재 여부 (실제 내용이 바뀔 때만 재계산)
   const hasAddressHistory = useMemo(() => {
-    return (
-      Array.isArray(addressHistoryInfinite?.pages) &&
-      addressHistoryInfinite.pages.some(
-        (page) =>
-          Array.isArray(page?.content?.getAddressResponses) &&
-          page.content.getAddressResponses.length > 0,
-      )
+    if (!addressHistoryInfinite?.pages) return false;
+
+    return addressHistoryInfinite.pages.some(
+      (page) => page?.content?.getAddressResponses?.length > 0,
     );
-  }, [addressHistoryInfinite?.pages]);
+  }, [addressHistoryInfinite]);
 
   return {
     // 상태
