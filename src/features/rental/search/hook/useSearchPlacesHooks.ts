@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   searchPlaces,
@@ -32,6 +32,9 @@ export const useSearchPlaces = () => {
   const [hasNext, setHasNext] = useState(true);
   const [page, setPage] = useState(1);
 
+  // 같은 요청 (키워드, 페이지)이 중복으로 발생하는 것을 방지 가드
+  const lastReqRef = useRef<string | null>(null);
+
   // 디바운스된 키워드 (500ms) - 공백 제거
   const debouncedKeyword = useDebounce(keyword.trim(), 500);
 
@@ -43,6 +46,13 @@ export const useSearchPlaces = () => {
         setSearchResults([]);
         return;
       }
+
+      // StrictMode 재마운트/이펙트 재실행 시 같은 요청 스킵
+      const reqKey = `${trimmedKeyword}::${pageNum}::${append ? 'append' : 'replace'}`;
+      if (lastReqRef.current === reqKey) {
+        return;
+      }
+      lastReqRef.current = reqKey;
 
       if (pageNum === 1) {
         setIsLoading(true);
