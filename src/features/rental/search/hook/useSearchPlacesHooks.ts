@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   searchPlaces,
@@ -21,22 +21,6 @@ const useDebounce = (value: string, delay: number) => {
   }, [value, delay]);
 
   return debouncedValue;
-};
-
-// 스로틀링 훅
-const useThrottle = <T extends unknown[]>(callback: (...args: T) => void, delay: number) => {
-  const lastRunRef = useRef(0);
-
-  return useCallback(
-    (...args: T) => {
-      const now = Date.now();
-      if (now - lastRunRef.current >= delay) {
-        lastRunRef.current = now;
-        callback(...args);
-      }
-    },
-    [callback, delay],
-  );
 };
 
 // 키워드 검색 훅
@@ -99,19 +83,16 @@ export const useSearchPlaces = () => {
     [],
   );
 
-  // 스로틀링된 검색 함수 (300ms)
-  const throttledSearch = useThrottle(performSearch, 300);
-
   // 디바운스된 키워드가 변경될 때 검색 실행
   useEffect(() => {
-    if (debouncedKeyword) {
-      setPage(1);
-      setHasNext(true);
-      throttledSearch(debouncedKeyword, 1, false);
-    } else {
+    if (!debouncedKeyword) {
       setSearchResults([]);
+      return;
     }
-  }, [debouncedKeyword, throttledSearch]);
+    setPage(1);
+    setHasNext(true);
+    performSearch(debouncedKeyword, 1, false);
+  }, [debouncedKeyword, performSearch]);
 
   // 다음 페이지 로드 함수
   const loadNextPage = useCallback(() => {
