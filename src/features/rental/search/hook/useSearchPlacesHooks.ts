@@ -38,6 +38,9 @@ export const useSearchPlaces = () => {
   // 디바운스된 키워드 (500ms) - 공백 제거
   const debouncedKeyword = useDebounce(keyword.trim(), 500);
 
+  // 이전 요청 취소용 컨트롤러
+  const controllerRef = useRef<AbortController | null>(null);
+
   // 검색 실행 함수
   const performSearch = useCallback(
     async (searchKeyword: string, pageNum: number = 1, append: boolean = false) => {
@@ -54,6 +57,13 @@ export const useSearchPlaces = () => {
       }
       lastReqRef.current = reqKey;
 
+      // 이전 요청 취소
+      controllerRef.current?.abort();
+      // 새 컨트롤러 생성
+      const controller = new AbortController();
+      controllerRef.current = controller;
+
+      // API 호출
       if (pageNum === 1) {
         setIsLoading(true);
       } else {
@@ -65,6 +75,7 @@ export const useSearchPlaces = () => {
           keyword: trimmedKeyword,
           page: pageNum,
           size: 15,
+          signal: controller.signal,
         };
 
         const results = await searchPlaces(params);
@@ -77,13 +88,15 @@ export const useSearchPlaces = () => {
 
         setHasNext(results.length === 15 && pageNum < 3);
       } catch (error) {
-        console.error('검색 오류:', error);
-        if (!append) {
-          setSearchResults([]);
-        }
-        // API 호출 제한 에러인 경우 사용자에게 알림
-        if (error instanceof Error && error.message.includes('API 호출 제한')) {
-          console.warn('API 호출 제한으로 인해 검색이 일시적으로 중단되었습니다.');
+        if ((error as Error)?.name !== 'AbortError') {
+          console.error('검색 오류:', error);
+          if (!append) {
+            setSearchResults([]);
+          }
+          // API 호출 제한 에러인 경우 사용자에게 알림
+          if (error instanceof Error && error.message.includes('API 호출 제한')) {
+            console.warn('API 호출 제한으로 인해 검색이 일시적으로 중단되었습니다.');
+          }
         }
       } finally {
         setIsLoading(false);
@@ -97,11 +110,17 @@ export const useSearchPlaces = () => {
   useEffect(() => {
     if (!debouncedKeyword) {
       setSearchResults([]);
+      // 현재 진행 중인 요청이 있으면 취소
+      controllerRef.current?.abort();
       return;
     }
     setPage(1);
     setHasNext(true);
     performSearch(debouncedKeyword, 1, false);
+    // 이 이펙트가 재실행/언마운트 될 때 진행 중 요청 취소
+    return () => {
+      controllerRef.current?.abort();
+    };
   }, [debouncedKeyword, performSearch]);
 
   // 다음 페이지 로드 함수
