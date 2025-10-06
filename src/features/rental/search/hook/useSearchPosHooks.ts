@@ -50,28 +50,25 @@ export const useSearchPos = () => {
   } = useSearchPlaces();
 
   // 검색 결과 선택 시 호출되는 함수
-  const handleSelectPlace = useCallback(
-    (place: PlaceSearchResult) => {
-      createAddressMutation.mutate(place, {
-        onSuccess: () => {
-          setTimeout(() => {
-            queryClient.invalidateQueries({ queryKey: ['addressHistory', 5, sort] });
-            refetch();
-          }, 500);
-        },
-      });
+  const handleSelectPlace = useCallback((place: PlaceSearchResult) => {
+    createAddressMutation.mutate(place, {
+      onSuccess: () => {
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ['addressHistory', 5, sort] });
+          refetch();
+        }, 500);
+      },
+    });
 
-      const searchParams = new URLSearchParams({
-        lat: place.y.toString(),
-        lng: place.x.toString(),
-        address: place.road_address_name || place.address_name,
-        placeName: place.place_name,
-      });
+    const searchParams = new URLSearchParams({
+      lat: place.y.toString(),
+      lng: place.x.toString(),
+      address: place.road_address_name || place.address_name,
+      placeName: place.place_name,
+    });
 
-      router.push(`/rental?${searchParams.toString()}`);
-    },
-    [createAddressMutation, refetch, sort, queryClient, router],
-  );
+    router.push(`/rental?${searchParams.toString()}`);
+  }, []);
 
   // 주소 이력 클릭 시 호출되는 함수
   const handleAddressHistoryClick = useCallback(
