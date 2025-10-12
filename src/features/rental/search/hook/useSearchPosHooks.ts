@@ -49,28 +49,38 @@ export const useSearchPos = () => {
     loadNextPage,
   } = useSearchPlaces();
 
-  // 검색 결과 선택 시 호출되는 함수
+  // 주소 이력 쿼리 키
+  const addressHistoryKey = (limit: number, sort: string /*, userId?: string */) =>
+    ['addressHistory', limit, sort /*, userId */] as const;
+
+  const LIMIT = 5;
+
+  // 장소 선택 시 호출되는 함수
   const handleSelectPlace = useCallback(
-    (place: PlaceSearchResult) => {
-      createAddressMutation.mutate(place, {
-        onSuccess: () => {
-          setTimeout(() => {
-            queryClient.invalidateQueries({ queryKey: ['addressHistory', 5, sort] });
-            refetch();
-          }, 500);
-        },
-      });
+    async (place: PlaceSearchResult) => {
+      try {
+        // 1) 주소 생성(저장)
+        await createAddressMutation.mutateAsync(place);
 
-      const searchParams = new URLSearchParams({
-        lat: place.y.toString(),
-        lng: place.x.toString(),
-        address: place.road_address_name || place.address_name,
-        placeName: place.place_name,
-      });
+        // 2) 캐시 무효화 + 즉시 재패치 (타임아웃 제거)
+        const key = addressHistoryKey(LIMIT, sort);
+        await queryClient.invalidateQueries({ queryKey: key });
+        await queryClient.refetchQueries({ queryKey: key });
 
-      router.push(`/rental?${searchParams.toString()}`);
+        // 3) 라우팅
+        const searchParams = new URLSearchParams({
+          lat: String(place.y), // Kakao: y=lat, x=lng
+          lng: String(place.x),
+          address: place.road_address_name || place.address_name,
+          placeName: place.place_name,
+        });
+        router.push(`/rental?${searchParams.toString()}`);
+      } catch (e) {
+        // 필요 시 토스트/로그
+        console.error(e);
+      }
     },
-    [createAddressMutation, refetch, sort, queryClient, router],
+    [createAddressMutation, queryClient, sort, router],
   );
 
   // 주소 이력 클릭 시 호출되는 함수
@@ -182,17 +192,14 @@ export const useSearchPos = () => {
     }
   }, [throttledHandleScroll]);
 
-  // 주소 이력 존재 여부
+  // 주소 이력 존재 여부 (실제 내용이 바뀔 때만 재계산)
   const hasAddressHistory = useMemo(() => {
-    return (
-      Array.isArray(addressHistoryInfinite?.pages) &&
-      addressHistoryInfinite.pages.some(
-        (page) =>
-          Array.isArray(page?.content?.getAddressResponses) &&
-          page.content.getAddressResponses.length > 0,
-      )
+    if (!addressHistoryInfinite?.pages) return false;
+
+    return addressHistoryInfinite.pages.some(
+      (page) => page?.content?.getAddressResponses?.length > 0,
     );
-  }, [addressHistoryInfinite?.pages]);
+  }, [addressHistoryInfinite]);
 
   return {
     // 상태
