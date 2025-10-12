@@ -14,11 +14,12 @@ export interface SearchPlacesParams {
   keyword: string;
   page?: number;
   size?: number;
+  signal?: AbortSignal;
 }
 
 // 키워드 검색 함수 (페이지네이션 지원)
 export const searchPlaces = async (params: SearchPlacesParams): Promise<PlaceSearchResult[]> => {
-  const { keyword, page = 1, size = 15 } = params;
+  const { keyword, page = 1, size = 15, signal } = params;
 
   if (!keyword.trim()) {
     return [];
@@ -31,6 +32,7 @@ export const searchPlaces = async (params: SearchPlacesParams): Promise<PlaceSea
         headers: {
           Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_MAP_REST_API_KEY}`,
         },
+        signal, //진행 중 요청을 취소할 수 있도록 signal 추가
       },
     );
 
@@ -67,7 +69,11 @@ export const searchPlaces = async (params: SearchPlacesParams): Promise<PlaceSea
 
     return [];
   } catch (error) {
+    if ((error as Error)?.name === 'AbortError') {
+      // 요청이 취소된 경우 (AbortError)에는 아무 작업도 하지 않음
+      throw error;
+    }
     console.error('키워드 검색 오류:', error);
-    return [];
+    throw error;
   }
 };

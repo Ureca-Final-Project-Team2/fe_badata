@@ -23,22 +23,6 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-// 스로틀링 훅
-const useThrottle = <T extends unknown[]>(callback: (...args: T) => void, delay: number) => {
-  const lastRunRef = useRef(0);
-
-  return useCallback(
-    (...args: T) => {
-      const now = Date.now();
-      if (now - lastRunRef.current >= delay) {
-        lastRunRef.current = now;
-        callback(...args);
-      }
-    },
-    [callback, delay],
-  );
-};
-
 // 키워드 검색 훅
 export const useSearchPlaces = () => {
   const [keyword, setKeyword] = useState('');
@@ -48,8 +32,14 @@ export const useSearchPlaces = () => {
   const [hasNext, setHasNext] = useState(true);
   const [page, setPage] = useState(1);
 
+  // 같은 요청 (키워드, 페이지)이 중복으로 발생하는 것을 방지 가드
+  const lastReqRef = useRef<string | null>(null);
+
   // 디바운스된 키워드 (500ms) - 공백 제거
   const debouncedKeyword = useDebounce(keyword.trim(), 500);
+
+  // 이전 요청 취소용 컨트롤러
+  const controllerRef = useRef<AbortController | null>(null);
 
   // 검색 실행 함수
   const performSearch = useCallback(
@@ -60,6 +50,20 @@ export const useSearchPlaces = () => {
         return;
       }
 
+      // StrictMode 재마운트/이펙트 재실행 시 같은 요청 스킵
+      const reqKey = `${trimmedKeyword}::${pageNum}::${append ? 'append' : 'replace'}`;
+      if (lastReqRef.current === reqKey) {
+        return;
+      }
+      lastReqRef.current = reqKey;
+
+      // 이전 요청 취소
+      controllerRef.current?.abort();
+      // 새 컨트롤러 생성
+      const controller = new AbortController();
+      controllerRef.current = controller;
+
+      // API 호출
       if (pageNum === 1) {
         setIsLoading(true);
       } else {
@@ -71,6 +75,7 @@ export const useSearchPlaces = () => {
           keyword: trimmedKeyword,
           page: pageNum,
           size: 15,
+          signal: controller.signal,
         };
 
         const results = await searchPlaces(params);
@@ -83,13 +88,15 @@ export const useSearchPlaces = () => {
 
         setHasNext(results.length === 15 && pageNum < 3);
       } catch (error) {
-        console.error('검색 오류:', error);
-        if (!append) {
-          setSearchResults([]);
-        }
-        // API 호출 제한 에러인 경우 사용자에게 알림
-        if (error instanceof Error && error.message.includes('API 호출 제한')) {
-          console.warn('API 호출 제한으로 인해 검색이 일시적으로 중단되었습니다.');
+        if ((error as Error)?.name !== 'AbortError') {
+          console.error('검색 오류:', error);
+          if (!append) {
+            setSearchResults([]);
+          }
+          // API 호출 제한 에러인 경우 사용자에게 알림
+          if (error instanceof Error && error.message.includes('API 호출 제한')) {
+            console.warn('API 호출 제한으로 인해 검색이 일시적으로 중단되었습니다.');
+          }
         }
       } finally {
         setIsLoading(false);
@@ -99,19 +106,22 @@ export const useSearchPlaces = () => {
     [],
   );
 
-  // 스로틀링된 검색 함수 (300ms)
-  const throttledSearch = useThrottle(performSearch, 300);
-
   // 디바운스된 키워드가 변경될 때 검색 실행
   useEffect(() => {
-    if (debouncedKeyword) {
-      setPage(1);
-      setHasNext(true);
-      throttledSearch(debouncedKeyword, 1, false);
-    } else {
+    if (!debouncedKeyword) {
       setSearchResults([]);
+      // 현재 진행 중인 요청이 있으면 취소
+      controllerRef.current?.abort();
+      return;
     }
-  }, [debouncedKeyword, throttledSearch]);
+    setPage(1);
+    setHasNext(true);
+    performSearch(debouncedKeyword, 1, false);
+    // 이 이펙트가 재실행/언마운트 될 때 진행 중 요청 취소
+    return () => {
+      controllerRef.current?.abort();
+    };
+  }, [debouncedKeyword, performSearch]);
 
   // 다음 페이지 로드 함수
   const loadNextPage = useCallback(() => {
